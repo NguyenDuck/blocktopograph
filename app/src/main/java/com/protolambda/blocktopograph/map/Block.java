@@ -182,6 +182,9 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_81_0_CACTUS("cactus", null, 81, 0, "blocks/cactus.png", 0xc30d6318, false),
     B_82_0_CLAY("clay", null, 82, 0, "blocks/clay.png", 0xff9ea4b0, false),
     B_83_0_REEDS("reeds", null, 83, 0, "blocks/reeds.png", 0x8c94c065, false),
+
+    B_84_0_JUKEBOX("jukebox", null, 84, 0, "blocks/fence_birch_fence.png", 0x8f463822, false),
+
     B_85_0_FENCE_FENCE("fence", "fence", 85, 0, "blocks/fence_fence.png", 0x8f463822, false),
     B_85_1_FENCE_SPRUCE_FENCE("fence", "spruce_fence", 85, 1, "blocks/fence_spruce_fence.png", 0x8f463822, false),
     B_85_2_FENCE_BIRCH_FENCE("fence", "birch_fence", 85, 2, "blocks/fence_birch_fence.png", 0x8f463822, false),
@@ -355,6 +358,11 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_175_3_DOUBLE_PLANT_FERN("double_plant", "fern", 175, 3, "blocks/double_plant_fern.png", 0xb43d5d34, false),
     B_175_4_DOUBLE_PLANT_ROSE("double_plant", "rose", 175, 4, "blocks/double_plant_rose.png", 0xb4d10609, false),
     B_175_5_DOUBLE_PLANT_PAEONIA("double_plant", "paeonia", 175, 5, "blocks/double_plant_paeonia.png", 0xb4d6c1df, false),
+
+    B_176_0_BANNER("banner", null, 176, 0, "blocks/double_plant_paeonia.png", 0xff9aa1a1, false),
+    B_176_8_BANNER("banner", null, 176, 8, "blocks/double_plant_paeonia.png", 0xff9aa1a1, false),
+    B_176_12_BANNER("banner", null, 176, 12, "blocks/double_plant_paeonia.png", 0xff9aa1a1, false),
+
     B_178_0_DAYLIGHT_DETECTOR_INVERTED("daylight_detector_inverted", null, 178, 0, "blocks/daylight_detector_inverted.png", 0xffd8c9b5, false),
     B_179_0_RED_SANDSTONE_DEFAULT("red_sandstone", "default", 179, 0, "blocks/red_sandstone_default.png", 0xffaa561e, false),
     B_179_1_RED_SANDSTONE_CHISELED("red_sandstone", "chiseled", 179, 1, "blocks/red_sandstone_chiseled.png", 0xffa8551e, false),
@@ -385,6 +393,26 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_206_0_END_BRICKS("end_bricks", null, 206, 0, "blocks/end_bricks.png", 0xffe7f2af, false),
     B_208_0_END_ROD("end_rod", null, 208, 0, "blocks/end_rod.png", 0xff6e6e6e, true),
     B_209_0_END_GATEWAY("end_gateway", null, 209, 0, "blocks/end_gateway.png", 0xff171c27, false),
+
+    B_205_0_SHULKERBOX("shulker_box", null, 205, 0, "blocks/observer.png", 0xffffffff, false),
+    B_218_0_SHULKERBOX_WHITE("shulker_box", "white", 218, 0, "blocks/observer.png", 0xffffffff, false),
+    B_218_1_SHULKERBOX_ORANGE("shulker_box", "orange", 218, 1, "blocks/observer.png", 0xffffd030, false),
+    B_218_2_SHULKERBOX_MAGENTA("shulker_box", "magenta", 218, 2, "blocks/observer.png", 0xffef007f, false),
+    B_218_3_SHULKERBOX_LIGHT_BLUE("shulker_box", "light_blue", 218, 3, "blocks/observer.png", 0xff5588ff, false),
+    B_218_4_SHULKERBOX_YELLOW("shulker_box", "yellow", 218, 4, "blocks/observer.png", 0xffffff40, false),
+    B_218_5_SHULKERBOX_LIME("shulker_box", "lime", 218, 5, "blocks/observer.png", 0xff0db60e, false),
+    B_218_6_SHULKERBOX_PINK("shulker_box", "pink", 218, 6, "blocks/observer.png", 0xffff6076, false),
+    B_218_7_SHULKERBOX_GRAY("shulker_box", "gray", 218, 7, "blocks/observer.png", 0xff565656, false),
+    B_218_8_SHULKERBOX_SILVER("shulker_box", "silver", 218, 8, "blocks/observer.png", 0xffa6a6a6, false),
+    B_218_9_SHULKERBOX_CYAN("shulker_box", "cyan", 218, 9, "blocks/observer.png", 0xff0d5656, false),
+    B_218_10_SHULKERBOX_PURPLE("shulker_box", "purple", 218, 10, "blocks/observer.png", 0xff560d56, false),
+    B_218_11_SHULKERBOX_BLUE("shulker_box", "blue", 218, 11, "blocks/observer.png", 0xff0d0e56, false),
+    B_218_12_SHULKERBOX_BROWN("shulker_box", "brown", 218, 12, "blocks/observer.png", 0xff804530, false),
+    B_218_13_SHULKERBOX_GREEN("shulker_box", "green", 218, 13, "blocks/observer.png", 0xff0d560e, false),
+    B_218_14_SHULKERBOX_RED("shulker_box", "red", 218, 14, "blocks/observer.png", 0xffff2020, false),
+    B_218_15_SHULKERBOX_BLACK("shulker_box", "black", 218, 15, "blocks/observer.png", 0xff000000, false),
+
+
     B_240_0_CHORUS_PLANT("chorus_plant", null, 240, 0, "blocks/chorus_plant.png", 0xaa3d6e86, false),
     B_241_0_STAINED_GLASS_WHITE("stained_glass", "white", 241, 0, "blocks/stained_glass_white.png", 0x50836f64, false),
     B_241_1_STAINED_GLASS_ORANGE("stained_glass", "orange", 241, 1, "blocks/stained_glass_orange.png", 0x509d5021, false),
@@ -414,6 +442,8 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_250_0_MOVINGBLOCK("movingBlock", null, 250, 0, "blocks/movingBlock.png", 0, false),
     B_251_0_OBSERVER("observer", null, 251, 0, "blocks/observer.png", 0xff3d6e86, false),
 
+
+
     B_236_0_CONCRETE_WHITE("concrete", "orange", 236, 0, "blocks/observer.png", 0xffffffff, false),
     B_236_1_CONCRETE_ORANGE("concrete", "orange", 236, 1, "blocks/observer.png", 0xffffd030, false),
     B_236_2_CONCRETE_MAGENTA("concrete", "magenta", 236, 2, "blocks/observer.png", 0xffef007f, false),
@@ -428,7 +458,7 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_236_11_CONCRETE_BLUE("concrete", "blue", 236, 11, "blocks/observer.png", 0xff0d0e56, false),
     B_236_12_CONCRETE_BROWN("concrete", "brown", 236, 12, "blocks/observer.png", 0xff804530, false),
     B_236_13_CONCRETE_GREEN("concrete", "green", 236, 13, "blocks/observer.png", 0xff0d560e, false),
-    B_236_14_CONCRETE_RED("concrete", "brown", 236, 14, "blocks/observer.png", 0xffff2020, false),
+    B_236_14_CONCRETE_RED("concrete", "red", 236, 14, "blocks/observer.png", 0xffff2020, false),
     B_236_15_CONCRETE_BLACK("concrete", "black", 236, 15, "blocks/observer.png", 0xff000000, false),
 
 
