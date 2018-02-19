@@ -7,7 +7,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context="com.protolambda.blocktopograph.WorldActivity"
+    tools:context="com.mithrilmania.blocktopograph.WorldActivity"
     tools:showIn="@layout/app_bar_world"
     android:id="@+id/world_content_wrapper"
     xmlns:app="http://schemas.android.com/apk/res-auto"

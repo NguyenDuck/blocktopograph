@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.protolambda.blocktopograph">
+    package="com.mithrilmania.blocktopograph">
 
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -17,7 +17,7 @@
 
         <!-- Splash screen -->
         <activity
-            android:name="com.protolambda.blocktopograph.SplashScreen"
+            android:name="com.mithrilmania.blocktopograph.SplashScreen"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             <intent-filter>
@@ -28,33 +28,33 @@
 
         <!-- World List -->
         <activity
-            android:name="com.protolambda.blocktopograph.worldlist.WorldItemListActivity"
+            android:name="com.mithrilmania.blocktopograph.worldlist.WorldItemListActivity"
             android:label="@string/title_worlditem_list"
-            android:parentActivityName="com.protolambda.blocktopograph.SplashScreen"
+            android:parentActivityName="com.mithrilmania.blocktopograph.SplashScreen"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <!-- World Detail -->
         <activity
-            android:name="com.protolambda.blocktopograph.worldlist.WorldItemDetailActivity"
+            android:name="com.mithrilmania.blocktopograph.worldlist.WorldItemDetailActivity"
             android:label="@string/title_worlditem_detail"
-            android:parentActivityName="com.protolambda.blocktopograph.worldlist.WorldItemListActivity"
+            android:parentActivityName="com.mithrilmania.blocktopograph.worldlist.WorldItemListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.protolambda.blocktopograph.worldlist.WorldItemListActivity" />
+                android:value="com.mithrilmania.blocktopograph.worldlist.WorldItemListActivity" />
         </activity>
 
         <!-- World -->
         <activity
-            android:name="com.protolambda.blocktopograph.WorldActivity"
+            android:name="com.mithrilmania.blocktopograph.WorldActivity"
             android:label="@string/title_activity_world"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName="com.protolambda.blocktopograph.worldlist.WorldItemListActivity"
+            android:parentActivityName="com.mithrilmania.blocktopograph.worldlist.WorldItemListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.protolambda.blocktopograph.worldlist.WorldItemListActivity" />
+                android:value="com.mithrilmania.blocktopograph.worldlist.WorldItemListActivity" />
         </activity>
 
 

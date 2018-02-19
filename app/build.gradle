@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.1"
 
     defaultConfig {
-        applicationId "com.protolambda.blocktopograph"
+        applicationId "com.mithrilmania.blocktopograph"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 9
@@ -21,13 +21,19 @@ android {
     }
 
     signingConfigs {
-        if(hasKeystore) {
+        if (hasKeystore) {
             release {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
                 storeFile rootProject.file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
             }
+        }
+        config {
+            keyAlias 'key1'
+            keyPassword 'keypassword'
+            storeFile file('/home/alex/Documents/keystore')
+            storePassword 'keypassword'
         }
     }
 
@@ -41,7 +47,7 @@ android {
     }
 
     buildTypes {
-        if(hasKeystore){
+        if (hasKeystore) {
             release {
                 minifyEnabled true
                 shrinkResources true
@@ -53,6 +59,9 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        release {
+            signingConfig signingConfigs.config
+        }
     }
 
 }
@@ -60,20 +69,15 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar', '*.so'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-
     compile project(':android-leveldb')
     compile project(':tileview')
-
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.android.support:recyclerview-v7:25.0.1'
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.android.support:design:25.0.1'
     compile 'com.github.bmelnychuk:atv:1.2.8'
-
     //core is the new recommended alias for analytics
     compile 'com.google.firebase:firebase-core:10.0.1'
-
-
 }
 
 

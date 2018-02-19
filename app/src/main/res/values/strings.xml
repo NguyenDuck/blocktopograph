@@ -49,14 +49,14 @@
         \n
         <i>Used libraries</i>\n
         &#8226; <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n
-        &#8226; <a href="https://github.com/protolambda/TileView">
-                    Tileview, fork by protolambda</a> \n
+        &#8226; <a href="https://github.com/mithrilmania/TileView">
+                    Tileview, fork by mithrilmania</a> \n
         &#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n
-            with <a href="https://github.com/protolambda/android-leveldb">
-                    android-leveldb, fork by protolambda</a> \n
+            with <a href="https://github.com/mithrilmania/android-leveldb">
+                    android-leveldb, fork by mithrilmania</a> \n
         \n
         <i>Source code on GitHub:</i>\n
-        <a href="https://github.com/protolambda/blocktopograph">github.com/protolambda/blocktopograph</a> \n
+        <a href="https://github.com/mithrilmania/blocktopograph">github.com/mithrilmania/blocktopograph</a> \n
 
     </string>
 

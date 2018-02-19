@@ -6,11 +6,11 @@ By @protolambda.
  Feel free to fork it and improve it yourself,
   it is licensed under AGPL v3; reverse engineering the MCPE format is time consuming, share your updates.
 
-## [Download on Google-Play](https://play.google.com/store/apps/details?id=com.protolambda.blocktopograph)
+## [Download on Google-Play](https://play.google.com/store/apps/details?id=com.mithrilmania.blocktopograph)
 
 ### Showcase website
 
-Screenshots, download links, roadmap etc. can all be found on [blocktopograph.protolambda.com](http://blocktopograph.protolambda.com).
+Screenshots, download links, roadmap etc. can all be found on [blocktopograph.mithrilmania.com](http://blocktopograph.mithrilmania.com).
 
 
 ## Get-started
@@ -36,11 +36,11 @@ NOTE: You may want to fork one of the dependencies (or this project) if you want
 1. `mkdir block-project` or something like that. This will be the main-container
 1. `cd` into the new folder
 1. `git clone` (your fork of) this repository
-1. `git clone` (your fork of) [android-leveldb](https://github.com/protolambda/android-leveldb)
+1. `git clone` (your fork of) [android-leveldb](https://github.com/mithrilmania/android-leveldb)
 1. `cd android-leveldb` and `git submodule update` to get the
-    [leveldb-mcpe](https://github.com/protolambda/leveldb-mcpe) git-submodule, it is required for building this project.
+    [leveldb-mcpe](https://github.com/mithrilmania/leveldb-mcpe) git-submodule, it is required for building this project.
 1. `cd ..` (back to the main container)
-1. `git clone` (your fork of) [TileView](https://github.com/protolambda/TileView)
+1. `git clone` (your fork of) [TileView](https://github.com/mithrilmania/TileView)
 1. Add `local.properties` files to these projects,
     with `sdk.dir` for your sdk home,
     and with `ndk.dir` specified for `android-leveldb`.
@@ -55,7 +55,7 @@ NOTE: You may want to fork one of the dependencies (or this project) if you want
 
 ### Release-Workflow
 
-The official Google-Play version is managed by @protolambda. The Release-signing keys are not available.
+The official Google-Play version is managed by @mithrilmania. The Release-signing keys are not available.
 You can build it as debug build or sign it with your own keys.
 
 This Google-Play version will be updated after any significant and well-written feature additions and fixes.
@@ -106,4 +106,4 @@ LICENSE-head:
 ## Contributing
 
 Always welcome! Fork the project, change what you want, and send back a pull request.
-Good (and properly written) features will be merged into the official app by @protolambda.
+Good (and properly written) features will be merged into the official app by @mithrilmania.
