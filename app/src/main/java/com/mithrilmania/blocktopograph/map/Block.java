@@ -252,6 +252,8 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_135_0_BIRCH_STAIRS("birch_stairs", null, 135, 0, "blocks/birch_stairs.png", 0xffc3b37b, false),
     B_136_0_JUNGLE_STAIRS("jungle_stairs", null, 136, 0, "blocks/jungle_stairs.png", 0xff9a6e4d, false),
     B_138_0_BEACON("beacon", null, 138, 0, "blocks/beacon.png", 0xff74ddd7, false),
+    B_137_0_IMPULSE_COMMAND_BLOCK("impulse_command_block", null, 137, 0, "blocks/beacon.png", 0xff9a6e4d, false),
+    B_137_4_IMPULSE_COMMAND_BLOCK("impulse_command_block", null, 137, 4, "blocks/beacon.png", 0xff9a6e4d, false),
     B_139_0_COBBLESTONE_WALL_NORMAL("cobblestone_wall", "normal", 139, 0, "blocks/cobblestone_wall_normal.png", 0xff7a7a7a, false),
     B_139_1_COBBLESTONE_WALL_MOSSY("cobblestone_wall", "mossy", 139, 1, "blocks/cobblestone_wall_mossy.png", 0xff506a50, false),
     B_140_0_FLOWER_POT("flower_pot", null, 140, 0, "blocks/flower_pot.png", 0x31764133, false),
@@ -389,6 +391,9 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_201_1_PURPUR_BLOCK_CHISELED("purpur_block", "chiseled", 201, 1, "blocks/purpur_block_chiseled.png", 0xffa570a5, false),
     B_201_2_PURPUR_BLOCK_LINES("purpur_block", "lines", 201, 2, "blocks/purpur_block_lines.png", 0xffa070a5, false),
     B_201_3_PURPUR_BLOCK_DEFAULT("purpur_block", "default", 201, 3, "blocks/purpur_block_default.png", 0xffa577a5, false),
+    B_202_0_COLORED_TORCH_DEFAULT("colored_torch_rg", "default", 202, 0, "blocks/redstone_torch_on.png", 0xffa070a5, false),
+    B_202_9_COLORED_TORCH_DEFAULT("colored_torch_rg", "default", 202, 9, "blocks/redstone_torch_on.png", 0xffa070a5, false),
+    B_202_13_COLORED_TORCH_DEFAULT("colored_torch_rg", "default", 202, 13, "blocks/redstone_torch_on.png", 0xffa070a5, false),
     B_203_0_PURPUR_STAIRS("purpur_stairs", null, 203, 0, "blocks/purpur_stairs.png", 0xffa577a5, false),
     B_206_0_END_BRICKS("end_bricks", null, 206, 0, "blocks/end_bricks.png", 0xffe7f2af, false),
     B_208_0_END_ROD("end_rod", null, 208, 0, "blocks/end_rod.png", 0xff6e6e6e, true),
@@ -500,18 +505,23 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_223_3_GLAZED_TERRACOTTA_LIGHT_BLUE("glazed_terracotta", "light_blue", 223, 3, "blocks/observer.png", 0xff75a8ff, false),
     B_223_4_GLAZED_TERRACOTTA_LIGHT_BLUE("glazed_terracotta", "light_blue", 223, 4, "blocks/observer.png", 0xff75a8ff, false),
     B_223_5_GLAZED_TERRACOTTA_LIGHT_BLUE("glazed_terracotta", "light_blue", 223, 5, "blocks/observer.png", 0xff75a8ff, false),
+    B_224_0_GLAZED_TERRACOTTA_YELLOW("glazed_terracotta", "yellow", 224, 0, "blocks/observer.png", 0xffffff60, false),
     B_224_2_GLAZED_TERRACOTTA_YELLOW("glazed_terracotta", "yellow", 224, 2, "blocks/observer.png", 0xffffff60, false),
     B_224_3_GLAZED_TERRACOTTA_YELLOW("glazed_terracotta", "yellow", 224, 3, "blocks/observer.png", 0xffffff60, false),
     B_224_4_GLAZED_TERRACOTTA_YELLOW("glazed_terracotta", "yellow", 224, 4, "blocks/observer.png", 0xffffff60, false),
     B_224_5_GLAZED_TERRACOTTA_YELLOW("glazed_terracotta", "yellow", 224, 5, "blocks/observer.png", 0xffffff60, false),
+    B_225_0_GLAZED_TERRACOTTA_LIME("glazed_terracotta", "lime", 225, 0, "blocks/observer.png", 0xff2dd62e, false),
     B_225_2_GLAZED_TERRACOTTA_LIME("glazed_terracotta", "lime", 225, 2, "blocks/observer.png", 0xff2dd62e, false),
     B_225_3_GLAZED_TERRACOTTA_LIME("glazed_terracotta", "lime", 225, 3, "blocks/observer.png", 0xff2dd62e, false),
     B_225_4_GLAZED_TERRACOTTA_LIME("glazed_terracotta", "lime", 225, 4, "blocks/observer.png", 0xff2dd62e, false),
     B_225_5_GLAZED_TERRACOTTA_LIME("glazed_terracotta", "lime", 225, 5, "blocks/observer.png", 0xff2dd62e, false),
+    B_226_0_GLAZED_TERRACOTTA_PINK("glazed_terracotta", "pink", 226, 0, "blocks/observer.png", 0xffff8096, false),
     B_226_2_GLAZED_TERRACOTTA_PINK("glazed_terracotta", "pink", 226, 2, "blocks/observer.png", 0xffff8096, false),
     B_226_3_GLAZED_TERRACOTTA_PINK("glazed_terracotta", "pink", 226, 3, "blocks/observer.png", 0xffff8096, false),
     B_226_4_GLAZED_TERRACOTTA_PINK("glazed_terracotta", "pink", 226, 4, "blocks/observer.png", 0xffff8096, false),
     B_226_5_GLAZED_TERRACOTTA_PINK("glazed_terracotta", "pink", 226, 5, "blocks/observer.png", 0xffff8096, false),
+    B_226_6_GLAZED_TERRACOTTA_PINK("glazed_terracotta", "pink", 226, 6, "blocks/observer.png", 0xffff8096, false),
+    B_226_7_GLAZED_TERRACOTTA_PINK("glazed_terracotta", "pink", 226, 7, "blocks/observer.png", 0xffff8096, false),
     B_227_2_GLAZED_TERRACOTTA_GRAY("glazed_terracotta", "gray", 227, 2, "blocks/observer.png", 0xff767676, false),
     B_227_3_GLAZED_TERRACOTTA_GRAY("glazed_terracotta", "gray", 227, 3, "blocks/observer.png", 0xff767676, false),
     B_227_4_GLAZED_TERRACOTTA_GRAY("glazed_terracotta", "gray", 227, 4, "blocks/observer.png", 0xff767676, false),
@@ -532,6 +542,7 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_232_3_GLAZED_TERRACOTTA_BROWN("glazed_terracotta", "brown", 232, 3, "blocks/observer.png", 0xffa06550, false),
     B_232_4_GLAZED_TERRACOTTA_BROWN("glazed_terracotta", "brown", 232, 4, "blocks/observer.png", 0xffa06550, false),
     B_232_5_GLAZED_TERRACOTTA_BROWN("glazed_terracotta", "brown", 232, 5, "blocks/observer.png", 0xffa06550, false),
+    B_233_0_GLAZED_TERRACOTTA_GREEN("glazed_terracotta", "green", 233, 0, "blocks/observer.png", 0xff2d762e, false),
     B_233_2_GLAZED_TERRACOTTA_GREEN("glazed_terracotta", "green", 233, 2, "blocks/observer.png", 0xff2d762e, false),
     B_233_3_GLAZED_TERRACOTTA_GREEN("glazed_terracotta", "green", 233, 3, "blocks/observer.png", 0xff2d762e, false),
     B_233_4_GLAZED_TERRACOTTA_GREEN("glazed_terracotta", "green", 233, 4, "blocks/observer.png", 0xff2d762e, false),
@@ -790,12 +801,13 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
 
     public final int id, subId;
 
-    public final String name, subName, displayName;
+    public final String name, subName, displayName, identifier;
 
     public final String texPath;
 
     public final Color color;
     public final boolean hasBiomeShading;
+
 
     public Bitmap bitmap;
 
@@ -808,6 +820,7 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
         this.texPath = texPath;
         this.color = Color.fromARGB(color);
         this.hasBiomeShading = hasBiomeShading;
+        this.identifier = "minecraft:" + subName;
     }
 
     Block(String name, String subName, int id, int subId, String texPath){
@@ -819,6 +832,7 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
         this.texPath = texPath;
         this.color = null;
         this.hasBiomeShading = false;
+        this.identifier = "minecraft:" + subName;
     }
 
     @Override

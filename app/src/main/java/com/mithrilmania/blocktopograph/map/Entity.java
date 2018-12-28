@@ -84,7 +84,7 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
     ENDER_CRYSTAL(71, "Ender Crystal", new String[]{ "EnderCrystal" }, "ender-crystal", 52),
     //72
     //73
-    //74
+    TURTLE(74, "Turtle", new String[]{ "Turtle" }, "turtle", 79),
     //75
     SHULKER_BULLET(76, "Shulker Bullet", new String[]{ "ShulkerBullet" }, "shulker-bullet", 79),
     FISHING_HOOK(77, "Fishing Hook", new String[]{ "FishingHook" }, "fishing-hook", 57),
@@ -111,17 +111,20 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
     MINECART_CHEST(98, "Storage Minecart", new String[]{ "MinecartChest" }, "minecart-chest", 35),
     LINGERING_POTION(101, "Lingering potion", new String[]{ "LingeringPotion" }, "lingering-potion", 144),
 
+    CAT(122, "Cat", new String[]{ "Cat" }, "cat", 144),//95 ; FireworksRocketEntity is not in the game yet
+    PANDA(123, "Panda", new String[]{ "Panda" }, "panda", 144),//95 ; FireworksRocketEntity is not in the game yet
+
     //id 900+ is ignored for functions like map-filtering, these are placeholders for when the game adds more expected features.
     MINECART_SPAWNER(900, "Minecart with Spawner", new String[]{ "MinecartSpawner" }, "minecart-with-spawner", 71),//99 ; MinecartSpawner is not yet in the game
     MINECART_COMMAND_BLOCK(901, "Minecart with Command Block", new String[]{ "MinecartCommandBlock" }, "minecart-with-command-block", 78),//100 ; MinecartCommandBlock is not yet in the game
     MINECART_FURNACE(902, "Powered Minecart", new String[]{ "MinecartFurnace" }, "minecart-furnace", 36),//101 ; MinecartFurnace is not yet in the game
     FIREWORKS_ROCKET_ENTITY(903, "Firework Rocket", new String[]{ "FireworksRocketEntity" }, "fireworks-rocket", 144),//95 ; FireworksRocketEntity is not in the game yet
-
     UNKNOWN(999, "Unknown", new String[]{ "Unknown" }, "unknown", 144);
 
     public final int id, sheetPos;
     public final String displayName, wikiName;
     public final String[] dataNames;
+    public final String identifier;
 
     public Bitmap bitmap;
 
@@ -131,6 +134,7 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
         this.dataNames = dataNames;
         this.wikiName = wikiName;
         this.sheetPos = sheetPos;
+        this.identifier = "minecraft:" + wikiName;
     }
 
     @Override
@@ -173,12 +177,28 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
     }
 
     public static Entity getEntity(String dataName){
-        return entityMap.get(dataName);
+        try {
+            return entityMap.get(dataName);
+        }
+        catch (Exception e)
+        {
+            android.util.Log.d("myTag","error finding id for: " + dataName);
+            return entityMap.get(dataName);
+        }
     }
 
     public static Entity getEntity(int id){
-        return entityByID.get(id);
+        try {
+            return entityByID.get(id);
+        }
+        catch (Exception e )
+        {
+            android.util.Log.d("myTag","error finding id for: " + id);
+            return entityByID.get(id);
+        }
     }
+
+
 
     public static void loadEntityBitmaps(AssetManager assetManager) throws IOException {
         Bitmap sheet = BitmapFactory.decodeStream(assetManager.open("entity_wiki.png"));

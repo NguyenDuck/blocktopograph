@@ -147,8 +147,17 @@ public class V1_1_TerrainChunkData extends TerrainChunkData {
             return 0;
         }
         int offset = getOffset(x, y, z);
-        byte dualData = terrainData.get(POS_META_DATA + (offset >>> 1));
-        return (byte) ((offset & 1) == 1 ? ((dualData >>> 4) & 0xf) : (dualData & 0xf));
+        byte dualData = 0;
+        try {
+            //dualData = terrainData.get(POS_META_DATA + (offset >>> 1));
+            dualData = terrainData.get(terrainData.limit() - (offset >>> 1));
+            return (byte) ((offset & 1) == 1 ? ((dualData >>> 4) & 0xf) : (dualData & 0xf));
+        }
+        catch (Exception e) {
+            return (byte) ((offset & 1) == 1 ? ((dualData >>> 4) & 0xf) : (dualData & 0xf));
+        }
+
+
     }
 
     @Override

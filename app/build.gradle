@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        applicationId "com.mithrilmania.blocktopograph"
+        applicationId 'com.sirkut.blocktopograph'
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
         versionCode 10
         versionName "1.7"
     }
@@ -39,7 +39,7 @@ android {
 
 
     productFlavors {
-        if(hasKeystore) {
+        if (hasKeystore) {
             mainFlavor {
                 signingConfig signingConfigs.release
             }
@@ -54,11 +54,11 @@ android {
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             }
         }
-        opensource {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+       // opensource {
+            //minifyEnabled true
+            //shrinkResources true
+           // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        //}
         release {
             signingConfig signingConfigs.config
         }
@@ -67,17 +67,17 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar', '*.so'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile project(':android-leveldb')
-    compile project(':tileview')
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.github.clans:fab:1.6.4'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.github.bmelnychuk:atv:1.2.8'
+    implementation fileTree(include: ['*.jar', '*.so'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    implementation project(':android-leveldb')
+    implementation project(':tileview')
+    implementation 'com.android.support:appcompat-v7:25.4.0'
+    implementation 'com.android.support:recyclerview-v7:25.4.0'
+    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'com.android.support:design:25.4.0'
+    implementation 'com.github.bmelnychuk:atv:1.2.8'
     //core is the new recommended alias for analytics
-    compile 'com.google.firebase:firebase-core:10.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.6'
 }
 
 

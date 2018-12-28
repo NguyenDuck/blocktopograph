@@ -51,6 +51,23 @@ public enum Biome {
     MESA(37, "Mesa", Color.fromRGB(220, 66, 19)),
     MESA_PLATEAU_F(38, "Mesa Plateau F", Color.fromRGB(174, 152, 100)),
     MESA_PLATEAU(39, "Mesa Plateau", Color.fromRGB(202, 139, 98)),
+
+    //fix the colors for these
+    SMALL_END_ISLANDS(40, "Small End Islands",Color.fromRGB(202, 139, 98)),
+    END_MIDLANDS(41, "End Midlands",Color.fromRGB(202, 139, 98)),
+    END_HIGHLANDS(42, "End Highlands",Color.fromRGB(202, 139, 98)),
+    END_BARRENS(43, "End Barrens",Color.fromRGB(202, 139, 98)),
+    WARM_OCEAN(44, "Warm Ocean",Color.fromRGB(202, 139, 98)),
+    LUKEWARM_OCEAN(45, "Lukewarm Ocean",Color.fromRGB(202, 139, 98)),
+    COLD_OCEAN(46, "Cold Ocean",Color.fromRGB(202, 139, 98)),
+    DEEP_WARM_OCEAN(47, "Deep Warm Ocean",Color.fromRGB(202, 139, 98)),
+    DEEP_LUKEWARM_OCEAN(48, "Deep Lukewarm Ocean",Color.fromRGB(202, 139, 98)),
+    DEEP_COLD_OCEAN(49, "Deep Cold Ocean",Color.fromRGB(202, 139, 98)),
+    DEEP_FROZEN_OCEAN(50, "Deep Frozen Ocean",Color.fromRGB(202, 139, 98)),
+
+    //fix the colors for the void
+    THE_VOID(127, "The Void", Color.fromRGB(81, 79, 195)),
+
     OCEAN_M(128, "Ocean M", Color.fromRGB(81, 79, 195)),
     SUNFLOWER_PLAINS(129, "Sunflower Plains", Color.fromRGB(220, 255, 177)),
     DESERT_M(130, "Desert M", Color.fromRGB(255, 230, 101)),
@@ -90,7 +107,9 @@ public enum Biome {
     SAVANNA_PLATEAU_M(164, "Savanna Plateau M", Color.fromRGB(247, 238, 180)),
     MESA_BRYCE(165, "Mesa (Bryce)", Color.fromRGB(255, 151, 101)),
     MESA_PLATEAU_F_M(166, "Mesa Plateau F M", Color.fromRGB(255, 234, 179)),
-    MESA_PLATEAU_M(167, "Mesa Plateau M", Color.fromRGB(255, 220, 184));
+    MESA_PLATEAU_M(167, "Mesa Plateau M", Color.fromRGB(255, 220, 184)),
+    BAMBOO_JUNGLE(168, "Bamboo Jungle", Color.fromRGB(255, 220, 184)),
+    BAMBOO_JUNGLE_HILLS(169, "Bamboo Jungle Hills", Color.fromRGB(255, 220, 184));
 
     public final int id;
     public final String name;

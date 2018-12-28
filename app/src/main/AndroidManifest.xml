@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mithrilmania.blocktopograph">
 
 
@@ -56,7 +57,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mithrilmania.blocktopograph.worldlist.WorldItemListActivity" />
         </activity>
-
+        <meta-data
+            tools:node="replace"
+            android:name="android.support.VERSION"
+            android:value="26.1.0"
+            />
 
     </application>
 
