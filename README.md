@@ -1,3 +1,6 @@
+## DO NOT FORK ME! Fork [flagmaggot/blocktopograph](https://github.com/flagmaggot/blocktopograph) instead!  
+## 【This fork is not maintained NOW】
+
 # Blocktopograph
 
 By @protolambda.
