@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId 'com.sirkut.blocktopograph'
@@ -12,73 +11,32 @@ android {
         versionName "1.7"
     }
 
-    def keystorePropertiesFile = rootProject.file("keystore.properties")
-    def hasKeystore = keystorePropertiesFile.exists()
-    def keystoreProperties
-    if(hasKeystore) {
-        keystoreProperties = new Properties()
-        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    }
-
-    signingConfigs {
-        if (hasKeystore) {
-            release {
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-                storeFile rootProject.file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-            }
-        }
-        config {
-            keyAlias 'key1'
-            keyPassword 'keypassword'
-            storeFile file('/home/alex/Documents/keystore')
-            storePassword 'keypassword'
-        }
-    }
-
-
-    productFlavors {
-        if (hasKeystore) {
-            mainFlavor {
-                signingConfig signingConfigs.release
-            }
-        }
-    }
-
     buildTypes {
-        if (hasKeystore) {
-            release {
-                minifyEnabled true
-                shrinkResources true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-       // opensource {
-            //minifyEnabled true
-            //shrinkResources true
-           // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        //}
+
         release {
-            signingConfig signingConfigs.config
-        }
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
     }
 
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar', '*.so'], dir: 'libs')
+    implementation fileTree(include: ['*.jar', '*.so','*.aar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    implementation project(':android-leveldb')
-    implementation project(':tileview')
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation 'com.android.support:recyclerview-v7:25.4.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.github.clans:fab:1.6.4'
-    implementation 'com.android.support:design:25.4.0'
+    implementation 'com.android.support:design:28.0.0'
     implementation 'com.github.bmelnychuk:atv:1.2.8'
     //core is the new recommended alias for analytics
     implementation 'com.google.firebase:firebase-core:16.0.6'
 }
 
 
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'

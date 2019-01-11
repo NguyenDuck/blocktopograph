@@ -1,3 +1,1 @@
-include ':app', ':tileview', ':android-leveldb'
-project(':tileview').projectDir = new File(rootProject.projectDir, '../TileView/tileview')
-project(':android-leveldb').projectDir = new File(rootProject.projectDir, '../android-leveldb/library')
+include ':app'
