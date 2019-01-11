@@ -4,6 +4,7 @@ import com.mithrilmania.blocktopograph.map.MarkerManager;
 import com.mithrilmania.blocktopograph.nbt.convert.LevelDataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
+import com.mithrilmania.blocktopograph.nbt.tags.IntTag;
 import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
 import com.mithrilmania.blocktopograph.util.io.TextFile;
 import com.litl.leveldb.Iterator;
@@ -17,7 +18,7 @@ public class World implements Serializable {
     private static final long serialVersionUID = 792709417041090031L;
 
     public String getWorldDisplayName() {
-        if(worldName == null) return null;
+        if (worldName == null) return null;
         //return worldname, without special color codes
         // (character prefixed by the section-sign character)
         // Short quick regex, shouldn't affect performance too much
@@ -41,7 +42,7 @@ public class World implements Serializable {
         public final String keyName;
         public final byte[] keyBytes;
 
-        SpecialDBEntryType(String keyName){
+        SpecialDBEntryType(String keyName) {
             this.keyName = keyName;
             this.keyBytes = keyName.getBytes(NBTConstants.CHARSET);
         }
@@ -65,36 +66,41 @@ public class World implements Serializable {
     public static class WorldLoadException extends Exception {
         private static final long serialVersionUID = 1812348294537392782L;
 
-        public WorldLoadException(String msg){ super(msg); }
+        public WorldLoadException(String msg) {
+            super(msg);
+        }
     }
 
 
     public World(File worldFolder) throws WorldLoadException {
 
-        if(!worldFolder.exists()) throw new WorldLoadException("Error: '"+worldFolder.getPath()+"' does not exist!");
+        if (!worldFolder.exists())
+            throw new WorldLoadException("Error: '" + worldFolder.getPath() + "' does not exist!");
 
         this.worldFolder = worldFolder;
 
         // check for a custom world name
         File levelNameTxt = new File(this.worldFolder, "levelname.txt");
-        if(levelNameTxt.exists()) worldName = TextFile.readTextFileFirstLine(levelNameTxt);// new way of naming worlds
+        if (levelNameTxt.exists())
+            worldName = TextFile.readTextFileFirstLine(levelNameTxt);// new way of naming worlds
         else worldName = this.worldFolder.getName();// legacy way of naming worlds
 
 
         this.levelFile = new File(this.worldFolder, "level.dat");
-        if(!levelFile.exists()) throw new WorldLoadException("Error: Level-file: '"+levelFile.getPath()+"' does not exist!");
+        if (!levelFile.exists())
+            throw new WorldLoadException("Error: Level-file: '" + levelFile.getPath() + "' does not exist!");
 
         try {
             this.level = LevelDataConverter.read(levelFile);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new WorldLoadException("Error: failed to read level: '"+levelFile.getPath()+"' !");
+            throw new WorldLoadException("Error: failed to read level: '" + levelFile.getPath() + "' !");
         }
 
     }
 
-    public long getWorldSeed(){
-        if(this.level == null) return 0;
+    public long getWorldSeed() {
+        if (this.level == null) return 0;
 
         LongTag seed = (LongTag) this.level.getChildTagByKey("RandomSeed");
         return seed == null ? 0 : seed.getValue();
@@ -108,7 +114,7 @@ public class World implements Serializable {
     private MarkerManager markersManager;
 
     public MarkerManager getMarkerManager() {
-        if(markersManager == null)
+        if (markersManager == null)
             markersManager = new MarkerManager(new File(this.worldFolder, "markers.txt"));
 
         return markersManager;
@@ -117,13 +123,17 @@ public class World implements Serializable {
     /**
      * @return worldFolder name, also unique save-file ID
      */
-    public String getID(){
+    public String getID() {
         return this.worldFolder.getName();
     }
 
 
-    public WorldData getWorldData(){
-        if(this.worldData == null) this.worldData = new WorldData(this);
+    public WorldData getWorldData() {
+        if (this.worldData == null) {
+            ///Meow
+            boolean isMeow = ((IntTag) level.getChildTagByKey("StorageVersion")).getValue() >= 7;
+            this.worldData = new WorldData(this, isMeow);
+        }
         return this.worldData;
     }
 
@@ -158,7 +168,7 @@ public class World implements Serializable {
     */
 
     public void closeDown() throws WorldData.WorldDBException {
-        if(this.worldData != null) this.worldData.closeDB();
+        if (this.worldData != null) this.worldData.closeDB();
     }
 
     public void pause() throws WorldData.WorldDBException {
@@ -174,7 +184,7 @@ public class World implements Serializable {
     }
 
     //function meant for debugging, not used in production
-    public void logDBKeys(){
+    public void logDBKeys() {
         try {
             this.getWorldData();
 
@@ -182,10 +192,11 @@ public class World implements Serializable {
 
             Iterator it = worldData.db.iterator();
 
-            for(it.seekToFirst(); it.isValid(); it.next()){
+            for (it.seekToFirst(); it.isValid(); it.next()) {
                 byte[] key = it.getKey();
                 byte[] value = it.getValue();
-                /*if(key.length == 9 && key[8] == RegionDataType.TERRAIN.dataID) */ Log.d("key: " + new String(key) + " key in Hex: " + WorldData.bytesToHex(key, 0, key.length) + " size: "+value.length);
+                /*if(key.length == 9 && key[8] == RegionDataType.TERRAIN.dataID) */
+                Log.d("key: " + new String(key) + " key in Hex: " + WorldData.bytesToHex(key, 0, key.length) + " size: " + value.length);
 
             }
 
