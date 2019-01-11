@@ -8,7 +8,6 @@ import com.litl.leveldb.Iterator;
 import com.litl.leveldb.DB;
 
 import java.io.File;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class WorldData {
     }
 
     ///Meow
-    private boolean isMeow;
+    private boolean mIsMeow;
 
     private World world;
 
@@ -52,8 +51,13 @@ public class WorldData {
         this.world = world;
 
         //Meow
-        this.isMeow = isMeow;
-        android.util.Log.e("233", "isMeow=" + isMeow);
+        this.mIsMeow = isMeow;
+        android.util.Log.e("233", "mIsMeow=" + isMeow);
+    }
+
+    ///Meow
+    public boolean isMeow() {
+        return mIsMeow;
     }
 
     //load db when needed (does not load it!)

@@ -1,6 +1,7 @@
 package com.mithrilmania.blocktopograph.chunk;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.chunk.terrain.MeowTeChData;
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
@@ -16,8 +17,9 @@ public class Chunk {
 
     private Version version;
 
-    private AtomicReferenceArray<TerrainChunkData>
-            terrain = new AtomicReferenceArray<>(256);
+    ///Meow
+    private AtomicReferenceArray<TerrainChunkData> terrain;
+    private MeowTeChData meowTeChData;
 
     private volatile NBTChunkData entity, blockEntity;
 
@@ -26,11 +28,14 @@ public class Chunk {
         this.x = x;
         this.z = z;
         this.dimension = dimension;
+
+        ///Meow
+        terrain = new AtomicReferenceArray<>(256);
     }
 
     public TerrainChunkData getTerrain(byte subChunk) throws Version.VersionException {
         TerrainChunkData data = terrain.get(subChunk & 0xff);
-        if(data == null){
+        if (data == null) {
             data = this.getVersion().createTerrainChunkData(this, subChunk);
             terrain.set(subChunk & 0xff, data);
         }
@@ -38,18 +43,18 @@ public class Chunk {
     }
 
     public NBTChunkData getEntity() throws Version.VersionException {
-        if(entity == null) entity = this.getVersion().createEntityChunkData(this);
+        if (entity == null) entity = this.getVersion().createEntityChunkData(this);
         return entity;
     }
 
 
     public NBTChunkData getBlockEntity() throws Version.VersionException {
-        if(blockEntity == null) blockEntity = this.getVersion().createBlockEntityChunkData(this);
+        if (blockEntity == null) blockEntity = this.getVersion().createBlockEntityChunkData(this);
         return blockEntity;
     }
 
-    public Version getVersion(){
-        if(this.version == null) try {
+    public Version getVersion() {
+        if (this.version == null) try {
             byte[] data = this.worldData.getChunkData(x, z, ChunkTag.VERSION, dimension, (byte) 0, false);
             this.version = Version.getVersion(data);
         } catch (WorldData.WorldDBLoadException | WorldData.WorldDBException e) {
@@ -65,7 +70,7 @@ public class Chunk {
     public int getHighestBlockYAt(int x, int z) throws Version.VersionException {
         Version cVersion = getVersion();
         TerrainChunkData data;
-        for(int subChunk = cVersion.subChunks - 1; subChunk >= 0; subChunk--) {
+        for (int subChunk = cVersion.subChunks - 1; subChunk >= 0; subChunk--) {
             data = this.getTerrain((byte) subChunk);
             if (data == null || !data.loadTerrain()) continue;
 
@@ -83,7 +88,7 @@ public class Chunk {
         int subChunk = y / cVersion.subChunkHeight;
         TerrainChunkData data;
 
-        for(; subChunk >= 0; subChunk--) {
+        for (; subChunk >= 0; subChunk--) {
             data = this.getTerrain((byte) subChunk);
             if (data == null || !data.loadTerrain()) continue;
 
@@ -104,7 +109,7 @@ public class Chunk {
         int subChunk = y / cVersion.subChunkHeight;
         TerrainChunkData data;
 
-        for(; subChunk >= 0; subChunk--) {
+        for (; subChunk >= 0; subChunk--) {
             data = this.getTerrain((byte) subChunk);
             if (data == null || !data.loadTerrain()) continue;
             for (y = offset; y >= 0; y--) {
