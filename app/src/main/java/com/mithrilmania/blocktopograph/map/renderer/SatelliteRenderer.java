@@ -1,6 +1,7 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 import android.graphics.Bitmap;
+
 import com.mithrilmania.blocktopograph.Log;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
@@ -15,21 +16,21 @@ public class SatelliteRenderer implements MapRenderer {
 
     /**
      * Render a single chunk to provided bitmap (bm)
-     * @param cm ChunkManager, provides chunks, which provide chunk-data
-     * @param bm Bitmap to render to
-     * @param dimension Mapped dimension
-     * @param chunkX X chunk coordinate (x-block coord / Chunk.WIDTH)
-     * @param chunkZ Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param bX begin block X coordinate, relative to chunk edge
-     * @param bZ begin block Z coordinate, relative to chunk edge
-     * @param eX end block X coordinate, relative to chunk edge
-     * @param eZ end block Z coordinate, relative to chunk edge
-     * @param pX texture X pixel coord to start rendering to
-     * @param pY texture Y pixel coord to start rendering to
-     * @param pW width (X) of one block in pixels
-     * @param pL length (Z) of one block in pixels
-     * @return bm is returned back
      *
+     * @param cm        ChunkManager, provides chunks, which provide chunk-data
+     * @param bm        Bitmap to render to
+     * @param dimension Mapped dimension
+     * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
+     * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
+     * @param bX        begin block X coordinate, relative to chunk edge
+     * @param bZ        begin block Z coordinate, relative to chunk edge
+     * @param eX        end block X coordinate, relative to chunk edge
+     * @param eZ        end block Z coordinate, relative to chunk edge
+     * @param pX        texture X pixel coord to start rendering to
+     * @param pY        texture Y pixel coord to start rendering to
+     * @param pW        width (X) of one block in pixels
+     * @param pL        length (Z) of one block in pixels
+     * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
     public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int bX, int bZ, int eX, int eZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
@@ -37,35 +38,38 @@ public class SatelliteRenderer implements MapRenderer {
         Chunk chunk = cm.getChunk(chunkX, chunkZ);
         Version cVersion = chunk.getVersion();
 
-        if(cVersion == Version.ERROR) return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
-        if(cVersion == Version.NULL) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (cVersion == Version.ERROR)
+            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (cVersion == Version.NULL)
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
 
         //the bottom sub-chunk is sufficient to get heightmap data.
         TerrainChunkData data = chunk.getTerrain((byte) 0);
-        if(data == null || !data.load2DData()) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (data == null || !data.load2DData())
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
 
 
         TerrainChunkData dataW = cm.getChunk(chunkX - 1, chunkZ).getTerrain((byte) 0);
-        TerrainChunkData dataN = cm.getChunk(chunkX, chunkZ-1).getTerrain((byte) 0);
+        TerrainChunkData dataN = cm.getChunk(chunkX, chunkZ - 1).getTerrain((byte) 0);
 
         boolean west = dataW != null && dataW.load2DData(),
                 north = dataN != null && dataN.load2DData();
 
         int x, y, z, color, i, j, tX, tY;
-        for (z = bZ, tY = pY ; z < eZ; z++, tY += pL) {
+        for (z = bZ, tY = pY; z < eZ; z++, tY += pL) {
             for (x = bX, tX = pX; x < eX; x++, tX += pW) {
 
                 y = data.getHeightMapValue(x, z);
 
                 color = getColumnColour(chunk, data, x, y, z,
                         (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge
-                                 : data.getHeightMapValue(x - 1, z),//within chunk
+                                : data.getHeightMapValue(x - 1, z),//within chunk
                         (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
-                                 : data.getHeightMapValue(x, z - 1)//within chunk
+                                : data.getHeightMapValue(x, z - 1)//within chunk
                 );
 
-                for(i = 0; i < pL; i++){
-                    for(j = 0; j < pW; j++){
+                for (i = 0; i < pL; i++) {
+                    for (j = 0; j < pW; j++) {
                         bm.setPixel(tX + j, tY + i, color);
                     }
                 }
@@ -104,16 +108,18 @@ public class SatelliteRenderer implements MapRenderer {
 
         TerrainChunkData data;
 
-        subChunkLoop: for(; subChunk >= 0; subChunk--) {
+        subChunkLoop:
+        for (; subChunk >= 0; subChunk--) {
 
             data = chunk.getTerrain((byte) subChunk);
-            if (data == null || !data.loadTerrain()){
+            if (data == null || !data.loadTerrain()) {
                 //start at the top of the next chunk! (current offset might differ)
                 offset = cVersion.subChunkHeight - 1;
                 continue;
             }
 
-            for (y = offset; y >= 0; y--) {
+            ///Meow
+            for (y = 255; y >= 0; y--) {
 
                 id = data.getBlockTypeId(x, y, z) & 0xff;
 
@@ -158,7 +164,7 @@ public class SatelliteRenderer implements MapRenderer {
                 a *= 1f - blockA;
 
                 // break when an opaque block is encountered
-                if (block.color.alpha == 0xff){
+                if (block.color.alpha == 0xff) {
                     break subChunkLoop;
                 }
             }

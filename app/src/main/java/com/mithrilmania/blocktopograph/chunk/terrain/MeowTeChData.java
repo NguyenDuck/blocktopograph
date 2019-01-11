@@ -4,26 +4,42 @@ import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 public class MeowTeChData extends TerrainChunkData {
 
+    private com.litl.leveldb.Chunk nativeChunk;
+
     public MeowTeChData(Chunk chunk) {
-        super(chunk, (byte) 0);
+        super(chunk, (byte) 1);
     }
 
     @Override
     public boolean loadTerrain() {
+        if (nativeChunk == null)
+            nativeChunk = new com.litl.leveldb.Chunk(this.chunk.worldData.db, this.chunk.x << 4, this.chunk.z << 4, this.chunk.dimension.id);
         return true;
     }
 
     @Override
     public boolean load2DData() {
-        return true;
+        return loadTerrain();
     }
 
     @Override
     public byte getBlockTypeId(int x, int y, int z) {
-        return 9;
+        int val = nativeChunk.getBlock(x, y, z);
+        byte b = (byte) (val >> 8);
+        return b;
+    }
+
+    public int getHighestBlockYUnderAt(int x, int y, int z) {
+        for (int yy = y; yy >= 0; yy--) {
+            int val = nativeChunk.getBlock(x, y, z);
+            if (val != 0)
+                return yy;
+        }
+        return 0;
     }
 
     @Override
@@ -78,7 +94,7 @@ public class MeowTeChData extends TerrainChunkData {
 
     @Override
     public int getHeightMapValue(int x, int z) {
-        return 1;
+        return getHighestBlockYUnderAt(x, 255, z);
     }
 
     @Override

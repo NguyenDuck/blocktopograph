@@ -30,10 +30,15 @@ public class Chunk {
         this.dimension = dimension;
 
         ///Meow
-        terrain = new AtomicReferenceArray<>(256);
+        if (worldData.isMeow())
+            meowTeChData = new MeowTeChData(this);
+        else
+            terrain = new AtomicReferenceArray<>(256);
     }
 
     public TerrainChunkData getTerrain(byte subChunk) throws Version.VersionException {
+        ///Meow
+        if (worldData.isMeow()) return meowTeChData;
         TerrainChunkData data = terrain.get(subChunk & 0xff);
         if (data == null) {
             data = this.getVersion().createTerrainChunkData(this, subChunk);
@@ -54,6 +59,9 @@ public class Chunk {
     }
 
     public Version getVersion() {
+        ///Meow
+        if (worldData.isMeow()) return Version.V1_1;
+
         if (this.version == null) try {
             byte[] data = this.worldData.getChunkData(x, z, ChunkTag.VERSION, dimension, (byte) 0, false);
             this.version = Version.getVersion(data);
@@ -68,6 +76,9 @@ public class Chunk {
 
     //TODO: should we use the heightmap???
     public int getHighestBlockYAt(int x, int z) throws Version.VersionException {
+        ///Meow
+        if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, 255, z);
+
         Version cVersion = getVersion();
         TerrainChunkData data;
         for (int subChunk = cVersion.subChunks - 1; subChunk >= 0; subChunk--) {
@@ -83,6 +94,9 @@ public class Chunk {
     }
 
     public int getHighestBlockYUnderAt(int x, int z, int y) throws Version.VersionException {
+        ///Meow
+        if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, y, z);
+
         Version cVersion = getVersion();
         int offset = y % cVersion.subChunkHeight;
         int subChunk = y / cVersion.subChunkHeight;
@@ -104,6 +118,9 @@ public class Chunk {
     }
 
     public int getCaveYUnderAt(int x, int z, int y) throws Version.VersionException {
+        ///Meow
+        if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, y, z);
+
         Version cVersion = getVersion();
         int offset = y % cVersion.subChunkHeight;
         int subChunk = y / cVersion.subChunkHeight;
