@@ -1,10 +1,13 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
+import android.support.v4.graphics.ColorUtils;
+import android.util.Log;
+
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.util.Color;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 public class MeowTeChData extends TerrainChunkData {
 
@@ -17,7 +20,9 @@ public class MeowTeChData extends TerrainChunkData {
     @Override
     public boolean loadTerrain() {
         if (nativeChunk == null)
-            nativeChunk = new com.litl.leveldb.Chunk(this.chunk.worldData.db, this.chunk.x << 4, this.chunk.z << 4, this.chunk.dimension.id);
+            nativeChunk = new com.litl.leveldb.Chunk(
+                    this.chunk.worldData.db, this.chunk.x << 4,
+                    this.chunk.z << 4, this.chunk.dimension.id);
         return true;
     }
 
@@ -77,19 +82,27 @@ public class MeowTeChData extends TerrainChunkData {
         return 1;
     }
 
+    private Color getColor(int x, int z) {
+        double amp = Math.sin(x * z * z) + 1.2 * Math.cos(z) + 0.2 * Math.sin(x / 2.0) + 0.1 * Math.sin(z / 4.0);
+        float[] arr = new float[]{96, (float) (0.54 + amp * 2.0 / 25.0), (float) (0.48 + (0.54 + amp * 2.0 / 30.0))};
+        return Color.fromRGB(ColorUtils.HSLToColor(arr));//Wrong
+    }
+
     @Override
     public byte getGrassR(int x, int z) {
-        return -128;
+        //Color c = getColor(x, z);
+        //Log.e("123", c.toString());
+        return 0x56;//(byte) c.red;
     }
 
     @Override
     public byte getGrassG(int x, int z) {
-        return 0;
+        return (byte) 0xf9;//(byte) getColor(x, z).green;
     }
 
     @Override
     public byte getGrassB(int x, int z) {
-        return 0;
+        return 0x1a;//(byte) getColor(x, z).blue;
     }
 
     @Override
