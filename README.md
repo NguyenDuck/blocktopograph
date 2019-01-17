@@ -1,6 +1,7 @@
 # Blocktopograph
 
-By @protolambda.  
+By [@protolambda](https://github.com/protolambda), [@MithrilMania](https://github.com/MithrilMania) and
+[flagmaggot](https://github.com/flagmaggot).  
 This fork is the only one supporting MCPE 1.2~1.9 for now.
 
 ## Download
