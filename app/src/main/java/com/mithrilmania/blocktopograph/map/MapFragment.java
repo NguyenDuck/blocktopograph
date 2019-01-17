@@ -892,7 +892,7 @@ public class MapFragment extends Fragment {
         this.tileView.setTransitionsEnabled(false);
 
         //more responsive rendering
-        this.tileView.setShouldRenderWhilePanning(true);
+        this.tileView.setShouldRenderWhilePanning(false);
 
         this.tileView.setSaveEnabled(true);
 

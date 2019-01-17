@@ -30,6 +30,7 @@ dependencies {
     implementation fileTree(include: ['*.jar', '*.so', '*.aar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     implementation project(':leveldb')
+    implementation project(':tileview')
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.github.clans:fab:1.6.4'
