@@ -1,60 +1,17 @@
-## DO NOT FORK ME! Fork [flagmaggot/blocktopograph](https://github.com/flagmaggot/blocktopograph) instead!  
-## 【This fork is not maintained NOW】
-
 # Blocktopograph
 
-By @protolambda.
+By @protolambda.  
+This fork is the only one supporting MCPE 1.2~1.9 for now.
 
-**NOTE**: This is a *very* old legacy project! Code quality is awful, but I'm not going to rewrite the whole app for "fun".
- Feel free to fork it and improve it yourself,
-  it is licensed under AGPL v3; reverse engineering the MCPE format is time consuming, share your updates.
+## Download
+Google play download not available now.   
+Download apk from [the release page](https://github.com/oO0oO0oO0o0o00/blocktopograph/releases). 
+<img src="arts/scr01.jpg" alt="screenshot" width="600"/>  
 
-## [Download on Google-Play](https://play.google.com/store/apps/details?id=com.mithrilmania.blocktopograph)
+## Build
 
-### Showcase website
-
-Screenshots, download links, roadmap etc. can all be found on [blocktopograph.mithrilmania.com](http://blocktopograph.mithrilmania.com).
-
-
-## Get-started
-
-Steps to get started quickly:
-
-### Get-started: pre-installation
-
-This project requires you to download some android SDKs, tools, libraries and drivers.
-
-- SDKs + Tools: please check the sdk version before cloning a repo, then install sdk+tools for this version with SDK-manager.
-- Libraries: You need to install the google-services and google-repository libraries with SDK-manager.
-- Drivers: download the appropriate drivers for your phone to use `adb`.
-    The SDK-manager provides windows drivers for the Nexus phones.
-- Some libraries are downloaded by gradle itself. You do not have to worry about these.
-- Sub-modules are managed with git. (See installation)
-
-
-### Get-started: installation
-
-NOTE: You may want to fork one of the dependencies (or this project) if you want to contribute.
-
-1. `mkdir block-project` or something like that. This will be the main-container
-1. `cd` into the new folder
-1. `git clone` (your fork of) this repository
-1. `git clone` (your fork of) [android-leveldb](https://github.com/mithrilmania/android-leveldb)
-1. `cd android-leveldb` and `git submodule update` to get the
-    [leveldb-mcpe](https://github.com/mithrilmania/leveldb-mcpe) git-submodule, it is required for building this project.
-1. `cd ..` (back to the main container)
-1. `git clone` (your fork of) [TileView](https://github.com/mithrilmania/TileView)
-1. Add `local.properties` files to these projects,
-    with `sdk.dir` for your sdk home,
-    and with `ndk.dir` specified for `android-leveldb`.
-1. Open the cloned blocktopograph repo with your IDE (android-studio and intellij-idea are tested).
-    The blocktopograph repo should be the `root-module`;
-     `app`, `library`(android-leveldb) and `tileview`(TileView) will be recognized as sub-modules.
-1. Build the project with gradle
-1. Make the project, to get android-leveldb native libs.
-1. Switch build-variants of the projects you want to debug and rebuild with gradle (or leave them as is)
-1. Good to go! Try running a debug build (`app` submodule)! Start with small-changes to see if you encounter any problems.
-
+Clone project in Android Studio: `File->New->Project from Version Control->Git`  
+Install missing SDK components. Android Studio would give you the auto-fix options.  
 
 ### Release-Workflow
 
