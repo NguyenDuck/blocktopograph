@@ -5,12 +5,12 @@ This fork is the only one supporting MCPE 1.2~1.9 for now.
 
 ## Download
 Google play download not available now.   
-Download apk from [the release page](https://github.com/oO0oO0oO0o0o00/blocktopograph/releases). 
-<img src="arts/scr01.jpg" alt="screenshot" width="600"/>  
+Download apk from [the release page](https://github.com/oO0oO0oO0o0o00/blocktopograph/releases).  
+<img src="arts/scr01.jpg" alt="screenshot" width="320"/>
 
 ## Build
 
-Clone project in Android Studio: `File->New->Project from Version Control->Git`  
+Clone project in Android Studio: `File -> New -> Project from Version Control -> Git`  
 Install missing SDK components. Android Studio would give you the auto-fix options.  
 
 ### Release-Workflow
