@@ -7,22 +7,15 @@
 
 #include <leveldb/db.h>
 #include <vector>
-#include <subchunk.h>
 #include <decompress_allocator.h>
 #include "mapkey.h"
 #include "debug_conf.h"
 #include "qstr.h"
 
+class SubChunk;
+
 class Chunk {
 private:
-
-    //Constants.
-
-    static const int32_t msk[];
-
-    static const char pattern_name[];
-
-    static const char pattern_val[];
 
     //Member vars.
 
@@ -33,6 +26,8 @@ private:
     void loadSubChunk(leveldb::DB *db, unsigned char which);
 
 public:
+
+    static leveldb::ReadOptions readOptions;
 
     Chunk(leveldb::DB *db, mapkey_t key);
 

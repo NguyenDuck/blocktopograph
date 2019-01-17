@@ -23,6 +23,10 @@ public class MeowTeChData extends TerrainChunkData {
             nativeChunk = new com.litl.leveldb.Chunk(
                     this.chunk.worldData.db, this.chunk.x << 4,
                     this.chunk.z << 4, this.chunk.dimension.id);
+        if (nativeChunk.isDead()) {
+            nativeChunk = null;
+            return false;
+        }
         return true;
     }
 
@@ -44,7 +48,7 @@ public class MeowTeChData extends TerrainChunkData {
             if (val != 0)
                 return yy;
         }
-        return 0;
+        return -1;
     }
 
     @Override

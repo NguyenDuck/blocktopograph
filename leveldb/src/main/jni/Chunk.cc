@@ -10,6 +10,7 @@
 #include <leveldbjni.h>
 #include <stdlib.h>
 #include <mapkey.h>
+#include "subchunk.h"
 
 #ifdef LOG_CHUNK_LOADSAVE
 #define LOGE_LS(x, ...) LOGE(CAT("Chunk: ", x), ##__VA_ARGS__);
@@ -25,16 +26,7 @@
 
 //Init constants.
 
-const int32_t Chunk::msk[] = {0b1, 0b11, 0b111, 0b1111, 0b11111, 0b111111, 0b1111111,
-                              0b11111111,
-                              0b111111111, 0b1111111111, 0b11111111111,
-                              0b111111111111,
-                              0b1111111111111, 0b11111111111111, 0b11111111111111};
-
-const char Chunk::pattern_name[] = {0x0a, 0x00, 0x00, 0x08, 0x04, 0x00, 'n', 'a', 'm',
-                                    'e'};
-
-const char Chunk::pattern_val[] = {0x02, 0x03, 0x00, 'v', 'a', 'l'};
+leveldb::ReadOptions Chunk::readOptions;
 
 Chunk::Chunk(leveldb::DB *db, mapkey_t key)
     : key(key) {
@@ -49,8 +41,6 @@ void Chunk::loadSubChunk(leveldb::DB *db, unsigned char which) {
     LDBKEY_SUBCHUNK(this->key, which)
     leveldb::Slice slice(key, 0 == this->key.dimension ? 10 : 14);
     std::string val;
-    leveldb::ReadOptions readOptions;
-    readOptions.decompress_allocator = new leveldb::DecompressAllocator;
     bool hit = db->Get(readOptions, slice, &val).ok();
     if (hit) {//Found, detect version.
         switch (val[0]) {

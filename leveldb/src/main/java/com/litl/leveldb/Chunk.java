@@ -10,6 +10,10 @@ public class Chunk extends NativeObject {
         mPtr = nativeOpen(db.getPtr(), x, z, dim);
     }
 
+    public boolean isDead() {
+        return mPtr == 0;
+    }
+
     public int getBlock(int x, int y, int z) {
         return nativeGetBlock(mPtr, x, y, z);
     }

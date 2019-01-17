@@ -11,7 +11,15 @@
 
 static jlong nativeOpen(JNIEnv *env, jclass clazz, jlong dbptr, jint x, jint z, jint dim) {
     leveldb::DB *db = reinterpret_cast<leveldb::DB *>(dbptr);
-    Chunk *chunk = new Chunk(db, LDBKEY_STRUCT(x, z, dim));
+    mapkey_t mapkey = LDBKEY_STRUCT(x, z, dim);
+    LDBKEY_VERSION(mapkey)
+    leveldb::Slice skey(key_db, mapkey.dimension == 0 ? 9 : 13);
+    std::string str;
+    leveldb::Status status = db->Get(Chunk::readOptions, skey, &str);
+    if (status.ok()) {
+        if (str[0] < 7)return NULL;
+    } else return NULL;
+    Chunk *chunk = new Chunk(db, mapkey);
     return reinterpret_cast<jlong>(chunk);
 }
 
