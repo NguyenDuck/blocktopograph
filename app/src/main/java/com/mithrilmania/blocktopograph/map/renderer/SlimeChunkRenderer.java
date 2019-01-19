@@ -1,6 +1,9 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -33,6 +36,8 @@ public class SlimeChunkRenderer implements MapRenderer {
 
         boolean isSlimeChunk = isSlimeChunk(chunkX, chunkZ);
         int color, r, g, b, avg;
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint();
 
         //make slimeChunks much more green
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
@@ -50,11 +55,8 @@ public class SlimeChunkRenderer implements MapRenderer {
                 }
                 color = (color & 0xFF000000) | (r << 16) | (g << 8) | b;
 
-                for (i = 0; i < pL; i++) {
-                    for (j = 0; j < pW; j++) {
-                        bm.setPixel(tX + j, tY + i, color);
-                    }
-                }
+                paint.setColor(color);
+                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
 
             }
         }

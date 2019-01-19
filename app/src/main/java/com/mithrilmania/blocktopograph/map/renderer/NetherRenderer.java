@@ -2,6 +2,9 @@ package com.mithrilmania.blocktopograph.map.renderer;
 
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.Log;
 
@@ -65,6 +68,8 @@ public class NetherRenderer implements MapRenderer {
         int stop;
         int subChunk;
         int stopSubChunk;
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint();
 
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
@@ -234,11 +239,8 @@ public class NetherRenderer implements MapRenderer {
 
                 color = (r << 16) | (g << 8) | b | 0xff000000;
 
-                for (i = 0; i < pL; i++) {
-                    for (j = 0; j < pW; j++) {
-                        bm.setPixel(tX + j, tY + i, color);
-                    }
-                }
+                paint.setColor(color);
+                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
             }
         }
 

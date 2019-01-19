@@ -1,6 +1,9 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
@@ -46,6 +49,9 @@ public class BiomeRenderer implements MapRenderer {
         int x, z, biomeID, color, i, j, tX, tY;
         Biome biome;
 
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint();
+
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
 
@@ -55,11 +61,13 @@ public class BiomeRenderer implements MapRenderer {
 
                 color = biome == null ? 0xff000000 : (biome.color.red << 16) | (biome.color.green << 8) | (biome.color.blue) | 0xff000000;
 
-                for (i = 0; i < pL; i++) {
-                    for (j = 0; j < pW; j++) {
-                        bm.setPixel(tX + j, tY + i, color);
-                    }
-                }
+//                for (i = 0; i < pL; i++) {
+//                    for (j = 0; j < pW; j++) {
+//                        bm.setPixel(tX + j, tY + i, color);
+//                    }
+//                }
+                paint.setColor(color);
+                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
 
 
             }

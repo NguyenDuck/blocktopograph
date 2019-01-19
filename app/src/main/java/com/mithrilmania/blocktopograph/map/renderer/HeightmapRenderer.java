@@ -1,6 +1,9 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
@@ -49,6 +52,8 @@ public class HeightmapRenderer implements MapRenderer {
                 north = dataN != null && dataN.load2DData();
 
         int x, y, z, color, i, j, tX, tY;
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint();
         int yW, yN;
         int r, g, b;
         float yNorm, yNorm2, heightShading;
@@ -83,11 +88,8 @@ public class HeightmapRenderer implements MapRenderer {
 
                 color = (r << 16) | (g << 8) | b | 0xff000000;
 
-                for (i = 0; i < pL; i++) {
-                    for (j = 0; j < pW; j++) {
-                        bm.setPixel(tX + j, tY + i, color);
-                    }
-                }
+                paint.setColor(color);
+                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
 
 
             }

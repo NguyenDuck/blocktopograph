@@ -1,6 +1,9 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
@@ -38,10 +41,12 @@ public class BlockLightRenderer implements MapRenderer {
 
 
         int x, y, z, subChunk, color, i, j, tX, tY;
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint();
 
         //render width in blocks
-        int rW = 16 - 0;
-        int[] light = new int[rW * (16 - 0)];
+        int rW = 16;
+        int[] light = new int[rW * 16];
 
         for (subChunk = 0; subChunk < cVersion.subChunks; subChunk++) {
             TerrainChunkData data = chunk.getTerrain((byte) subChunk);
@@ -50,7 +55,7 @@ public class BlockLightRenderer implements MapRenderer {
             for (z = 0; z < 16; z++) {
                 for (x = 0; x < 16; x++) {
                     for (y = 0; y < cVersion.subChunkHeight; y++) {
-                        light[((z - 0) * rW) + (x - 0)] += data.getBlockLightValue(x, y, z) & 0xff;
+                        light[(z * rW) + x] += data.getBlockLightValue(x, y, z) & 0xff;
                     }
                 }
             }
@@ -60,16 +65,14 @@ public class BlockLightRenderer implements MapRenderer {
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
 
-                l = light[((z - 0) * rW) + (x - 0)];
+                l = light[(z * rW) + x];
                 l = l < 0 ? 0 : ((l > 0xff) ? 0xff : l);
 
                 color = (l << 16) | (l << 8) | (l) | 0xff000000;
 
-                for (i = 0; i < pL; i++) {
-                    for (j = 0; j < pW; j++) {
-                        bm.setPixel(tX + j, tY + i, color);
-                    }
-                }
+
+                paint.setColor(color);
+                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
 
             }
 
