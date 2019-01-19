@@ -35,32 +35,33 @@ public class V0_9_TerrainChunkData extends TerrainChunkData {
 
     @Override
     public void write() throws IOException, WorldData.WorldDBException {
-        this.chunk.worldData.writeChunkData(chunk.x, chunk.z, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.dimension, subChunk, false, toByteArray());
+        Chunk chunk = this.chunk.get();
+        chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.dimension, subChunk, false, toByteArray());
     }
 
     @Override
-    public boolean loadTerrain(){
+    public boolean loadTerrain() {
         return tryLoad();
     }
 
     @Override
-    public boolean load2DData(){
+    public boolean load2DData() {
         return tryLoad();
     }
 
     public boolean tryLoad() {
-        if(buf == null){
+        if (buf == null) {
             try {
-                byte[] rawData = this.chunk.worldData.getChunkData(chunk.x, chunk.z, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.dimension, subChunk, false);
-                if(rawData == null) return false;
+                Chunk chunk = this.chunk.get();
+                byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.dimension, subChunk, false);
+                if (rawData == null) return false;
                 this.buf = ByteBuffer.wrap(rawData);
                 return true;
-            } catch (Exception e){
+            } catch (Exception e) {
                 //data is not present
                 return false;
             }
-        }
-        else return true;
+        } else return true;
     }
 
     public byte[] toByteArray() throws IOException {
@@ -77,36 +78,36 @@ public class V0_9_TerrainChunkData extends TerrainChunkData {
         byte sandstone = (byte) 24;
 
         //generate super basic terrain (one layer of bedrock, 31 layers of sandstone)
-        for(x = 0; x < chunkW; x++){
-            for(z = 0; z < chunkL; z++){
-                for(y = 0; y < chunkH; y++, i++){
+        for (x = 0; x < chunkW; x++) {
+            for (z = 0; z < chunkL; z++) {
+                for (y = 0; y < chunkH; y++, i++) {
                     chunk[i] = (y == 0 ? bedrock : (y < 32 ? sandstone : 0));
                 }
             }
         }
 
         //fill meta-data with 0
-        for(; i < POS_SKY_LIGHT; i++){
+        for (; i < POS_SKY_LIGHT; i++) {
             chunk[i] = 0;
         }
 
         //fill blocklight with 0xff
-        for(; i < POS_BLOCK_LIGHT; i++){
+        for (; i < POS_BLOCK_LIGHT; i++) {
             chunk[i] = (byte) 0xff;
         }
 
         //fill block-light with 0xff
-        for(; i < POS_HEIGHTMAP; i++){
+        for (; i < POS_HEIGHTMAP; i++) {
             chunk[i] = (byte) 0xff;
         }
 
         //fill heightmap
-        for(; i < POS_BIOME_DATA; i++){
+        for (; i < POS_BIOME_DATA; i++) {
             chunk[i] = 32;
         }
 
         //fill biome data
-        for(; i < LENGTH;){
+        for (; i < LENGTH; ) {
             chunk[i++] = 1;//biome: plains
             chunk[i++] = (byte) 42;//r
             chunk[i++] = (byte) 42;//g

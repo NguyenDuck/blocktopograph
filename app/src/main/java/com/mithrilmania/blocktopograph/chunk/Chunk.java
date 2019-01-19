@@ -1,44 +1,37 @@
 package com.mithrilmania.blocktopograph.chunk;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.chunk.terrain.MeowTeChData;
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 
 public class Chunk {
 
-    public final WorldData worldData;
+    public final WeakReference<WorldData> worldData;
 
     public final int x, z;
     public final Dimension dimension;
 
     private Version version;
 
-    ///Meow
     private AtomicReferenceArray<TerrainChunkData> terrain;
-    private MeowTeChData meowTeChData;
 
     private volatile NBTChunkData entity, blockEntity;
 
     public Chunk(WorldData worldData, int x, int z, Dimension dimension) {
-        this.worldData = worldData;
+        this.worldData = new WeakReference<>(worldData);
         this.x = x;
         this.z = z;
         this.dimension = dimension;
-
-        ///Meow
-        if (worldData.isMeow())
-            meowTeChData = new MeowTeChData(this);
-        else
-            terrain = new AtomicReferenceArray<>(256);
+        terrain = new AtomicReferenceArray<>(16);
+        Log.e("new Chunk " + x + "," + z);
     }
 
     public TerrainChunkData getTerrain(byte subChunk) throws Version.VersionException {
-        ///Meow
-        if (worldData.isMeow()) return meowTeChData;
         TerrainChunkData data = terrain.get(subChunk & 0xff);
         if (data == null) {
             data = this.getVersion().createTerrainChunkData(this, subChunk);
@@ -60,10 +53,12 @@ public class Chunk {
 
     public Version getVersion() {
         ///Meow
-        if (worldData.isMeow()) return Version.V1_1;
+        ///if (worldData.isMeow()) return Version.V1_1;
 
         if (this.version == null) try {
-            byte[] data = this.worldData.getChunkData(x, z, ChunkTag.VERSION, dimension, (byte) 0, false);
+            WorldData worldData = this.worldData.get();
+            if (worldData == null) return Version.ERROR;
+            byte[] data = worldData.getChunkData(x, z, ChunkTag.VERSION, dimension, (byte) 0, false);
             this.version = Version.getVersion(data);
         } catch (WorldData.WorldDBLoadException | WorldData.WorldDBException e) {
             e.printStackTrace();
@@ -77,7 +72,7 @@ public class Chunk {
     //TODO: should we use the heightmap???
     public int getHighestBlockYAt(int x, int z) throws Version.VersionException {
         ///Meow
-        if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, 255, z);
+        ///if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, 255, z);
 
         Version cVersion = getVersion();
         TerrainChunkData data;
@@ -95,7 +90,7 @@ public class Chunk {
 
     public int getHighestBlockYUnderAt(int x, int z, int y) throws Version.VersionException {
         ///Meow
-        if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, y, z);
+        ///if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, y, z);
 
         Version cVersion = getVersion();
         int offset = y % cVersion.subChunkHeight;
@@ -119,7 +114,7 @@ public class Chunk {
 
     public int getCaveYUnderAt(int x, int z, int y) throws Version.VersionException {
         ///Meow
-        if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, y, z);
+        ///if (worldData.isMeow()) return meowTeChData.getHighestBlockYUnderAt(x, y, z);
 
         Version cVersion = getVersion();
         int offset = y % cVersion.subChunkHeight;

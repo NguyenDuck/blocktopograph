@@ -8,6 +8,7 @@ import com.litl.leveldb.Iterator;
 import com.litl.leveldb.DB;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,48 +17,53 @@ import java.util.List;
  */
 public class WorldData {
 
-    public static class WorldDataLoadException extends Exception {
-        private static final long serialVersionUID = 659185044124115547L;
-
-        public WorldDataLoadException(String msg) {
-            super(msg);
-        }
-    }
-
-    public static class WorldDBException extends Exception {
-        private static final long serialVersionUID = -3299282170140961220L;
-
-        public WorldDBException(String msg) {
-            super(msg);
-        }
-    }
-
-    public static class WorldDBLoadException extends Exception {
-        private static final long serialVersionUID = 4412238820886423076L;
-
-        public WorldDBLoadException(String msg) {
-            super(msg);
-        }
-    }
-
-    ///Meow
-    private boolean mIsMeow;
-
-    private World world;
+    //another method for debugging, makes it easy to print a readable byte array
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     public DB db;
 
-    public WorldData(World world, boolean isMeow) {
-        this.world = world;
+    private WeakReference<World> world;
 
-        //Meow
-        this.mIsMeow = isMeow;
-        android.util.Log.e("233", "mIsMeow=" + isMeow);
+    public WorldData(World world) {
+        this.world = new WeakReference<>(world);
     }
 
-    ///Meow
-    public boolean isMeow() {
-        return mIsMeow;
+    static String bytesToHex(byte[] bytes, int start, int end) {
+        char[] hexChars = new char[(end - start) * 2];
+        for (int j = start; j < end; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[(j - start) * 2] = hexArray[v >>> 4];
+            hexChars[(j - start) * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    private static byte[] getChunkDataKey(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk) {
+        if (dimension == Dimension.OVERWORLD) {
+            byte[] key = new byte[asSubChunk ? 10 : 9];
+            System.arraycopy(getReversedBytes(x), 0, key, 0, 4);
+            System.arraycopy(getReversedBytes(z), 0, key, 4, 4);
+            key[8] = type.dataID;
+            if (asSubChunk) key[9] = subChunk;
+            return key;
+        } else {
+            byte[] key = new byte[asSubChunk ? 14 : 13];
+            System.arraycopy(getReversedBytes(x), 0, key, 0, 4);
+            System.arraycopy(getReversedBytes(z), 0, key, 4, 4);
+            System.arraycopy(getReversedBytes(dimension.id), 0, key, 8, 4);
+            key[12] = type.dataID;
+            if (asSubChunk) key[13] = subChunk;
+            return key;
+        }
+    }
+
+    private static byte[] getReversedBytes(int i) {
+        return new byte[]{
+                (byte) i,
+                (byte) (i >> 8),
+                (byte) (i >> 16),
+                (byte) (i >> 24)
+        };
     }
 
     //load db when needed (does not load it!)
@@ -66,7 +72,9 @@ public class WorldData {
 
         if (db != null) return;
 
-        File dbFile = new File(this.world.worldFolder, "db");
+        World world = this.world.get();
+
+        File dbFile = new File(world.worldFolder, "db");
         if (!dbFile.canRead()) {
             if (!dbFile.setReadable(true, false))
                 throw new WorldDataLoadException("World-db folder is not readable! World-db folder: " + dbFile.getAbsolutePath());
@@ -76,7 +84,7 @@ public class WorldData {
                 throw new WorldDataLoadException("World-db folder is not writable! World-db folder: " + dbFile.getAbsolutePath());
         }
 
-        Log.d("WorldFolder: " + this.world.worldFolder.getAbsolutePath());
+        Log.d("WorldFolder: " + world.worldFolder.getAbsolutePath());
         Log.d("WorldFolder permissions: read: " + dbFile.canRead() + " write: " + dbFile.canWrite());
 
         if (dbFile.listFiles() == null)
@@ -104,19 +112,6 @@ public class WorldData {
             }
         }
 
-    }
-
-    //another method for debugging, makes it easy to print a readable byte array
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
-    public static String bytesToHex(byte[] bytes, int start, int end) {
-        char[] hexChars = new char[(end - start) * 2];
-        for (int j = start; j < end; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[(j - start) * 2] = hexArray[v >>> 4];
-            hexChars[(j - start) * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
     }
 
     //close db to make it available for other apps (Minecraft itself!)
@@ -188,32 +183,28 @@ public class WorldData {
         return items;
     }
 
-    public static byte[] getChunkDataKey(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk) {
-        if (dimension == Dimension.OVERWORLD) {
-            byte[] key = new byte[asSubChunk ? 10 : 9];
-            System.arraycopy(getReversedBytes(x), 0, key, 0, 4);
-            System.arraycopy(getReversedBytes(z), 0, key, 4, 4);
-            key[8] = type.dataID;
-            if (asSubChunk) key[9] = subChunk;
-            return key;
-        } else {
-            byte[] key = new byte[asSubChunk ? 14 : 13];
-            System.arraycopy(getReversedBytes(x), 0, key, 0, 4);
-            System.arraycopy(getReversedBytes(z), 0, key, 4, 4);
-            System.arraycopy(getReversedBytes(dimension.id), 0, key, 8, 4);
-            key[12] = type.dataID;
-            if (asSubChunk) key[13] = subChunk;
-            return key;
+    public static class WorldDataLoadException extends Exception {
+        private static final long serialVersionUID = 659185044124115547L;
+
+        public WorldDataLoadException(String msg) {
+            super(msg);
         }
     }
 
-    public static byte[] getReversedBytes(int i) {
-        return new byte[]{
-                (byte) i,
-                (byte) (i >> 8),
-                (byte) (i >> 16),
-                (byte) (i >> 24)
-        };
+    public static class WorldDBException extends Exception {
+        private static final long serialVersionUID = -3299282170140961220L;
+
+        public WorldDBException(String msg) {
+            super(msg);
+        }
+    }
+
+    public static class WorldDBLoadException extends Exception {
+        private static final long serialVersionUID = 4412238820886423076L;
+
+        public WorldDBLoadException(String msg) {
+            super(msg);
+        }
     }
 
 }

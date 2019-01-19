@@ -12,17 +12,23 @@ LOCAL_CPP_EXTENSION     := .cc
 
 LOCAL_CFLAGS            := -DLEVELDB_PLATFORM_ANDROID -std=gnu++11 -DDLLX=
 
+#Asan
+#LOCAL_CFLAGS            += -fsanitize=leak -fno-omit-frame-pointer
+#LOCAL_LDFLAGS           := -fsanitize=leak
+
 LOCAL_SRC_FILES         := com_litl_leveldb_DB.cc\
                             com_litl_leveldb_Iterator.cc\
                             com_litl_leveldb_WriteBatch.cc\
                             leveldbjni.cc\
-                            com_litl_leveldb_Chunk.cc\
-                            subchunk.cc Chunk.cc\
-                            blocknames.cc
 
 LOCAL_STATIC_LIBRARIES  +=  leveldb-mcpe
 
 LOCAL_LDLIBS            +=  -llog -ldl -lz
+
+LOCAL_CPP_FEATURES      += exceptions
+
+#Asan
+#LD_PRELOAD              += libclang_rt.asan-i686-android.so
 
 include $(BUILD_SHARED_LIBRARY)
 

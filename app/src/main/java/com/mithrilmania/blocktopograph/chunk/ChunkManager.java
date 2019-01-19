@@ -1,49 +1,60 @@
 package com.mithrilmania.blocktopograph.chunk;
 
-import android.annotation.SuppressLint;
+import android.util.LruCache;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.chunk.terrain.V0_9_TerrainChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.ref.WeakReference;
 
 
 public class ChunkManager {
 
-    @SuppressLint("UseSparseArrays")
-    private Map<Long, Chunk> chunks = new HashMap<>();
-
-    private WorldData worldData;
-
-    public final Dimension dimension;
-
-    public ChunkManager(WorldData worldData, Dimension dimension){
-        this.worldData = worldData;
-        this.dimension = dimension;
-    }
-
-
-    public static long xzToKey(int x, int z){
-        return (((long) x) << 32) | (((long) z) & 0xFFFFFFFFL);
-    }
-
-    public Chunk getChunk(int cX, int cZ) {
-        long key = xzToKey(cX, cZ);
-        Chunk chunk = chunks.get(key);
-        if(chunk == null) {
-            chunk = new Chunk(worldData, cX, cZ, dimension);
-            this.chunks.put(key, chunk);
+    private LruCache<Key, Chunk> chunks = new LruCache<Key, Chunk>(256) {
+        @Override
+        protected Chunk create(Key key) {
+            return new Chunk(worldData.get(), key.x, key.z, key.dim);
         }
-        return chunk;
+    };
+
+    private WeakReference<WorldData> worldData;
+
+    public ChunkManager(WorldData worldData) {
+        this.worldData = new WeakReference<>(worldData);
     }
 
-    public void disposeAll(){
-        this.chunks.clear();
+    public Chunk getChunk(int cX, int cZ, Dimension dimension) {
+        Key key = new Key(cX, cZ, dimension);
+        return chunks.get(key);
     }
 
+    public void disposeAll() {
+        this.chunks.evictAll();
+    }
 
+    static class Key {
 
+        public int x, z;
+        Dimension dim;
+
+        public Key(int x, int z, Dimension dim) {
+            this.x = x;
+            this.z = z;
+            this.dim = dim;
+        }
+
+        @Override
+        public int hashCode() {
+            return (x * 31 + z) * 31 + dim.id;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Key)) return false;
+            Key another = (Key) obj;
+            return ((x == another.x) && (z == another.z) && (dim != null)
+                    && (another.dim != null) && (dim.id == another.dim.id));
+        }
+    }
 
 }

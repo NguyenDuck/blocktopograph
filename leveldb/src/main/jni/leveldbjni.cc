@@ -1,13 +1,10 @@
 #include "leveldbjni.h"
-#include "Chunk.h"
 
 extern int register_com_litl_leveldb_DB(JNIEnv *env);
 
 extern int register_com_litl_leveldb_WriteBatch(JNIEnv *env);
 
 extern int register_com_litl_leveldb_Iterator(JNIEnv *env);
-
-extern int register_com_litl_leveldb_Chunk(JNIEnv *env);
 
 jint
 throwException(JNIEnv *env, leveldb::Status status) {
@@ -41,9 +38,6 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     register_com_litl_leveldb_DB(env);
     register_com_litl_leveldb_WriteBatch(env);
     register_com_litl_leveldb_Iterator(env);
-    register_com_litl_leveldb_Chunk(env);
-
-    Chunk::readOptions.decompress_allocator = new leveldb::DecompressAllocator;
 
     return JNI_VERSION_1_6;
 }

@@ -15,6 +15,8 @@ import com.mithrilmania.blocktopograph.map.renderer.MapType;
 import com.qozix.tileview.graphics.BitmapProvider;
 import com.qozix.tileview.tiles.Tile;
 
+import java.lang.ref.WeakReference;
+
 
 public class MCTileProvider implements BitmapProvider {
 
@@ -27,173 +29,17 @@ public class MCTileProvider implements BitmapProvider {
     HALF_WORLDSIZE = 1 << 20;
 
     public static int worldSizeInBlocks = 2 * HALF_WORLDSIZE,
-    viewSizeW = worldSizeInBlocks * TILESIZE / Dimension.OVERWORLD.chunkW,
-    viewSizeL = worldSizeInBlocks * TILESIZE / Dimension.OVERWORLD.chunkL;
+            viewSizeW = worldSizeInBlocks * TILESIZE / Dimension.OVERWORLD.chunkW,
+            viewSizeL = worldSizeInBlocks * TILESIZE / Dimension.OVERWORLD.chunkL;
 
-    public final WorldActivityInterface worldProvider;
+    public final WeakReference<WorldActivityInterface> worldProvider;
 
-    public MCTileProvider(WorldActivityInterface worldProvider){
-        this.worldProvider = worldProvider;
+    private WeakReference<ChunkManager> mChunkManager;
+
+    public MCTileProvider(WorldActivityInterface worldProvider, ChunkManager chunkManager) {
+        this.worldProvider = new WeakReference<>(worldProvider);
+        mChunkManager = new WeakReference<>(chunkManager);
     }
-
-    @Override
-    public Bitmap getBitmap(Tile tile, Context context) {
-
-        Bitmap bm = tile.hasBitmap() ? tile.getBitmap() : Bitmap.createBitmap(tile.getWidth(), tile.getHeight(), Bitmap.Config.RGB_565);//getRecycledBitmap();
-
-        try {
-
-
-            // column and row range from 0 to (worldsize/tilesize) * scale
-
-            Dimension dimension = worldProvider.getDimension();
-
-            // 1 chunk per tile on scale 1.0
-            int pixelsPerBlockW_unscaled = TILESIZE / dimension.chunkW;
-            int pixelsPerBlockL_unscaled = TILESIZE / dimension.chunkL;
-
-            float scale = tile.getDetailLevel().getScale();
-
-            // this will be the amount of chunks in the width of one tile
-            int invScale = Math.round(1f / scale);
-
-            //scale the amount of pixels, less pixels per block if zoomed out
-            int pixelsPerBlockW = Math.round(pixelsPerBlockW_unscaled * scale);
-            int pixelsPerBlockL = Math.round(pixelsPerBlockL_unscaled * scale);
-
-
-            // for translating to origin
-            // HALF_WORLDSIZE and TILESIZE must be a power of two
-            int tilesInHalfWorldW = (HALF_WORLDSIZE  * pixelsPerBlockW) / TILESIZE;
-            int tilesInHalfWorldL = (HALF_WORLDSIZE  * pixelsPerBlockL) / TILESIZE;
-
-
-
-            // translate tile coord to origin, multiply origin-relative-tile-coordinate with the chunks per tile
-            int minChunkX = ( tile.getColumn() - tilesInHalfWorldW) * invScale;
-            int minChunkZ = ( tile.getRow()    - tilesInHalfWorldL) * invScale;
-            int maxChunkX = minChunkX + invScale;
-            int maxChunkZ = minChunkZ + invScale;
-
-
-            //scale pixels to dimension scale (Nether 1 : 8 Overworld)
-            pixelsPerBlockW *= dimension.dimensionScale;
-            pixelsPerBlockL *= dimension.dimensionScale;
-
-
-            ChunkManager cm = new ChunkManager(worldProvider.getWorld().getWorldData(), dimension);
-
-            MapType mapType = (MapType) tile.getDetailLevel().getLevelType();
-            if(mapType == null) return null;
-
-
-            int x, z, pX, pY;
-            String tileTxt;
-
-            //check if the tile is not aligned with its inner chunks
-            //hacky: it must be a single chunk that is to big for the tile, render just the visible part, easy.
-            int alignment = invScale % dimension.dimensionScale;
-            if(alignment > 0){
-
-                int chunkX = minChunkX / dimension.dimensionScale;
-                if(minChunkX % dimension.dimensionScale < 0) chunkX -= 1;
-                int chunkZ = minChunkZ / dimension.dimensionScale;
-                if(minChunkZ % dimension.dimensionScale < 0) chunkZ -= 1;
-
-                int stepX = dimension.chunkW / dimension.dimensionScale;
-                int stepZ = dimension.chunkL / dimension.dimensionScale;
-                int minX = (minChunkX % dimension.dimensionScale) * stepX;
-                if(minX < 0) minX += dimension.chunkW;
-                int minZ = (minChunkZ % dimension.dimensionScale) * stepZ;
-                if(minZ < 0) minZ += dimension.chunkL;
-                int maxX = (maxChunkX % dimension.dimensionScale) * stepX;
-                if(maxX <= 0) maxX += dimension.chunkW;
-                int maxZ = (maxChunkZ % dimension.dimensionScale) * stepZ;
-                if(maxZ <= 0) maxZ += dimension.chunkL;
-
-
-                tileTxt = chunkX+";"+chunkZ+" ("+((chunkX*dimension.chunkW)+minX)+"; "+((chunkZ*dimension.chunkL)+minZ)+")";
-
-
-                mapType.renderer.renderToBitmap(cm, bm, dimension,
-                        chunkX, chunkZ,
-                        minX, minZ ,
-                        maxX, maxZ,
-                        0, 0,
-                        pixelsPerBlockW, pixelsPerBlockL);
-
-            } else {
-
-                minChunkX /= dimension.dimensionScale;
-                minChunkZ /= dimension.dimensionScale;
-                maxChunkX /= dimension.dimensionScale;
-                maxChunkZ /= dimension.dimensionScale;
-
-                tileTxt = "("+(minChunkX*dimension.chunkW)+"; "+(minChunkZ*dimension.chunkL)+")";
-
-
-                int pixelsPerChunkW = pixelsPerBlockW * dimension.chunkW;
-                int pixelsPerChunkL = pixelsPerBlockL * dimension.chunkL;
-
-                for(z = minChunkZ, pY = 0; z < maxChunkZ; z++, pY += pixelsPerChunkL){
-
-                    for(x = minChunkX, pX = 0; x < maxChunkX; x++, pX += pixelsPerChunkW){
-
-                        try {
-                            mapType.renderer.renderToBitmap(cm, bm, dimension,
-                                    x, z,
-                                    0, 0,
-                                    dimension.chunkW, dimension.chunkL,
-                                    pX, pY,
-                                    pixelsPerBlockW, pixelsPerBlockL);
-                        } catch (Exception e){
-                            MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension,
-                                    x, z,
-                                    0, 0,
-                                    dimension.chunkW, dimension.chunkL,
-                                    pX, pY,
-                                    pixelsPerBlockW, pixelsPerBlockL);
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-            }
-
-
-            //load all those markers with an async task, this task publishes its progress,
-            // the UI thread picks it up and renders the markers
-            new MarkerAsyncTask(worldProvider, cm, minChunkX, minChunkZ, maxChunkX, maxChunkZ).execute();
-
-
-            //draw the grid
-            if(worldProvider.getShowGrid()){
-
-                //draw tile-edges white
-                for(int i = 0; i < TILESIZE; i++){
-
-                    //horizontal edges
-                    bm.setPixel(i, 0, Color.WHITE);
-                    bm.setPixel(i, TILESIZE-1, Color.WHITE);
-
-                    //vertical edges
-                    bm.setPixel(0, i, Color.WHITE);
-                    bm.setPixel(TILESIZE-1, i, Color.WHITE);
-
-                }
-
-                //draw tile coordinates on top of bitmap
-                drawText(tileTxt, bm, Color.WHITE, 0);
-            }
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return bm;
-    }
-
 
     public static Bitmap drawText(String text, Bitmap b, int textColor, int bgColor) {
         // Get text dimensions
@@ -206,7 +52,7 @@ public class MCTileProvider implements BitmapProvider {
         // Create bitmap and canvas to draw to
         Canvas c = new Canvas(b);
 
-        if(bgColor != 0){
+        if (bgColor != 0) {
             // Draw background
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
             paint.setStyle(Paint.Style.FILL);
@@ -221,6 +67,111 @@ public class MCTileProvider implements BitmapProvider {
         c.restore();
 
         return b;
+    }
+
+    @Override
+    public Bitmap getBitmap(Tile tile, Context context) {
+
+        Bitmap bm = tile.hasBitmap() ? tile.getBitmap() : Bitmap.createBitmap(tile.getWidth(), tile.getHeight(), Bitmap.Config.RGB_565);//getRecycledBitmap();
+
+        try {
+
+            // 1 chunk per tile on scale 1.0
+            int pixelsPerBlockW_unscaled = TILESIZE / 16;
+            int pixelsPerBlockL_unscaled = TILESIZE / 16;
+
+            float scale = tile.getDetailLevel().getScale();
+
+            // this will be the amount of chunks in the width of one tile
+            int invScale = Math.round(1f / scale);
+
+            //scale the amount of pixels, less pixels per block if zoomed out
+            int pixelsPerBlockW = Math.round(pixelsPerBlockW_unscaled * scale);
+            int pixelsPerBlockL = Math.round(pixelsPerBlockL_unscaled * scale);
+
+
+            // for translating to origin
+            // HALF_WORLDSIZE and TILESIZE must be a power of two
+            int tilesInHalfWorldW = (HALF_WORLDSIZE * pixelsPerBlockW) / TILESIZE;
+            int tilesInHalfWorldL = (HALF_WORLDSIZE * pixelsPerBlockL) / TILESIZE;
+
+
+            // translate tile coord to origin, multiply origin-relative-tile-coordinate with the chunks per tile
+            int minChunkX = (tile.getColumn() - tilesInHalfWorldW) * invScale;
+            int minChunkZ = (tile.getRow() - tilesInHalfWorldL) * invScale;
+            int maxChunkX = minChunkX + invScale;
+            int maxChunkZ = minChunkZ + invScale;
+            Dimension dimension = worldProvider.get().getDimension();
+
+            MapType mapType = (MapType) tile.getDetailLevel().getLevelType();
+            if (mapType == null) return null;
+
+
+            int x, z, pX, pY;
+            String tileTxt;
+
+            //check if the tile is not aligned with its inner chunks
+            //hacky: it must be a single chunk that is to big for the tile, render just the visible part, easy.
+
+
+            tileTxt = "(" + (minChunkX * 16) + "; " + (minChunkZ * 16) + ")";
+
+
+            int pixelsPerChunkW = pixelsPerBlockW * 16;
+            int pixelsPerChunkL = pixelsPerBlockL * 16;
+
+            for (z = minChunkZ, pY = 0; z < maxChunkZ; z++, pY += pixelsPerChunkL) {
+
+                for (x = minChunkX, pX = 0; x < maxChunkX; x++, pX += pixelsPerChunkW) {
+
+                    try {
+                        mapType.renderer.renderToBitmap(mChunkManager.get(), bm, dimension,
+                                x, z,
+                                pX, pY,
+                                pixelsPerBlockW, pixelsPerBlockL);
+                    } catch (Exception e) {
+                        MapType.ERROR.renderer.renderToBitmap(mChunkManager.get(), bm, dimension,
+                                x, z,
+                                pX, pY,
+                                pixelsPerBlockW, pixelsPerBlockL);
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+
+            //load all those markers with an async task, this task publishes its progress,
+            // the UI thread picks it up and renders the markers
+            new MarkerAsyncTask(worldProvider.get(), mChunkManager.get(), minChunkX, minChunkZ, maxChunkX, maxChunkZ, dimension).execute();
+
+
+            //draw the grid
+            if (worldProvider.get().getShowGrid()) {
+
+                //draw tile-edges white
+                for (int i = 0; i < TILESIZE; i++) {
+
+                    //horizontal edges
+                    bm.setPixel(i, 0, Color.WHITE);
+                    bm.setPixel(i, TILESIZE - 1, Color.WHITE);
+
+                    //vertical edges
+                    bm.setPixel(0, i, Color.WHITE);
+                    bm.setPixel(TILESIZE - 1, i, Color.WHITE);
+
+                }
+
+                //draw tile coordinates on top of bitmap
+                drawText(tileTxt, bm, Color.WHITE, 0);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return bm;
     }
 
 

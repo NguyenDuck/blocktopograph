@@ -15,62 +15,15 @@ import java.io.Serializable;
 
 public class World implements Serializable {
 
-    private static final long serialVersionUID = 792709417041090031L;
-
-    public String getWorldDisplayName() {
-        if (worldName == null) return null;
-        //return worldname, without special color codes
-        // (character prefixed by the section-sign character)
-        // Short quick regex, shouldn't affect performance too much
-        return worldName.replaceAll("\u00A7.", "");
-    }
-
-    public enum SpecialDBEntryType {
-
-        //Who came up with the formatting for these NBT keys is CRAZY
-        // (PascalCase, camelCase, snake_case, lowercase, m-prefix(Android), tilde-prefix; it's all there!)
-        BIOME_DATA("BiomeData"),
-        OVERWORLD("Overworld"),
-        M_VILLAGES("mVillages"),
-        PORTALS("portals"),
-        LOCAL_PLAYER("~local_player"),
-        AUTONOMOUS_ENTITIES("AutonomousEntities"),
-        DIMENSION_0("dimension0"),
-        DIMENSION_1("dimension1"),
-        DIMENSION_2("dimension2");
-
-        public final String keyName;
-        public final byte[] keyBytes;
-
-        SpecialDBEntryType(String keyName) {
-            this.keyName = keyName;
-            this.keyBytes = keyName.getBytes(NBTConstants.CHARSET);
-        }
-    }
-
     // The World (just a WorldData handle) is serializable, this is the tag used in the android workflow
     public static final String ARG_WORLD_SERIALIZED = "world_ser";
-
-
+    private static final long serialVersionUID = 792709417041090031L;
     public final String worldName;
-
     public final File worldFolder;
-
-    private transient WorldData worldData;
-
-
     public final File levelFile;
-
     public CompoundTag level;
-
-    public static class WorldLoadException extends Exception {
-        private static final long serialVersionUID = 1812348294537392782L;
-
-        public WorldLoadException(String msg) {
-            super(msg);
-        }
-    }
-
+    private transient WorldData worldData;
+    private MarkerManager markersManager;
 
     public World(File worldFolder) throws WorldLoadException {
 
@@ -99,6 +52,14 @@ public class World implements Serializable {
 
     }
 
+    public String getWorldDisplayName() {
+        if (worldName == null) return null;
+        //return worldname, without special color codes
+        // (character prefixed by the section-sign character)
+        // Short quick regex, shouldn't affect performance too much
+        return worldName.replaceAll("\u00A7.", "");
+    }
+
     public long getWorldSeed() {
         if (this.level == null) return 0;
 
@@ -110,8 +71,6 @@ public class World implements Serializable {
         LevelDataConverter.write(level, this.levelFile);
         this.level = level;
     }
-
-    private MarkerManager markersManager;
 
     public MarkerManager getMarkerManager() {
         if (markersManager == null)
@@ -127,14 +86,19 @@ public class World implements Serializable {
         return this.worldFolder.getName();
     }
 
-
     public WorldData getWorldData() {
         if (this.worldData == null) {
-            ///Meow
-            boolean isMeow = ((IntTag) level.getChildTagByKey("StorageVersion")).getValue() >= 7;
-            this.worldData = new WorldData(this, isMeow);
+            this.worldData = new WorldData(this);
         }
         return this.worldData;
+    }
+
+    public void closeDown() throws WorldData.WorldDBException {
+        if (this.worldData != null) this.worldData.closeDB();
+    }
+
+    public void pause() throws WorldData.WorldDBException {
+        closeDown();
     }
 
     /*
@@ -167,14 +131,6 @@ public class World implements Serializable {
     }
     */
 
-    public void closeDown() throws WorldData.WorldDBException {
-        if (this.worldData != null) this.worldData.closeDB();
-    }
-
-    public void pause() throws WorldData.WorldDBException {
-        closeDown();
-    }
-
     public void resume() throws WorldData.WorldDBException {
 
         this.getWorldData().openDB();
@@ -204,6 +160,37 @@ public class World implements Serializable {
 
         } catch (WorldData.WorldDBException e) {
             e.printStackTrace();
+        }
+    }
+
+    public enum SpecialDBEntryType {
+
+        //Who came up with the formatting for these NBT keys is CRAZY
+        // (PascalCase, camelCase, snake_case, lowercase, m-prefix(Android), tilde-prefix; it's all there!)
+        BIOME_DATA("BiomeData"),
+        OVERWORLD("Overworld"),
+        M_VILLAGES("mVillages"),
+        PORTALS("portals"),
+        LOCAL_PLAYER("~local_player"),
+        AUTONOMOUS_ENTITIES("AutonomousEntities"),
+        DIMENSION_0("dimension0"),
+        DIMENSION_1("dimension1"),
+        DIMENSION_2("dimension2");
+
+        public final String keyName;
+        public final byte[] keyBytes;
+
+        SpecialDBEntryType(String keyName) {
+            this.keyName = keyName;
+            this.keyBytes = keyName.getBytes(NBTConstants.CHARSET);
+        }
+    }
+
+    public static class WorldLoadException extends Exception {
+        private static final long serialVersionUID = 1812348294537392782L;
+
+        public WorldLoadException(String msg) {
+            super(msg);
         }
     }
 }

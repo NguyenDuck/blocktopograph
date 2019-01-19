@@ -71,46 +71,46 @@ public class WorldActivity extends AppCompatActivity
     public enum CustomFirebaseEvent {
 
         //max 32 chars:     "0123456789abcdef0123456789abcdef"
-        MAPFRAGMENT_OPEN(   "map_fragment_open"),
-        MAPFRAGMENT_RESUME( "map_fragment_resume"),
-        MAPFRAGMENT_RESET(  "map_fragment_reset"),
-        NBT_EDITOR_OPEN(    "nbt_editor_open"),
-        NBT_EDITOR_SAVE(    "nbt_editor_save"),
-        WORLD_OPEN(         "world_open"),
-        WORLD_RESUME(       "world_resume"),
-        GPS_PLAYER(         "gps_player"),
-        GPS_MULTIPLAYER(    "gps_multiplayer"),
-        GPS_SPAWN(          "gps_spawn"),
-        GPS_MARKER(         "gps_marker"),
-        GPS_COORD(          "gps_coord");
+        MAPFRAGMENT_OPEN("map_fragment_open"),
+        MAPFRAGMENT_RESUME("map_fragment_resume"),
+        MAPFRAGMENT_RESET("map_fragment_reset"),
+        NBT_EDITOR_OPEN("nbt_editor_open"),
+        NBT_EDITOR_SAVE("nbt_editor_save"),
+        WORLD_OPEN("world_open"),
+        WORLD_RESUME("world_resume"),
+        GPS_PLAYER("gps_player"),
+        GPS_MULTIPLAYER("gps_multiplayer"),
+        GPS_SPAWN("gps_spawn"),
+        GPS_MARKER("gps_marker"),
+        GPS_COORD("gps_coord");
 
         public final String eventID;
 
-        CustomFirebaseEvent(String eventID){
+        CustomFirebaseEvent(String eventID) {
             this.eventID = eventID;
         }
     }
 
     @Override
-    public void logFirebaseEvent(CustomFirebaseEvent firebaseEvent){
+    public void logFirebaseEvent(CustomFirebaseEvent firebaseEvent) {
         getFirebaseAnalytics().logEvent(firebaseEvent.eventID, new Bundle());
     }
 
     @Override
-    public void logFirebaseEvent(CustomFirebaseEvent firebaseEvent, Bundle eventContent){
+    public void logFirebaseEvent(CustomFirebaseEvent firebaseEvent, Bundle eventContent) {
         getFirebaseAnalytics().logEvent(firebaseEvent.eventID, eventContent);
     }
 
     @Override
     public void showActionBar() {
         ActionBar bar = getSupportActionBar();
-        if(bar != null) bar.show();
+        if (bar != null) bar.show();
     }
 
     @Override
     public void hideActionBar() {
         ActionBar bar = getSupportActionBar();
-        if(bar != null) bar.hide();
+        if (bar != null) bar.hide();
     }
 
     @Override
@@ -119,14 +119,14 @@ public class WorldActivity extends AppCompatActivity
         // immersive fullscreen for Android Kitkat and higher
         if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             ActionBar bar = getSupportActionBar();
-            if(bar != null) bar.hide();
+            if (bar != null) bar.hide();
             this.getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
 
@@ -143,7 +143,7 @@ public class WorldActivity extends AppCompatActivity
         this.world = (World) (savedInstanceState == null
                 ? getIntent().getSerializableExtra(World.ARG_WORLD_SERIALIZED)
                 : savedInstanceState.getSerializable(World.ARG_WORLD_SERIALIZED));
-        if(world == null){
+        if (world == null) {
             //WTF, try going back to the previous screen by finishing this hopeless activity...
             finish();
         }
@@ -168,8 +168,6 @@ public class WorldActivity extends AppCompatActivity
         assert drawer != null;
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-
 
 
         View headerView = navigationView.getHeaderView(0);
@@ -209,10 +207,8 @@ public class WorldActivity extends AppCompatActivity
         bundle.putString("name", this.world.getWorldDisplayName());
 
 
-
         // anonymous global counter of opened worlds
         logFirebaseEvent(CustomFirebaseEvent.WORLD_OPEN, bundle);
-
 
 
         // Open the world-map as default content
@@ -231,14 +227,14 @@ public class WorldActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         Log.d("World activity starting...");
         super.onStart();
         Log.d("World activity started");
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         Log.d("World activity resuming...");
         super.onResume();
 
@@ -255,7 +251,7 @@ public class WorldActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         Log.d("World activity pausing...");
         super.onPause();
 
@@ -269,14 +265,14 @@ public class WorldActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         Log.d("World activity stopping...");
         super.onStop();
         Log.d("World activity stopped");
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         Log.d("World activity destroying...");
         super.onDestroy();
         Log.d("World activity destroyed...");
@@ -299,31 +295,31 @@ public class WorldActivity extends AppCompatActivity
         if (count == 0) {
 
             new AlertDialog.Builder(this)
-                .setMessage(R.string.ask_close_world)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        WorldActivity.this.finish();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .show();
+                    .setMessage(R.string.ask_close_world)
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            WorldActivity.this.finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
 
-        } else if(confirmContentClose != null){
+        } else if (confirmContentClose != null) {
             //An important fragment is opened,
             // something that couldn't be reopened in its current state easily,
             // ask the user if he/she intended to close it.
             new AlertDialog.Builder(this)
-                .setMessage(confirmContentClose)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        manager.popBackStack();
-                        confirmContentClose = null;
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .show();
+                    .setMessage(confirmContentClose)
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            manager.popBackStack();
+                            confirmContentClose = null;
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
         } else {
             //fragment is open, but it may be closed without warning
             manager.popBackStack();
@@ -365,8 +361,8 @@ public class WorldActivity extends AppCompatActivity
         assert drawer != null;
 
 
-        switch (id){
-            case(R.id.nav_world_show_map):
+        switch (id) {
+            case (R.id.nav_world_show_map):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -374,14 +370,14 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_world_select):
+            case (R.id.nav_world_select):
                 //close activity; back to world selection screen
                 closeWorldActivity();
                 break;
-            case(R.id.nav_singleplayer_nbt):
+            case (R.id.nav_singleplayer_nbt):
                 openPlayerEditor();
                 break;
-            case(R.id.nav_multiplayer_nbt):
+            case (R.id.nav_multiplayer_nbt):
                 openMultiplayerEditor();
                 break;
             /*case(R.id.nav_inventory):
@@ -389,72 +385,72 @@ public class WorldActivity extends AppCompatActivity
                 //This feature is planned, but not yet implemented,
                 // use the generic NBT editor for now...
                 break;*/
-            case(R.id.nav_world_nbt):
+            case (R.id.nav_world_nbt):
                 openLevelEditor();
                 break;
             /*case(R.id.nav_tools):
                 //TODO open tools menu (world downloader/importer/exporter maybe?)
                 break;*/
-            case(R.id.nav_overworld_satellite):
+            case (R.id.nav_overworld_satellite):
                 changeMapType(MapType.OVERWORLD_SATELLITE, Dimension.OVERWORLD);
                 break;
-            case(R.id.nav_overworld_cave):
+            case (R.id.nav_overworld_cave):
                 changeMapType(MapType.OVERWORLD_CAVE, Dimension.OVERWORLD);
                 break;
-            case(R.id.nav_overworld_slime_chunk):
+            case (R.id.nav_overworld_slime_chunk):
                 changeMapType(MapType.OVERWORLD_SLIME_CHUNK, Dimension.OVERWORLD);
                 break;
             /*case(R.id.nav_overworld_debug):
                 changeMapType(MapType.DEBUG); //for debugging tiles positions, rendering, etc.
                 break;*/
-            case(R.id.nav_overworld_heightmap):
+            case (R.id.nav_overworld_heightmap):
                 changeMapType(MapType.OVERWORLD_HEIGHTMAP, Dimension.OVERWORLD);
                 break;
-            case(R.id.nav_overworld_biome):
+            case (R.id.nav_overworld_biome):
                 changeMapType(MapType.OVERWORLD_BIOME, Dimension.OVERWORLD);
                 break;
-            case(R.id.nav_overworld_grass):
+            case (R.id.nav_overworld_grass):
                 changeMapType(MapType.OVERWORLD_GRASS, Dimension.OVERWORLD);
                 break;
-            case(R.id.nav_overworld_xray):
+            case (R.id.nav_overworld_xray):
                 changeMapType(MapType.OVERWORLD_XRAY, Dimension.OVERWORLD);
                 break;
-            case(R.id.nav_overworld_block_light):
+            case (R.id.nav_overworld_block_light):
                 changeMapType(MapType.OVERWORLD_BLOCK_LIGHT, Dimension.OVERWORLD);
                 break;
-            case(R.id.nav_nether_map):
+            case (R.id.nav_nether_map):
                 changeMapType(MapType.NETHER, Dimension.NETHER);
                 break;
-            case(R.id.nav_nether_xray):
+            case (R.id.nav_nether_xray):
                 changeMapType(MapType.NETHER_XRAY, Dimension.NETHER);
                 break;
-            case(R.id.nav_nether_block_light):
+            case (R.id.nav_nether_block_light):
                 changeMapType(MapType.NETHER_BLOCK_LIGHT, Dimension.NETHER);
                 break;
-            case(R.id.nav_end_satellite):
+            case (R.id.nav_end_satellite):
                 changeMapType(MapType.END_SATELLITE, Dimension.END);
                 break;
-            case(R.id.nav_end_heightmap):
+            case (R.id.nav_end_heightmap):
                 changeMapType(MapType.END_HEIGHTMAP, Dimension.END);
                 break;
-            case(R.id.nav_end_block_light):
+            case (R.id.nav_end_block_light):
                 changeMapType(MapType.END_BLOCK_LIGHT, Dimension.END);
                 break;
-            case(R.id.nav_map_opt_toggle_grid):
+            case (R.id.nav_map_opt_toggle_grid):
                 //toggle the grid
                 this.showGrid = !this.showGrid;
                 //rerender tiles (tiles will render with toggled grid on it now)
-                if(this.mapFragment != null) this.mapFragment.resetTileView();
+                if (this.mapFragment != null) this.mapFragment.resetTileView();
                 break;
-            case(R.id.nav_map_opt_filter_markers):
+            case (R.id.nav_map_opt_filter_markers):
                 //toggle the grid
                 this.mapFragment.openMarkerFilter();
                 break;
-            case(R.id.nav_map_opt_toggle_markers):
+            case (R.id.nav_map_opt_toggle_markers):
                 //toggle markers
-                if(this.mapFragment != null) this.mapFragment.toggleMarkers();
+                if (this.mapFragment != null) this.mapFragment.toggleMarkers();
                 break;
-            case(R.id.nav_biomedata_nbt):
+            case (R.id.nav_biomedata_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -462,7 +458,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_overworld_nbt):
+            case (R.id.nav_overworld_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -470,7 +466,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_villages_nbt):
+            case (R.id.nav_villages_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -478,7 +474,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_portals_nbt):
+            case (R.id.nav_portals_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -486,7 +482,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_dimension0_nbt):
+            case (R.id.nav_dimension0_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -494,7 +490,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_dimension1_nbt):
+            case (R.id.nav_dimension1_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -502,7 +498,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_dimension2_nbt):
+            case (R.id.nav_dimension2_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -510,7 +506,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_autonomous_entities_nbt):
+            case (R.id.nav_autonomous_entities_nbt):
                 changeContentFragment(new OpenFragmentCallback() {
                     @Override
                     public void onOpen() {
@@ -518,7 +514,7 @@ public class WorldActivity extends AppCompatActivity
                     }
                 });
                 break;
-            case(R.id.nav_open_nbt_by_name): {
+            case (R.id.nav_open_nbt_by_name): {
 
                 //TODO put this bit in its own method
 
@@ -539,7 +535,7 @@ public class WorldActivity extends AppCompatActivity
                                         Editable keyNameEditable = keyEditText.getText();
                                         String keyName = keyNameEditable == null
                                                 ? null : keyNameEditable.toString();
-                                        if(keyName == null || keyName.equals("")){
+                                        if (keyName == null || keyName.equals("")) {
                                             Snackbar.make(drawer,
                                                     R.string.invalid_keyname,
                                                     Snackbar.LENGTH_LONG)
@@ -552,7 +548,7 @@ public class WorldActivity extends AppCompatActivity
                                                         Snackbar.LENGTH_LONG)
                                                         .setAction("Action", null).show();//TODO maybe add option to create it?
                                                 else openNBTEditor(dbEntry);
-                                            } catch (Exception e){
+                                            } catch (Exception e) {
                                                 Snackbar.make(drawer,
                                                         R.string.invalid_keyname,
                                                         Snackbar.LENGTH_LONG)
@@ -600,11 +596,11 @@ public class WorldActivity extends AppCompatActivity
         WorldData worldData = world.getWorldData();
         try {
             worldData.openDB();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         byte[] entryData = worldData.db.get(keyBytes);
-        if(entryData == null) return null;
+        if (entryData == null) return null;
 
         final ArrayList<Tag> workCopy = DataConverter.read(entryData);
 
@@ -651,6 +647,7 @@ public class WorldActivity extends AppCompatActivity
 
     /**
      * Loads local player data "~local-player" or level.dat>"Player" into an EditableNBT.
+     *
      * @return EditableNBT, local player NBT data wrapped in a handle to use for saving + metadata
      * @throws Exception
      */
@@ -670,27 +667,30 @@ public class WorldActivity extends AppCompatActivity
         EditableNBT editableNBT;
         try {
             editableNBT = openSpecialEditableNbtDbEntry(World.SpecialDBEntryType.LOCAL_PLAYER);
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             throw new Exception("Failed to read \"~local_player\" from the database.");
         }
 
         //check if it is not found in the DB
-        if(editableNBT == null) editableNBT = openEditableNbtLevel("Player");
+        if (editableNBT == null) editableNBT = openEditableNbtLevel("Player");
 
         //check if it is not found in level.dat as well
-        if(editableNBT == null) throw new Exception("Failed to find \"~local_player\" in DB and \"Player\" in level.dat!");
+        if (editableNBT == null)
+            throw new Exception("Failed to find \"~local_player\" in DB and \"Player\" in level.dat!");
 
 
         return editableNBT;
 
     }
 
-    /** Open NBT editor fragment for special database entry */
-    public void openSpecialDBEntry(final World.SpecialDBEntryType entryType){
+    /**
+     * Open NBT editor fragment for special database entry
+     */
+    public void openSpecialDBEntry(final World.SpecialDBEntryType entryType) {
         try {
             EditableNBT editableEntry = openSpecialEditableNbtDbEntry(entryType);
-            if(editableEntry == null){
+            if (editableEntry == null) {
                 this.openWorldMap();
                 //TODO better handling of db problems
                 //throw new Exception("\"" + entryType.keyName + "\" not found in DB.");
@@ -704,7 +704,8 @@ public class WorldActivity extends AppCompatActivity
             e.printStackTrace();
 
             String msg = e.getMessage();
-            if(e instanceof IOException) msg = String.format(getString(R.string.failed_to_read_x_from_db), entryType.keyName);
+            if (e instanceof IOException)
+                msg = String.format(getString(R.string.failed_to_read_x_from_db), entryType.keyName);
 
             new AlertDialog.Builder(WorldActivity.this)
                     .setMessage(msg)
@@ -723,7 +724,7 @@ public class WorldActivity extends AppCompatActivity
     }
 
 
-    public void openMultiplayerEditor(){
+    public void openMultiplayerEditor() {
 
 
         //takes some time to find all players...
@@ -733,8 +734,8 @@ public class WorldActivity extends AppCompatActivity
         final String[] players = getWorld().getWorldData().getPlayers();
 
         final View content = WorldActivity.this.findViewById(R.id.world_content);
-        if(players.length == 0){
-            if(content != null) Snackbar.make(content,
+        if (players.length == 0) {
+            if (content != null) Snackbar.make(content,
                     R.string.no_multiplayer_data_found,
                     Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
@@ -771,32 +772,32 @@ public class WorldActivity extends AppCompatActivity
                                 public void onOpen() {
                                     try {
                                         openNBTEditor(editableNBT);
-                                    } catch (Exception e){
+                                    } catch (Exception e) {
                                         new AlertDialog.Builder(WorldActivity.this)
-                                            .setMessage(e.getMessage())
-                                            .setCancelable(false)
-                                            .setNeutralButton(android.R.string.ok,
-                                                    new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,
-                                                                    int id) {
-                                                    changeContentFragment(
-                                                            new OpenFragmentCallback() {
-                                                        @Override
-                                                        public void onOpen() {
-                                                            openWorldMap();
-                                                        }
-                                                    });
-                                                }
-                                            }).show();
+                                                .setMessage(e.getMessage())
+                                                .setCancelable(false)
+                                                .setNeutralButton(android.R.string.ok,
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog,
+                                                                                int id) {
+                                                                changeContentFragment(
+                                                                        new OpenFragmentCallback() {
+                                                                            @Override
+                                                                            public void onOpen() {
+                                                                                openWorldMap();
+                                                                            }
+                                                                        });
+                                                            }
+                                                        }).show();
                                     }
 
                                 }
                             });
 
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
-                            Log.d("Failed to open player entry in DB. key: "+playerKey);
-                            if(content != null) Snackbar.make(content,
+                            Log.d("Failed to open player entry in DB. key: " + playerKey);
+                            if (content != null) Snackbar.make(content,
                                     String.format(getString(R.string.failed_read_player_from_db_with_key_x), playerKey),
                                     Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
@@ -808,52 +809,53 @@ public class WorldActivity extends AppCompatActivity
                 .show();
     }
 
-    public void openPlayerEditor(){
+    public void openPlayerEditor() {
         changeContentFragment(new OpenFragmentCallback() {
             @Override
             public void onOpen() {
 
                 try {
                     openNBTEditor(getEditablePlayer());
-                } catch (Exception e){
+                } catch (Exception e) {
                     new AlertDialog.Builder(WorldActivity.this)
                             .setMessage(e.getMessage())
                             .setCancelable(false)
                             .setNeutralButton(android.R.string.ok,
                                     new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    changeContentFragment(new OpenFragmentCallback() {
-                                        @Override
-                                        public void onOpen() {
-                                            openWorldMap();
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            changeContentFragment(new OpenFragmentCallback() {
+                                                @Override
+                                                public void onOpen() {
+                                                    openWorldMap();
+                                                }
+                                            });
                                         }
-                                    });
-                                }
-                            }).show();
+                                    }).show();
                 }
 
             }
         });
     }
 
-    /** Opens an editableNBT for just the subTag if it is not null.
-     Opens the whole level.dat if subTag is null. **/
-    public EditableNBT openEditableNbtLevel(String subTagName){
+    /**
+     * Opens an editableNBT for just the subTag if it is not null.
+     * Opens the whole level.dat if subTag is null.
+     **/
+    public EditableNBT openEditableNbtLevel(String subTagName) {
 
         //make a copy first, the user might not want to save changed tags.
         final CompoundTag workCopy = world.level.getDeepCopy();
         final ArrayList<Tag> workCopyContents;
         final String contentTitle;
-        if(subTagName == null){
+        if (subTagName == null) {
             workCopyContents = workCopy.getValue();
             contentTitle = "level.dat";
-        }
-        else{
+        } else {
             workCopyContents = new ArrayList<>();
             Tag subTag = workCopy.getChildTagByKey(subTagName);
-            if(subTag == null) return null;
+            if (subTag == null) return null;
             workCopyContents.add(subTag);
-            contentTitle = "level.dat>"+subTagName;
+            contentTitle = "level.dat>" + subTagName;
         }
 
         EditableNBT editableNBT = new EditableNBT() {
@@ -899,7 +901,7 @@ public class WorldActivity extends AppCompatActivity
         return editableNBT;
     }
 
-    public void openLevelEditor(){
+    public void openLevelEditor() {
         changeContentFragment(new OpenFragmentCallback() {
             @Override
             public void onOpen() {
@@ -913,13 +915,13 @@ public class WorldActivity extends AppCompatActivity
     //  splitting allows to pass more sophisticated use of [MapRenderer]s
     private Dimension dimension = Dimension.OVERWORLD;
 
-    public Dimension getDimension(){
+    public Dimension getDimension() {
         return this.dimension;
     }
 
     private MapType mapType = dimension.defaultMapType;
 
-    public MapType getMapType(){
+    public MapType getMapType() {
         return this.mapType;
     }
 
@@ -936,6 +938,7 @@ public class WorldActivity extends AppCompatActivity
 
 
     private boolean fatal = false;
+
     @Override
     public void onFatalDBError(WorldData.WorldDBException worldDBException) {
 
@@ -943,7 +946,7 @@ public class WorldActivity extends AppCompatActivity
         worldDBException.printStackTrace();
 
         //already dead? (happens on multiple onFatalDBError(e) calls)
-        if(fatal) return;
+        if (fatal) return;
 
         fatal = true;
 
@@ -960,30 +963,31 @@ public class WorldActivity extends AppCompatActivity
     }
 
     @Override
-    public void changeMapType(MapType mapType, Dimension dimension){
+    public void changeMapType(MapType mapType, Dimension dimension) {
         this.mapType = mapType;
         this.dimension = dimension;
         //don't forget to do a reset-tileview, the mapfragment should know of this change ASAP.
         mapFragment.resetTileView();
     }
 
-    public void closeWorldActivity(){
+    public void closeWorldActivity() {
 
         //TODO not translation-friendly
 
         new AlertDialog.Builder(this)
-            .setMessage(R.string.confirm_close_world)
-            .setCancelable(false)
-            .setIcon(R.drawable.ic_action_exit)
-            .setPositiveButton(android.R.string.yes,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //finish this activity
-                            finish();
-                        }
-                    })
-            .setNegativeButton(android.R.string.no, null)
-            .show();
+                .setMessage(R.string.confirm_close_world)
+                .setCancelable(false)
+                .setIcon(R.drawable.ic_action_exit)
+                .setPositiveButton(android.R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //finish this activity
+                                mapFragment.closeChunks();
+                                finish();
+                            }
+                        })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
     }
 
     public interface OpenFragmentCallback {
@@ -992,25 +996,25 @@ public class WorldActivity extends AppCompatActivity
 
     public String confirmContentClose = null;
 
-    public void changeContentFragment(final OpenFragmentCallback callback){
+    public void changeContentFragment(final OpenFragmentCallback callback) {
 
         final FragmentManager manager = getFragmentManager();
 
         // confirmContentClose shouldn't be both used as boolean and as close-message,
         //  this is a bad pattern
-        if(confirmContentClose != null){
+        if (confirmContentClose != null) {
             new AlertDialog.Builder(this)
-                .setMessage(confirmContentClose)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.yes,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                            callback.onOpen();
-                        }
-                    })
-                .setNegativeButton(android.R.string.no, null)
-                .show();
+                    .setMessage(confirmContentClose)
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.yes,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                    callback.onOpen();
+                                }
+                            })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
         } else {
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             callback.onOpen();
@@ -1018,8 +1022,10 @@ public class WorldActivity extends AppCompatActivity
 
     }
 
-    /** Open NBT editor fragment for the given editableNBT */
-    public void openNBTEditor(EditableNBT editableNBT){
+    /**
+     * Open NBT editor fragment for the given editableNBT
+     */
+    public void openNBTEditor(EditableNBT editableNBT) {
 
         // see changeContentFragment(callback)
         this.confirmContentClose = getString(R.string.confirm_close_nbt_editor);
@@ -1035,8 +1041,10 @@ public class WorldActivity extends AppCompatActivity
 
     }
 
-    /** Replace current content fragment with a fresh MapFragment */
-    public void openWorldMap(){
+    /**
+     * Replace current content fragment with a fresh MapFragment
+     */
+    public void openWorldMap() {
 
         //TODO should this use cached world-position etc.?
 
@@ -1057,18 +1065,19 @@ public class WorldActivity extends AppCompatActivity
 
 
     @Override
-    public void addMarker(AbstractMarker marker){
+    public void addMarker(AbstractMarker marker) {
         mapFragment.addMarker(marker);
     }
 
 
-
-    /** Open a dialog; user chooses chunk-type -> open editor for this type **/
+    /**
+     * Open a dialog; user chooses chunk-type -> open editor for this type
+     **/
     @Override
-    public void openChunkNBTEditor(final int chunkX, final int chunkZ, final NBTChunkData nbtChunkData, final ViewGroup viewGroup){
+    public void openChunkNBTEditor(final int chunkX, final int chunkZ, final NBTChunkData nbtChunkData, final ViewGroup viewGroup) {
 
 
-        if(nbtChunkData == null){
+        if (nbtChunkData == null) {
             //should never happen
             Log.w("User tried to open null chunkData in the nbt-editor!!!");
             return;
@@ -1077,14 +1086,14 @@ public class WorldActivity extends AppCompatActivity
 
         try {
             nbtChunkData.load();
-        } catch (Exception e){
+        } catch (Exception e) {
             Snackbar.make(viewGroup, this.getString(R.string.failed_to_load_x, this.getString(R.string.nbt_chunk_data)), Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             return;
         }
 
         final List<Tag> tags = nbtChunkData.tags;
-        if(tags == null) {
+        if (tags == null) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.nbt_editor)
                     .setMessage(R.string.data_does_not_exist_for_chunk_ask_if_create)
@@ -1100,7 +1109,7 @@ public class WorldActivity extends AppCompatActivity
                                         Snackbar.make(viewGroup, R.string.created_and_saved_chunk_NBT_data, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
                                         WorldActivity.this.openChunkNBTEditor(chunkX, chunkZ, nbtChunkData, viewGroup);
-                                    } catch (Exception e){
+                                    } catch (Exception e) {
                                         Snackbar.make(viewGroup, R.string.failed_to_create_or_save_chunk_NBT_data, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
                                     }
@@ -1112,7 +1121,6 @@ public class WorldActivity extends AppCompatActivity
         }
 
 
-
         //open nbt editor for entity data
         changeContentFragment(new OpenFragmentCallback() {
             @Override
@@ -1120,7 +1128,7 @@ public class WorldActivity extends AppCompatActivity
 
                 //make a copy first, the user might not want to save changed tags.
                 final List<Tag> workCopy = new ArrayList<>();
-                for(Tag tag : tags){
+                for (Tag tag : tags) {
                     workCopy.add(tag.getDeepCopy());
                 }
 
@@ -1135,7 +1143,7 @@ public class WorldActivity extends AppCompatActivity
                     public boolean save() {
                         try {
                             final List<Tag> saveCopy = new ArrayList<>();
-                            for(Tag tag : workCopy){
+                            for (Tag tag : workCopy) {
                                 saveCopy.add(tag.getDeepCopy());
                             }
                             nbtChunkData.tags = saveCopy;
@@ -1150,10 +1158,13 @@ public class WorldActivity extends AppCompatActivity
                     @Override
                     public String getRootTitle() {
                         final String format = "%s (cX:%d;cZ:%d)";
-                        switch ((nbtChunkData).dataType){
-                            case ENTITY: return String.format(format, getString(R.string.entity_chunk_data) , chunkX, chunkZ);
-                            case BLOCK_ENTITY: return String.format(format, getString(R.string.tile_entity_chunk_data), chunkX, chunkZ);
-                            default: return String.format(format, getString(R.string.nbt_chunk_data), chunkX, chunkZ);
+                        switch ((nbtChunkData).dataType) {
+                            case ENTITY:
+                                return String.format(format, getString(R.string.entity_chunk_data), chunkX, chunkZ);
+                            case BLOCK_ENTITY:
+                                return String.format(format, getString(R.string.tile_entity_chunk_data), chunkX, chunkZ);
+                            default:
+                                return String.format(format, getString(R.string.nbt_chunk_data), chunkX, chunkZ);
                         }
                     }
 

@@ -1,7 +1,6 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 
-
 import android.graphics.Bitmap;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
@@ -12,35 +11,32 @@ import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
 
-
 public class CaveRenderer implements MapRenderer {
 
     /**
      * Render a single chunk to provided bitmap (bm)
-     * @param cm ChunkManager, provides chunks, which provide chunk-data
-     * @param bm Bitmap to render to
-     * @param dimension Mapped dimension
-     * @param chunkX X chunk coordinate (x-block coord / Chunk.WIDTH)
-     * @param chunkZ Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param bX begin block X coordinate, relative to chunk edge
-     * @param bZ begin block Z coordinate, relative to chunk edge
-     * @param eX end block X coordinate, relative to chunk edge
-     * @param eZ end block Z coordinate, relative to chunk edge
-     * @param pX texture X pixel coord to start rendering to
-     * @param pY texture Y pixel coord to start rendering to
-     * @param pW width (X) of one block in pixels
-     * @param pL length (Z) of one block in pixels
-     * @return bm is returned back
      *
+     * @param cm        ChunkManager, provides chunks, which provide chunk-data
+     * @param bm        Bitmap to render to
+     * @param dimension Mapped dimension
+     * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
+     * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
+     * @param pX        texture X pixel coord to start rendering to
+     * @param pY        texture Y pixel coord to start rendering to
+     * @param pW        width (X) of one block in pixels
+     * @param pL        length (Z) of one block in pixels
+     * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int bX, int bZ, int eX, int eZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
+    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
 
-        Chunk chunk = cm.getChunk(chunkX, chunkZ);
+        Chunk chunk = cm.getChunk(chunkX, chunkZ, dimension);
         Version cVersion = chunk.getVersion();
 
-        if(cVersion == Version.ERROR) return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
-        if(cVersion == Version.NULL) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (cVersion == Version.ERROR)
+            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+        if (cVersion == Version.NULL)
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
         boolean solid, intoSurface;
         int id, meta, cavyness, layers, offset;
@@ -49,12 +45,13 @@ public class CaveRenderer implements MapRenderer {
 
         //the bottom sub-chunk is sufficient to get heightmap data.
         TerrainChunkData floorData = chunk.getTerrain((byte) 0);
-        if(floorData == null || !floorData.load2DData()) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (floorData == null || !floorData.load2DData())
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
         TerrainChunkData data;
 
-        for (z = bZ, tY = pY; z < eZ; z++, tY += pL) {
-            for (x = bX, tX = pX; x < eX; x++, tX += pW) {
+        for (z = 0, tY = pY; z < 16; z++, tY += pL) {
+            for (x = 0, tX = pX; x < 16; x++, tX += pW) {
 
 
                 solid = false;
@@ -80,10 +77,11 @@ public class CaveRenderer implements MapRenderer {
 
                 r = g = b = 0;
 
-                subChunkLoop: for(; subChunk >= 0; subChunk--) {
+                subChunkLoop:
+                for (; subChunk >= 0; subChunk--) {
 
                     data = chunk.getTerrain((byte) subChunk);
-                    if (data == null || !data.loadTerrain()){
+                    if (data == null || !data.loadTerrain()) {
                         //start at the top of the next chunk! (current offset might differ)
                         offset = cVersion.subChunkHeight - 1;
                         continue;
@@ -103,11 +101,11 @@ public class CaveRenderer implements MapRenderer {
                         switch (id) {
                             case 0:
                                 //count the number of times it goes from solid to air
-                                if(solid) layers++;
+                                if (solid) layers++;
 
                                 //count the air blocks underground,
                                 // but avoid trees by skipping the first layer
-                                if(intoSurface) cavyness++;
+                                if (intoSurface) cavyness++;
                                 break;
                             case 66://rail
                                 if (b < 150) {
@@ -151,7 +149,7 @@ public class CaveRenderer implements MapRenderer {
                     }
                 }
 
-                if (g == 0 && layers > 0){
+                if (g == 0 && layers > 0) {
                     g = (r + 2) * cavyness;
                     r *= 32 * layers;
                     b = 16 * cavyness * (layers - 1);

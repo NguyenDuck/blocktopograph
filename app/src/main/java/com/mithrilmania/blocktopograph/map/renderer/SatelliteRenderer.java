@@ -1,6 +1,9 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.Log;
 
@@ -22,10 +25,6 @@ public class SatelliteRenderer implements MapRenderer {
      * @param dimension Mapped dimension
      * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
      * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param bX        begin block X coordinate, relative to chunk edge
-     * @param bZ        begin block Z coordinate, relative to chunk edge
-     * @param eX        end block X coordinate, relative to chunk edge
-     * @param eZ        end block Z coordinate, relative to chunk edge
      * @param pX        texture X pixel coord to start rendering to
      * @param pY        texture Y pixel coord to start rendering to
      * @param pW        width (X) of one block in pixels
@@ -33,31 +32,33 @@ public class SatelliteRenderer implements MapRenderer {
      * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int bX, int bZ, int eX, int eZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
+    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
 
-        Chunk chunk = cm.getChunk(chunkX, chunkZ);
+        Chunk chunk = cm.getChunk(chunkX, chunkZ, dimension);
         Version cVersion = chunk.getVersion();
 
         if (cVersion == Version.ERROR)
-            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
         if (cVersion == Version.NULL)
-            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
         //the bottom sub-chunk is sufficient to get heightmap data.
         TerrainChunkData data = chunk.getTerrain((byte) 0);
         if (data == null || !data.load2DData())
-            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
 
-        TerrainChunkData dataW = cm.getChunk(chunkX - 1, chunkZ).getTerrain((byte) 0);
-        TerrainChunkData dataN = cm.getChunk(chunkX, chunkZ - 1).getTerrain((byte) 0);
+        TerrainChunkData dataW = cm.getChunk(chunkX - 1, chunkZ, dimension).getTerrain((byte) 0);
+        TerrainChunkData dataN = cm.getChunk(chunkX, chunkZ - 1, dimension).getTerrain((byte) 0);
 
         boolean west = dataW != null && dataW.load2DData(),
                 north = dataN != null && dataN.load2DData();
 
         int x, y, z, color, i, j, tX, tY;
-        for (z = bZ, tY = pY; z < eZ; z++, tY += pL) {
-            for (x = bX, tX = pX; x < eX; x++, tX += pW) {
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint();
+        for (z = 0, tY = pY; z < 16; z++, tY += pL) {
+            for (x = 0, tX = pX; x < 16; x++, tX += pW) {
 
                 y = data.getHeightMapValue(x, z);
 
@@ -67,12 +68,8 @@ public class SatelliteRenderer implements MapRenderer {
                         (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
                                 : data.getHeightMapValue(x, z - 1)//within chunk
                 );
-
-                for (i = 0; i < pL; i++) {
-                    for (j = 0; j < pW; j++) {
-                        bm.setPixel(tX + j, tY + i, color);
-                    }
-                }
+                paint.setColor(color);
+                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
 
 
             }
@@ -118,8 +115,7 @@ public class SatelliteRenderer implements MapRenderer {
                 continue;
             }
 
-            ///Meow
-            for (y = 255; y >= 0; y--) {
+            for (y = offset; y >= 0; y--) {
 
                 id = data.getBlockTypeId(x, y, z) & 0xff;
 

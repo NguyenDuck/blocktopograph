@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 
 /**
  * TODO docs
- *
  */
 public class MarkerManager {
 
@@ -51,6 +50,7 @@ public class MarkerManager {
     //
     // example:
     // 1 "Test \" marker" "default \" \"_ma 1 rker 1" 1234 64 4321 overworld ;
+    // Why bother inventing a format?
     private static final Pattern formatRegex = Pattern.compile("(\\d+)\\s+\"(?:(?:(.+?[^\\\\]))|)\"\\s+\"(?:(?:(.+?[^\\\\]))|)\"\\s+(\\d+?)\\s+(\\d+?)\\s+(\\d+?)\\s+(.+?)\\s*;");
 
 
@@ -62,12 +62,12 @@ public class MarkerManager {
 
     private boolean dirty;
 
-    public MarkerManager(File markerFile){
+    public MarkerManager(File markerFile) {
         this.markerFile = markerFile;
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    public void load(){
+    public void load() {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
@@ -76,31 +76,35 @@ public class MarkerManager {
         });
     }
 
-    public void removeMarker(AbstractMarker marker, boolean dirty){
+    private static long xzToKey(int x, int z) {
+        return (((long) x) << 32) | z;
+    }
 
-        long chunkKey = ChunkManager.xzToKey(marker.x >> 4, marker.z >> 4);
+    public void removeMarker(AbstractMarker marker, boolean dirty) {
+
+        long chunkKey = xzToKey(marker.x >> 4, marker.z >> 4);
         Set<AbstractMarker> chunk = chunks.get(chunkKey);
-        if(chunk != null) chunk.remove(marker);
+        if (chunk != null) chunk.remove(marker);
 
         //only set it to dirty if the marker is removed.
         this.dirty |= markers.remove(marker) && dirty;
     }
 
-    public void addMarker(AbstractMarker marker, boolean dirty){
+    public void addMarker(AbstractMarker marker, boolean dirty) {
         markers.add(marker);
 
-        long chunkKey = ChunkManager.xzToKey(marker.x >> 4, marker.z >> 4);
+        long chunkKey = xzToKey(marker.x >> 4, marker.z >> 4);
         Set<AbstractMarker> chunk = chunks.get(chunkKey);
-        if(chunk == null) chunks.put(chunkKey, chunk = new HashSet<>());
+        if (chunk == null) chunks.put(chunkKey, chunk = new HashSet<>());
         chunk.add(marker);
 
         this.dirty |= dirty;
     }
 
-    private synchronized Set<AbstractMarker> loadFromFile(){
+    private synchronized Set<AbstractMarker> loadFromFile() {
         markers = new HashSet<>();
 
-        if(this.markerFile.exists()) {
+        if (this.markerFile.exists()) {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(this.markerFile));
                 String line;
@@ -148,8 +152,8 @@ public class MarkerManager {
     /**
      * Saves the current markers, if and only if the markers were changed.
      */
-    public void save(){
-        if(dirty) executorService.submit(new Runnable() {
+    public void save() {
+        if (dirty) executorService.submit(new Runnable() {
             @Override
             public void run() {
                 MarkerManager.this.saveToFile();
@@ -158,15 +162,15 @@ public class MarkerManager {
         });
     }
 
-    private synchronized void saveToFile(){
+    private synchronized void saveToFile() {
         try {
 
-            if(markerFile.createNewFile()) Log.d("Created "+this.markerFile.getAbsolutePath());
+            if (markerFile.createNewFile()) Log.d("Created " + this.markerFile.getAbsolutePath());
 
             //append to file
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(this.markerFile, false)));
 
-            for(AbstractMarker marker : markers){
+            for (AbstractMarker marker : markers) {
                 out.format("1 \"%s\", \"%s\", %d %d %d %s ;\n",
                         marker.getNamedBitmapProvider().getBitmapDisplayName().replace("\"", "\\\""),
                         marker.getNamedBitmapProvider().getBitmapDataName().replace("\"", "\\\""),
@@ -180,27 +184,27 @@ public class MarkerManager {
         }
     }
 
-    public Collection<AbstractMarker> getMarkers(){
+    public Collection<AbstractMarker> getMarkers() {
         return Collections.unmodifiableSet(markers);
     }
 
-    public Collection<AbstractMarker> getMarkersOfChunk(int chunkX, int chunkZ){
-        long key = ChunkManager.xzToKey(chunkX, chunkZ);
+    public Collection<AbstractMarker> getMarkersOfChunk(int chunkX, int chunkZ) {
+        long key = xzToKey(chunkX, chunkZ);
         Set<AbstractMarker> chunk = chunks.get(key);
-        if(chunk == null) chunks.put(key, chunk = new HashSet<>());
+        if (chunk == null) chunks.put(key, chunk = new HashSet<>());
         return chunk;
     }
 
-    public static AbstractMarker markerFromData(String displayName, String iconName, int x, int y, int z, Dimension dimension){
+    public static AbstractMarker markerFromData(String displayName, String iconName, int x, int y, int z, Dimension dimension) {
 
         NamedBitmapProvider nbp = Block.getByDataName(iconName);
-        if(nbp == null || nbp.getBitmap() == null) nbp = Entity.getEntity(iconName);
-        if(nbp == null || nbp.getBitmap() == null) nbp = TileEntity.getTileEntity(iconName);
-        if(nbp == null || nbp.getBitmap() == null) nbp = CustomIcon.getCustomIcon(iconName);
-        if(nbp == null || nbp.getBitmap() == null) nbp = CustomIcon.DEFAULT_MARKER;
+        if (nbp == null || nbp.getBitmap() == null) nbp = Entity.getEntity(iconName);
+        if (nbp == null || nbp.getBitmap() == null) nbp = TileEntity.getTileEntity(iconName);
+        if (nbp == null || nbp.getBitmap() == null) nbp = CustomIcon.getCustomIcon(iconName);
+        if (nbp == null || nbp.getBitmap() == null) nbp = CustomIcon.DEFAULT_MARKER;
 
         return new AbstractMarker(x, y, z, dimension,
-            new CustomNamedBitmapProvider(nbp, displayName), true);
+                new CustomNamedBitmapProvider(nbp, displayName), true);
 
     }
 }

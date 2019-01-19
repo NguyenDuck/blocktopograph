@@ -1,59 +1,121 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.map.Biome;
+import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.map.BlockNameResolver;
+import com.mithrilmania.blocktopograph.nbt.convert.NBTInputStream;
+import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
+import com.mithrilmania.blocktopograph.nbt.tags.ShortTag;
+import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
 import com.mithrilmania.blocktopograph.util.Noise;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
-public class V1_1_TerrainChunkData extends TerrainChunkData {
+public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
 
-
-    public volatile ByteBuffer terrainData, data2D;
+    //There could be multiple BlockStorage but we can just display the main.
+    public volatile IntBuffer mainStorage;
+    public volatile ByteBuffer data2D;
+    public volatile List<Integer> palette;
+    public volatile int blockTypes, blockCodeLenth;
 
     public static final int chunkW = 16, chunkL = 16, chunkH = 16;
 
     public static final int area = chunkW * chunkL;
     public static final int vol = area * chunkH;
 
-    public static final int POS_VERSION = 0;
-    public static final int POS_BLOCK_IDS = POS_VERSION + 1;
-    public static final int POS_META_DATA = POS_BLOCK_IDS + vol;
-    public static final int POS_SKY_LIGHT = POS_META_DATA + (vol >> 1);
-    public static final int TERRAIN_LENGTH = POS_SKY_LIGHT + (vol >> 1);
-
     public static final int POS_HEIGHTMAP = 0;
     // it looks like each biome takes 2 bytes, and the first 1 byte of every 2 bytes is always 0!?
     public static final int POS_BIOME_DATA = POS_HEIGHTMAP + area + area;
     public static final int DATA2D_LENGTH = POS_BIOME_DATA + area;
 
-    public V1_1_TerrainChunkData(Chunk chunk, byte subChunk) {
+    private static final int[] msk = {0b1, 0b11, 0b111, 0b1111, 0b11111, 0b111111, 0b1111111,
+            0b11111111,
+            0b111111111, 0b1111111111, 0b11111111111,
+            0b111111111111,
+            0b1111111111111, 0b11111111111111, 0b11111111111111};
+
+    public V1_2_Plus_TerrainChunkData(Chunk chunk, byte subChunk) {
         super(chunk, subChunk);
     }
 
     @Override
     public void write() throws WorldData.WorldDBException {
         Chunk chunk = this.chunk.get();
-        chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true, terrainData.array());
+        //this.chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true, terrainData.array());
         chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.DATA_2D, chunk.dimension, subChunk, true, data2D.array());
     }
 
     @Override
     public boolean loadTerrain() {
-        if (terrainData == null) {
+        if (mainStorage == null) {
             try {
                 Chunk chunk = this.chunk.get();
                 byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true);
                 if (rawData == null) return false;
-                this.terrainData = ByteBuffer.wrap(rawData);
+                ByteBuffer raw = ByteBuffer.wrap(rawData);
+                raw.order(ByteOrder.LITTLE_ENDIAN);
+                switch (rawData[0]) {
+                    case 0:
+                        raw.position(1);
+                        break;
+                    case 8:
+                        raw.position(2);
+                        break;
+                    default:
+                        return false;
+                }
+                loadBlockStorage(raw);
                 return true;
             } catch (Exception e) {
                 //data is not present
                 return false;
             }
         } else return true;
+    }
+
+    private void loadBlockStorage(ByteBuffer raw) throws IOException {
+
+        //Read BlockState length.
+        //this byte = (length << 2) | serializedType.
+        blockCodeLenth = (raw.get() & 0xff) >> 1;
+
+        //We use this much of bytes to store BlockStates.
+        int bufsize = (4095 / (32 / blockCodeLenth) + 1) << 2;
+        ByteBuffer byteBuffer = ByteBuffer.allocate(bufsize);
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        mainStorage = byteBuffer.asIntBuffer();
+
+        //No convenient way copy these stuff.
+        byteBuffer.put(raw.array(), raw.position(), bufsize);
+        raw.position(raw.position() + bufsize);
+
+        //Palette items count.
+        int psize = raw.getInt();
+
+        //Construct the palette. Each is a piece of nbt data.
+        palette = new ArrayList<>(16);
+        ByteArrayInputStream bais = new ByteArrayInputStream(raw.array());
+        bais.skip(raw.position());
+        NBTInputStream nis = new NBTInputStream(bais, false);
+        for (int i = 0; i < psize; i++) {
+            CompoundTag tag = (CompoundTag) nis.readTag();
+            String name = ((StringTag) tag.getChildTagByKey("name")).getValue();
+            int data = ((ShortTag) tag.getChildTagByKey("val")).getValue();
+            palette.add(BlockNameResolver.resolve(name) << 8 | data);
+        }
+        raw.position(raw.position() + nis.getReadCount());
     }
 
     @Override
@@ -76,38 +138,7 @@ public class V1_1_TerrainChunkData extends TerrainChunkData {
     @Override
     public void createEmpty() {
 
-        byte[] terrain = new byte[TERRAIN_LENGTH];
-
-        //version byte
-        terrain[0] = terrainData.get(0);
-
-        int x, y, z, i = 1, realY;
-        byte bedrock = (byte) 7;
-        byte sandstone = (byte) 24;
-
-        //generate super basic terrain (one layer of bedrock, 31 layers of sandstone)
-        for (x = 0; x < chunkW; x++) {
-            for (z = 0; z < chunkL; z++) {
-                for (y = 0, realY = chunkH * this.subChunk; y < chunkH; y++, i++, realY++) {
-                    terrain[i] = (realY == 0 ? bedrock : (realY < 32 ? sandstone : 0));
-                }
-            }
-        }
-
-
-        //fill meta-data with 0
-        for (; i < POS_META_DATA; i++) {
-            terrain[i] = (byte) 0;
-        }
-
-        //fill block-light with 0xff
-        for (; i < TERRAIN_LENGTH; i++) {
-            terrain[i] = (byte) 0xff;
-        }
-
-        this.terrainData = ByteBuffer.wrap(terrain);
-        i = 0;
-
+        int i = 0;
 
         if (this.subChunk == (byte) 0) {
 
@@ -133,13 +164,21 @@ public class V1_1_TerrainChunkData extends TerrainChunkData {
 
     }
 
+    private int getBlockState(int x, int y, int z) {
+        int codeOffset = getOffset(x, y, z);
+        int intCapa = 32 / blockCodeLenth;
+        int stick = mainStorage.get(codeOffset / intCapa);
+        int ind = (stick >> (codeOffset % intCapa * blockCodeLenth)) & msk[blockCodeLenth - 1];
+        return palette.get(ind);
+    }
+
 
     @Override
     public byte getBlockTypeId(int x, int y, int z) {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
             return 0;
         }
-        return terrainData.get(POS_BLOCK_IDS + getOffset(x, y, z));
+        return (byte) (getBlockState(x, y, z) >>> 8);
     }
 
     @Override
@@ -147,17 +186,7 @@ public class V1_1_TerrainChunkData extends TerrainChunkData {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
             return 0;
         }
-        int offset = getOffset(x, y, z);
-        byte dualData = 0;
-        try {
-            //dualData = terrainData.get(POS_META_DATA + (offset >>> 1));
-            dualData = terrainData.get(terrainData.limit() - (offset >>> 1));
-            return (byte) ((offset & 1) == 1 ? ((dualData >>> 4) & 0xf) : (dualData & 0xf));
-        } catch (Exception e) {
-            return (byte) ((offset & 1) == 1 ? ((dualData >>> 4) & 0xf) : (dualData & 0xf));
-        }
-
-
+        return (byte) (getBlockState(x, y, z) & 0xf);
     }
 
     @Override
@@ -165,9 +194,7 @@ public class V1_1_TerrainChunkData extends TerrainChunkData {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
             return 0;
         }
-        int offset = getOffset(x, y, z);
-        byte dualData = terrainData.get(POS_SKY_LIGHT + (offset >>> 1));
-        return (byte) ((offset & 1) == 1 ? (dualData >>> 4) & 0xf : dualData & 0xf);
+        return 0;
     }
 
     @Override
@@ -189,7 +216,6 @@ public class V1_1_TerrainChunkData extends TerrainChunkData {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
             return;
         }
-        terrainData.put(POS_BLOCK_IDS + getOffset(x, y, z), (byte) type);
     }
 
     @Override
@@ -197,29 +223,16 @@ public class V1_1_TerrainChunkData extends TerrainChunkData {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
             return;
         }
-        int offset = getOffset(x, y, z);
-        int pos = POS_META_DATA + (offset >> 1);
-        byte oldData = terrainData.get(POS_META_DATA + (offset >> 1));
-        if ((offset & 1) == 1) {
-            terrainData.put(pos, (byte) ((newData << 4) | (oldData & 0xf)));
-        } else {
-            terrainData.put(pos, (byte) ((oldData & 0xf0) | (newData & 0xf)));
-        }
     }
 
     private int getOffset(int x, int y, int z) {
-        return (x * chunkW + z) * chunkH + y;
+        return (((x << 4) | z) << 4) | y;
     }
 
     @Override
     public byte getBiome(int x, int z) {
         return data2D.get(POS_BIOME_DATA + get2Di(x, z));
     }
-
-    /*
-        MCPE 1.0 stopped embedding foliage color data in the chunk data,
-         so now we fake the colors by combining biome colors with Perlin noise
-     */
 
     @Override
     public byte getGrassR(int x, int z) {

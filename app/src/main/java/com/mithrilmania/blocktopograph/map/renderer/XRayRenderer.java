@@ -18,30 +18,28 @@ public class XRayRenderer implements MapRenderer {
 
     /**
      * Render a single chunk to provided bitmap (bm)
-     * @param cm ChunkManager, provides chunks, which provide chunk-data
-     * @param bm Bitmap to render to
-     * @param dimension Mapped dimension
-     * @param chunkX X chunk coordinate (x-block coord / Chunk.WIDTH)
-     * @param chunkZ Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param bX begin block X coordinate, relative to chunk edge
-     * @param bZ begin block Z coordinate, relative to chunk edge
-     * @param eX end block X coordinate, relative to chunk edge
-     * @param eZ end block Z coordinate, relative to chunk edge
-     * @param pX texture X pixel coord to start rendering to
-     * @param pY texture Y pixel coord to start rendering to
-     * @param pW width (X) of one block in pixels
-     * @param pL length (Z) of one block in pixels
-     * @return bm is returned back
      *
+     * @param cm        ChunkManager, provides chunks, which provide chunk-data
+     * @param bm        Bitmap to render to
+     * @param dimension Mapped dimension
+     * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
+     * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
+     * @param pX        texture X pixel coord to start rendering to
+     * @param pY        texture Y pixel coord to start rendering to
+     * @param pW        width (X) of one block in pixels
+     * @param pL        length (Z) of one block in pixels
+     * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int bX, int bZ, int eX, int eZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
+    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
 
-        Chunk chunk = cm.getChunk(chunkX, chunkZ);
+        Chunk chunk = cm.getChunk(chunkX, chunkZ, dimension);
         Version cVersion = chunk.getVersion();
 
-        if(cVersion == Version.ERROR) return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
-        if(cVersion == Version.NULL) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (cVersion == Version.ERROR)
+            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+        if (cVersion == Version.NULL)
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
         //the bottom sub-chunk is sufficient to get heightmap data.
         TerrainChunkData data;
@@ -50,8 +48,8 @@ public class XRayRenderer implements MapRenderer {
         int x, y, z, color, i, j, tX, tY;
 
         //render width in blocks
-        int rW = eX - bX;
-        int size2D = rW * (eZ - bZ);
+        int rW = 16;
+        int size2D = rW * (16);
         int index2D;
         Block[] bestBlock = new Block[size2D];
 
@@ -63,17 +61,17 @@ public class XRayRenderer implements MapRenderer {
         int r, g, b;
 
         int subChunk;
-        for(subChunk = 0; subChunk < cVersion.subChunks; subChunk++) {
+        for (subChunk = 0; subChunk < cVersion.subChunks; subChunk++) {
             data = chunk.getTerrain((byte) subChunk);
             if (data == null || !data.loadTerrain()) break;
 
-            for (z = bZ; z < eZ; z++) {
-                for (x = bX; x < eX; x++) {
+            for (z = 0; z < 16; z++) {
+                for (x = 0; x < 16; x++) {
 
                     for (y = 0; y < cVersion.subChunkHeight; y++) {
                         block = Block.getBlock(data.getBlockTypeId(x, y, z) & 0xff, 0);
 
-                        index2D = ((z - bZ) * rW) + (x - bX);
+                        index2D = ((z - 0) * rW) + (x - 0);
                         if (block == null || block.id <= 1)
                             continue;
                         else if (block == Block.B_56_0_DIAMOND_ORE) {
@@ -98,11 +96,12 @@ public class XRayRenderer implements MapRenderer {
             }
         }
 
-        if(subChunk == 0) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (subChunk == 0)
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
-        for (z = bZ, tY = pY; z < eZ; z++, tY += pL) {
-            for (x = bX, tX = pX; x < eX; x++, tX += pW) {
-                block = bestBlock[((z - bZ) * rW) + (x - bX)];
+        for (z = 0, tY = pY; z < 16; z++, tY += pL) {
+            for (x = 0, tX = pX; x < 16; x++, tX += pW) {
+                block = bestBlock[((z - 0) * rW) + (x - 0)];
                 if (block == null || block.color == null) {
                     color = 0xff000000;
                 } else {

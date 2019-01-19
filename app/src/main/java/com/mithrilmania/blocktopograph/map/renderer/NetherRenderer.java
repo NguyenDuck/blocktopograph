@@ -1,8 +1,8 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 
-
 import android.graphics.Bitmap;
+
 import com.mithrilmania.blocktopograph.Log;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
@@ -17,38 +17,37 @@ public class NetherRenderer implements MapRenderer {
 
     /**
      * Render a single chunk to provided bitmap (bm)
-     * @param cm ChunkManager, provides chunks, which provide chunk-data
-     * @param bm Bitmap to render to
-     * @param dimension Mapped dimension
-     * @param chunkX X chunk coordinate (x-block coord / Chunk.WIDTH)
-     * @param chunkZ Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param bX begin block X coordinate, relative to chunk edge
-     * @param bZ begin block Z coordinate, relative to chunk edge
-     * @param eX end block X coordinate, relative to chunk edge
-     * @param eZ end block Z coordinate, relative to chunk edge
-     * @param pX texture X pixel coord to start rendering to
-     * @param pY texture Y pixel coord to start rendering to
-     * @param pW width (X) of one block in pixels
-     * @param pL length (Z) of one block in pixels
-     * @return bm is returned back
      *
+     * @param cm        ChunkManager, provides chunks, which provide chunk-data
+     * @param bm        Bitmap to render to
+     * @param dimension Mapped dimension
+     * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
+     * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
+     * @param pX        texture X pixel coord to start rendering to
+     * @param pY        texture Y pixel coord to start rendering to
+     * @param pW        width (X) of one block in pixels
+     * @param pL        length (Z) of one block in pixels
+     * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int bX, int bZ, int eX, int eZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
+    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
 
-        Chunk chunk = cm.getChunk(chunkX, chunkZ);
+        Chunk chunk = cm.getChunk(chunkX, chunkZ, dimension);
         Version cVersion = chunk.getVersion();
 
-        if(cVersion == Version.ERROR) return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
-        if(cVersion == Version.NULL) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (cVersion == Version.ERROR)
+            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+        if (cVersion == Version.NULL)
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
         //bottom chunk must be present
         TerrainChunkData floorData = chunk.getTerrain((byte) 0);
-        if(floorData == null || !floorData.load2DData()) return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, bX, bZ, eX, eZ, pX, pY, pW, pL);
+        if (floorData == null || !floorData.load2DData())
+            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
 
 
-        Chunk chunkW = cm.getChunk(chunkX - 1, chunkZ);
-        Chunk chunkN = cm.getChunk(chunkX, chunkZ-1);
+        Chunk chunkW = cm.getChunk(chunkX - 1, chunkZ, dimension);
+        Chunk chunkN = cm.getChunk(chunkX, chunkZ - 1, dimension);
 
         TerrainChunkData data;
 
@@ -67,8 +66,8 @@ public class NetherRenderer implements MapRenderer {
         int subChunk;
         int stopSubChunk;
 
-        for (z = bZ, tY = pY ; z < eZ; z++, tY += pL) {
-            for (x = bX, tX = pX; x < eX; x++, tX += pW) {
+        for (z = 0, tY = pY; z < 16; z++, tY += pL) {
+            for (x = 0, tX = pX; x < 16; x++, tX += pW) {
 
                 worth = 0;
                 shadingSum = 0;
@@ -99,7 +98,7 @@ public class NetherRenderer implements MapRenderer {
                             : 0;
 
                     //check if it is supported, default to full brightness to not lose details.
-                    if(data.supportsBlockLightValues()) {
+                    if (data.supportsBlockLightValues()) {
                         lightShading = (float) lightValue / 15f + 1;
                     } else {
                         lightShading = 2f;
@@ -115,8 +114,6 @@ public class NetherRenderer implements MapRenderer {
                     shadingSum += shading;
 
 
-
-
                     a = 1f;
 
                     offset = caveceil % cVersion.subChunkHeight;
@@ -125,7 +122,8 @@ public class NetherRenderer implements MapRenderer {
                     stopSubChunk = caveceil / cVersion.subChunkHeight;
 
 
-                    subChunkLoop: for(; subChunk >= stopSubChunk; subChunk--) {
+                    subChunkLoop:
+                    for (; subChunk >= stopSubChunk; subChunk--) {
                         if (subChunk == stopSubChunk) stop = cavefloor % cVersion.subChunkHeight;
 
                         data = chunk.getTerrain((byte) subChunk);
@@ -179,7 +177,6 @@ public class NetherRenderer implements MapRenderer {
                     }
 
 
-
                     layers++;
                 }
 
@@ -196,7 +193,8 @@ public class NetherRenderer implements MapRenderer {
                 b = b < 0 ? 0 : b > 255 ? 255 : b;
 
 
-                subChunkLoop: for(subChunk = 0; subChunk < cVersion.subChunks; subChunk++) {
+                subChunkLoop:
+                for (subChunk = 0; subChunk < cVersion.subChunks; subChunk++) {
                     data = chunk.getTerrain((byte) subChunk);
                     if (data == null || data.loadTerrain()) break;
 
@@ -236,8 +234,8 @@ public class NetherRenderer implements MapRenderer {
 
                 color = (r << 16) | (g << 8) | b | 0xff000000;
 
-                for(i = 0; i < pL; i++){
-                    for(j = 0; j < pW; j++){
+                for (i = 0; i < pL; i++) {
+                    for (j = 0; j < pW; j++) {
                         bm.setPixel(tX + j, tY + i, color);
                     }
                 }

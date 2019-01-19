@@ -14,6 +14,8 @@ public final class NBTInputStream
     private final DataInputStream is;
     private final boolean littleEndian;
 
+    private int readCount;
+
     public NBTInputStream(InputStream is)
             throws IOException {
         this(is, false, true);
@@ -28,6 +30,7 @@ public final class NBTInputStream
             throws IOException {
         this.littleEndian = littleEndian;
         this.is = new DataInputStream(compressed ? new GZIPInputStream(is) : is);
+        this.readCount = 0;
     }
 
     public ArrayList<Tag> readTopLevelTags() {
@@ -52,12 +55,15 @@ public final class NBTInputStream
     private Tag readTag(int depth)
             throws IOException {
         int type = this.is.readByte() & 0xFF;
+        readCount++;
         String name;
         if (type != NBTConstants.NBTType.END.id) {
             short shLen = this.is.readShort();
+            readCount += 2;
             int nameLength = (this.littleEndian ? Short.reverseBytes(shLen) : shLen) & 0xFFFF;
             byte[] nameBytes = new byte[nameLength];
             this.is.readFully(nameBytes);
+            readCount += nameLength;
             name = new String(nameBytes, NBTConstants.CHARSET.name());
         } else {
             name = "";
@@ -70,7 +76,7 @@ public final class NBTInputStream
 
         NBTConstants.NBTType nbtType = NBTConstants.NBTType.typesByID.get(type);
 
-        if(nbtType == null) throw new IOException("Invalid tag type: " + type + ".");
+        if (nbtType == null) throw new IOException("Invalid tag type: " + type + ".");
 
         int length;
         byte[] bytes;
@@ -81,35 +87,47 @@ public final class NBTInputStream
                 }
                 return new EndTag();
             case BYTE:
+                readCount++;
                 return new ByteTag(name, this.is.readByte());
             case SHORT:
+                readCount += 2;
                 return new ShortTag(name, this.littleEndian ? Short.reverseBytes(this.is.readShort()) : this.is.readShort());
             case INT:
+                readCount += 4;
                 return new IntTag(name, this.littleEndian ? Integer.reverseBytes(this.is.readInt()) : this.is.readInt());
             case LONG:
+                readCount += 8;
                 return new LongTag(name, this.littleEndian ? Long.reverseBytes(this.is.readLong()) : this.is.readLong());
             case FLOAT:
+                readCount += 4;
                 return new FloatTag(name, this.littleEndian ? Float.intBitsToFloat(Integer.reverseBytes(this.is.readInt())) : this.is.readFloat());
             case DOUBLE:
+                readCount += 8;
                 return new DoubleTag(name, this.littleEndian ? Double.longBitsToDouble(Long.reverseBytes(this.is.readLong())) : this.is.readDouble());
             case BYTE_ARRAY: {
                 length = this.littleEndian ? Integer.reverseBytes(this.is.readInt()) : this.is.readInt();
+                readCount += 4;
                 bytes = new byte[length];
                 this.is.readFully(bytes);
+                readCount += length;
                 return new ByteArrayTag(name, bytes);
             }
             case STRING: {
                 length = this.littleEndian ? Short.reverseBytes(this.is.readShort()) : this.is.readShort();
+                readCount+=2;
                 bytes = new byte[length];
                 this.is.readFully(bytes);
+                readCount += length;
                 return new StringTag(name, new String(bytes, NBTConstants.CHARSET.name()));
             }
             case LIST: {
                 int childType = this.is.readByte();
+                readCount++;
                 length = this.littleEndian ? Integer.reverseBytes(this.is.readInt()) : this.is.readInt();
+                readCount += 4;
 
                 NBTConstants.NBTType childNbtType = NBTConstants.NBTType.typesByID.get(childType);
-                if(childNbtType.id == 0) return new ListTag(name, new ArrayList<Tag>());
+                if (childNbtType.id == 0) return new ListTag(name, new ArrayList<Tag>());
                 Class<? extends Tag> clazz = childNbtType.tagClazz;
                 ArrayList<Tag> tagList = new ArrayList<>();
                 for (int i = 0; i < length; i++) {
@@ -134,26 +152,32 @@ public final class NBTInputStream
             }
             case INT_ARRAY: {
                 length = this.littleEndian ? Integer.reverseBytes(this.is.readInt()) : this.is.readInt();
+                readCount += 4;
                 int[] ints = new int[length];
-                if(this.littleEndian) for (int i = 0; i < length; i++) {
+                readCount += length << 2;
+                if (this.littleEndian) for (int i = 0; i < length; i++) {
                     ints[i] = Integer.reverseBytes(this.is.readInt());
-                } else for (int i = 0; i < length; i++) {
+                }
+                else for (int i = 0; i < length; i++) {
                     ints[i] = this.is.readInt();
                 }
                 return new IntArrayTag(name, ints);
             }
             case SHORT_ARRAY: {
                 length = this.littleEndian ? Integer.reverseBytes(this.is.readInt()) : this.is.readInt();
+                readCount += 4;
                 short[] shorts = new short[length];
-                if(this.littleEndian) for (int i = 0; i < length; i++) {
+                readCount += length << 1;
+                if (this.littleEndian) for (int i = 0; i < length; i++) {
                     shorts[i] = Short.reverseBytes(this.is.readShort());
-                } else for (int i = 0; i < length; i++) {
+                }
+                else for (int i = 0; i < length; i++) {
                     shorts[i] = this.is.readShort();
                 }
                 return new ShortArrayTag(name, shorts);
             }
             default: {
-                throw new IOException("Unhandled NBT type!!! type: "+type);
+                throw new IOException("Unhandled NBT type!!! type: " + type);
             }
         }
     }
@@ -161,6 +185,14 @@ public final class NBTInputStream
     public void close()
             throws IOException {
         this.is.close();
+    }
+
+    public int getReadCount() {
+        return readCount;
+    }
+
+    public void resetReadCount() {
+        readCount = 0;
     }
 
     public boolean isLittleEndian() {
