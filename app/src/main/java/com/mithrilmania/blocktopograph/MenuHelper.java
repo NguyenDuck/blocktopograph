@@ -3,6 +3,7 @@ package com.mithrilmania.blocktopograph;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -27,8 +28,9 @@ public class MenuHelper {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                 TextView msg = new TextView(ctx);
+                msg.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 float dpi = ctx.getResources().getDisplayMetrics().density;
-                msg.setPadding((int)(19*dpi), (int)(5*dpi), (int)(14*dpi), (int)(5*dpi));
+                msg.setPadding((int) (19 * dpi), (int) (5 * dpi), (int) (14 * dpi), (int) (5 * dpi));
                 msg.setMaxLines(20);
                 msg.setMovementMethod(LinkMovementMethod.getInstance());
                 msg.setText(R.string.app_about);
@@ -44,7 +46,7 @@ public class MenuHelper {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                 TextView msg = new TextView(ctx);
                 float dpi = ctx.getResources().getDisplayMetrics().density;
-                msg.setPadding((int)(19*dpi), (int)(5*dpi), (int)(14*dpi), (int)(5*dpi));
+                msg.setPadding((int) (19 * dpi), (int) (5 * dpi), (int) (14 * dpi), (int) (5 * dpi));
                 msg.setMaxLines(20);
                 msg.setMovementMethod(LinkMovementMethod.getInstance());
                 msg.setText(R.string.app_help);
@@ -60,7 +62,7 @@ public class MenuHelper {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                 TextView msg = new TextView(ctx);
                 float dpi = ctx.getResources().getDisplayMetrics().density;
-                msg.setPadding((int)(19*dpi), (int)(5*dpi), (int)(14*dpi), (int)(5*dpi));
+                msg.setPadding((int) (19 * dpi), (int) (5 * dpi), (int) (14 * dpi), (int) (5 * dpi));
                 msg.setMaxLines(20);
                 msg.setMovementMethod(LinkMovementMethod.getInstance());
                 String content = String.format(ctx.getResources().getString(R.string.app_changelog), BuildConfig.VERSION_NAME);
@@ -79,5 +81,5 @@ public class MenuHelper {
             }
         }
     }
-    
+
 }

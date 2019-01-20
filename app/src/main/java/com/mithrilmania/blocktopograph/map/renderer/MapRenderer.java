@@ -1,8 +1,9 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
-import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 
-import com.mithrilmania.blocktopograph.chunk.ChunkData;
+import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
@@ -21,8 +22,8 @@ public interface MapRenderer {
     /**
      * Render a single chunk to provided bitmap (bm)
      *
-     * @param cm        ChunkManager, provides chunks, which provide chunk-data
-     * @param bm        Bitmap to render to
+     * @param chunk        ChunkManager, provides chunks, which provide chunk-data
+     * @param canvas        Bitmap to render to
      * @param dimension Mapped dimension
      * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
      * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
@@ -30,9 +31,12 @@ public interface MapRenderer {
      * @param pY        texture Y pixel coord to start rendering to
      * @param pW        width (X) of one block in pixels
      * @param pL        length (Z) of one block in pixels
+     * @param paint
+     * @param version
+     * @param chunkManager
      * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException;
+    void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException;
 
 }

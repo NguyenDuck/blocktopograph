@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="TypographyEllipsis">
+    <string name="brand_sub">由@protolambda制作</string>
+    <string name="title_worlditem_list">选择世界</string>
+    <string name="title_worlditem_detail">世界</string>
+    <string name="title_activity_world">世界</string>
+    <string name="navigation_drawer_open">打开侧边栏</string>
+    <string name="navigation_drawer_close">关闭侧边栏</string>
+    <string name="action_settings">设置</string>
+    <string name="action_about">关于</string>
+    <string name="action_help">帮助</string>
+    <string name="action_changelog">更新日志</string>
+    <string name="no_sdcard_access">"不能打开世界：没有存储读/写权限。
+        尝试重启应用，或者在应用设置/手机管家开启本应用的存储权限。"</string>
+    <string name="no_custom_markers_title">没有自定义标记。在地图上长按创建。</string>
+    <string name="no_custom_markers">还没有自定义标记。</string>
+    <string name="app_help">查看本应用的文档（长期未更新）：
+        <a href="http://blocktopograph.protolambda.com/help">
+            blocktopograph.protolambda.com/help
+        </a>.</string>
+    <string name="world_seed_prefix">种子：</string>
+    <string name="app_about">
+        本应用由<a href="http://twitter.com/protolambda">@protolambda</a>原创，
+        由<a href="https://github.com/MithrilMania/blocktopograph">@MithrilMania</a>、
+        <a href="https://github.com/flagmaggot/blocktopograph">@flagmaggot</a>、
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a>参与更新和维护。
+        在等待前任作者回归（或确认失踪）前，暂时从Github发布更新，您可以
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph/releases">打开发布页面</a>
+        下载最新的apk安装包，需要从浏览器勾选“使用电脑版网页”或用电脑打开，手机默认看不到下载。
+        有账号的可以点一下Star~ 以后可能恢复咕狗商店上架，谁知道呢。
+        <i>欢迎在Github查看源代码，并参与更新维护（包括增强翻译）：</i>\n
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
+        \n使用前请备份你的重要存档，以免发生意外。一点小问题都可能导致Minecraft无法加载整个存档→_→
+        \n本应用支持MCPE 0.14至1.9（当前）的存档格式，更旧或者更新的版本【可能】不完全兼容，但不妨一试。
+        \n原作者网站：<a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>
+        这会是第二任作者的网站吗？或者只是重名<a href="http://mithrilmania.fc2web.com/">mithrilmania.fc2web.com/</a>
+        <i>Disclaimer</i>\n
+        <b>This app is not affiliated with Minecraft, Mojang AB or Microsoft.</b>\n
+        This is not an official but a fan made app.\n
+        Minecraft is a trademark of Mojang AB.\n
+        Please note:\n
+            &#8226; NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.\n
+            &#8226; THE APP IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND.\n
+        \n<i>Used libraries</i>\n
+        &#8226; <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n
+        &#8226; <a href="https://github.com/mithrilmania/TileView">
+                    Tileview, fork by mithrilmania</a> \n
+        &#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n
+            with <a href="https://github.com/mithrilmania/android-leveldb">
+                    android-leveldb, fork by mithrilmania</a> \n
+        \n
+    </string>
+    <string name="app_changelog" formatted="false">
+        版本: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>
+        <![CDATA[<br/><br/>
+        2018之前的更新记录可以到:
+        <a href="http://blocktopograph.protolambda.com/changelog">
+            blocktopograph.protolambda.com/changelog
+        </a>查看。]]>
+    </string>
+    <string name="create_marker_info">
+        标记图标：\n
+        &#8226; default_marker, blue_marker, green_marker, red_marker \n
+        &#8226; Entity data-names (case sensitive) \n
+        &#8226; Block data-names (case sensitive) \n
+    </string>
+    <string name="reloaded_world_list">已刷新世界列表。</string>
+    <string name="could_not_find_worlds">找不到任何世界。</string>
+    <string name="no_read_write_access">没法读/写世界。</string>
+    <string name="storage_path_here">输入文件路径...</string>
+    <string name="open_world_custom_path">从外部文件打开世界</string>
+    <string name="open">打开</string>
+    <string name="report_path_and_previous_search" formatted="false">
+        您使用的路径：<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/worldName" id="file_path">%1$s</xliff:g>\n
+        \n
+        已经从<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/" id="file_path">%2$s</xliff:g>
+        搜索包含Minecraft世界的文件夹。
+    </string>
+    <string name="no_file_folder_found_at_path">没找到您输入的文件或者文件夹</string>
+    <string name="worldpath_is_not_directory">
+        文件路径（可以以“/level.dat”结尾）不是文件夹。
+    </string>
+    <string name="no_level_dat_found">没找到level.dat文件</string>
+    <string name="error_opening_world">打开世界时发生错误。</string>
+    <string name="ask_close_world">关闭世界？</string>
+    <string name="leveldb_key_here">输入用于levelDB的关键码...</string>
+    <string name="open_nbt_from_db">从数据库打开NBT数据</string>
+    <string name="invalid_keyname">无效关键码。</string>
+    <string name="cannot_find_db_entry_with_name">根据该名称，没有找到数据库项。</string>
+    <string name="failed_to_read_x_from_db" formatted="false">
+        不能从该世界的数据库文件读取<xliff:g example="very_long_DB_key" id="some_db_key">%1$s</xliff:g>\"。
+    </string>
+    <string name="no_multiplayer_data_found">没找到联机玩家的数据。</string>
+    <string name="select_player">选择玩家</string>
+    <string name="open_nbt">打开NBT数据</string>
+    <string name="failed_read_player_from_db_with_key_x">无法从数据库打开玩家的数据项。关键码：</string>
+    <string name="error_cannot_open_world_close_and_try_again">
+        当前Minecraft世界无法打开。
+        可以尝试从Minecraft退出该世界，然后重启应用。
+    </string>
+    <string name="confirm_close_world">关闭世界？</string>
+    <string name="confirm_close_nbt_editor">关闭NBT编辑窗口？</string>
+    <string name="teleport_local_player">传送单机玩家</string>
+    <string name="create_custom_marker">创建自定义标记</string>
+    <string name="remove_custom_marker">移除标记</string>
+    <string name="open_chunk_entity_nbt">打开该区块的实体(entity)的NBT数据</string>
+    <string name="open_chunk_tile_entity_nbt">打开该区块的方块实体(Tile entity)的NBT数据</string>
+    <string name="entity_chunk_data">该区块的实体数据</string>
+    <string name="tile_entity_chunk_data">该区块的方块实体数据</string>
+    <string name="nbt_chunk_data">该区块的NBT数据</string>
+    <string name="marker_info" formatted="false">
+        <xliff:g example="My awesome marker" id="marker_displayname">%1$s</xliff:g>
+        ~ <xliff:g example="blue_marker" id="marker_dataname">%2$s</xliff:g>
+        (<xliff:g example="123.45" id="x_coordinate">%3$d</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%4$d</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%5$d</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%6$s</xliff:g>].
+    </string>
+    <string name="teleported_player_to_xyz_dim">
+        已传送玩家到(<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%2$.2f</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%3$.2f</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%4$s</xliff:g>].
+    </string>
+    <string name="failed_teleporting_player">传送玩家失败。</string>
+    <string name="failed_to_find_or_edit_local_player_data">找不到或者不能编辑本地玩家数据。</string>
+    <string name="default_custom_marker_name">我的自定义标记</string>
+    <string name="marker_invalid_name">无效的标记名字</string>
+    <string name="invalid_icon_name">无效的图标名称</string>
+    <string name="invalid_x_coordinate">X坐标无效</string>
+    <string name="invalid_y_coordinate">Y坐标无效</string>
+    <string name="invalid_z_coordinate">Z坐标无效</string>
+    <string name="failed_to_create_marker">错误：创建标记失败。</string>
+    <string name="failed_to_load_x">1</string>
+    <string name="nbt_editor">NBT编辑器</string>
+    <string name="data_does_not_exist_for_chunk_ask_if_create">1</string>
+    <string name="creating_and_saving_chunk_NBT_data">正在创建该区块的NBT数据...</string>
+    <string name="created_and_saved_chunk_NBT_data">已完成~</string>
+    <string name="failed_to_create_or_save_chunk_NBT_data">创建或保存失败</string>
+    <string name="error_could_not_open_world_details_lost_track_world">错误：无法打开世界详情。</string>
+    <string name="error_could_not_open_world">错误：无法打开世界。</string>
+    <string name="no_level_data_available">没有有效的关卡数据(可能指level.dat?)。</string>
+    <string name="worldlist_detail_world_name">名字：</string>
+    <string name="worldlist_detail_world_size">大小：</string>
+    <string name="worldlist_detail_gamemode">模式：</string>
+    <string name="worldlist_detail_last_played">上次游玩：</string>
+    <string name="worldlist_detail_world_seed">种子：</string>
+    <string name="worldlist_detail_file_path">文件路径：</string>
+    <string name="loading_world">加载世界...</string>
+    <string name="x_is_invalid">
+        “<xliff:g example="something" id="something_invalid">%1$s</xliff:g>”无效
+    </string>
+    <string name="edit_cancel">取消</string>
+    <string name="edit_copy">复制</string>
+    <string name="edit_paste_overwrite">粘贴（覆盖该标签）</string>
+    <string name="edit_paste_sub_tag">粘贴（作为该标签的子标签）</string>
+    <string name="edit_delete">删除</string>
+    <string name="edit_rename">重命名</string>
+    <string name="edit_add_sub_tag">添加子标签</string>
+    <string name="edit_root_add">添加新NBT标签</string>
+    <string name="edit_root_paste_sub_tag">作为子标签粘贴</string>
+    <string name="edit_root_remove_all">移除所有NBT标签</string>
+    <string name="cannot_edit_root_NBT_tag">不能修改NBT根标签。</string>
+    <string name="root_NBT_options">NBT根标签选项</string>
+    <string name="hint_tag_name_here">输入标签名字...</string>
+    <string name="create_nbt_tag">创建NBT标签</string>
+    <string name="create">创建</string>
+    <string name="clipboard_is_empty">剪贴板没有东西...</string>
+    <string name="confirm_delete_all_nbt_tags">真要删除所有NBT标签？</string>
+    <string name="delete_loud">" 删 ↑ 除 ↓ "</string>
+    <string name="failed_to_do_NBT_change">错误：修改NBT数据失败。</string>
+    <string name="nbt_tag_options">NBT标签选项</string>
+    <string name="clipboard_key_exists_in_compound">错误：剪贴板中的标签与当前标签的子标签冲突。</string>
+    <string name="error_cannot_overwrite_tag_unknow_parent_type">错误：不能覆盖标签：上层标签类型未知。</string>
+    <string name="error_cannot_overwrite_in_empty_parent">错误：不能在空标签里覆盖。</string>
+    <string name="error_cannot_paste_as_sub_unknown_parent_type">错误：不能作为子标签粘贴：上层标签类型未知。</string>
+    <string name="error_cannot_remove_from_empty_list">错误：不能从空列表删除标签。</string>
+    <string name="rename_nbt_tag">重命名NBT标签</string>
+    <string name="rename">重命名</string>
+    <string name="error_parent_already_contains_child_with_same_key">错误：上级标签已经包含相同的子标签。</string>
+    <string name="error_key_already_exists_in_compound">错误：该组合标签已包含相同的关键码。</string>
+    <string name="sub_tags_only_add_compound_list">错误：只能在组合标签或列表标签添加子标签。</string>
+    <string name="no_data_changed_nothing_to_save">没有需要保存的。</string>
+    <string name="confirm_nbt_editor_changes">保存？</string>
+    <string name="go_to_a_marker_list">前往标记位置</string>
+    <string name="failed_find_player">找不到玩家</string>
+    <string name="failed_find_spawn">找不到出生点</string>
+    <string name="player">玩家位置</string>
+    <string name="spawn">出生点</string>
+    <string name="something_at_xyz_dim_float" formatted="false">
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>在：
+        (<xliff:g example="123.45" id="x_coordinate">%2$.2f</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%3$.2f</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%4$.2f</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
+    <string name="something_at_xyz_dim_int" formatted="false">
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>在：
+        (<xliff:g example="123.45" id="x_coordinate">%2$d</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%3$d</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].
+    </string>
+    <string name="no_map_available">没有有效的地图。</string>
+    <string name="searching_for_players">寻找玩家...</string>
+    <string name="failed_to_retrieve_player_data">提取玩家数据失败。</string>
+    <string name="go_to_player">前往玩家位置</string>
+    <string name="go_to_local_player">前往单机玩家位置</string>
+    <string name="go_to__other_player">前往其他玩家位置</string>
+    <string name="go_loud">走！</string>
+    <string name="go_to_coordinate">前往坐标</string>
+    <string name="teleported_player_to_xyz_dimension">已传送玩家到：</string>
+    <string name="marker_is_not_removable">这个标记不该被移除。</string>
+    <string name="sub_chunk">子区块</string>
+    <string name="choose_subchunk">选择一个子区块（0至15）：</string>
+    <string name="filter_markers">筛选标记</string>
+    <string name="show_map">显示地图</string>
+    <string name="select_world">选择世界</string>
+    <string name="singleplayer_nbt">单机玩家的NBT数据</string>
+    <string name="multiplayer_nbt">联机玩家的NBT数据</string>
+    <string name="world_nbt">世界NBT数据</string>
+    <string name="overworld">主世界</string>
+    <string name="satellite">俯瞰图</string>
+    <string name="cave">洞穴</string>
+    <string name="slime_chunks">史莱姆区块</string>
+    <string name="heightmap">高度图</string>
+    <string name="biomes">生态群系图</string>
+    <string name="foliage_color">植被颜色</string>
+    <string name="x_ray">透视</string>
+    <string name="light">光照强度</string>
+    <string name="nether">地狱</string>
+    <string name="map">地图</string>
+    <string name="the_end">末地</string>
+    <string name="map_options">地图选项</string>
+    <string name="toggle_grid">开/关网格显示</string>
+    <string name="toggle_markers">开/关标记显示</string>
+    <string name="advanced_options">高级选项</string>
+    <string name="biomedata_nbt">生物群系NBT数据</string>
+    <string name="overworld_nbt">主世界NBT数据</string>
+    <string name="villages_nbt">村庄NBT数据</string>
+    <string name="portals_nbt">传送门NBT数据</string>
+    <string name="dimension0_nbt">维度0NBT数据</string>
+    <string name="dimension1_nbt">维度1NBT数据</string>
+    <string name="dimension2_nbt">维度2NBT数据</string>
+    <string name="autonomousentities_nbt">自主实体NBT数据</string>
+    <string name="open_nbt_by_name">按名称打开NBT数据</string>
+    <string name="gamemode_survival">生存</string>
+    <string name="gamemode_creative">创造</string>
+    <string name="gamemode_adventure">探险</string>
+    <string name="postion_2D_floats_with_chunkpos">
+    位置：(<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
+    <xliff:g example="-123.987" id="z_coordinate">%2$.2f</xliff:g>)
+    区块：(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>;
+    <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
+    [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].
+    </string>
+    <string name="action_teleport">传送！</string>
+    <string name="go_to_spawn">前往出生点</string>
+</resources>

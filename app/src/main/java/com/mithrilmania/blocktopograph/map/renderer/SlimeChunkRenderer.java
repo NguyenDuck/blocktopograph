@@ -1,12 +1,13 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.Version;
+import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.util.MTwister;
 
@@ -16,33 +17,52 @@ public class SlimeChunkRenderer implements MapRenderer {
     /**
      * Render a single chunk to provided bitmap (bm)
      *
-     * @param cm        ChunkManager, provides chunks, which provide chunk-data
-     * @param bm        Bitmap to render to
-     * @param dimension Mapped dimension
-     * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
-     * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param pX        texture X pixel coord to start rendering to
-     * @param pY        texture Y pixel coord to start rendering to
-     * @param pW        width (X) of one block in pixels
-     * @param pL        length (Z) of one block in pixels
+     * @param chunk        ChunkManager, provides chunks, which provide chunk-data
+     * @param canvas       Bitmap to render to
+     * @param dimension    Mapped dimension
+     * @param chunkX       X chunk coordinate (x-block coord / Chunk.WIDTH)
+     * @param chunkZ       Z chunk coordinate (z-block coord / Chunk.LENGTH)
+     * @param pX           texture X pixel coord to start rendering to
+     * @param pY           texture Y pixel coord to start rendering to
+     * @param pW           width (X) of one block in pixels
+     * @param pL           length (Z) of one block in pixels
+     * @param paint
+     * @param version
+     * @param chunkManager
      * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
 
         int x, z, i, j, tX, tY;
+        //the bottom sub-chunk is sufficient to get heightmap data.
+        TerrainChunkData data = chunk.getTerrain((byte) 0);
+        if (data == null || !data.load2DData())
+            throw new RuntimeException();
 
-        MapType.OVERWORLD_SATELLITE.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+        TerrainChunkData dataW = chunkManager.getChunk(chunkX - 1, chunkZ, dimension).getTerrain((byte) 0);
+        TerrainChunkData dataN = chunkManager.getChunk(chunkX, chunkZ - 1, dimension).getTerrain((byte) 0);
+
+        boolean west = dataW != null && dataW.load2DData(),
+                north = dataN != null && dataN.load2DData();
+
+        //MapType.OVERWORLD_SATELLITE.renderer.renderToBitmap(chunk, canvas, dimension, chunkX, chunkZ, pX, pY, pW, pL, paint, version, chunkManager);
 
         boolean isSlimeChunk = isSlimeChunk(chunkX, chunkZ);
         int color, r, g, b, avg;
-        Canvas canvas = new Canvas(bm);
-        Paint paint = new Paint();
 
         //make slimeChunks much more green
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
-                color = bm.getPixel(tX, tY);
+
+                int y = data.getHeightMapValue(x, z);
+
+                color = SatelliteRenderer.getColumnColour(chunk, data, x, y, z,
+                        (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge
+                                : data.getHeightMapValue(x - 1, z),//within chunk
+                        (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
+                                : data.getHeightMapValue(x, z - 1)//within chunk
+                );
                 r = (color >> 16) & 0xff;
                 g = (color >> 8) & 0xff;
                 b = color & 0xff;
@@ -61,7 +81,6 @@ public class SlimeChunkRenderer implements MapRenderer {
             }
         }
 
-        return bm;
     }
 
 

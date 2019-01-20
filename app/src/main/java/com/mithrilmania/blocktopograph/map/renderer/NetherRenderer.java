@@ -1,7 +1,6 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -21,36 +20,30 @@ public class NetherRenderer implements MapRenderer {
     /**
      * Render a single chunk to provided bitmap (bm)
      *
-     * @param cm        ChunkManager, provides chunks, which provide chunk-data
-     * @param bm        Bitmap to render to
-     * @param dimension Mapped dimension
-     * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
-     * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param pX        texture X pixel coord to start rendering to
-     * @param pY        texture Y pixel coord to start rendering to
-     * @param pW        width (X) of one block in pixels
-     * @param pL        length (Z) of one block in pixels
+     * @param chunk        ChunkManager, provides chunks, which provide chunk-data
+     * @param canvas       Bitmap to render to
+     * @param dimension    Mapped dimension
+     * @param chunkX       X chunk coordinate (x-block coord / Chunk.WIDTH)
+     * @param chunkZ       Z chunk coordinate (z-block coord / Chunk.LENGTH)
+     * @param pX           texture X pixel coord to start rendering to
+     * @param pY           texture Y pixel coord to start rendering to
+     * @param pW           width (X) of one block in pixels
+     * @param pL           length (Z) of one block in pixels
+     * @param paint
+     * @param version
+     * @param chunkManager
      * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
-
-        Chunk chunk = cm.getChunk(chunkX, chunkZ, dimension);
-        Version cVersion = chunk.getVersion();
-
-        if (cVersion == Version.ERROR)
-            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
-        if (cVersion == Version.NULL)
-            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
 
         //bottom chunk must be present
         TerrainChunkData floorData = chunk.getTerrain((byte) 0);
         if (floorData == null || !floorData.load2DData())
-            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+            throw new RuntimeException();
 
-
-        Chunk chunkW = cm.getChunk(chunkX - 1, chunkZ, dimension);
-        Chunk chunkN = cm.getChunk(chunkX, chunkZ - 1, dimension);
+        Chunk chunkW = chunkManager.getChunk(chunkX - 1, chunkZ, dimension);
+        Chunk chunkN = chunkManager.getChunk(chunkX, chunkZ - 1, dimension);
 
         TerrainChunkData data;
 
@@ -68,8 +61,6 @@ public class NetherRenderer implements MapRenderer {
         int stop;
         int subChunk;
         int stopSubChunk;
-        Canvas canvas = new Canvas(bm);
-        Paint paint = new Paint();
 
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
@@ -95,11 +86,11 @@ public class NetherRenderer implements MapRenderer {
                     heightShading = SatelliteRenderer.getHeightShading(cavefloor, cavefloorW, cavefloorN);
 
                     y = cavefloor + 1;
-                    data = chunk.getTerrain((byte) (y / cVersion.subChunkHeight));
+                    data = chunk.getTerrain((byte) (y / version.subChunkHeight));
 
                     //light sources
                     lightValue = (data != null && data.loadTerrain())
-                            ? data.getBlockLightValue(x, y % cVersion.subChunkHeight, z)
+                            ? data.getBlockLightValue(x, y % version.subChunkHeight, z)
                             : 0;
 
                     //check if it is supported, default to full brightness to not lose details.
@@ -121,20 +112,20 @@ public class NetherRenderer implements MapRenderer {
 
                     a = 1f;
 
-                    offset = caveceil % cVersion.subChunkHeight;
+                    offset = caveceil % version.subChunkHeight;
                     stop = 0;
-                    subChunk = caveceil / cVersion.subChunkHeight;
-                    stopSubChunk = caveceil / cVersion.subChunkHeight;
+                    subChunk = caveceil / version.subChunkHeight;
+                    stopSubChunk = caveceil / version.subChunkHeight;
 
 
                     subChunkLoop:
                     for (; subChunk >= stopSubChunk; subChunk--) {
-                        if (subChunk == stopSubChunk) stop = cavefloor % cVersion.subChunkHeight;
+                        if (subChunk == stopSubChunk) stop = cavefloor % version.subChunkHeight;
 
                         data = chunk.getTerrain((byte) subChunk);
                         if (data == null || !data.loadTerrain()) {
                             //start at the top of the next chunk! (current offset might differ)
-                            offset = cVersion.subChunkHeight - 1;
+                            offset = version.subChunkHeight - 1;
                             continue;
                         }
 
@@ -178,7 +169,7 @@ public class NetherRenderer implements MapRenderer {
                         }
 
                         //start at the top of the next chunk! (current offset might differ)
-                        offset = cVersion.subChunkHeight - 1;
+                        offset = version.subChunkHeight - 1;
                     }
 
 
@@ -199,11 +190,11 @@ public class NetherRenderer implements MapRenderer {
 
 
                 subChunkLoop:
-                for (subChunk = 0; subChunk < cVersion.subChunks; subChunk++) {
+                for (subChunk = 0; subChunk < version.subChunks; subChunk++) {
                     data = chunk.getTerrain((byte) subChunk);
                     if (data == null || data.loadTerrain()) break;
 
-                    for (y = 0; y < cVersion.subChunkHeight; y++) {
+                    for (y = 0; y < version.subChunkHeight; y++) {
 
                         //some x-ray for important stuff like portals
                         switch (data.getBlockTypeId(x, y, z)) {
@@ -243,8 +234,6 @@ public class NetherRenderer implements MapRenderer {
                 canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
             }
         }
-
-        return bm;
     }
 
 }

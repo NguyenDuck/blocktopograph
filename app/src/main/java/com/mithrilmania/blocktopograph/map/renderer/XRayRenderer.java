@@ -1,6 +1,5 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -22,31 +21,25 @@ public class XRayRenderer implements MapRenderer {
     /**
      * Render a single chunk to provided bitmap (bm)
      *
-     * @param cm        ChunkManager, provides chunks, which provide chunk-data
-     * @param bm        Bitmap to render to
-     * @param dimension Mapped dimension
-     * @param chunkX    X chunk coordinate (x-block coord / Chunk.WIDTH)
-     * @param chunkZ    Z chunk coordinate (z-block coord / Chunk.LENGTH)
-     * @param pX        texture X pixel coord to start rendering to
-     * @param pY        texture Y pixel coord to start rendering to
-     * @param pW        width (X) of one block in pixels
-     * @param pL        length (Z) of one block in pixels
+     * @param chunk        ChunkManager, provides chunks, which provide chunk-data
+     * @param canvas       Bitmap to render to
+     * @param dimension    Mapped dimension
+     * @param chunkX       X chunk coordinate (x-block coord / Chunk.WIDTH)
+     * @param chunkZ       Z chunk coordinate (z-block coord / Chunk.LENGTH)
+     * @param pX           texture X pixel coord to start rendering to
+     * @param pY           texture Y pixel coord to start rendering to
+     * @param pW           width (X) of one block in pixels
+     * @param pL           length (Z) of one block in pixels
+     * @param paint
+     * @param version
+     * @param chunkManager
      * @return bm is returned back
      * @throws Version.VersionException when the version of the chunk is unsupported.
      */
-    public Bitmap renderToBitmap(ChunkManager cm, Bitmap bm, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL) throws Version.VersionException {
-
-        Chunk chunk = cm.getChunk(chunkX, chunkZ, dimension);
-        Version cVersion = chunk.getVersion();
-
-        if (cVersion == Version.ERROR)
-            return MapType.ERROR.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
-        if (cVersion == Version.NULL)
-            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
 
         //the bottom sub-chunk is sufficient to get heightmap data.
         TerrainChunkData data;
-
 
         int x, y, z, color, i, j, tX, tY;
 
@@ -62,21 +55,19 @@ public class XRayRenderer implements MapRenderer {
 
         int average;
         int r, g, b;
-        Canvas canvas = new Canvas(bm);
-        Paint paint = new Paint();
 
         int subChunk;
-        for (subChunk = 0; subChunk < cVersion.subChunks; subChunk++) {
+        for (subChunk = 0; subChunk < version.subChunks; subChunk++) {
             data = chunk.getTerrain((byte) subChunk);
             if (data == null || !data.loadTerrain()) break;
 
             for (z = 0; z < 16; z++) {
                 for (x = 0; x < 16; x++) {
 
-                    for (y = 0; y < cVersion.subChunkHeight; y++) {
+                    for (y = 0; y < version.subChunkHeight; y++) {
                         block = Block.getBlock(data.getBlockTypeId(x, y, z) & 0xff, 0);
 
-                        index2D = ((z - 0) * rW) + (x - 0);
+                        index2D = (z * rW) + x;
                         if (block == null || block.id <= 1)
                             continue;
                         else if (block == Block.B_56_0_DIAMOND_ORE) {
@@ -101,8 +92,10 @@ public class XRayRenderer implements MapRenderer {
             }
         }
 
-        if (subChunk == 0)
-            return MapType.CHESS.renderer.renderToBitmap(cm, bm, dimension, chunkX, chunkZ, pX, pY, pW, pL);
+        if (subChunk == 0) {
+            MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension, chunkX, chunkZ, pX, pY, pW, pL, paint, version, chunkManager);
+            return;
+        }
 
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
@@ -136,8 +129,6 @@ public class XRayRenderer implements MapRenderer {
 
             }
         }
-
-        return bm;
     }
 
 }

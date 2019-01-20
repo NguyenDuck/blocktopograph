@@ -4,6 +4,10 @@ By [@protolambda](https://github.com/protolambda), [@MithrilMania](https://githu
 [flagmaggot](https://github.com/flagmaggot).  
 This fork is the only one supporting MCPE 1.2~1.9 for now.
 
+## Update paused
+Until next change in Minecraft level format.  
+Pull requests will still be processed in time during the pause unless Meow Cat decays.  
+
 ## Download
 Google play download not available now.   
 Download apk from [the release page](https://github.com/oO0oO0oO0o0o00/blocktopograph/releases).  

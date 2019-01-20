@@ -1,6 +1,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">Blocktopograph</string>
+    <string name="app_name" translatable="false">Blocktopograph</string>
 
     <string name="brand_sub">By @protolambda</string>
 
@@ -27,7 +27,19 @@
         And then check if you can find it here!</string>
 
     <string name="app_about">
-        This app is created by <a href="http://twitter.com/protolambda">@protolambda</a>. \n
+        This app is created by <a href="http://twitter.com/protolambda">@protolambda</a>,
+        contributed by
+        <a href="https://github.com/MithrilMania/blocktopograph">@MithrilMania</a>,
+        <a href="https://github.com/flagmaggot/blocktopograph">@flagmaggot</a>,
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a> and others as well.\n
+        Releases would be published to
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph/releases">this page</a>,
+        you need to turn \"request desktop version\" on your browser, or use a PC, otherwise
+        apk downloads won\'t be shown. We may release on Google Play in the future.
+        Current active github repository:
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
+        Feel free to star or fork, help with the project or simply add your own language support.
+        <b>All non-destructive pull requests will be accepted.</b>
         More information (including the roadmap, changelog and help-information) can be found at:
         <a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>. \n
         \n
@@ -60,16 +72,16 @@
 
     </string>
 
-    <string name="app_help">The app documentation can be found at:
+    <string name="app_help">The app documentation can be found at (maybe out of date):
         <a href="http://blocktopograph.protolambda.com/help">
             blocktopograph.protolambda.com/help
         </a>.
     </string>
 
     <string name="app_changelog" formatted="false">
-        Version: <xliff:g id="version" example="0.0.1">%1$s</xliff:g>
+        Version: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>
         <![CDATA[<br/><br/>
-        Full changelog can be found at:
+        Full changelog can be found at (out of date):
         <a href="http://blocktopograph.protolambda.com/changelog">
             blocktopograph.protolambda.com/changelog
         </a>]]>
@@ -78,7 +90,7 @@
 
     <string name="world_seed_prefix">World seed:</string>
 
-    <string name="map_water_mark">Blocktopograph</string>
+    <string name="map_water_mark" translatable="false">Blocktopograph</string>
 
     <string name="create_marker_info">
         Marker icons:\n
@@ -95,11 +107,9 @@
     <string name="open_world_custom_path">Open world with custom path</string>
     <string name="open">Open</string>
     <string name="report_path_and_previous_search" formatted="false">
-        Your path: <xliff:g id="file_path"
-        example="/storage/emulated/0/games/com.mojang/minecraftWorlds/worldName">%1$s</xliff:g>\n
+        Your path: <xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/worldName" id="file_path">%1$s</xliff:g>\n
         \n
-        Already searched for world folders in <xliff:g id="file_path"
-        example="/storage/emulated/0/games/com.mojang/minecraftWorlds/">%2$s</xliff:g></string>
+        Already searched for world folders in <xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/" id="file_path">%2$s</xliff:g></string>
     <string name="no_file_folder_found_at_path">No file/folder found at path!</string>
     <string name="worldpath_is_not_directory">
         That path (optionally suffixed with /level.dat) is not a directory!</string>
@@ -111,13 +121,13 @@
     <string name="invalid_keyname">Invalid key name.</string>
     <string name="cannot_find_db_entry_with_name">Cannot find db entry with that name!</string>
     <string name="failed_to_read_x_from_db" formatted="false">
-        Failed to read \"<xliff:g id="some_db_key" example="very_long_DB_key">%1$s</xliff:g>\"
+        Failed to read \"<xliff:g example="very_long_DB_key" id="some_db_key">%1$s</xliff:g>\"
             from world database.</string>
     <string name="no_multiplayer_data_found">No multiplayer data found.</string>
     <string name="select_player">Select player</string>
     <string name="open_nbt">Open NBT</string>
     <string name="failed_read_player_from_db_with_key_x">Failed to open player entry in DB. key:
-        <xliff:g id="player_db_key" example="player_123456790">%1$s</xliff:g></string>
+        <xliff:g example="player_123456790" id="player_db_key">%1$s</xliff:g></string>
     <string name="error_cannot_open_world_close_and_try_again">
         The current Minecraft world could not be opened.
         Try restarting this app, and close the world in MCPE if it was open.</string>
@@ -132,17 +142,17 @@
     <string name="tile_entity_chunk_data">Tile-entity chunk data</string>
     <string name="nbt_chunk_data">NBT chunk data</string>
     <string name="marker_info" formatted="false">
-        <xliff:g id="marker_displayname" example="My awesome marker">%1$s</xliff:g>
-        ~ <xliff:g id="marker_dataname" example="blue_marker">%2$s</xliff:g>
-        (<xliff:g id="x_coordinate" example="123.45">%3$d</xliff:g>;
-        <xliff:g id="y_coordinate" example="42.122333">%4$d</xliff:g>;
-        <xliff:g id="z_coordinate" example="-123.987">%5$d</xliff:g>)
-        [<xliff:g id="dimension" example="Overworld">%6$s</xliff:g>].</string>
+        <xliff:g example="My awesome marker" id="marker_displayname">%1$s</xliff:g>
+        ~ <xliff:g example="blue_marker" id="marker_dataname">%2$s</xliff:g>
+        (<xliff:g example="123.45" id="x_coordinate">%3$d</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%4$d</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%5$d</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%6$s</xliff:g>].</string>
     <string name="teleported_player_to_xyz_dim" formatted="false">Teleported the player to:
-        (<xliff:g id="x_coordinate" example="123.45">%1$.2f</xliff:g>;
-        <xliff:g id="y_coordinate" example="42.122333">%2$.2f</xliff:g>;
-        <xliff:g id="z_coordinate" example="-123.987">%3$.2f</xliff:g>)
-        [<xliff:g id="dimension" example="Overworld">%4$s</xliff:g>].</string>
+        (<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%2$.2f</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%3$.2f</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%4$s</xliff:g>].</string>
     <string name="failed_teleporting_player">Failed to teleport player.</string>
     <string name="failed_to_find_or_edit_local_player_data">
         Failed to find/edit local player data.</string>
@@ -154,7 +164,7 @@
     <string name="invalid_z_coordinate">Invalid marker Z coordinate!</string>
     <string name="failed_to_create_marker">Error: failed to create marker.</string>
     <string name="failed_to_load_x" formatted="false">
-        Failed to load <xliff:g id="some_data" example="some data">%1$s</xliff:g>.
+        Failed to load <xliff:g example="some data" id="some_data">%1$s</xliff:g>.
     </string>
     <string name="nbt_editor">NBT editor</string>
     <string name="data_does_not_exist_for_chunk_ask_if_create">
@@ -166,7 +176,7 @@
         Created and saved new NBT chunk data!</string>
     <string name="failed_to_create_or_save_chunk_NBT_data">
         Error: failed to create/save the new NBT chunk data.</string>
-    <string name="full_date_format">dd/MM/yyyy hh:mm a</string>
+    <string name="full_date_format" translatable="false">dd/MM/yyyy hh:mm a</string>
     <string name="error_could_not_open_world_details_lost_track_world">
         Error: could not open world details; lost track of world.</string>
     <string name="error_could_not_open_world">Error: could not open world.</string>
@@ -181,7 +191,7 @@
 
     <string name="loading_world">Loading world…</string>
     <string name="x_is_invalid" formatted="false">
-        \"<xliff:g id="something_invalid" example="something">%1$s</xliff:g>\" is invalid!</string>
+        \"<xliff:g example="something" id="something_invalid">%1$s</xliff:g>\" is invalid!</string>
     <string name="edit_cancel">Cancel</string>
     <string name="edit_copy">Copy</string>
     <string name="edit_paste_overwrite">Paste (overwrite)</string>
@@ -227,20 +237,22 @@
     <string name="failed_find_player">Failed to find player.</string>
     <string name="failed_find_spawn">Failed to find spawn.</string>
     <string name="go_to_a_marker_list">Go to a marker:</string>
+    <string name="go_to_local_player">Go to local player</string>
+    <string name="go_to__other_player">Go to other player</string>
     <string name="player">Player</string>
     <string name="spawn">Spawn</string>
     <string name="something_at_xyz_dim_float" formatted="false">
-        <xliff:g id="something_name" example="Steve">%1$s</xliff:g> at:
-        (<xliff:g id="x_coordinate" example="123.45">%2$.2f</xliff:g>;
-        <xliff:g id="y_coordinate" example="42.122333">%3$.2f</xliff:g>;
-        <xliff:g id="z_coordinate" example="-123.987">%4$.2f</xliff:g>)
-        [<xliff:g id="dimension" example="Overworld">%5$s</xliff:g>].</string>
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g> at:
+        (<xliff:g example="123.45" id="x_coordinate">%2$.2f</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%3$.2f</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%4$.2f</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
     <string name="something_at_xyz_dim_int" formatted="false">
-        <xliff:g id="something_name" example="Steve">%1$s</xliff:g> at:
-        (<xliff:g id="x_coordinate" example="123.45">%2$d</xliff:g>;
-        <xliff:g id="y_coordinate" example="42.122333">%3$d</xliff:g>;
-        <xliff:g id="z_coordinate" example="-123.987">%4$d</xliff:g>)
-        [<xliff:g id="dimension" example="Overworld">%5$s</xliff:g>].</string>
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g> at:
+        (<xliff:g example="123.45" id="x_coordinate">%2$d</xliff:g>;
+        <xliff:g example="42.122333" id="y_coordinate">%3$d</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
     <string name="no_map_available">No map available.</string>
     <string name="searching_for_players">Searching for players…</string>
     <string name="failed_to_retrieve_player_data">Failed to retrieve player data.</string>
@@ -250,7 +262,7 @@
     <string name="teleported_player_to_xyz_dimension">Teleported the player to: </string>
     <string name="marker_is_not_removable">This marker is not meant to be removed!</string>
     <string name="sub_chunk">Sub-chunk</string>
-    <string name="choose_subchunk">Choose a sub–chunk (0…255):</string>
+    <string name="choose_subchunk">Choose a sub–chunk (0…):</string>
     <string name="filter_markers">Filter markers</string>
     <string name="show_map">Show map</string>
     <string name="select_world">Select world</string>
@@ -290,11 +302,12 @@
     <string name="gamemode_creative">Creative</string>
     <string name="gamemode_adventure">Adventure</string>
     <string name="postion_2D_floats_with_chunkpos">
-        Pos: (<xliff:g id="x_coordinate" example="123.45">%1$.2f</xliff:g>;
-        <xliff:g id="z_coordinate" example="-123.987">%2$.2f</xliff:g>)
-        Chunk: (<xliff:g id="x_chunk" example="123">%3$d</xliff:g>;
-        <xliff:g id="z_chunk" example="-42">%4$d</xliff:g>)
-        [<xliff:g id="dimension" example="Overworld">%5$s</xliff:g>].</string>
+        Pos: (<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
+        <xliff:g example="-123.987" id="z_coordinate">%2$.2f</xliff:g>)
+        Chunk: (<xliff:g example="123" id="x_chunk">%3$d</xliff:g>;
+        <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
+        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
     <string name="action_teleport">Teleport!</string>
+    <string name="go_to_spawn">Go to spawn</string>
 
 </resources>

@@ -10,7 +10,9 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
+import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
+import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.renderer.MapType;
 import com.qozix.tileview.graphics.BitmapProvider;
 import com.qozix.tileview.tiles.Tile;
@@ -120,25 +122,38 @@ public class MCTileProvider implements BitmapProvider {
             int pixelsPerChunkW = pixelsPerBlockW * 16;
             int pixelsPerChunkL = pixelsPerBlockL * 16;
 
-            for (z = minChunkZ, pY = 0; z < maxChunkZ; z++, pY += pixelsPerChunkL) {
+            ChunkManager chunkManager = mChunkManager.get();
 
+            Canvas canvas = new Canvas(bm);
+            Paint paint = new Paint();
+
+            for (z = minChunkZ, pY = 0; z < maxChunkZ; z++, pY += pixelsPerChunkL)
                 for (x = minChunkX, pX = 0; x < maxChunkX; x++, pX += pixelsPerChunkW) {
 
+                    Chunk chunk = chunkManager.getChunk(x, z, dimension);
                     try {
-                        mapType.renderer.renderToBitmap(mChunkManager.get(), bm, dimension,
-                                x, z,
-                                pX, pY,
-                                pixelsPerBlockW, pixelsPerBlockL);
+
+                        Version cVersion = chunk.getVersion();
+                        if (cVersion == Version.ERROR) {
+                            MapType.ERROR.renderer.renderToBitmap(chunk, canvas, dimension,
+                                    x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, cVersion, chunkManager);
+                            continue;
+                        }
+                        MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension,
+                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, cVersion, chunkManager);
+
+                        mapType.renderer.renderToBitmap(chunk, canvas, dimension, x, z,
+                                pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, cVersion, chunkManager);
+
                     } catch (Exception e) {
-                        MapType.ERROR.renderer.renderToBitmap(mChunkManager.get(), bm, dimension,
-                                x, z,
-                                pX, pY,
-                                pixelsPerBlockW, pixelsPerBlockL);
+
+                        MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension,
+                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, null, chunkManager);
                         e.printStackTrace();
+
                     }
 
                 }
-            }
 
 
             //load all those markers with an async task, this task publishes its progress,
