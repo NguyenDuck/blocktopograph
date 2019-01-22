@@ -9,8 +9,8 @@ Until next change in Minecraft level format.
 Pull requests will still be processed in time during the pause unless Meow Cat decays.  
 
 ## Download
-Google play download not available now.   
-Download apk from [the release page](https://github.com/oO0oO0oO0o0o00/blocktopograph/releases).  
+[>>> Download on Google Play <<<](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)  
+And release page of the repository provides debug version of the app.  
 <img src="arts/scr01.jpg" alt="screenshot" width="320"/>
 
 ## Build
