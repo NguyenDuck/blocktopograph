@@ -2,15 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-
     defaultConfig {
         applicationId 'rbq2012.blocktopograph'
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 10
+        versionCode 11
         versionName "1.8"
     }
-
     buildTypes {
 
         debug {
@@ -23,7 +21,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
@@ -40,4 +37,4 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.6'
 }
 
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'

@@ -240,7 +240,7 @@
     <string name="map">地图</string>
     <string name="the_end">末路之地</string>
     <string name="map_options">地图选项</string>
-    <string name="toggle_grid"网格开关</string>
+    <string name="toggle_grid">网格开关</string>
     <string name="toggle_markers">标记开关</string>
     <string name="advanced_options">高级选项</string>
     <string name="biomedata_nbt">BiomeData NBT</string>

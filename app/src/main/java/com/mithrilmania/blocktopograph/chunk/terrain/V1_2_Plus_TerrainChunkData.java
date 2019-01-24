@@ -40,6 +40,7 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
     public static final int POS_BIOME_DATA = POS_HEIGHTMAP + area + area;
     public static final int DATA2D_LENGTH = POS_BIOME_DATA + area;
 
+    //Masks used to extract BlockState bits of a certain block out of a int32, and vice-versa.
     private static final int[] msk = {0b1, 0b11, 0b111, 0b1111, 0b11111, 0b111111, 0b1111111,
             0b11111111,
             0b111111111, 0b1111111111, 0b11111111111,
@@ -59,23 +60,33 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
 
     @Override
     public boolean loadTerrain() {
+        //Don't repeat the work.
         if (mainStorage == null) {
             try {
+                //Retrieve raw data from database.
                 Chunk chunk = this.chunk.get();
                 byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true);
                 if (rawData == null) return false;
                 ByteBuffer raw = ByteBuffer.wrap(rawData);
                 raw.order(ByteOrder.LITTLE_ENDIAN);
+
+                //The first byte indicates version.
                 switch (rawData[0]) {
-                    case 0:
+                    //1: Only one BlockStorage starting from the next byte.
+                    case 1:
                         raw.position(1);
                         break;
+                    //8: One or more BlockStorage's, next byte is the count. We only read the first.
                     case 8:
                         raw.position(2);
                         break;
+                    //0,2,3,4,5,6,7: Should use a V1_1 terrain, why reaching here?
+                    //Else: wtf?
                     default:
                         return false;
                 }
+
+                //Load the BlockStorage.
                 loadBlockStorage(raw);
                 return true;
             } catch (Exception e) {
@@ -104,17 +115,27 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
         //Palette items count.
         int psize = raw.getInt();
 
-        //Construct the palette. Each is a piece of nbt data.
+        //Construct the palette. Each item is a piece of nbt data.
         palette = new ArrayList<>(16);
+
+        //NBT reader requires a stream.
         ByteArrayInputStream bais = new ByteArrayInputStream(raw.array());
         bais.skip(raw.position());
+
+        //Wrap it.
         NBTInputStream nis = new NBTInputStream(bais, false);
         for (int i = 0; i < psize; i++) {
+
+            //Read a piece of nbt data, represented by a root CompoundTag.
             CompoundTag tag = (CompoundTag) nis.readTag();
+
+            //Read `name` and `val` then resolve the `name` into numeric id.
             String name = ((StringTag) tag.getChildTagByKey("name")).getValue();
             int data = ((ShortTag) tag.getChildTagByKey("val")).getValue();
             palette.add(BlockNameResolver.resolve(name) << 8 | data);
         }
+
+        //If one day we need to read more BlockStorage's, this line helps.
         raw.position(raw.position() + nis.getReadCount());
     }
 
@@ -165,10 +186,20 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
     }
 
     private int getBlockState(int x, int y, int z) {
+
+        //The codeOffset'th BlockState is wanted.
         int codeOffset = getOffset(x, y, z);
+
+        //How much BlockStates can one int32 hold?
         int intCapa = 32 / blockCodeLenth;
+
+        //The int32 that holds the wanted BlockState.
         int stick = mainStorage.get(codeOffset / intCapa);
+
+        //Get the BlockState. It's also the index in palette array.
         int ind = (stick >> (codeOffset % intCapa * blockCodeLenth)) & msk[blockCodeLenth - 1];
+
+        //Transform the local BlockState into global id<<8|data structure.
         return palette.get(ind);
     }
 
