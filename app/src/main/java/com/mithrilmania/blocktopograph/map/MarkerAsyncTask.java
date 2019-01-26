@@ -3,9 +3,10 @@ package com.mithrilmania.blocktopograph.map;
 import android.os.AsyncTask;
 
 import com.mithrilmania.blocktopograph.Log;
-
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
-import com.mithrilmania.blocktopograph.chunk.*;
+import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.chunk.ChunkManager;
+import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.FloatTag;
@@ -90,7 +91,9 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
             }
 
         } catch (Exception e) {
-            Log.w(e.getMessage());
+            //TODO: e.getMessage can be null
+            //String msg=e.getMessage();
+            //String log="MarkerAsyncTask.loadEntityMarkers)Log.w();
         }
     }
 

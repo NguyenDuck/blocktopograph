@@ -1,17 +1,14 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
-import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.map.Biome;
-import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.BlockNameResolver;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTInputStream;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.ShortTag;
 import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
-import com.mithrilmania.blocktopograph.util.Noise;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,7 +16,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
 public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
@@ -49,13 +45,14 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
 
     public V1_2_Plus_TerrainChunkData(Chunk chunk, byte subChunk) {
         super(chunk, subChunk);
+        mNotFailed = loadTerrain();
     }
 
     @Override
     public void write() throws WorldData.WorldDBException {
         Chunk chunk = this.chunk.get();
-        //this.chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true, terrainData.array());
-        chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.DATA_2D, chunk.dimension, subChunk, true, data2D.array());
+        //this.chunk.worldData.get().writeChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.TERRAIN, chunk.mDimension, subChunk, true, terrainData.array());
+        chunk.getWorldData().writeChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.DATA_2D, chunk.mDimension, subChunk, true, data2D.array());
     }
 
     @Override
@@ -65,7 +62,7 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
             try {
                 //Retrieve raw data from database.
                 Chunk chunk = this.chunk.get();
-                byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true);
+                byte[] rawData = chunk.getWorldData().getChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.TERRAIN, chunk.mDimension, subChunk, true);
                 if (rawData == null) return false;
                 ByteBuffer raw = ByteBuffer.wrap(rawData);
                 raw.order(ByteOrder.LITTLE_ENDIAN);
@@ -93,7 +90,7 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
                 //data is not present
                 return false;
             }
-        } else return true;
+        } else return mNotFailed;
     }
 
     private void loadBlockStorage(ByteBuffer raw) throws IOException {
@@ -144,7 +141,7 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
         if (data2D == null) {
             try {
                 Chunk chunk = this.chunk.get();
-                byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.DATA_2D, chunk.dimension, subChunk, false);
+                byte[] rawData = chunk.getWorldData().getChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.DATA_2D, chunk.mDimension, subChunk, false);
                 if (rawData == null) return false;
                 this.data2D = ByteBuffer.wrap(rawData);
                 return true;
@@ -186,6 +183,8 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
     }
 
     private int getBlockState(int x, int y, int z) {
+
+        if (!mNotFailed) return 0;
 
         //The codeOffset'th BlockState is wanted.
         int codeOffset = getOffset(x, y, z);

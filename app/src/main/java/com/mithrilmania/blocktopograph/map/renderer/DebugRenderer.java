@@ -11,7 +11,7 @@ import com.mithrilmania.blocktopograph.map.Dimension;
 
 public class DebugRenderer implements MapRenderer {
 
-    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, ChunkManager chunkManager) throws Version.VersionException {
 
         int x, z, i, j, tX, tY;
 

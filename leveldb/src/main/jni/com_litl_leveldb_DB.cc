@@ -126,14 +126,21 @@ nativeGet(JNIEnv *env,
     //if (iter->Valid() && key == iter->key()) {
     //leveldb::Slice value = iter->value();
     std::string str;
-    db->Get(options, key, &str);
-    size_t len = str.size();
-    result = env->NewByteArray(static_cast<jsize>(len));
-    env->SetByteArrayRegion(result, 0, static_cast<jsize>(len), (const jbyte *) str.c_str());
+    leveldb::Status status=db->Get(options, key, &str);
+    env->ReleaseByteArrayElements(keyObj, buffer, JNI_ABORT);
+    if(status.ok()){
+        size_t len = str.size();
+        result = env->NewByteArray(static_cast<jsize>(len));
+        env->SetByteArrayRegion(result, 0, static_cast<jsize>(len), (const jbyte *) str.c_str());
+    }else if(status.IsNotFound())result=NULL;
+    else {
+        throwException(env,status);
+        result=NULL;
+    }
+
     //} else {
     //result = NULL;
     //}
-    env->ReleaseByteArrayElements(keyObj, buffer, JNI_ABORT);
     //delete iter;
 
     return result;

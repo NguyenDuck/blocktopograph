@@ -13,7 +13,7 @@ public class ChunkManager {
     private LruCache<Key, Chunk> chunks = new LruCache<Key, Chunk>(256) {
         @Override
         protected Chunk create(Key key) {
-            return new Chunk(worldData.get(), key.x, key.z, key.dim);
+            return Chunk.create(worldData.get(), key.x, key.z, key.dim);
         }
     };
 
@@ -37,7 +37,7 @@ public class ChunkManager {
         public int x, z;
         Dimension dim;
 
-        public Key(int x, int z, Dimension dim) {
+        Key(int x, int z, Dimension dim) {
             this.x = x;
             this.z = z;
             this.dim = dim;

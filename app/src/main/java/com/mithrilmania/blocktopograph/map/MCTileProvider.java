@@ -131,24 +131,22 @@ public class MCTileProvider implements BitmapProvider {
                 for (x = minChunkX, pX = 0; x < maxChunkX; x++, pX += pixelsPerChunkW) {
 
                     Chunk chunk = chunkManager.getChunk(x, z, dimension);
+                    if (chunk.isError()) {
+                        MapType.ERROR.renderer.renderToBitmap(chunk, canvas, dimension,
+                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
+                        continue;
+                    }
+                    MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension,
+                            x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
+                    if (chunk.isVoid()) continue;
                     try {
-
-                        Version cVersion = chunk.getVersion();
-                        if (cVersion == Version.ERROR) {
-                            MapType.ERROR.renderer.renderToBitmap(chunk, canvas, dimension,
-                                    x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, cVersion, chunkManager);
-                            continue;
-                        }
-                        MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension,
-                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, cVersion, chunkManager);
-
                         mapType.renderer.renderToBitmap(chunk, canvas, dimension, x, z,
-                                pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, cVersion, chunkManager);
+                                pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
 
                     } catch (Exception e) {
 
-                        MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension,
-                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, null, chunkManager);
+                        MapType.ERROR.renderer.renderToBitmap(chunk, canvas, dimension,
+                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
                         e.printStackTrace();
 
                     }

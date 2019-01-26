@@ -5,28 +5,24 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.chunk.TempChunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.Version;
-import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.util.MTwister;
 
 
 public class SlimeChunkRenderer implements MapRenderer {
 
-    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, ChunkManager chunkManager) throws Version.VersionException {
 
-        int x, z, i, j, tX, tY;
-        //the bottom sub-chunk is sufficient to get heightmap data.
-        TerrainChunkData data = chunk.getTerrain((byte) 0);
-        if (data == null || !data.load2DData())
-            throw new RuntimeException();
+        int x, z, tX, tY;
 
-        TerrainChunkData dataW = chunkManager.getChunk(chunkX - 1, chunkZ, dimension).getTerrain((byte) 0);
-        TerrainChunkData dataN = chunkManager.getChunk(chunkX, chunkZ - 1, dimension).getTerrain((byte) 0);
+        Chunk dataW = chunkManager.getChunk(chunkX - 1, chunkZ, dimension);
+        Chunk dataN = chunkManager.getChunk(chunkX, chunkZ - 1, dimension);
 
-        boolean west = dataW != null && dataW.load2DData(),
-                north = dataN != null && dataN.load2DData();
+        boolean west = dataW != null && !dataW.isVoid(),
+                north = dataN != null && !dataN.isVoid();
 
         //MapType.OVERWORLD_SATELLITE.renderer.renderToBitmap(chunk, canvas, dimension, chunkX, chunkZ, pX, pY, pW, pL, paint, version, chunkManager);
 
@@ -37,13 +33,13 @@ public class SlimeChunkRenderer implements MapRenderer {
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
 
-                int y = data.getHeightMapValue(x, z);
+                int y = chunk.getHeightMapValue(x, z);
 
-                color = SatelliteRenderer.getColumnColour(chunk, data, x, y, z,
+                color = SatelliteRenderer.getColumnColour(chunk, x, y, z,
                         (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge
-                                : data.getHeightMapValue(x - 1, z),//within chunk
+                                : chunk.getHeightMapValue(x - 1, z),//within chunk
                         (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
-                                : data.getHeightMapValue(x, z - 1)//within chunk
+                                : chunk.getHeightMapValue(x, z - 1)//within chunk
                 );
                 r = (color >> 16) & 0xff;
                 g = (color >> 8) & 0xff;

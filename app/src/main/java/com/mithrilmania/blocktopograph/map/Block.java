@@ -17,22 +17,22 @@ import java.util.Map;
 
 /**
  * Created by mithrilmania
- *
+ * <p>
  * ==========================
  * POCKET EDITION BLOCKS ONLY
  * ==========================
- *
+ * <p>
  * uvs are up to date with MCPE 0.14.0
- *
- --- Please attribute @mithrilmania for generating+updating this enum
+ * <p>
+ * --- Please attribute @mithrilmania for generating+updating this enum
  */
 public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
 
-  /*
-   * ==============================
-   *       Blocks
-   * ==============================
-   */
+    /*
+     * ==============================
+     *       Blocks
+     * ==============================
+     */
 
     B_0_0_AIR("air", null, 0, 0, null, 0x00000000, false),
     B_1_0_STONE("stone", "stone", 1, 0, "blocks/stone.png", 0xff464646, false),
@@ -448,7 +448,6 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     B_251_0_OBSERVER("observer", null, 251, 0, "blocks/observer.png", 0xff3d6e86, false),
 
 
-
     B_236_0_CONCRETE_WHITE("concrete", "orange", 236, 0, "blocks/observer.png", 0xffffffff, false),
     B_236_1_CONCRETE_ORANGE("concrete", "orange", 236, 1, "blocks/observer.png", 0xffffd030, false),
     B_236_2_CONCRETE_MAGENTA("concrete", "magenta", 236, 2, "blocks/observer.png", 0xffef007f, false),
@@ -576,11 +575,11 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
 
 
 
-  /*
-   * ==============================
-   *        Items
-   * ==============================
-   */
+    /*
+     * ==============================
+     *        Items
+     * ==============================
+     */
 
     I_256_0_IRON_SHOVEL("iron_shovel", null, 256, 0, "items/iron_shovel.png"),
     I_257_0_IRON_PICKAXE("iron_pickaxe", null, 257, 0, "items/iron_pickaxe.png"),
@@ -811,7 +810,7 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
 
     public Bitmap bitmap;
 
-    Block(String name, String subName, int id, int subId, String texPath, int color, boolean hasBiomeShading){
+    Block(String name, String subName, int id, int subId, String texPath, int color, boolean hasBiomeShading) {
         this.id = id;
         this.subId = subId;
         this.name = name;
@@ -823,7 +822,7 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
         this.identifier = "minecraft:" + subName;
     }
 
-    Block(String name, String subName, int id, int subId, String texPath){
+    Block(String name, String subName, int id, int subId, String texPath) {
         this.id = id;
         this.subId = subId;
         this.name = name;
@@ -836,69 +835,76 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
     }
 
     @Override
-    public Bitmap getBitmap(){
+    public Bitmap getBitmap() {
         return this.bitmap;
     }
 
     @NonNull
     @Override
-    public NamedBitmapProvider getNamedBitmapProvider(){
+    public NamedBitmapProvider getNamedBitmapProvider() {
         return this;
     }
 
     @NonNull
     @Override
-    public String getBitmapDisplayName(){
+    public String getBitmapDisplayName() {
         return this.displayName;
     }
 
     @NonNull
     @Override
-    public String getBitmapDataName(){
+    public String getBitmapDataName() {
         return name + "@" + subName;
     }
 
     private static final Map<String, Block> byDataName = new HashMap<>();
     private static final SparseArray<SparseArray<Block>> blockMap;
+
     static {
         blockMap = new SparseArray<>();
         SparseArray<Block> subMap;
-        for(Block b : Block.values()){
+        for (Block b : Block.values()) {
             subMap = blockMap.get(b.id);
-            if(subMap == null){
+            if (subMap == null) {
                 subMap = new SparseArray<>();
                 blockMap.put(b.id, subMap);
             }
             subMap.put(b.subId, b);
-            if(b.subId == 0) byDataName.put(b.name, b);
+            if (b.subId == 0) byDataName.put(b.name, b);
             byDataName.put(b.name + "@" + b.subName, b);
         }
     }
 
-    public static Block getByDataName(String dataName){
+    public static Block getByDataName(String dataName) {
         return byDataName.get(dataName);
     }
 
     public static void loadBitmaps(AssetManager assetManager) throws IOException {
-        for(Block b : Block.values()){
-            if(b.bitmap == null && b.texPath != null){
+        for (Block b : Block.values()) {
+            if (b.bitmap == null && b.texPath != null) {
                 try {
                     b.bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(assetManager.open(b.texPath)), 32, 32, false);
-                } catch(FileNotFoundException e){
+                } catch (FileNotFoundException e) {
                     //TODO file-paths were generated from block names; some do not actually exist...
                     //Log.w("File not found! "+b.texPath);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
 
-    public static Block getBlock(int id, int meta){
-        if(id < 0) return null;
+    public static Block getBlock(int id, int meta) {
+        if (id < 0) return null;
         SparseArray<Block> subMap = blockMap.get(id);
-        if(subMap == null) return null;
+        if (subMap == null) return null;
         else return subMap.get(meta);
+    }
+
+    public static Block getBlock(int runtimeId) {
+        int id = runtimeId >>> 8;
+        int data = runtimeId & 0xf;
+        return getBlock(id, data);
     }
 
 }

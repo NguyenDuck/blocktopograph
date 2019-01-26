@@ -2,7 +2,7 @@ package com.mithrilmania.blocktopograph.chunk;
 
 /**
  * Reference from Tommaso Checchi (/u/mojang_tommo), MCPE developer:
- *  https://www.reddit.com/r/MCPE/comments/5cw2tm/level_format_changes_in_mcpe_0171_100/d9zv9s8/
+ * https://www.reddit.com/r/MCPE/comments/5cw2tm/level_format_changes_in_mcpe_0171_100/d9zv9s8/
  */
 public enum ChunkTag {
 
@@ -15,13 +15,13 @@ public enum ChunkTag {
     PENDING_TICKS((byte) 0x33),//TODO untested
     BLOCK_EXTRA_DATA((byte) 0x34),//TODO untested, 32768 bytes, used for top-snow.
     BIOME_STATE((byte) 0x35),//TODO untested
+    GENERATOR_STAGE((byte) 0x36),
     VERSION((byte) 0x76);
-
 
 
     public final byte dataID;
 
-    ChunkTag(byte dataID){
+    ChunkTag(byte dataID) {
         this.dataID = dataID;
     }
 

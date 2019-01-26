@@ -1,6 +1,8 @@
 package com.mithrilmania.blocktopograph.chunk;
 
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.SparseArray;
 
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
@@ -42,7 +44,8 @@ public enum Version {
         }
     }
 
-    public static Version getVersion(byte[] data) {
+    @NonNull
+    public static Version getVersion(@Nullable byte[] data) {
         //Log.d("Data version: "+ ConvertUtil.bytesToHexStr(data));
 
         //`data` is supposed to be one byte,
@@ -66,24 +69,25 @@ public enum Version {
     }
 
     public TerrainChunkData createTerrainChunkData(Chunk chunk, byte subChunk) throws VersionException {
-        switch (this) {
-            case ERROR:
-            case NULL:
-                return null;
-            case OLD_LIMITED:
-                throw new VersionException("Handling terrain chunk data is NOT supported for this version!", this);
-            case v0_9:
-                return new V0_9_TerrainChunkData(chunk, subChunk);
-            case V1_0:
-                return new V1_0_TerrainChunkData(chunk, subChunk);
-            case V1_1:
-                //This was used as default and the author said:
-                //use the latest version, like nothing will ever happen...
-                return new V1_1_TerrainChunkData(chunk, subChunk);
-            case V1_2_PLUS:
-            default:
-                return new V1_2_Plus_TerrainChunkData(chunk, subChunk);
-        }
+        return null;
+//        switch (this) {
+//            case ERROR:
+//            case NULL:
+//                return null;
+//            case OLD_LIMITED:
+//                throw new VersionException("Handling terrain chunk data is NOT supported for this version!", this);
+//            case v0_9:
+//                return new V0_9_TerrainChunkData(chunk, subChunk);
+//            case V1_0:
+//                return new V1_0_TerrainChunkData(chunk, subChunk);
+//            case V1_1:
+//                //This was used as default and the author said:
+//                //use the latest version, like nothing will ever happen...
+//                return new V1_1_TerrainChunkData(chunk, subChunk);
+//            case V1_2_PLUS:
+//            default:
+//                return new V1_2_Plus_TerrainChunkData(chunk, subChunk);
+//        }
     }
 
     public NBTChunkData createEntityChunkData(Chunk chunk) throws VersionException {

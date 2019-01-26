@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mithrilmania.blocktopograph.map.Dimension;
@@ -51,55 +52,6 @@ public class WorldActivity extends AppCompatActivity
     private World world;
 
     private MapFragment mapFragment;
-
-    private FirebaseAnalytics mFirebaseAnalytics;
-
-    synchronized public FirebaseAnalytics getFirebaseAnalytics() {
-        if (mFirebaseAnalytics == null) {
-            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-            //don't measure the test devices in analytics
-            mFirebaseAnalytics.setAnalyticsCollectionEnabled(!BuildConfig.DEBUG);
-        }
-        return mFirebaseAnalytics;
-    }
-
-    // Firebase events, these are meant to be as anonymous as possible,
-    //  pure counters for usage analytics.
-    // Do not remove! Removing analytics in a fork skews the results to the original userbase!
-    // Forks should stay in touch, all new features are welcome.
-    public enum CustomFirebaseEvent {
-
-        //max 32 chars:     "0123456789abcdef0123456789abcdef"
-        MAPFRAGMENT_OPEN("map_fragment_open"),
-        MAPFRAGMENT_RESUME("map_fragment_resume"),
-        MAPFRAGMENT_RESET("map_fragment_reset"),
-        NBT_EDITOR_OPEN("nbt_editor_open"),
-        NBT_EDITOR_SAVE("nbt_editor_save"),
-        WORLD_OPEN("world_open"),
-        WORLD_RESUME("world_resume"),
-        GPS_PLAYER("gps_player"),
-        GPS_MULTIPLAYER("gps_multiplayer"),
-        GPS_SPAWN("gps_spawn"),
-        GPS_MARKER("gps_marker"),
-        GPS_COORD("gps_coord");
-
-        public final String eventID;
-
-        CustomFirebaseEvent(String eventID) {
-            this.eventID = eventID;
-        }
-    }
-
-    @Override
-    public void logFirebaseEvent(CustomFirebaseEvent firebaseEvent) {
-        getFirebaseAnalytics().logEvent(firebaseEvent.eventID, new Bundle());
-    }
-
-    @Override
-    public void logFirebaseEvent(CustomFirebaseEvent firebaseEvent, Bundle eventContent) {
-        getFirebaseAnalytics().logEvent(firebaseEvent.eventID, eventContent);
-    }
 
     @Override
     public void showActionBar() {
@@ -144,8 +96,12 @@ public class WorldActivity extends AppCompatActivity
                 ? getIntent().getSerializableExtra(World.ARG_WORLD_SERIALIZED)
                 : savedInstanceState.getSerializable(World.ARG_WORLD_SERIALIZED));
         if (world == null) {
+            Toast.makeText(this, "cannot open: world == null", Toast.LENGTH_SHORT).show();
             //WTF, try going back to the previous screen by finishing this hopeless activity...
             finish();
+            //Finish does not guarantee codes below won't be executed!
+            //Shit
+            return;
         }
 
 
@@ -197,6 +153,8 @@ public class WorldActivity extends AppCompatActivity
             TODO BigQuery is not configured yet,
              @mithrilmania (author of Blocktopograph) is working on it!
 
+             Ahhh good idea anyway... Then why didn't you continue it.
+
             *link to results will be included here for reference when @mithrilmania is done*
          */
         String worldSeed = String.valueOf(this.world.getWorldSeed());
@@ -208,7 +166,7 @@ public class WorldActivity extends AppCompatActivity
 
 
         // anonymous global counter of opened worlds
-        logFirebaseEvent(CustomFirebaseEvent.WORLD_OPEN, bundle);
+        Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_OPEN, bundle);
 
 
         // Open the world-map as default content
@@ -239,7 +197,7 @@ public class WorldActivity extends AppCompatActivity
         super.onResume();
 
         // anonymous global counter of resumed world-activities
-        logFirebaseEvent(CustomFirebaseEvent.WORLD_RESUME);
+        Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_RESUME);
 
         try {
             this.world.resume();

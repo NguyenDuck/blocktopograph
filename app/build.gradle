@@ -6,8 +6,8 @@ android {
         applicationId 'rbq2012.blocktopograph'
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 11
-        versionName "1.8"
+        versionCode 12
+        versionName "1.8.2"
     }
     buildTypes {
 
@@ -35,6 +35,7 @@ dependencies {
     implementation 'com.github.bmelnychuk:atv:1.2.8'
     //core is the new recommended alias for analytics
     implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

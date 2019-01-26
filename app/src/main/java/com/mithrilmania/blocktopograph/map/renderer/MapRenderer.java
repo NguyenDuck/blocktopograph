@@ -35,11 +35,10 @@ public interface MapRenderer {
      * @param pW           width (X) of one block in pixels
      * @param pL           length (Z) of one block in pixels
      * @param paint        Paint instance used to draw on canvas
-     * @param version      Ahh, why do we need this
      * @param chunkManager ChunkManager, some renderer needs info about its neighbor
      * @throws RuntimeException when the version of the chunk is unsupported.
      *                          TODO: reduce complicity, e.g. remove chunkManager from parameters.
      */
-    void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException;
+    void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, ChunkManager chunkManager) throws Version.VersionException;
 
 }

@@ -17,32 +17,22 @@ import com.mithrilmania.blocktopograph.map.Dimension;
 
 public class NetherRenderer implements MapRenderer {
 
-    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
-
-        //bottom chunk must be present
-        TerrainChunkData floorData = chunk.getTerrain((byte) 0);
-        if (floorData == null || !floorData.load2DData())
-            throw new RuntimeException();
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, ChunkManager chunkManager) throws Version.VersionException {
 
         Chunk chunkW = chunkManager.getChunk(chunkX - 1, chunkZ, dimension);
         Chunk chunkN = chunkManager.getChunk(chunkX, chunkZ - 1, dimension);
 
-        TerrainChunkData data;
+        //Do you have to list all variables here in a 80s manner
+        // regardless of many are only used within nested loop...
 
         float shading, shadingSum, rf, gf, bf, af, a, blendR, blendG, blendB, sumRf, sumGf, sumBf;
         int layers;
         int caveceil, cavefloor, cavefloorW, cavefloorN;
-        int x, y, z, color, i, j, tX, tY, r, g, b;
+        int x, y, z, color, tX, tY, r, g, b;
         Block block;
-        int id, meta;
+        int id;
         int worth;
-        int lightValue;
         float heightShading, lightShading, sliceShading, avgShading;
-
-        int offset;
-        int stop;
-        int subChunk;
-        int stopSubChunk;
 
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
@@ -51,9 +41,8 @@ public class NetherRenderer implements MapRenderer {
                 shadingSum = 0;
                 sumRf = sumGf = sumBf = 0;
                 layers = 1;
-                cavefloor = floorData.getHeightMapValue(x, z);//TODO test this
+                cavefloor = chunk.getHeightMapValue(x, z);//TODO test this
 
-                //See-through-multi-level-height-light-shading is the new black -- @mithrilmania
                 while (cavefloor > 0) {
                     caveceil = chunk.getCaveYUnderAt(x, z, cavefloor - 1);
 
@@ -68,16 +57,10 @@ public class NetherRenderer implements MapRenderer {
                     heightShading = SatelliteRenderer.getHeightShading(cavefloor, cavefloorW, cavefloorN);
 
                     y = cavefloor + 1;
-                    data = chunk.getTerrain((byte) (y / version.subChunkHeight));
-
-                    //light sources
-                    lightValue = (data != null && data.loadTerrain())
-                            ? data.getBlockLightValue(x, y % version.subChunkHeight, z)
-                            : 0;
 
                     //check if it is supported, default to full brightness to not lose details.
-                    if (data.supportsBlockLightValues()) {
-                        lightShading = (float) lightValue / 15f + 1;
+                    if (chunk.supportsBlockLightValues()) {
+                        lightShading = (float) chunk.getBlockLightValue(x, y, z) / 15f + 1;
                     } else {
                         lightShading = 2f;
                     }
@@ -94,65 +77,49 @@ public class NetherRenderer implements MapRenderer {
 
                     a = 1f;
 
-                    offset = caveceil % version.subChunkHeight;
-                    stop = 0;
-                    subChunk = caveceil / version.subChunkHeight;
-                    stopSubChunk = caveceil / version.subChunkHeight;
+                    for (y = caveceil; y >= cavefloor; y--) {
 
+                        id = chunk.getBlockRuntimeId(x, y, z);
 
-                    subChunkLoop:
-                    for (; subChunk >= stopSubChunk; subChunk--) {
-                        if (subChunk == stopSubChunk) stop = cavefloor % version.subChunkHeight;
+                        if (id == 0) continue;//skip air blocks
 
-                        data = chunk.getTerrain((byte) subChunk);
-                        if (data == null || !data.loadTerrain()) {
-                            //start at the top of the next chunk! (current offset might differ)
-                            offset = version.subChunkHeight - 1;
+                        block = Block.getBlock(id);
+
+                        if (block == null) block = Block.getBlock(id & 0x7fffff00);
+
+                        //try the default meta value: 0
+                        //if (block == null) block = Block.getBlock(id, 0);
+
+                        if (block == null) {
+                            //Log.w("UNKNOWN block: id: " + id + " meta: " + meta);
                             continue;
                         }
 
-                        for (y = offset; y >= stop; y--) {
+                        // no need to process block if it is fully transparent
+                        if (block.color.alpha == 0) continue;
 
-                            id = data.getBlockTypeId(x, y, z) & 0xff;
+                        rf = block.color.red / 255f;
+                        gf = block.color.green / 255f;
+                        bf = block.color.blue / 255f;
+                        af = block.color.alpha / 255f;
 
-                            if (id == 0) continue;//skip air blocks
+                        // alpha blend and multiply
+                        blendR = a * af * rf * shading;
+                        blendG = a * af * gf * shading;
+                        blendB = a * af * bf * shading;
 
-                            meta = data.getBlockData(x, y, z) & 0xff;
-                            block = Block.getBlock(id, meta);
+                        sumRf += blendR;
+                        sumGf += blendG;
+                        sumBf += blendB;
+                        a *= 1f - af;
 
-                            //try the default meta value: 0
-                            if (block == null) block = Block.getBlock(id, 0);
-
-                            if (block == null) {
-                                Log.w("UNKNOWN block: id: " + id + " meta: " + meta);
-                                continue;
-                            }
-
-                            // no need to process block if it is fully transparent
-                            if (block.color.alpha == 0) continue;
-
-                            rf = block.color.red / 255f;
-                            gf = block.color.green / 255f;
-                            bf = block.color.blue / 255f;
-                            af = block.color.alpha / 255f;
-
-                            // alpha blend and multiply
-                            blendR = a * af * rf * shading;
-                            blendG = a * af * gf * shading;
-                            blendB = a * af * bf * shading;
-
-                            sumRf += blendR;
-                            sumGf += blendG;
-                            sumBf += blendB;
-                            a *= 1f - af;
-
-                            // break when an opaque block is encountered
-                            if (block.color.alpha == 0xff) break subChunkLoop;
-                        }
-
-                        //start at the top of the next chunk! (current offset might differ)
-                        offset = version.subChunkHeight - 1;
+                        // break when an opaque block is encountered
+                        if (block.color.alpha == 0xff) break;
                     }
+
+                    //start at the top of the next chunk! (current offset might differ)
+                    //offset = 15;//cVersion.subChunkHeight - 1;
+                    //}
 
 
                     layers++;
@@ -170,43 +137,36 @@ public class NetherRenderer implements MapRenderer {
                 g = g < 0 ? 0 : g > 255 ? 255 : g;
                 b = b < 0 ? 0 : b > 255 ? 255 : b;
 
+                for (y = 0; y < chunk.getHeightLimit(); y++) {
 
-                subChunkLoop:
-                for (subChunk = 0; subChunk < version.subChunks; subChunk++) {
-                    data = chunk.getTerrain((byte) subChunk);
-                    if (data == null || data.loadTerrain()) break;
-
-                    for (y = 0; y < version.subChunkHeight; y++) {
-
-                        //some x-ray for important stuff like portals
-                        switch (data.getBlockTypeId(x, y, z)) {
-                            case 52://monster spawner
-                                r = g = b = 255;
-                                break subChunkLoop;//max already? just stop
-                            case 54://chest
-                                if (worth < 90) {
-                                    worth = 90;
-                                    b = 170;
-                                    r = 240;
-                                    g = 40;
-                                }
-                                break;
-                            case 115://nether wart
-                                if (worth < 80) {
-                                    worth = 80;
-                                    r = b = 120;
-                                    g = 170;
-                                }
-                                break;
-                            case 90://nether portal
-                                if (worth < 95) {
-                                    worth = 95;
-                                    r = 60;
-                                    g = 0;
-                                    b = 170;
-                                }
-                                break;
-                        }
+                    //some x-ray for important stuff like portals
+                    switch (chunk.getBlockRuntimeId(x, y, z) >>> 8) {
+                        case 52://monster spawner
+                            r = g = b = 255;
+                            break;
+                        case 54://chest
+                            if (worth < 90) {
+                                worth = 90;
+                                b = 170;
+                                r = 240;
+                                g = 40;
+                            }
+                            break;
+                        case 115://nether wart
+                            if (worth < 80) {
+                                worth = 80;
+                                r = b = 120;
+                                g = 170;
+                            }
+                            break;
+                        case 90://nether portal
+                            if (worth < 95) {
+                                worth = 95;
+                                r = 60;
+                                g = 0;
+                                b = 170;
+                            }
+                            break;
                     }
                 }
 

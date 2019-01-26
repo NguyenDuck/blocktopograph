@@ -5,28 +5,23 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.chunk.TempChunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.Version;
-import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
 
 public class HeightmapRenderer implements MapRenderer {
 
-    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, ChunkManager chunkManager) throws Version.VersionException {
 
-        //the bottom sub-chunk is sufficient to get heightmap data.
-        TerrainChunkData data = chunk.getTerrain((byte) 0);
-        if (data == null || !data.load2DData())
-            throw new RuntimeException();
+        Chunk dataW = chunkManager.getChunk(chunkX - 1, chunkZ, dimension);
+        Chunk dataN = chunkManager.getChunk(chunkX, chunkZ - 1, dimension);
 
-        TerrainChunkData dataW = chunkManager.getChunk(chunkX - 1, chunkZ, dimension).getTerrain((byte) 0);
-        TerrainChunkData dataN = chunkManager.getChunk(chunkX, chunkZ - 1, dimension).getTerrain((byte) 0);
+        boolean west = dataW != null && !dataW.isVoid(),
+                north = dataN != null && !dataN.isVoid();
 
-        boolean west = dataW != null && dataW.load2DData(),
-                north = dataN != null && dataN.load2DData();
-
-        int x, y, z, color, i, j, tX, tY;
+        int x, y, z, color, tX, tY;
         int yW, yN;
         int r, g, b;
         float yNorm, yNorm2, heightShading;
@@ -36,16 +31,18 @@ public class HeightmapRenderer implements MapRenderer {
 
 
                 //smooth step function: 6x^5 - 15x^4 + 10x^3
-                y = data.getHeightMapValue(x, z);
+                y = chunk.getHeightMapValue(x, z);
+
+                if (y < 0) continue;
 
                 yNorm = (float) y / (float) dimension.chunkH;
                 yNorm2 = yNorm * yNorm;
                 yNorm = ((6f * yNorm2) - (15f * yNorm) + 10f) * yNorm2 * yNorm;
 
                 yW = (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge
-                        : data.getHeightMapValue(x - 1, z);//within chunk
+                        : chunk.getHeightMapValue(x - 1, z);//within chunk
                 yN = (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
-                        : data.getHeightMapValue(x, z - 1);//within chunk
+                        : chunk.getHeightMapValue(x, z - 1);//within chunk
 
                 heightShading = SatelliteRenderer.getHeightShading(y, yW, yN);
 

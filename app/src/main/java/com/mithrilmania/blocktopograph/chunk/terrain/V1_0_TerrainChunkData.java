@@ -3,9 +3,7 @@ package com.mithrilmania.blocktopograph.chunk.terrain;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
-import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Biome;
-import com.mithrilmania.blocktopograph.util.Noise;
 
 import java.nio.ByteBuffer;
 
@@ -33,13 +31,14 @@ public class V1_0_TerrainChunkData extends TerrainChunkData {
 
     public V1_0_TerrainChunkData(Chunk chunk, byte subChunk) {
         super(chunk, subChunk);
+        mNotFailed = loadTerrain();
     }
 
     @Override
     public void write() throws WorldData.WorldDBException {
         Chunk chunk = this.chunk.get();
-        chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true, terrainData.array());
-        chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.DATA_2D, chunk.dimension, subChunk, true, data2D.array());
+        chunk.getWorldData().writeChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.TERRAIN, chunk.mDimension, subChunk, true, terrainData.array());
+        chunk.getWorldData().writeChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.DATA_2D, chunk.mDimension, subChunk, true, data2D.array());
     }
 
     @Override
@@ -47,7 +46,7 @@ public class V1_0_TerrainChunkData extends TerrainChunkData {
         if (terrainData == null) {
             try {
                 Chunk chunk = this.chunk.get();
-                byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.TERRAIN, chunk.dimension, subChunk, true);
+                byte[] rawData = chunk.getWorldData().getChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.TERRAIN, chunk.mDimension, subChunk, true);
                 if (rawData == null) return false;
                 this.terrainData = ByteBuffer.wrap(rawData);
                 return true;
@@ -55,7 +54,7 @@ public class V1_0_TerrainChunkData extends TerrainChunkData {
                 //data is not present
                 return false;
             }
-        } else return true;
+        } else return mNotFailed;
     }
 
     @Override
@@ -63,7 +62,7 @@ public class V1_0_TerrainChunkData extends TerrainChunkData {
         if (data2D == null) {
             try {
                 Chunk chunk = this.chunk.get();
-                byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.DATA_2D, chunk.dimension, subChunk, false);
+                byte[] rawData = chunk.getWorldData().getChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.DATA_2D, chunk.mDimension, subChunk, false);
                 if (rawData == null) return false;
                 this.data2D = ByteBuffer.wrap(rawData);
                 return true;

@@ -18,12 +18,9 @@ public class XRayRenderer implements MapRenderer {
     TODO make the X-ray viewable blocks configurable, without affecting performance too much...
      */
 
-    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, Version version, ChunkManager chunkManager) throws Version.VersionException {
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, ChunkManager chunkManager) throws Version.VersionException {
 
-        //the bottom sub-chunk is sufficient to get heightmap data.
-        TerrainChunkData data;
-
-        int x, y, z, color, i, j, tX, tY;
+        int x, y, z, color, tX, tY;
 
         //render width in blocks
         int rW = 16;
@@ -38,46 +35,41 @@ public class XRayRenderer implements MapRenderer {
         int average;
         int r, g, b;
 
-        int subChunk;
-        for (subChunk = 0; subChunk < version.subChunks; subChunk++) {
-            data = chunk.getTerrain((byte) subChunk);
-            if (data == null || !data.loadTerrain()) break;
+        for (z = 0; z < 16; z++) {
+            for (x = 0; x < 16; x++) {
 
-            for (z = 0; z < 16; z++) {
-                for (x = 0; x < 16; x++) {
+                for (y = 0; y < chunk.getHeightLimit(); y++) {
+                    block = Block.getBlock(chunk.getBlockRuntimeId(x, y, z));
 
-                    for (y = 0; y < version.subChunkHeight; y++) {
-                        block = Block.getBlock(data.getBlockTypeId(x, y, z) & 0xff, 0);
+                    index2D = (z * rW) + x;
+                    if (block == null || block.id <= 1)
+                        continue;
+                    else if (block == Block.B_56_0_DIAMOND_ORE) {
+                        bestBlock[index2D] = block;
+                        break;
+                    } else if (block == Block.B_129_0_EMERALD_ORE) bValue = 8;
+                    else if (block == Block.B_153_0_QUARTZ_ORE) bValue = 7;
+                    else if (block == Block.B_14_0_GOLD_ORE) bValue = 6;
+                    else if (block == Block.B_15_0_IRON_ORE) bValue = 5;
+                    else if (block == Block.B_73_0_REDSTONE_ORE) bValue = 4;
+                    else if (block == Block.B_21_0_LAPIS_ORE) bValue = 3;
+                        //else if(block == Block.COAL_ORE) bValue = 2;
+                        //else if(b == Block.LAVA || b == Block.STATIONARY_LAVA) bValue = 1;
+                    else bValue = 0;
 
-                        index2D = (z * rW) + x;
-                        if (block == null || block.id <= 1)
-                            continue;
-                        else if (block == Block.B_56_0_DIAMOND_ORE) {
-                            bestBlock[index2D] = block;
-                            break;
-                        } else if (block == Block.B_129_0_EMERALD_ORE) bValue = 8;
-                        else if (block == Block.B_153_0_QUARTZ_ORE) bValue = 7;
-                        else if (block == Block.B_14_0_GOLD_ORE) bValue = 6;
-                        else if (block == Block.B_15_0_IRON_ORE) bValue = 5;
-                        else if (block == Block.B_73_0_REDSTONE_ORE) bValue = 4;
-                        else if (block == Block.B_21_0_LAPIS_ORE) bValue = 3;
-                            //else if(block == Block.COAL_ORE) bValue = 2;
-                            //else if(b == Block.LAVA || b == Block.STATIONARY_LAVA) bValue = 1;
-                        else bValue = 0;
-
-                        if (bValue > minValue[index2D]) {
-                            minValue[index2D] = bValue;
-                            bestBlock[index2D] = block;
-                        }
+                    if (bValue > minValue[index2D]) {
+                        minValue[index2D] = bValue;
+                        bestBlock[index2D] = block;
                     }
                 }
             }
         }
 
-        if (subChunk == 0) {
-            MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension, chunkX, chunkZ, pX, pY, pW, pL, paint, version, chunkManager);
-            return;
-        }
+
+//        if (y == 0) {
+//            MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension, chunkX, chunkZ, pX, pY, pW, pL, paint, version, chunkManager);
+//            return;
+//        }
 
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {

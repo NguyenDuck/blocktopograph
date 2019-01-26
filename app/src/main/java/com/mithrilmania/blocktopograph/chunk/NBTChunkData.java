@@ -23,7 +23,7 @@ public class NBTChunkData extends ChunkData {
 
     public void load() throws WorldData.WorldDBLoadException, WorldData.WorldDBException, IOException {
         Chunk chunk = this.chunk.get();
-        loadFromByteArray(chunk.worldData.get().getChunkData(chunk.x, chunk.z, dataType, chunk.dimension, (byte) 0, false));
+        loadFromByteArray(chunk.getWorldData().getChunkData(chunk.mChunkX, chunk.mChunkZ, dataType, chunk.mDimension, (byte) 0, false));
     }
 
     public void loadFromByteArray(byte[] data) throws IOException {
@@ -34,7 +34,7 @@ public class NBTChunkData extends ChunkData {
         if (this.tags == null) this.tags = new ArrayList<>();
         byte[] data = DataConverter.write(this.tags);
         Chunk chunk = this.chunk.get();
-        chunk.worldData.get().writeChunkData(chunk.x, chunk.z, this.dataType, chunk.dimension, (byte) 0, false, data);
+        chunk.getWorldData().writeChunkData(chunk.mChunkX, chunk.mChunkZ, this.dataType, chunk.mDimension, (byte) 0, false, data);
     }
 
     @Override

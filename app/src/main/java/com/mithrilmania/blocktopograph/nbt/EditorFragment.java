@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.TextWatcher;
+
 import com.mithrilmania.blocktopograph.Log;
 
 import android.util.DisplayMetrics;
@@ -46,21 +47,19 @@ import java.util.List;
 public class EditorFragment extends Fragment {
 
     /**
-     *
      * TODO:
-     *
+     * <p>
      * - The onSomethingChanged listeners should start Asynchronous tasks
-     *     when directly modifying NBT.
-     *
+     * when directly modifying NBT.
+     * <p>
      * - This editor should be refactored into parts, it grew too large.
-     *
+     * <p>
      * - The functions lack documentation. Add it. Ask @mithrilmania for now...
-     *
      */
 
     private EditableNBT nbt;
 
-    public void setEditableNBT(EditableNBT nbt){
+    public void setEditableNBT(EditableNBT nbt) {
         this.nbt = nbt;
     }
 
@@ -68,13 +67,13 @@ public class EditorFragment extends Fragment {
 
         public Tag parent, self;
 
-        public ChainTag(Tag parent, Tag self){
+        public ChainTag(Tag parent, Tag self) {
             this.parent = parent;
             this.self = self;
         }
     }
 
-    public static class RootNodeHolder extends TreeNode.BaseNodeViewHolder<EditableNBT>{
+    public static class RootNodeHolder extends TreeNode.BaseNodeViewHolder<EditableNBT> {
 
 
         public RootNodeHolder(Context context) {
@@ -117,9 +116,9 @@ public class EditorFragment extends Fragment {
         @Override
         public View createNodeView(TreeNode node, final ChainTag chain) {
 
-            if(chain == null) return null;
+            if (chain == null) return null;
             Tag tag = chain.self;
-            if(tag == null) return null;
+            if (tag == null) return null;
 
             final LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -191,7 +190,7 @@ public class EditorFragment extends Fragment {
             TextView tagName = (TextView) tagView.findViewById(R.id.tag_name);
             tagName.setText(tag.getName());
 
-            switch (layoutID){
+            switch (layoutID) {
                 case R.layout.tag_boolean_layout: {
                     final CheckBox checkBox = (CheckBox) tagView.findViewById(R.id.checkBox);
                     final ByteTag byteTag = (ByteTag) tag;
@@ -215,24 +214,26 @@ public class EditorFragment extends Fragment {
                     final EditText editText = (EditText) tagView.findViewById(R.id.byteField);
                     final ByteTag byteTag = (ByteTag) tag;
                     //parse the byte as an unsigned byte
-                    editText.setText(""+(((int) byteTag.getValue()) & 0xFF));
+                    editText.setText("" + (((int) byteTag.getValue()) & 0xFF));
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
 
                         @Override
                         public void afterTextChanged(Editable s) {
                             String sValue = s.toString();
                             try {
                                 int value = Integer.parseInt(sValue);
-                                if(value < 0 || value > 0xff)
+                                if (value < 0 || value > 0xff)
                                     throw new NumberFormatException("No unsigned byte.");
                                 byteTag.setValue((byte) value);
                                 nbt.setModified();
-                            } catch (NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
                             }
                         }
@@ -245,10 +246,12 @@ public class EditorFragment extends Fragment {
                     editText.setText(shortTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
 
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -256,7 +259,7 @@ public class EditorFragment extends Fragment {
                             try {
                                 shortTag.setValue(Short.valueOf(sValue));
                                 nbt.setModified();
-                            } catch (NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
                             }
                         }
@@ -269,10 +272,12 @@ public class EditorFragment extends Fragment {
                     editText.setText(intTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
 
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -280,7 +285,7 @@ public class EditorFragment extends Fragment {
                             try {
                                 intTag.setValue(Integer.valueOf(sValue));
                                 nbt.setModified();
-                            } catch (NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
                             }
                         }
@@ -293,10 +298,12 @@ public class EditorFragment extends Fragment {
                     editText.setText(longTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
 
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -304,7 +311,7 @@ public class EditorFragment extends Fragment {
                             try {
                                 longTag.setValue(Long.valueOf(sValue));
                                 nbt.setModified();
-                            } catch (NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
                             }
                         }
@@ -317,10 +324,12 @@ public class EditorFragment extends Fragment {
                     editText.setText(floatTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
 
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -328,7 +337,7 @@ public class EditorFragment extends Fragment {
                             try {
                                 floatTag.setValue(Float.valueOf(sValue));
                                 nbt.setModified();
-                            } catch (NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
                             }
                         }
@@ -341,10 +350,12 @@ public class EditorFragment extends Fragment {
                     editText.setText(doubleTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
 
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -352,7 +363,7 @@ public class EditorFragment extends Fragment {
                             try {
                                 doubleTag.setValue(Double.valueOf(sValue));
                                 nbt.setModified();
-                            } catch (NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
                             }
                         }
@@ -365,10 +376,12 @@ public class EditorFragment extends Fragment {
                     editText.setText(stringTag.getValue());
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
 
                         @Override
                         public void afterTextChanged(Editable s) {
@@ -409,16 +422,16 @@ public class EditorFragment extends Fragment {
 
         public final int stringId;
 
-        NBTEditOption(int stringId){
+        NBTEditOption(int stringId) {
             this.stringId = stringId;
         }
     }
 
-    public String[] getNBTEditOptions(){
+    public String[] getNBTEditOptions() {
         NBTEditOption[] values = NBTEditOption.values();
         int len = values.length;
         String[] options = new String[len];
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             options[i] = getString(values[i].stringId);
         }
         return options;
@@ -432,17 +445,17 @@ public class EditorFragment extends Fragment {
 
         public final int stringId;
 
-        RootNBTEditOption(int stringId){
+        RootNBTEditOption(int stringId) {
             this.stringId = stringId;
         }
 
     }
 
-    public String[] getRootNBTEditOptions(){
+    public String[] getRootNBTEditOptions() {
         RootNBTEditOption[] values = RootNBTEditOption.values();
         int len = values.length;
         String[] options = new String[len];
-        for(int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             options[i] = getString(values[i].stringId);
         }
         return options;
@@ -453,14 +466,14 @@ public class EditorFragment extends Fragment {
 
 
     //returns true if there is a tag in content with a name equals to key.
-    boolean checkKeyCollision(String key, List<Tag> content){
-        if(content == null || content.isEmpty()) return false;
-        if(key == null) key = "";
+    boolean checkKeyCollision(String key, List<Tag> content) {
+        if (content == null || content.isEmpty()) return false;
+        if (key == null) key = "";
         String tagName;
-        for(Tag tag : content) {
+        for (Tag tag : content) {
             tagName = tag.getName();
-            if(tagName == null) tagName = "";
-            if(tagName.equals(key)) {
+            if (tagName == null) tagName = "";
+            if (tagName.equals(key)) {
                 return true;
             }
         }
@@ -472,7 +485,7 @@ public class EditorFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        if(nbt == null){
+        if (nbt == null) {
             new Exception("No NBT data provided").printStackTrace();
             getActivity().finish();
 
@@ -495,7 +508,7 @@ public class EditorFragment extends Fragment {
 
         root.setViewHolder(new RootNodeHolder(activity));
 
-        for(Tag tag : nbt.getTags()){
+        for (Tag tag : nbt.getTags()) {
             root.addChild(new TreeNode(new ChainTag(null, tag)).setViewHolder(new NBTNodeHolder(nbt, activity)));
         }
 
@@ -516,9 +529,9 @@ public class EditorFragment extends Fragment {
 
 
                 //root tag has nbt as value
-                if(value instanceof EditableNBT){
+                if (value instanceof EditableNBT) {
 
-                    if(!nbt.enableRootModifications){
+                    if (!nbt.enableRootModifications) {
                         Toast.makeText(activity, R.string.cannot_edit_root_NBT_tag, Toast.LENGTH_LONG).show();
                         return true;
                     }
@@ -528,7 +541,7 @@ public class EditorFragment extends Fragment {
                     builder.setTitle(R.string.root_NBT_options)
                             .setItems(getRootNBTEditOptions(), new DialogInterface.OnClickListener() {
 
-                                private void showMsg(int msg){
+                                private void showMsg(int msg) {
                                     Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
                                 }
 
@@ -536,8 +549,8 @@ public class EditorFragment extends Fragment {
                                     try {
                                         RootNBTEditOption option = RootNBTEditOption.values()[which];
 
-                                        switch (option){
-                                            case ADD_NBT_TAG:{
+                                        switch (option) {
+                                            case ADD_NBT_TAG: {
                                                 final EditText nameText = new EditText(activity);
                                                 nameText.setHint(R.string.hint_tag_name_here);
 
@@ -601,7 +614,7 @@ public class EditorFragment extends Fragment {
                                                 return;
                                             }
                                             case PASTE_SUB_TAG: {
-                                                if(clipboard == null){
+                                                if (clipboard == null) {
                                                     showMsg(R.string.clipboard_is_empty);
                                                     return;
                                                 }
@@ -613,7 +626,7 @@ public class EditorFragment extends Fragment {
 
                                                 return;
                                             }
-                                            case REMOVE_ALL_TAGS:{
+                                            case REMOVE_ALL_TAGS: {
 
                                                 //wrap layout in alert
                                                 AlertDialog.Builder alert = new AlertDialog.Builder(activity);
@@ -626,10 +639,10 @@ public class EditorFragment extends Fragment {
 
                                                         List<TreeNode> children = new ArrayList<>(node.getChildren());
                                                         //new tag name
-                                                        for(TreeNode child : children){
+                                                        for (TreeNode child : children) {
                                                             tree.removeNode(child);
                                                             Object childValue = child.getValue();
-                                                            if(childValue != null && childValue instanceof ChainTag)
+                                                            if (childValue != null && childValue instanceof ChainTag)
                                                                 nbt.removeRootTag(((ChainTag) childValue).self);
                                                         }
                                                         nbt.setModified();
@@ -649,10 +662,10 @@ public class EditorFragment extends Fragment {
                                                 break;
                                             }
                                             default: {
-                                                Log.d("User clicked unknown NBTEditOption! "+option.name());
+                                                Log.d("User clicked unknown NBTEditOption! " + option.name());
                                             }
                                         }
-                                    } catch (Exception e){
+                                    } catch (Exception e) {
                                         showMsg(R.string.failed_to_do_NBT_change);
                                     }
                                 }
@@ -662,7 +675,7 @@ public class EditorFragment extends Fragment {
                     return true;
 
 
-                } else if(value instanceof ChainTag){
+                } else if (value instanceof ChainTag) {
                     //other tags have a chain-tag as value
 
 
@@ -671,23 +684,23 @@ public class EditorFragment extends Fragment {
                     builder.setTitle(R.string.nbt_tag_options)
                             .setItems(getNBTEditOptions(), new DialogInterface.OnClickListener() {
 
-                                private void showMsg(int msg){
+                                private void showMsg(int msg) {
                                     Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
                                 }
 
                                 @SuppressWarnings("unchecked")
                                 public void onClick(DialogInterface dialog, int which) {
-                                    try{
+                                    try {
                                         NBTEditOption editOption = NBTEditOption.values()[which];
 
                                         final Tag parent = ((ChainTag) value).parent;
                                         final Tag self = ((ChainTag) value).self;
 
-                                        if(self == null) return;//WTF?
+                                        if (self == null) return;//WTF?
 
-                                        if(editOption == null) return;//WTF?
+                                        if (editOption == null) return;//WTF?
 
-                                        switch (editOption){
+                                        switch (editOption) {
                                             case CANCEL: {
                                                 return;
                                             }
@@ -696,12 +709,12 @@ public class EditorFragment extends Fragment {
                                                 return;
                                             }
                                             case PASTE_OVERWRITE: {
-                                                if(clipboard == null){
+                                                if (clipboard == null) {
                                                     showMsg(R.string.clipboard_is_empty);
                                                     return;
                                                 }
 
-                                                if(parent == null){
+                                                if (parent == null) {
                                                     //it is one of the children of the root node
                                                     nbt.removeRootTag(self);
                                                     Tag copy = clipboard.getDeepCopy();
@@ -720,7 +733,7 @@ public class EditorFragment extends Fragment {
                                                         }
                                                         case COMPOUND: {
                                                             content = ((CompoundTag) parent).getValue();
-                                                            if(checkKeyCollision(clipboard.getName(), content)){
+                                                            if (checkKeyCollision(clipboard.getName(), content)) {
                                                                 showMsg(R.string.clipboard_key_exists_in_compound);
                                                                 return;
                                                             }
@@ -731,7 +744,7 @@ public class EditorFragment extends Fragment {
                                                             return;
                                                         }
                                                     }
-                                                    if(content != null){
+                                                    if (content != null) {
                                                         content.remove(self);
                                                         Tag copy = clipboard.getDeepCopy();
                                                         content.add(copy);
@@ -739,13 +752,13 @@ public class EditorFragment extends Fragment {
                                                         tree.removeNode(node);
                                                         nbt.setModified();
                                                         return;
-                                                    }
-                                                    else showMsg(R.string.error_cannot_overwrite_in_empty_parent);
+                                                    } else
+                                                        showMsg(R.string.error_cannot_overwrite_in_empty_parent);
                                                     return;
                                                 }
                                             }
                                             case PASTE_SUBTAG: {
-                                                if(clipboard == null){
+                                                if (clipboard == null) {
                                                     showMsg(R.string.clipboard_is_empty);
                                                     return;
                                                 }
@@ -758,7 +771,7 @@ public class EditorFragment extends Fragment {
                                                     }
                                                     case COMPOUND: {
                                                         content = ((CompoundTag) self).getValue();
-                                                        if(checkKeyCollision(clipboard.getName(), content)){
+                                                        if (checkKeyCollision(clipboard.getName(), content)) {
                                                             showMsg(R.string.clipboard_key_exists_in_compound);
                                                             return;
                                                         }
@@ -769,7 +782,7 @@ public class EditorFragment extends Fragment {
                                                         return;
                                                     }
                                                 }
-                                                if(content == null){
+                                                if (content == null) {
                                                     content = new ArrayList<>();
                                                     self.setValue(content);
                                                 }
@@ -782,7 +795,7 @@ public class EditorFragment extends Fragment {
                                                 return;
                                             }
                                             case DELETE: {
-                                                if(parent == null){
+                                                if (parent == null) {
                                                     //it is one of the children of the root node
                                                     tree.removeNode(node);
                                                     nbt.removeRootTag(self);
@@ -791,26 +804,26 @@ public class EditorFragment extends Fragment {
                                                 }
 
                                                 ArrayList<Tag> content;
-                                                switch (parent.getType()){
-                                                    case LIST:{
+                                                switch (parent.getType()) {
+                                                    case LIST: {
                                                         content = ((ListTag) parent).getValue();
                                                         break;
                                                     }
-                                                    case COMPOUND:{
+                                                    case COMPOUND: {
                                                         content = ((CompoundTag) parent).getValue();
                                                         break;
                                                     }
-                                                    default:{
+                                                    default: {
                                                         showMsg(R.string.error_cannot_overwrite_tag_unknow_parent_type);
                                                         return;
                                                     }
                                                 }
-                                                if(content != null){
+                                                if (content != null) {
                                                     content.remove(self);
                                                     tree.removeNode(node);
                                                     nbt.setModified();
-                                                }
-                                                else showMsg(R.string.error_cannot_remove_from_empty_list);
+                                                } else
+                                                    showMsg(R.string.error_cannot_remove_from_empty_list);
                                                 return;
                                             }
                                             case RENAME: {
@@ -827,9 +840,9 @@ public class EditorFragment extends Fragment {
                                                         Editable newNameEditable = edittext.getText();
                                                         String newName = (newNameEditable == null || newNameEditable.toString().equals("")) ? null : newNameEditable.toString();
 
-                                                        if(parent != null
+                                                        if (parent != null
                                                                 && parent instanceof CompoundTag
-                                                                && checkKeyCollision(newName, ((CompoundTag) parent).getValue())){
+                                                                && checkKeyCollision(newName, ((CompoundTag) parent).getValue())) {
                                                             showMsg(R.string.error_parent_already_contains_child_with_same_key);
                                                             return;
                                                         }
@@ -855,9 +868,9 @@ public class EditorFragment extends Fragment {
                                                 return;
                                             }
                                             case ADD_SUBTAG: {
-                                                switch (self.getType()){
+                                                switch (self.getType()) {
                                                     case LIST:
-                                                    case COMPOUND:{
+                                                    case COMPOUND: {
                                                         final EditText nameText = new EditText(activity);
                                                         nameText.setHint(R.string.hint_tag_name_here);
 
@@ -899,21 +912,19 @@ public class EditorFragment extends Fragment {
 
 
                                                                 ArrayList<Tag> content;
-                                                                if(self instanceof CompoundTag) {
+                                                                if (self instanceof CompoundTag) {
 
                                                                     content = ((CompoundTag) self).getValue();
 
-                                                                    if(checkKeyCollision(newName, content)){
+                                                                    if (checkKeyCollision(newName, content)) {
                                                                         showMsg(R.string.error_key_already_exists_in_compound);
                                                                         return;
                                                                     }
-                                                                }
-                                                                else if(self instanceof ListTag){
+                                                                } else if (self instanceof ListTag) {
                                                                     content = ((ListTag) self).getValue();
-                                                                }
-                                                                else return;//WTF?
+                                                                } else return;//WTF?
 
-                                                                if(content == null){
+                                                                if (content == null) {
                                                                     content = new ArrayList<>();
                                                                     self.setValue(content);
                                                                 }
@@ -942,14 +953,14 @@ public class EditorFragment extends Fragment {
                                                         return;
 
                                                     }
-                                                    default:{
+                                                    default: {
                                                         showMsg(R.string.sub_tags_only_add_compound_list);
                                                         return;
                                                     }
                                                 }
                                             }
                                             default: {
-                                                Log.d("User clicked unknown NBTEditOption! "+editOption.name());
+                                                Log.d("User clicked unknown NBTEditOption! " + editOption.name());
                                             }
 
                                         }
@@ -969,7 +980,6 @@ public class EditorFragment extends Fragment {
         frame.addView(treeView, 0);
 
 
-
         // save functionality
         // ================================
 
@@ -978,7 +988,7 @@ public class EditorFragment extends Fragment {
         fabSaveNBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                if(!nbt.isModified()){
+                if (!nbt.isModified()) {
                     Snackbar.make(view, R.string.no_data_changed_nothing_to_save, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
@@ -988,21 +998,22 @@ public class EditorFragment extends Fragment {
                             .setIcon(R.drawable.ic_action_save_b)
                             .setPositiveButton(android.R.string.yes,
                                     new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    Snackbar.make(view, "Saving NBT data...", Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show();
-                                    if(nbt.save()){
-                                        //nbt is not "modified" anymore, in respect to the new saved data
-                                        nbt.modified = false;
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            Snackbar.make(view, "Saving NBT data...", Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
+                                            if (nbt.save()) {
+                                                //nbt is not "modified" anymore, in respect to the new saved data
+                                                nbt.modified = false;
 
-                                        Snackbar.make(view, "Saved NBT data!", Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
-                                        ((WorldActivityInterface) activity).logFirebaseEvent(WorldActivity.CustomFirebaseEvent.NBT_EDITOR_SAVE);
-                                    } else {
-                                        Snackbar.make(view, "Error: failed to save the NBT data.", Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
-                                    }
-                                }})
+                                                Snackbar.make(view, "Saved NBT data!", Snackbar.LENGTH_LONG)
+                                                        .setAction("Action", null).show();
+                                                Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.NBT_EDITOR_SAVE);
+                                            } else {
+                                                Snackbar.make(view, "Error: failed to save the NBT data.", Snackbar.LENGTH_LONG)
+                                                        .setAction("Action", null).show();
+                                            }
+                                        }
+                                    })
                             .setNegativeButton(android.R.string.no, null).show();
                 }
 
@@ -1022,7 +1033,7 @@ public class EditorFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("title", nbt.getRootTitle());
 
-        ((WorldActivityInterface) getActivity()).logFirebaseEvent(WorldActivity.CustomFirebaseEvent.NBT_EDITOR_OPEN, bundle);
+        Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.NBT_EDITOR_OPEN, bundle);
     }
 
     @Override

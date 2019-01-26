@@ -31,14 +31,13 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
-import com.mithrilmania.blocktopograph.WorldActivity;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.chunk.TempChunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
-import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 import com.mithrilmania.blocktopograph.map.marker.CustomNamedBitmapProvider;
 import com.mithrilmania.blocktopograph.map.marker.MarkerImageView;
@@ -127,7 +126,7 @@ public class MapFragment extends Fragment {
         WorldActivityInterface worldProvider = this.worldProvider.get();
         getActivity().setTitle(worldProvider.getWorld().getWorldDisplayName());
 
-        worldProvider.logFirebaseEvent(WorldActivity.CustomFirebaseEvent.MAPFRAGMENT_OPEN);
+        Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.MAPFRAGMENT_OPEN);
     }
 
     @Override
@@ -137,7 +136,7 @@ public class MapFragment extends Fragment {
         //resume drawing the map
         this.tileView.resume();
 
-        worldProvider.get().logFirebaseEvent(WorldActivity.CustomFirebaseEvent.MAPFRAGMENT_RESUME);
+        Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.MAPFRAGMENT_RESUME);
     }
 
     public void closeChunks() {
@@ -231,10 +230,9 @@ public class MapFragment extends Fragment {
             int spawnY = ((IntTag) level.getChildTagByKey("SpawnY")).getValue();
             int spawnZ = ((IntTag) level.getChildTagByKey("SpawnZ")).getValue();
             if (spawnY == 256) {
-                TerrainChunkData data = mChunkManager.getChunk(spawnX >> 4, spawnZ >> 4, Dimension.OVERWORLD)
-                        .getTerrain((byte) 0);
-                if (data.load2DData())
-                    spawnY = data.getHeightMapValue(spawnX % 16, spawnZ % 16) + 1;
+                Chunk chunk = mChunkManager.getChunk(spawnX >> 4, spawnZ >> 4, Dimension.OVERWORLD);
+                if (!chunk.isError())
+                    spawnY = chunk.getHeightMapValue(spawnX % 16, spawnZ % 16) + 1;
             }
             return new DimensionVector3<>(spawnX, spawnY, spawnZ, Dimension.OVERWORLD);
         } catch (Exception e) {
@@ -289,7 +287,7 @@ public class MapFragment extends Fragment {
                         worldProvider.changeMapType(playerPos.dimension.defaultMapType, playerPos.dimension);
                     }
 
-                    worldProvider.logFirebaseEvent(WorldActivity.CustomFirebaseEvent.GPS_PLAYER);
+                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_PLAYER);
 
                     frameTo((double) playerPos.x, (double) playerPos.z);
 
@@ -323,7 +321,7 @@ public class MapFragment extends Fragment {
                         worldProvider.changeMapType(spawnPos.dimension.defaultMapType, spawnPos.dimension);
                     }
 
-                    worldProvider.logFirebaseEvent(WorldActivity.CustomFirebaseEvent.GPS_SPAWN);
+                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_SPAWN);
 
                     frameTo((double) spawnPos.x, (double) spawnPos.z);
 
@@ -415,7 +413,7 @@ public class MapFragment extends Fragment {
 
                                         frameTo((double) m.x, (double) m.z);
 
-                                        worldProvider.logFirebaseEvent(WorldActivity.CustomFirebaseEvent.GPS_MARKER);
+                                        Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_MARKER);
                                     }
                                 });
                         markerDialogBuilder.show();
@@ -494,7 +492,7 @@ public class MapFragment extends Fragment {
                                         return;
                                     }
 
-                                    worldProvider.get().logFirebaseEvent(WorldActivity.CustomFirebaseEvent.GPS_COORD);
+                                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_COORD);
 
                                     frameTo((double) inX, (double) inZ);
                                 }
@@ -1186,7 +1184,7 @@ public class MapFragment extends Fragment {
         }
 
         //just open the editor if the data is there for us to edit it
-        this.worldProvider.get().openChunkNBTEditor(chunk.x, chunk.z, chunkData, this.tileView);
+        this.worldProvider.get().openChunkNBTEditor(chunk.mChunkX, chunk.mChunkZ, chunkData, this.tileView);
         return true;
     }
 
@@ -1276,7 +1274,7 @@ public class MapFragment extends Fragment {
     public void resetTileView() {
         if (this.tileView != null) {
             WorldActivityInterface worldProvider = this.worldProvider.get();
-            worldProvider.logFirebaseEvent(WorldActivity.CustomFirebaseEvent.MAPFRAGMENT_RESET);
+            Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.MAPFRAGMENT_RESET);
 
             updateMarkerFilter();
 
@@ -1514,7 +1512,7 @@ public class MapFragment extends Fragment {
                                                 .setAction("Action", null).show();
 
                                         WorldActivityInterface worldProvider = owner.get().worldProvider.get();
-                                        worldProvider.logFirebaseEvent(WorldActivity.CustomFirebaseEvent.GPS_MULTIPLAYER);
+                                        Log.logFirebaseEvent(activity.get(), Log.CustomFirebaseEvent.GPS_MULTIPLAYER);
 
                                         if (playerPos.dimension != worldProvider.getDimension()) {
                                             worldProvider.changeMapType(playerPos.dimension.defaultMapType, playerPos.dimension);

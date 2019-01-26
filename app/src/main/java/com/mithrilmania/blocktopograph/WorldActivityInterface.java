@@ -3,6 +3,7 @@ package com.mithrilmania.blocktopograph;
 import android.os.Bundle;
 
 import android.view.ViewGroup;
+
 import com.mithrilmania.blocktopograph.chunk.ChunkData;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
@@ -26,10 +27,6 @@ public interface WorldActivityInterface {
     void onFatalDBError(WorldData.WorldDBException worldDB);
 
     void addMarker(AbstractMarker marker);
-
-    void logFirebaseEvent(WorldActivity.CustomFirebaseEvent firebaseEvent);
-
-    void logFirebaseEvent(WorldActivity.CustomFirebaseEvent firebaseEvent, Bundle eventContent);
 
     void showActionBar();
 

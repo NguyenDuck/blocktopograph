@@ -31,29 +31,30 @@ public class V0_9_TerrainChunkData extends TerrainChunkData {
 
     public V0_9_TerrainChunkData(Chunk chunk, byte subChunk) {
         super(chunk, subChunk);
+        mNotFailed = tryLoad();
     }
 
     @Override
     public void write() throws IOException, WorldData.WorldDBException {
         Chunk chunk = this.chunk.get();
-        chunk.worldData.get().writeChunkData(chunk.x, chunk.z, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.dimension, subChunk, false, toByteArray());
+        chunk.getWorldData().writeChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.mDimension, subChunk, false, toByteArray());
     }
 
     @Override
     public boolean loadTerrain() {
-        return tryLoad();
+        return mNotFailed;
     }
 
     @Override
     public boolean load2DData() {
-        return tryLoad();
+        return mNotFailed;
     }
 
     public boolean tryLoad() {
         if (buf == null) {
             try {
                 Chunk chunk = this.chunk.get();
-                byte[] rawData = chunk.worldData.get().getChunkData(chunk.x, chunk.z, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.dimension, subChunk, false);
+                byte[] rawData = chunk.getWorldData().getChunkData(chunk.mChunkX, chunk.mChunkZ, ChunkTag.V0_9_LEGACY_TERRAIN, chunk.mDimension, subChunk, false);
                 if (rawData == null) return false;
                 this.buf = ByteBuffer.wrap(rawData);
                 return true;
