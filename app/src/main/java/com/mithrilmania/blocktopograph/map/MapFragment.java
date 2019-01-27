@@ -125,7 +125,6 @@ public class MapFragment extends Fragment {
         super.onStart();
         WorldActivityInterface worldProvider = this.worldProvider.get();
         getActivity().setTitle(worldProvider.getWorld().getWorldDisplayName());
-
         Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.MAPFRAGMENT_OPEN);
     }
 
@@ -926,7 +925,7 @@ public class MapFragment extends Fragment {
     public void onLongClick(final double worldX, final double worldZ) {
 
 
-        final Activity activity = MapFragment.this.getActivity();
+        final Activity activity = getActivity();
 
 
         final Dimension dim = this.worldProvider.get().getDimension();

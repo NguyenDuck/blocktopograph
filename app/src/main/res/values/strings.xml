@@ -1,4 +1,4 @@
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name" translatable="false">Blocktopograph</string>
 
@@ -309,5 +309,15 @@
         [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
     <string name="action_teleport">Teleport!</string>
     <string name="go_to_spawn">Go to spawn</string>
-
+    <string name="err_noworld_1" tools:ignore="MissingTranslation">No worlds found from your device storage.</string>
+    <string name="err_noworld_2" tools:ignore="MissingTranslation">
+        Note that newer Minecrafts puts your worlds in its private data by default.
+        For this reason, all tools won\'t be able to access the worlds.
+        You\'d have to set Minecraft to use \"external\" storage, by go to Minecraft-&gt;
+        Settings-&gt;Profile-&gt;File Storage Location, and change the option from
+        \"Application\" to \"External\".
+        After that, newly created worlds would be accessible by Blocktopograph, while
+        existing worlds may not be opened. Moving those worlds to external may requires
+        root your device, and we\'re not available to help.
+    </string>
 </resources>

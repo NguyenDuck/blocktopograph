@@ -76,7 +76,7 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
                     //int id = ((IntTag) compoundTag.getChildTagByKey("id")).getValue();
                     String tempName = compoundTag.getChildTagByKey("identifier").getValue().toString();
                     tempName = tempName.replace("minecraft:", "");
-                    tempName = tempName.substring(0, 1).toUpperCase() + tempName.substring(1);
+                    //tempName = tempName.substring(0, 1).toUpperCase() + tempName.substring(1);
                     int id = Entity.getEntity(tempName).id;
                     Entity e = Entity.getEntity(id & 0xff);
                     if (e != null && e.bitmap != null) {

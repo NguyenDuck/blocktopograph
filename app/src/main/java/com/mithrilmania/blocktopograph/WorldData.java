@@ -117,26 +117,14 @@ public class WorldData {
     //close db to make it available for other apps (Minecraft itself!)
     public void closeDB() throws WorldDBException {
         if (this.db == null)
-            throw new WorldDBException("DB is null!!! (db is not loaded probably)");
-
+            return;
+        //Why bother throw an exception, isn't it good enough being able to skip closing as it's null?
         try {
             this.db.close();
         } catch (Exception e) {
             //db was already closed (probably)
             e.printStackTrace();
         }
-    }
-
-    /**
-     * WARNING: DELETES WORLD !!!
-     */
-    public void destroy() throws WorldDBException {
-        if (this.db == null)
-            throw new WorldDBException("DB is null!!! (db is not loaded probably)");
-
-        this.db.close();
-        this.db.destroy();
-        this.db = null;
     }
 
     public byte[] getChunkData(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk) throws WorldDBException, WorldDBLoadException {

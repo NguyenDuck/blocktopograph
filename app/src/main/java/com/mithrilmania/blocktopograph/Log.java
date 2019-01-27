@@ -35,8 +35,9 @@ public class Log {
         if (mFirebaseAnalytics == null) {
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
-            //don't measure the test devices in analytics
-            mFirebaseAnalytics.setAnalyticsCollectionEnabled(!BuildConfig.DEBUG);
+            //don't measure the test devices in analytics ...Meow but why?
+            //How would a single test device influences data from all over the world...
+            //mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
         }
         return mFirebaseAnalytics;
     }

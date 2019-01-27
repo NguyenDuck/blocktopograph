@@ -80,8 +80,8 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
             @Override
             public void onClick(View view) {
 
-                if(worldItemAdapter != null){
-                    if(worldItemAdapter.reloadWorldList()) {
+                if (worldItemAdapter != null) {
+                    if (worldItemAdapter.reloadWorldList()) {
                         Snackbar.make(view, R.string.reloaded_world_list, Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     } else {
@@ -117,29 +117,29 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
                         //new tag name
                         Editable pathEditable = pathText.getText();
                         String path = (pathEditable == null || pathEditable.toString().equals("")) ? null : pathEditable.toString();
-                        if(path == null){
+                        if (path == null) {
                             return;//no path, no world
                         }
 
                         String levelDat = "/level.dat";
                         int levelIndex = path.lastIndexOf(levelDat);
                         //if the path ends with /level.dat, remove it!
-                        if(levelIndex >= 0 && path.endsWith(levelDat))
+                        if (levelIndex >= 0 && path.endsWith(levelDat))
                             path = path.substring(0, levelIndex);
 
-                        String defaultPath = Environment.getExternalStorageDirectory().toString()+"/games/com.mojang/minecraftWorlds/";
+                        String defaultPath = Environment.getExternalStorageDirectory().toString() + "/games/com.mojang/minecraftWorlds/";
                         File worldFolder = new File(path);
                         String errTitle = null, errMsg = String.format(getString(R.string.report_path_and_previous_search), path, defaultPath);
-                        if(!worldFolder.exists()){
+                        if (!worldFolder.exists()) {
                             errTitle = getString(R.string.no_file_folder_found_at_path);
                         }
-                        if(!worldFolder.isDirectory()){
+                        if (!worldFolder.isDirectory()) {
                             errTitle = getString(R.string.worldpath_is_not_directory);
                         }
-                        if(!(new File(worldFolder, "level.dat").exists())){
+                        if (!(new File(worldFolder, "level.dat").exists())) {
                             errTitle = getString(R.string.no_level_dat_found);
                         }
-                        if(errTitle != null) {
+                        if (errTitle != null) {
                             new AlertDialog.Builder(WorldItemListActivity.this)
                                     .setTitle(errTitle)
                                     .setMessage(errMsg)
@@ -166,7 +166,7 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
                                     WorldItemListActivity.this.startActivity(intent);
                                 }
 
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 Snackbar.make(view, R.string.error_opening_world, Snackbar.LENGTH_SHORT)
                                         .setAction("Action", null).show();
                             }
@@ -187,8 +187,7 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
         });
 
 
-
-        if(verifyStoragePermissions(this)){
+        if (verifyStoragePermissions(this)) {
             //directly open the world list if we already have access
             initWorldList();
         }
@@ -196,14 +195,19 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
 
     }
 
-    public void initWorldList(){
+    public void initWorldList() {
 
         View recyclerView = findViewById(R.id.worlditem_list);
         assert recyclerView != null;
         boolean hasWorlds = setupRecyclerView((RecyclerView) recyclerView);
-        if(!hasWorlds){
-            Snackbar.make(recyclerView, R.string.could_not_find_worlds, Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show();
+        if (!hasWorlds) {
+            AlertDialog dia = new AlertDialog.Builder(this)
+                    .setTitle(R.string.err_noworld_1)
+                    .setView(R.layout.dialog_noworlds)
+                    .create();
+            dia.show();
+            //Snackbar.make(recyclerView, R.string.could_not_find_worlds, Snackbar.LENGTH_SHORT)
+            //        .setAction("Action", null).show();
         }
 
     }
@@ -227,7 +231,7 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     TextView msg = new TextView(this);
                     float dpi = this.getResources().getDisplayMetrics().density;
-                    msg.setPadding((int)(19*dpi), (int)(5*dpi), (int)(14*dpi), (int)(5*dpi));
+                    msg.setPadding((int) (19 * dpi), (int) (5 * dpi), (int) (14 * dpi), (int) (5 * dpi));
                     msg.setMaxLines(20);
                     msg.setMovementMethod(LinkMovementMethod.getInstance());
                     msg.setText(R.string.no_sdcard_access);
@@ -242,7 +246,6 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
     }
 
 
-
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 4242;
     private static String[] PERMISSIONS_STORAGE = {
@@ -252,9 +255,8 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
 
     /**
      * Checks if the app has permission to write to device storage
-     *
+     * <p>
      * If the app does not has permission then the user will be prompted to grant permissions
-     *
      */
     public static boolean verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
@@ -311,14 +313,14 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
         WorldItemRecyclerViewAdapter() {
             mValues = new ArrayList<>();
 
-            String path = Environment.getExternalStorageDirectory().toString()+"/games/com.mojang/minecraftWorlds/";
+            String path = Environment.getExternalStorageDirectory().toString() + "/games/com.mojang/minecraftWorlds/";
             Log.d("minecraftWorlds path: " + path);
 
             this.savesFolder = new File(path);
         }
 
         //returns true if it has loaded a new list of worlds, false otherwise
-        boolean reloadWorldList(){
+        boolean reloadWorldList() {
             mValues.clear();
             File[] saves = savesFolder.exists() ? savesFolder.listFiles(new FileFilter() {
                 @Override
@@ -327,7 +329,7 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
                 }
             }) : null;
 
-            if(saves != null) {
+            if (saves != null) {
                 Log.d("Number of minecraft worlds: " + saves.length);
 
                 for (File save : saves) {
@@ -365,14 +367,12 @@ public class WorldItemListActivity extends AppCompatActivity implements MenuHelp
         }
 
 
-
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.worlditem_list_content, parent, false);
             return new ViewHolder(view);
         }
-
 
 
         @SuppressLint("SetTextI18n")

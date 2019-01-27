@@ -30,7 +30,7 @@ abstract class NativeObject implements Closeable {
         return mPtr;
     }
 
-    synchronized public boolean isClosed(){
+    synchronized public boolean isClosed() {
         return getPtr() == 0;
     }
 
@@ -61,9 +61,10 @@ abstract class NativeObject implements Closeable {
 
     @Override
     public synchronized void close() {
-        if (mPtr != 0) {
-            unref();
-        }
+        closeNativeObject(mPtr);
+//        if (mPtr != 0) {
+//            unref();
+//        }
     }
 
     @Override

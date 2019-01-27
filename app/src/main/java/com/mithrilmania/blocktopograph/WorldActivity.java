@@ -160,15 +160,6 @@ public class WorldActivity extends AppCompatActivity
         String worldSeed = String.valueOf(this.world.getWorldSeed());
         subtitle.setText(worldSeed);
 
-        Bundle bundle = new Bundle();
-        bundle.putString("seed", worldSeed);
-        bundle.putString("name", this.world.getWorldDisplayName());
-
-
-        // anonymous global counter of opened worlds
-        Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_OPEN, bundle);
-
-
         // Open the world-map as default content
         openWorldMap();
 
@@ -176,10 +167,19 @@ public class WorldActivity extends AppCompatActivity
         try {
             //try to load world-data (Opens chunk-database for later usage)
             this.world.getWorldData().load();
-        } catch (WorldData.WorldDataLoadException e) {
+            world.getWorldData().openDB();
+        } catch (Exception e) {
             finish();
             e.printStackTrace();
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("seed", worldSeed);
+        bundle.putString("name", this.world.getWorldDisplayName());
+        bundle.putAll(world.getMapVersionData());
+
+        // anonymous global counter of opened worlds
+        Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_OPEN, bundle);
 
         Log.d("World activity created");
     }
