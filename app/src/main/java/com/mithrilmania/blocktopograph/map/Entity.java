@@ -153,9 +153,14 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
         this.identifier = "minecraft:" + wikiName;
     }
 
+    @NonNull
     @Override
     public Bitmap getBitmap() {
-        return this.bitmap;
+        if (bitmap != null) return bitmap;
+        if (Entity.UNKNOWN.bitmap == null) {
+            Entity.UNKNOWN.bitmap = Bitmap.createBitmap(24, 24, Bitmap.Config.RGB_565);
+        }
+        return Entity.UNKNOWN.bitmap;
     }
 
     @NonNull
@@ -178,24 +183,14 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
         return this.dataNames[0];
     }
 
-    //private static final Map<String, Entity> entityMap;
-    //private static final Map<Integer, Entity> entityByID;
-
-    static {
-        //entityMap = new HashMap<>();
-        //entityByID = new HashMap<>();
-        //for (Entity e : Entity.values()) {
-        //for(String dataName : e.dataNames){
-        // entityMap.put(e.wikiName.replace("_", "_"), e);
-        //}
-        //  entityByID.put(e.id, e);
-        //}
-    }
-    //We don't need a cache for this!
-
-    public static Entity getEntity(@NonNull String dataName) {
+    public static Entity getEntity(@NonNull String identifier) {
+        int i = identifier.indexOf(':');
+        if (i != -1) {
+            if (!"minecraft".equals(identifier.substring(0, i))) return Entity.UNKNOWN;
+            identifier = identifier.substring(i + 1);
+        }
         for (Entity e : Entity.values()) {
-            if (dataName.equals(e.wikiName)) return e;
+            if (identifier.equals(e.wikiName)) return e;
         }
         return Entity.UNKNOWN;
     }

@@ -868,9 +868,13 @@ public class MapFragment extends Fragment {
      *
      * @param marker The marker to add to the tile view.
      */
-    public void addMarker(AbstractMarker marker) {
+    public synchronized void addMarker(AbstractMarker marker) {
 
-        if (proceduralMarkers.contains(marker)) return;
+        for (AbstractMarker abstractMarker : proceduralMarkers) {
+            if (abstractMarker.equals(marker)) {
+                removeMarker(abstractMarker);
+            }
+        }
 
         if (shrinkProceduralMarkersTask == null
                 && ++proceduralMarkersInterval > MARKER_INTERVAL_CHECK) {

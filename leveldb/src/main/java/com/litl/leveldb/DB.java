@@ -29,10 +29,6 @@ public class DB extends NativeObject {
     @Override
     protected void closeNativeObject(long ptr) {
         nativeClose(ptr);
-
-        if (mDestroyOnClose) {
-            destroy(mPath);
-        }
     }
 
     public void put(byte[] key, byte[] value) {
@@ -98,41 +94,21 @@ public class DB extends NativeObject {
     public Iterator iterator(final Snapshot snapshot) {
         assertOpen("Database is closed");
 
-        ref();
-
-        if (snapshot != null) {
-            snapshot.ref();
-        }
-
         return new Iterator(nativeIterator(mPtr, snapshot != null ? snapshot.getPtr() : 0)) {
             @Override
             protected void closeNativeObject(long ptr) {
                 super.closeNativeObject(ptr);
-                if (snapshot != null) {
-                    snapshot.unref();
-                }
-
-                DB.this.unref();
             }
         };
     }
 
     public Snapshot getSnapshot() {
         assertOpen("Database is closed");
-        ref();
         return new Snapshot(nativeGetSnapshot(mPtr)) {
             protected void closeNativeObject(long ptr) {
                 nativeReleaseSnapshot(DB.this.getPtr(), getPtr());
-                DB.this.unref();
             }
         };
-    }
-
-    public void destroy() {
-        mDestroyOnClose = true;
-        if (getPtr() == 0) {
-            destroy(mPath);
-        }
     }
 
     public static void destroy(File path) {

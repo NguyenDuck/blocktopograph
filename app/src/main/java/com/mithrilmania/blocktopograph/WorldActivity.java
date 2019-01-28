@@ -195,7 +195,7 @@ public class WorldActivity extends AppCompatActivity
     public void onResume() {
         Log.d("World activity resuming...");
         super.onResume();
-
+//
         // anonymous global counter of resumed world-activities
         Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_RESUME);
 
@@ -257,6 +257,11 @@ public class WorldActivity extends AppCompatActivity
                     .setCancelable(false)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            try {
+                                world.closeDown();
+                            } catch (WorldData.WorldDBException e) {
+                                e.printStackTrace();
+                            }
                             WorldActivity.this.finish();
                         }
                     })

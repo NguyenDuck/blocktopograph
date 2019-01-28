@@ -71,23 +71,30 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
             if (entityData.tags == null) return;
 
             for (Tag tag : entityData.tags) {
-                if (tag instanceof CompoundTag) {
-                    CompoundTag compoundTag = (CompoundTag) tag;
-                    //int id = ((IntTag) compoundTag.getChildTagByKey("id")).getValue();
-                    String tempName = compoundTag.getChildTagByKey("identifier").getValue().toString();
-                    tempName = tempName.replace("minecraft:", "");
-                    //tempName = tempName.substring(0, 1).toUpperCase() + tempName.substring(1);
-                    int id = Entity.getEntity(tempName).id;
-                    Entity e = Entity.getEntity(id & 0xff);
-                    if (e != null && e.bitmap != null) {
-                        List<Tag> pos = ((ListTag) compoundTag.getChildTagByKey("Pos")).getValue();
-                        float xf = ((FloatTag) pos.get(0)).getValue();
-                        float yf = ((FloatTag) pos.get(1)).getValue();
-                        float zf = ((FloatTag) pos.get(2)).getValue();
-
-                        this.publishProgress(new AbstractMarker(Math.round(xf), Math.round(yf), Math.round(zf), dimension, e, false));
+                if (!(tag instanceof CompoundTag)) continue;
+                CompoundTag compoundTag = (CompoundTag) tag;
+                Entity e = null;
+                {
+                    Tag idTag = compoundTag.getChildTagByKey("id");
+                    if (idTag instanceof IntTag) {
+                        Integer id = ((IntTag) idTag).getValue();
+                        if (id != null) e = Entity.getEntity(id);
                     }
                 }
+                if (e == null) {
+                    Tag idenTag = compoundTag.getChildTagByKey("identifier");
+                    if (idenTag instanceof StringTag) {
+                        String identifier = ((StringTag) idenTag).getValue();
+                        if (identifier != null) e = Entity.getEntity(identifier);
+                    }
+                }
+                if (e == null) e = Entity.UNKNOWN;
+                List<Tag> pos = ((ListTag) compoundTag.getChildTagByKey("Pos")).getValue();
+                float xf = ((FloatTag) pos.get(0)).getValue();
+                float yf = ((FloatTag) pos.get(1)).getValue();
+                float zf = ((FloatTag) pos.get(2)).getValue();
+
+                this.publishProgress(new AbstractMarker(Math.round(xf), Math.round(yf), Math.round(zf), dimension, e, false));
             }
 
         } catch (Exception e) {
