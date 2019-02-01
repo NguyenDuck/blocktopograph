@@ -31,6 +31,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
+import com.mithrilmania.blocktopograph.WorldActivity;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
@@ -174,8 +175,7 @@ public class MapFragment extends Fragment {
                     dimension);
 
         } catch (Exception e) {
-            Log.e(e.getMessage());
-
+            Log.d(this, e);
             Exception e2 = new Exception("Could not find " + dbKey);
             e2.setStackTrace(e.getStackTrace());
             throw e2;
@@ -191,7 +191,7 @@ public class MapFragment extends Fragment {
 
             final CompoundTag player = data != null
                     ? (CompoundTag) DataConverter.read(data).get(0)
-                    : (CompoundTag) worldProvider.getWorld().level.getChildTagByKey("Player");
+                    : (CompoundTag) worldProvider.getWorld().getLevel().getChildTagByKey("Player");
 
             ListTag posVec = (ListTag) player.getChildTagByKey("Pos");
             if (posVec == null || posVec.getValue() == null)
@@ -212,19 +212,16 @@ public class MapFragment extends Fragment {
                     dimension);
 
         } catch (Exception e) {
-            Log.e(e.toString());
-
-            ///Meow
-            return new DimensionVector3<>(0f, 64f, 0f, Dimension.OVERWORLD);
-//            Exception e2 = new Exception("Could not find player.");
-//            e2.setStackTrace(e.getStackTrace());
-//            throw e2;
+            Log.d(this, e);
+            Exception e2 = new Exception("Could not find player.");
+            e2.setStackTrace(e.getStackTrace());
+            throw e2;
         }
     }
 
     public DimensionVector3<Integer> getSpawnPos() throws Exception {
         try {
-            CompoundTag level = this.worldProvider.get().getWorld().level;
+            CompoundTag level = this.worldProvider.get().getWorld().getLevel();
             int spawnX = ((IntTag) level.getChildTagByKey("SpawnX")).getValue();
             int spawnY = ((IntTag) level.getChildTagByKey("SpawnY")).getValue();
             int spawnZ = ((IntTag) level.getChildTagByKey("SpawnZ")).getValue();
@@ -235,9 +232,8 @@ public class MapFragment extends Fragment {
             }
             return new DimensionVector3<>(spawnX, spawnY, spawnZ, Dimension.OVERWORLD);
         } catch (Exception e) {
-            ///Meow
-            return new DimensionVector3<>(0, 64, 0, Dimension.OVERWORLD);
-            //throw new Exception("Could not find spawn");
+            Log.d(this, e);
+            throw new Exception("Could not find spawn");
         }
     }
 
@@ -259,13 +255,13 @@ public class MapFragment extends Fragment {
 
 
         View rootView = inflater.inflate(R.layout.map_fragment, container, false);
-        RelativeLayout worldContainer = (RelativeLayout) rootView.findViewById(R.id.world_tileview_container);
+        RelativeLayout worldContainer = rootView.findViewById(R.id.world_tileview_container);
         assert worldContainer != null;
 
         /*
         GPS button: moves camera to player position
          */
-        FloatingActionButton fabGPSPlayer = (FloatingActionButton) rootView.findViewById(R.id.fab_menu_gps_player);
+        FloatingActionButton fabGPSPlayer = rootView.findViewById(R.id.fab_menu_gps_player);
         assert fabGPSPlayer != null;
         fabGPSPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,7 +297,7 @@ public class MapFragment extends Fragment {
         /*
         GPS button: moves camera to spawn
          */
-        FloatingActionButton fabGPSSpawn = (FloatingActionButton) rootView.findViewById(R.id.fab_menu_gps_spawn);
+        FloatingActionButton fabGPSSpawn = rootView.findViewById(R.id.fab_menu_gps_spawn);
         assert fabGPSSpawn != null;
         fabGPSSpawn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,7 +345,7 @@ public class MapFragment extends Fragment {
 
 
         //show the toolbar if the fab menu is opened
-        FloatingActionMenu fabMenu = (FloatingActionMenu) rootView.findViewById(R.id.fab_menu);
+        FloatingActionMenu fabMenu = rootView.findViewById(R.id.fab_menu);
         fabMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
@@ -360,7 +356,7 @@ public class MapFragment extends Fragment {
         });
 
 
-        FloatingActionButton fabGPSMarker = (FloatingActionButton) rootView.findViewById(R.id.fab_menu_gps_marker);
+        FloatingActionButton fabGPSMarker = rootView.findViewById(R.id.fab_menu_gps_marker);
         assert fabGPSMarker != null;
         fabGPSMarker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -429,7 +425,7 @@ public class MapFragment extends Fragment {
         /*
         GPS button: moves camera to player position
          */
-        FloatingActionButton fabGPSMultiplayer = (FloatingActionButton) rootView.findViewById(R.id.fab_menu_gps_multiplayer);
+        FloatingActionButton fabGPSMultiplayer = rootView.findViewById(R.id.fab_menu_gps_multiplayer);
         assert fabGPSMultiplayer != null;
         fabGPSMultiplayer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -456,7 +452,7 @@ public class MapFragment extends Fragment {
         /*
         GPS button: moves camera to player position
          */
-        FloatingActionButton fabGPSCoord = (FloatingActionButton) rootView.findViewById(R.id.fab_menu_gps_coord);
+        FloatingActionButton fabGPSCoord = rootView.findViewById(R.id.fab_menu_gps_coord);
         assert fabGPSCoord != null;
         fabGPSCoord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -465,9 +461,9 @@ public class MapFragment extends Fragment {
                     if (tileView == null) throw new Exception("No map available.");
 
                     View xzForm = LayoutInflater.from(activity).inflate(R.layout.xz_coord_form, null);
-                    final EditText xInput = (EditText) xzForm.findViewById(R.id.x_input);
+                    final EditText xInput = xzForm.findViewById(R.id.x_input);
                     xInput.setText("0");
-                    final EditText zInput = (EditText) xzForm.findViewById(R.id.z_input);
+                    final EditText zInput = xzForm.findViewById(R.id.z_input);
                     zInput.setText("0");
 
                     //wrap layout in alert
@@ -569,7 +565,10 @@ public class MapFragment extends Fragment {
         /*
         Create tile(=bitmap) provider
          */
-        this.mChunkManager = new ChunkManager(worldProvider.get().getWorld().getWorldData());
+        this.mChunkManager = new ChunkManager(
+                ((WorldActivity) activity)   //Can't be null, otherwise returned.
+                        .getWorld()         //Can't be null, otherwise finished & returned.
+                        .getWorldData());   //NonNull, no warning.
         this.minecraftTileProvider = new MCTileProvider(worldProvider.get(), mChunkManager);
 
 
@@ -604,7 +603,6 @@ public class MapFragment extends Fragment {
             this.tileView.addDetailLevel(0.25f, "0.25", MCTileProvider.TILESIZE, MCTileProvider.TILESIZE, mapType);
             this.tileView.addDetailLevel(0.5f, "0.5", MCTileProvider.TILESIZE, MCTileProvider.TILESIZE, mapType);
             this.tileView.addDetailLevel(1f, "1", MCTileProvider.TILESIZE, MCTileProvider.TILESIZE, mapType);// 1/1=1 chunk per tile
-
         }
 
         this.tileView.setScale(0.5f);
@@ -617,7 +615,7 @@ public class MapFragment extends Fragment {
 
             DimensionVector3<Float> playerPos = getPlayerPos();
             float x = playerPos.x, y = playerPos.y, z = playerPos.z;
-            Log.d("Placed player marker at: " + x + ";" + y + ";" + z + " [" + playerPos.dimension.name + "]");
+            Log.d(this, "Placed player marker at: " + x + ";" + y + ";" + z + " [" + playerPos.dimension.name + "]");
             localPlayerMarker = new AbstractMarker((int) x, (int) y, (int) z,
                     playerPos.dimension, new CustomNamedBitmapProvider(Entity.PLAYER, "~local_player"), false);
             this.staticMarkers.add(localPlayerMarker);
@@ -633,7 +631,7 @@ public class MapFragment extends Fragment {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("Failed to place player marker. " + e.toString());
+            Log.d(this, "Failed to place player marker. " + e.toString());
         }
 
 
@@ -666,13 +664,13 @@ public class MapFragment extends Fragment {
             @Override
             public void onMarkerTap(View view, int tapX, int tapY) {
                 if (!(view instanceof MarkerImageView)) {
-                    Log.d("Markertaplistener found a marker that is not a MarkerImageView! " + view.toString());
+                    Log.d(this, "Markertaplistener found a marker that is not a MarkerImageView! " + view.toString());
                     return;
                 }
 
                 final AbstractMarker marker = ((MarkerImageView) view).getMarkerHook();
                 if (marker == null) {
-                    Log.d("abstract marker is null! " + view.toString());
+                    Log.d(this, "abstract marker is null! " + view.toString());
                     return;
                 }
 
@@ -739,7 +737,7 @@ public class MapFragment extends Fragment {
                                             } else throw new Exception("Failed saving player");
 
                                         } catch (Exception e) {
-                                            Log.w(e.toString());
+                                            Log.d(this, e.toString());
 
                                             Snackbar.make(tileView, R.string.failed_teleporting_player,
                                                     Snackbar.LENGTH_LONG)
@@ -944,7 +942,7 @@ public class MapFragment extends Fragment {
 
         final View container = activity.findViewById(R.id.world_content);
         if (container == null) {
-            Log.w("CANNOT FIND MAIN CONTAINER, WTF");
+            Log.d(this, "CANNOT FIND MAIN CONTAINER, WTF");
             return;
         }
 
@@ -990,7 +988,7 @@ public class MapFragment extends Fragment {
 
 
                                     View yForm = LayoutInflater.from(activity).inflate(R.layout.y_coord_form, null);
-                                    final EditText yInput = (EditText) yForm.findViewById(R.id.y_input);
+                                    final EditText yInput = yForm.findViewById(R.id.y_input);
                                     yInput.setText(String.valueOf(playerY));
 
                                     final float newX = (float) worldX;
@@ -1147,8 +1145,6 @@ public class MapFragment extends Fragment {
                             case ENTITY:
                             case TILE_ENTITY: {
 
-                                final World world = MapFragment.this.worldProvider.get().getWorld();
-                                ;
                                 final Chunk chunk = mChunkManager.getChunk(chunkXint, chunkZint, dim);
 
                                 if (!chunkDataNBT(chunk, chosen == LongClickOption.ENTITY)) {
@@ -1207,8 +1203,7 @@ public class MapFragment extends Fragment {
         final Activity activity = this.getActivity();
 
 
-        final List<BitmapChoiceListAdapter.NamedBitmapChoice> choices = new ArrayList<>();
-        choices.addAll(markerFilter.values());
+        final List<BitmapChoiceListAdapter.NamedBitmapChoice> choices = new ArrayList<>(markerFilter.values());
 
         //sort on names, nice for the user.
         Collections.sort(choices, new Comparator<BitmapChoiceListAdapter.NamedBitmapChoice>() {
@@ -1413,9 +1408,9 @@ public class MapFragment extends Fragment {
                     .inflate(R.layout.img_name_check_list_entry, parent, false);
 
 
-            ImageView img = (ImageView) v.findViewById(R.id.entry_img);
-            TextView text = (TextView) v.findViewById(R.id.entry_text);
-            final CheckBox check = (CheckBox) v.findViewById(R.id.entry_check);
+            ImageView img = v.findViewById(R.id.entry_img);
+            TextView text = v.findViewById(R.id.entry_text);
+            final CheckBox check = v.findViewById(R.id.entry_check);
 
             img.setImageBitmap(m.namedBitmap.getNamedBitmapProvider().getBitmap());
             text.setText(m.namedBitmap.getNamedBitmapProvider().getBitmapDisplayName());

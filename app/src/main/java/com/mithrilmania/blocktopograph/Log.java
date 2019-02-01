@@ -4,7 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class Log {
 
@@ -15,23 +19,38 @@ public class Log {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
-    public static void i(@NonNull String msg) {
-        android.util.Log.i(LOG_TAG, msg);
+    private static String concat(@NonNull Object caller, @NonNull String msg) {
+        Class clazz;
+        if (caller instanceof Class) clazz = (Class) caller;
+        else clazz = caller.getClass();
+        return clazz.getSimpleName() + ": " + msg;
     }
 
-    public static void d(@NonNull String msg) {
-        android.util.Log.d(LOG_TAG, msg);
+    public static void d(@NonNull Object caller, @NonNull String msg) {
+        android.util.Log.d(LOG_TAG, concat(caller, msg));
     }
 
-    public static void w(@NonNull String msg) {
-        android.util.Log.w(LOG_TAG, msg);
+    public static void d(@NonNull Object caller, @NonNull Throwable throwable) {
+        StringWriter sw = new StringWriter(4096);
+        PrintWriter pw = new PrintWriter(sw);
+        throwable.printStackTrace(pw);
+        android.util.Log.e(LOG_TAG, concat(caller, sw.toString()));
     }
 
-    public static void e(@NonNull String msg) {
-        android.util.Log.e(LOG_TAG, msg);
+    public static void e(@NonNull Object caller, @NonNull String msg) {
+        if (!BuildConfig.DEBUG)
+            Crashlytics.log(android.util.Log.DEBUG, LOG_TAG, concat(caller, msg));
     }
 
-    synchronized static public FirebaseAnalytics getFirebaseAnalytics(@NonNull Context context) {
+    public static void e(@NonNull Object caller, @NonNull Throwable throwable) {
+        StringWriter sw = new StringWriter(4096);
+        PrintWriter pw = new PrintWriter(sw);
+        throwable.printStackTrace(pw);
+        android.util.Log.e(LOG_TAG, concat(caller, sw.toString()));
+        if (!BuildConfig.DEBUG) Crashlytics.logException(throwable);
+    }
+
+    private synchronized static FirebaseAnalytics getFirebaseAnalytics(@NonNull Context context) {
         if (mFirebaseAnalytics == null) {
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 

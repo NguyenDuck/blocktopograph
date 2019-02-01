@@ -86,7 +86,7 @@ public class WorldItemDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.worlditem_detail, container, false);
 
         try {
-            if (world != null && world.level != null){
+            if (world != null && world.getLevel() != null){
                 TextView worldName = (TextView) rootView.findViewById(R.id.detail_world_name);
                 worldName.setText(world.getWorldDisplayName());
                 TextView worldSize = (TextView) rootView.findViewById(R.id.detail_world_size);
@@ -164,8 +164,8 @@ public class WorldItemDetailFragment extends Fragment {
                         buf.newLine();
                         buf.write("------------------------");
                         buf.newLine();
-                        for(int i =0; i < value.length; i += 256){
-                            buf.write(WorldData.bytesToHex(value, i, Math.min(i + 256, value.length)));
+                        for(int d =0; d < value.length; d += 256){
+                            buf.write(WorldData.bytesToHex(value, d, Math.min(d + 256, value.length)));
                             buf.newLine();
                         }
 

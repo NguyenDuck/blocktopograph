@@ -83,7 +83,7 @@ public class SatelliteRenderer implements MapRenderer {
 
             //TODO log null blocks to debug missing blocks
             if (block == null) {
-                Log.w("UNKNOWN block: id: " + id);
+                Log.d(SatelliteRenderer.class, "UNKNOWN block: id: " + id);
                 continue;
             }
 

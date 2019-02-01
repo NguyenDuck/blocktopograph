@@ -3,24 +3,21 @@ package com.mithrilmania.blocktopograph;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.text.Editable;
-import android.view.View;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
-import android.view.Menu;
+import android.text.Editable;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -28,26 +25,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
+import com.mithrilmania.blocktopograph.map.renderer.MapType;
+import com.mithrilmania.blocktopograph.nbt.EditableNBT;
+import com.mithrilmania.blocktopograph.nbt.EditorFragment;
+import com.mithrilmania.blocktopograph.nbt.convert.DataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
+import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
+import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
-import com.mithrilmania.blocktopograph.map.MapFragment;
-import com.mithrilmania.blocktopograph.map.renderer.MapType;
-import com.mithrilmania.blocktopograph.nbt.EditableNBT;
-import com.mithrilmania.blocktopograph.nbt.EditorFragment;
-import com.mithrilmania.blocktopograph.nbt.convert.DataConverter;
-import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
-import com.mithrilmania.blocktopograph.nbt.tags.Tag;
-
 public class WorldActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, WorldActivityInterface, MenuHelper.MenuContext {
+        implements NavigationView.OnNavigationItemSelectedListener, WorldActivityInterface {
 
     private World world;
 
@@ -83,15 +78,22 @@ public class WorldActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(World.ARG_WORLD_SERIALIZED, world);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("World activity creating...");
-
-        super.onCreate(savedInstanceState);
-
-
         /*
         Retrieve world from previous state or intent
          */
+        Log.d(this, "World activity creating...");
         this.world = (World) (savedInstanceState == null
                 ? getIntent().getSerializableExtra(World.ARG_WORLD_SERIALIZED)
                 : savedInstanceState.getSerializable(World.ARG_WORLD_SERIALIZED));
@@ -104,21 +106,23 @@ public class WorldActivity extends AppCompatActivity
             return;
         }
 
+        super.onCreate(savedInstanceState);
+
 
         /*
                 Layout
          */
         setContentView(R.layout.activity_world);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         assert toolbar != null;
         setSupportActionBar(toolbar);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
         // Main drawer, quick access to different menus, tools and map-types.
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         assert drawer != null;
@@ -130,12 +134,12 @@ public class WorldActivity extends AppCompatActivity
         assert headerView != null;
 
         // Title = world-name
-        TextView title = (TextView) headerView.findViewById(R.id.world_drawer_title);
+        TextView title = headerView.findViewById(R.id.world_drawer_title);
         assert title != null;
         title.setText(this.world.getWorldDisplayName());
 
         // Subtitle = world-seed (Tap worldseed to choose to copy it)
-        TextView subtitle = (TextView) headerView.findViewById(R.id.world_drawer_subtitle);
+        TextView subtitle = headerView.findViewById(R.id.world_drawer_subtitle);
         assert subtitle != null;
 
         /*
@@ -181,19 +185,19 @@ public class WorldActivity extends AppCompatActivity
         // anonymous global counter of opened worlds
         Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_OPEN, bundle);
 
-        Log.d("World activity created");
+        Log.d(this, "World activity created");
     }
 
     @Override
     public void onStart() {
-        Log.d("World activity starting...");
+        Log.d(this, "World activity starting...");
         super.onStart();
-        Log.d("World activity started");
+        Log.d(this, "World activity started");
     }
 
     @Override
     public void onResume() {
-        Log.d("World activity resuming...");
+        Log.d(this, "World activity resuming...");
         super.onResume();
 //
         // anonymous global counter of resumed world-activities
@@ -205,12 +209,12 @@ public class WorldActivity extends AppCompatActivity
             this.onFatalDBError(e);
         }
 
-        Log.d("World activity resumed");
+        Log.d(this, "World activity resumed");
     }
 
     @Override
     public void onPause() {
-        Log.d("World activity pausing...");
+        Log.d(this, "World activity pausing...");
         super.onPause();
 
         try {
@@ -219,26 +223,26 @@ public class WorldActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        Log.d("World activity paused");
+        Log.d(this, "World activity paused");
     }
 
     @Override
     public void onStop() {
-        Log.d("World activity stopping...");
+        Log.d(this, "World activity stopping...");
         super.onStop();
-        Log.d("World activity stopped");
+        Log.d(this, "World activity stopped");
     }
 
     @Override
     public void onDestroy() {
-        Log.d("World activity destroying...");
+        Log.d(this, "World activity destroying...");
         super.onDestroy();
-        Log.d("World activity destroyed...");
+        Log.d(this, "World activity destroyed...");
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         assert drawer != null;
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -289,38 +293,16 @@ public class WorldActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.world, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return MenuHelper.onOptionsItemSelected(this, item);
-    }
-
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    @Override
-    public boolean propagateOnOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Log.d("World activity nav-drawer menu item selected: " + id);
+        Log.d(this, "World activity nav-drawer menu item selected: " + id);
 
 
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         assert drawer != null;
 
 
@@ -530,7 +512,7 @@ public class WorldActivity extends AppCompatActivity
             }
             default:
                 //Warning, we might have messed with the menu XML!
-                Log.w("pressed unknown navigation-item in world-activity-drawer");
+                Log.d(this, "pressed unknown navigation-item in world-activity-drawer");
                 break;
         }
 
@@ -612,7 +594,7 @@ public class WorldActivity extends AppCompatActivity
      * Loads local player data "~local-player" or level.dat>"Player" into an EditableNBT.
      *
      * @return EditableNBT, local player NBT data wrapped in a handle to use for saving + metadata
-     * @throws Exception
+     * @throws Exception wtf
      */
     public EditableNBT getEditablePlayer() throws Exception {
 
@@ -659,7 +641,7 @@ public class WorldActivity extends AppCompatActivity
                 //throw new Exception("\"" + entryType.keyName + "\" not found in DB.");
             }
 
-            Log.i("Opening NBT editor for \"" + entryType.keyName + "\" from world database.");
+            Log.d(this, "Opening NBT editor for \"" + entryType.keyName + "\" from world database.");
 
             openNBTEditor(editableEntry);
 
@@ -668,10 +650,11 @@ public class WorldActivity extends AppCompatActivity
 
             String msg = e.getMessage();
             if (e instanceof IOException)
-                msg = String.format(getString(R.string.failed_to_read_x_from_db), entryType.keyName);
+                Log.d(this, String.format(getString(R.string.failed_to_read_x_from_db), entryType.keyName));
+            else Log.d(this, e);
 
             new AlertDialog.Builder(WorldActivity.this)
-                    .setMessage(msg)
+                    .setMessage(msg == null ? "" : msg)
                     .setCancelable(false)
                     .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -759,7 +742,7 @@ public class WorldActivity extends AppCompatActivity
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Log.d("Failed to open player entry in DB. key: " + playerKey);
+                            Log.d(this, "Failed to open player entry in DB. key: " + playerKey);
                             if (content != null) Snackbar.make(content,
                                     String.format(getString(R.string.failed_read_player_from_db_with_key_x), playerKey),
                                     Snackbar.LENGTH_LONG)
@@ -807,7 +790,7 @@ public class WorldActivity extends AppCompatActivity
     public EditableNBT openEditableNbtLevel(String subTagName) {
 
         //make a copy first, the user might not want to save changed tags.
-        final CompoundTag workCopy = world.level.getDeepCopy();
+        final CompoundTag workCopy = world.getLevel().getDeepCopy();
         final ArrayList<Tag> workCopyContents;
         final String contentTitle;
         if (subTagName == null) {
@@ -905,7 +888,7 @@ public class WorldActivity extends AppCompatActivity
     @Override
     public void onFatalDBError(WorldData.WorldDBException worldDBException) {
 
-        Log.d(worldDBException.getMessage());
+        Log.d(this, worldDBException.getMessage());
         worldDBException.printStackTrace();
 
         //already dead? (happens on multiple onFatalDBError(e) calls)
@@ -990,11 +973,16 @@ public class WorldActivity extends AppCompatActivity
      */
     public void openNBTEditor(EditableNBT editableNBT) {
 
+        if (editableNBT == null) {
+            Toast.makeText(this, "Empty data.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // see changeContentFragment(callback)
         this.confirmContentClose = getString(R.string.confirm_close_nbt_editor);
 
         EditorFragment editorFragment = new EditorFragment();
-        editorFragment.setEditableNBT(editableNBT);
+        editorFragment.setNbt(editableNBT);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.world_content, editorFragment);
@@ -1042,7 +1030,7 @@ public class WorldActivity extends AppCompatActivity
 
         if (nbtChunkData == null) {
             //should never happen
-            Log.w("User tried to open null chunkData in the nbt-editor!!!");
+            Log.e(this, "User tried to open null chunkData in the nbt-editor!!!");
             return;
         }
 
@@ -1064,8 +1052,6 @@ public class WorldActivity extends AppCompatActivity
                     .setPositiveButton(android.R.string.yes,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    Snackbar.make(viewGroup, R.string.creating_and_saving_chunk_NBT_data, Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show();
                                     nbtChunkData.createEmpty();
                                     try {
                                         nbtChunkData.write();
@@ -1075,6 +1061,7 @@ public class WorldActivity extends AppCompatActivity
                                     } catch (Exception e) {
                                         Snackbar.make(viewGroup, R.string.failed_to_create_or_save_chunk_NBT_data, Snackbar.LENGTH_LONG)
                                                 .setAction("Action", null).show();
+                                        Log.d(this, e);
                                     }
                                 }
                             })

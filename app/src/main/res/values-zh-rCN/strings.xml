@@ -264,4 +264,5 @@
     </string>
     <string name="action_teleport">传送！</string>
     <string name="go_to_spawn">前往出生点</string>
+    <string name="world_mark_neteas">[网易]</string>
 </resources>

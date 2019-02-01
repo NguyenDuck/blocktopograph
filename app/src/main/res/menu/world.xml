@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_open"
+        android:icon="@drawable/ic_folder_open"
+        android:orderInCategory="100"
+        android:title="@string/open_world_custom_path"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_about"
         android:orderInCategory="100"
         android:title="@string/action_about"
@@ -11,9 +17,9 @@
         android:orderInCategory="100"
         android:title="@string/action_help"
         app:showAsAction="never" />
-    <item
+    <!--item
         android:id="@+id/action_changelog"
         android:orderInCategory="100"
         android:title="@string/action_changelog"
-        app:showAsAction="never" />
+        app:showAsAction="never" /-->
 </menu>

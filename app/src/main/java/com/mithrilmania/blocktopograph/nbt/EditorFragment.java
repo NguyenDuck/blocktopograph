@@ -7,37 +7,39 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
-
-import com.mithrilmania.blocktopograph.Log;
-
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
-import com.mithrilmania.blocktopograph.WorldActivity;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
-import com.mithrilmania.blocktopograph.nbt.tags.*;
-import com.unnamed.b.atv.holder.SimpleViewHolder;
+import com.mithrilmania.blocktopograph.nbt.tags.ByteTag;
+import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
+import com.mithrilmania.blocktopograph.nbt.tags.DoubleTag;
+import com.mithrilmania.blocktopograph.nbt.tags.FloatTag;
+import com.mithrilmania.blocktopograph.nbt.tags.IntTag;
+import com.mithrilmania.blocktopograph.nbt.tags.ListTag;
+import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
+import com.mithrilmania.blocktopograph.nbt.tags.ShortTag;
+import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
+import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
@@ -59,7 +61,7 @@ public class EditorFragment extends Fragment {
 
     private EditableNBT nbt;
 
-    public void setEditableNBT(EditableNBT nbt) {
+    public void setNbt(@NonNull EditableNBT nbt) {
         this.nbt = nbt;
     }
 
@@ -86,7 +88,7 @@ public class EditorFragment extends Fragment {
             final LayoutInflater inflater = LayoutInflater.from(context);
 
             final View tagView = inflater.inflate(R.layout.tag_root_layout, null, false);
-            TextView tagName = (TextView) tagView.findViewById(R.id.tag_name);
+            TextView tagName = tagView.findViewById(R.id.tag_name);
             tagName.setText(value.getRootTitle());
 
             return tagView;
@@ -187,12 +189,12 @@ public class EditorFragment extends Fragment {
             }
 
             final View tagView = inflater.inflate(layoutID, null, false);
-            TextView tagName = (TextView) tagView.findViewById(R.id.tag_name);
+            TextView tagName = tagView.findViewById(R.id.tag_name);
             tagName.setText(tag.getName());
 
             switch (layoutID) {
                 case R.layout.tag_boolean_layout: {
-                    final CheckBox checkBox = (CheckBox) tagView.findViewById(R.id.checkBox);
+                    final CheckBox checkBox = tagView.findViewById(R.id.checkBox);
                     final ByteTag byteTag = (ByteTag) tag;
                     checkBox.setChecked(byteTag.getValue() == (byte) 1);
                     checkBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
@@ -211,7 +213,7 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case R.layout.tag_byte_layout: {
-                    final EditText editText = (EditText) tagView.findViewById(R.id.byteField);
+                    final EditText editText = tagView.findViewById(R.id.byteField);
                     final ByteTag byteTag = (ByteTag) tag;
                     //parse the byte as an unsigned byte
                     editText.setText("" + (((int) byteTag.getValue()) & 0xFF));
@@ -241,7 +243,7 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case R.layout.tag_short_layout: {
-                    final EditText editText = (EditText) tagView.findViewById(R.id.shortField);
+                    final EditText editText = tagView.findViewById(R.id.shortField);
                     final ShortTag shortTag = (ShortTag) tag;
                     editText.setText(shortTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
@@ -267,7 +269,7 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case R.layout.tag_int_layout: {
-                    final EditText editText = (EditText) tagView.findViewById(R.id.intField);
+                    final EditText editText = tagView.findViewById(R.id.intField);
                     final IntTag intTag = (IntTag) tag;
                     editText.setText(intTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
@@ -293,7 +295,7 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case R.layout.tag_long_layout: {
-                    final EditText editText = (EditText) tagView.findViewById(R.id.longField);
+                    final EditText editText = tagView.findViewById(R.id.longField);
                     final LongTag longTag = (LongTag) tag;
                     editText.setText(longTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
@@ -319,7 +321,7 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case R.layout.tag_float_layout: {
-                    final EditText editText = (EditText) tagView.findViewById(R.id.floatField);
+                    final EditText editText = tagView.findViewById(R.id.floatField);
                     final FloatTag floatTag = (FloatTag) tag;
                     editText.setText(floatTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
@@ -345,7 +347,7 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case R.layout.tag_double_layout: {
-                    final EditText editText = (EditText) tagView.findViewById(R.id.doubleField);
+                    final EditText editText = tagView.findViewById(R.id.doubleField);
                     final DoubleTag doubleTag = (DoubleTag) tag;
                     editText.setText(doubleTag.getValue().toString());
                     editText.addTextChangedListener(new TextWatcher() {
@@ -371,7 +373,7 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case R.layout.tag_string_layout: {
-                    final EditText editText = (EditText) tagView.findViewById(R.id.stringField);
+                    final EditText editText = tagView.findViewById(R.id.stringField);
                     final StringTag stringTag = (StringTag) tag;
                     editText.setText(stringTag.getValue());
                     editText.addTextChangedListener(new TextWatcher() {
@@ -486,10 +488,12 @@ public class EditorFragment extends Fragment {
 
 
         if (nbt == null) {
-            new Exception("No NBT data provided").printStackTrace();
-            getActivity().finish();
-
-            return null;
+            Log.e(this, "No NBT data provided");
+            if (getActivity() == null) return null;
+            //What are you doing!
+            TextView textView = new TextView(getActivity());
+            textView.setText("Cannot load data. Close me please.");
+            return textView;
         }
 
         final View rootView = inflater.inflate(R.layout.nbt_editor, container, false);
@@ -512,7 +516,7 @@ public class EditorFragment extends Fragment {
             root.addChild(new TreeNode(new ChainTag(null, tag)).setViewHolder(new NBTNodeHolder(nbt, activity)));
         }
 
-        FrameLayout frame = (FrameLayout) rootView.findViewById(R.id.nbt_editor_frame);
+        FrameLayout frame = rootView.findViewById(R.id.nbt_editor_frame);
 
         final AndroidTreeView tree = new AndroidTreeView(getActivity(), superRoot);
         tree.setUse2dScroll(true);
@@ -525,7 +529,7 @@ public class EditorFragment extends Fragment {
             @Override
             public boolean onLongClick(final TreeNode node, final Object value) {
 
-                Log.d("NBT editor: Long click!");
+                Log.d(this, "NBT editor: Long click!");
 
 
                 //root tag has nbt as value
@@ -605,7 +609,7 @@ public class EditorFragment extends Fragment {
                                                 //or alert is cancelled
                                                 alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                                        Log.d("NBT tag creation cancelled");
+                                                        Log.d(this, "NBT tag creation cancelled");
                                                     }
                                                 });
 
@@ -642,7 +646,7 @@ public class EditorFragment extends Fragment {
                                                         for (TreeNode child : children) {
                                                             tree.removeNode(child);
                                                             Object childValue = child.getValue();
-                                                            if (childValue != null && childValue instanceof ChainTag)
+                                                            if (childValue instanceof ChainTag)
                                                                 nbt.removeRootTag(((ChainTag) childValue).self);
                                                         }
                                                         nbt.setModified();
@@ -653,7 +657,7 @@ public class EditorFragment extends Fragment {
                                                 //or alert is cancelled
                                                 alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                                        Log.d("NBT tag creation cancelled");
+                                                        Log.d(this, "NBT tag creation cancelled");
                                                     }
                                                 });
 
@@ -662,7 +666,7 @@ public class EditorFragment extends Fragment {
                                                 break;
                                             }
                                             default: {
-                                                Log.d("User clicked unknown NBTEditOption! " + option.name());
+                                                Log.d(this, "User clicked unknown NBTEditOption! " + option.name());
                                             }
                                         }
                                     } catch (Exception e) {
@@ -840,8 +844,7 @@ public class EditorFragment extends Fragment {
                                                         Editable newNameEditable = edittext.getText();
                                                         String newName = (newNameEditable == null || newNameEditable.toString().equals("")) ? null : newNameEditable.toString();
 
-                                                        if (parent != null
-                                                                && parent instanceof CompoundTag
+                                                        if (parent instanceof CompoundTag
                                                                 && checkKeyCollision(newName, ((CompoundTag) parent).getValue())) {
                                                             showMsg(R.string.error_parent_already_contains_child_with_same_key);
                                                             return;
@@ -859,7 +862,7 @@ public class EditorFragment extends Fragment {
 
                                                 alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                                        Log.d("Cancelled rename NBT tag");
+                                                        Log.d(this, "Cancelled rename NBT tag");
                                                     }
                                                 });
 
@@ -944,7 +947,7 @@ public class EditorFragment extends Fragment {
                                                         //or alert is cancelled
                                                         alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                                Log.d("NBT tag creation cancelled");
+                                                                Log.d(this, "NBT tag creation cancelled");
                                                             }
                                                         });
 
@@ -960,7 +963,7 @@ public class EditorFragment extends Fragment {
                                                 }
                                             }
                                             default: {
-                                                Log.d("User clicked unknown NBTEditOption! " + editOption.name());
+                                                Log.d(this, "User clicked unknown NBTEditOption! " + editOption.name());
                                             }
 
                                         }
@@ -983,7 +986,7 @@ public class EditorFragment extends Fragment {
         // save functionality
         // ================================
 
-        FloatingActionButton fabSaveNBT = (FloatingActionButton) rootView.findViewById(R.id.fab_save_nbt);
+        FloatingActionButton fabSaveNBT = rootView.findViewById(R.id.fab_save_nbt);
         assert fabSaveNBT != null;
         fabSaveNBT.setOnClickListener(new View.OnClickListener() {
             @Override

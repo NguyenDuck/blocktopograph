@@ -309,7 +309,7 @@
         [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
     <string name="action_teleport">Teleport!</string>
     <string name="go_to_spawn">Go to spawn</string>
-    <string name="err_noworld_1" tools:ignore="MissingTranslation">No worlds found from your device storage.</string>
+    <string name="err_noworld_1" tools:ignore="MissingTranslation">No worlds found.</string>
     <string name="err_noworld_2" tools:ignore="MissingTranslation">
         Note that newer Minecrafts puts your worlds in its private data by default.
         For this reason, all tools won\'t be able to access the worlds.
@@ -320,4 +320,18 @@
         existing worlds may not be opened. Moving those worlds to external may requires
         root your device, and we\'re not available to help.
     </string>
+    <string name="world_mark_neteas">[NetEase]</string>
+    <string name="create_world_title">Create Flat World</string>
+    <string name="create_world_name">Name:</string>
+    <string name="create_world_default_name">My World</string>
+    <string name="create_world_version_aqua">1.2.13 till now</string>
+    <string name="create_world_version">Version:</string>
+    <string name="create_world_layers">Layers:</string>
+    <string name="error_general">Unknown Error.</string>
+    <string name="general_please_wait">Please wait...</string>
+    <string name="edit_layer_amount">Amount:</string>
+    <string name="edit_layer_amount_constrait">Sum of amount from all layers should be at least 0 and at most 127.</string>
+    <string name="edit_flat_add_layer_title">Add a layer...</string>
+    <string name="edit_flat_edit_layer_title">Edit</string>
+    <string name="pick_block_title">Pick a block</string>
 </resources>

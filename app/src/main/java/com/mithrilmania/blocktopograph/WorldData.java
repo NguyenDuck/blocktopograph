@@ -84,14 +84,14 @@ public class WorldData {
                 throw new WorldDataLoadException("World-db folder is not writable! World-db folder: " + dbFile.getAbsolutePath());
         }
 
-        Log.d("WorldFolder: " + world.worldFolder.getAbsolutePath());
-        Log.d("WorldFolder permissions: read: " + dbFile.canRead() + " write: " + dbFile.canWrite());
+        Log.d(this, "WorldFolder: " + world.worldFolder.getAbsolutePath());
+        Log.d(this, "WorldFolder permissions: read: " + dbFile.canRead() + " write: " + dbFile.canWrite());
 
         if (dbFile.listFiles() == null)
             throw new WorldDataLoadException("Failed loading world-db: cannot list files in worldfolder");
 
         for (File dbEntry : dbFile.listFiles()) {
-            Log.d("File in db: " + dbEntry.getAbsolutePath());
+            Log.d(this, "File in db: " + dbEntry.getAbsolutePath());
         }
         this.db = new DB(dbFile);
 

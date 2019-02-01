@@ -98,9 +98,7 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
             }
 
         } catch (Exception e) {
-            //TODO: e.getMessage can be null
-            //String msg=e.getMessage();
-            //String log="MarkerAsyncTask.loadEntityMarkers)Log.w();
+            Log.d(this, e);
         }
     }
 
@@ -132,7 +130,7 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
             }
 
         } catch (Exception e) {
-            Log.w(e.getMessage());
+            Log.d(this, e);
         }
     }
 

@@ -1,93 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <ImageView
-        android:layout_margin="8dp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="icon of world"
         android:src="@mipmap/ic_world_icon"
-        android:id="@+id/icon"
-        android:layout_alignParentLeft="true" />
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
         android:layout_margin="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="2dp"
+        android:paddingLeft="2dp"
         android:paddingTop="0dp"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_toRightOf="@+id/icon">
+        android:paddingEnd="2dp"
+        android:paddingRight="2dp">
 
-        <TextView
-            android:id="@+id/world_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            tools:text="worldName"
-            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/world_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="worldName" />
+
+            <TextView
+                android:id="@+id/world_mark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="worldMark" />
+
+
+        </LinearLayout>
 
         <RelativeLayout
-            android:orientation="horizontal"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/world_size"
-                android:layout_margin="5dp"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:textAppearance="?attr/textAppearanceListItem"
-                tools:text="0.5MB"/>
+                tools:text="0.5MB" />
+
             <TextView
                 android:id="@+id/world_gamemode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_toEndOf="@+id/world_size"
                 android:layout_toRightOf="@+id/world_size"
-                android:layout_margin="5dp"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 android:textAppearance="?attr/textAppearanceListItem"
-                tools:text="Creative"/>
+                tools:text="Creative" />
+
             <TextView
+                android:id="@+id/world_last_played"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_toEndOf="@+id/world_gamemode"
                 android:layout_toRightOf="@+id/world_gamemode"
-                android:id="@+id/world_last_played"
-                android:layout_margin="5dp"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 android:textAppearance="?attr/textAppearanceListItem"
-                tools:text="01/02/1234"/>
+                tools:text="01/02/1234" />
         </RelativeLayout>
 
         <TextView
             android:id="@+id/world_path"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text="/storage/emulated/0/games/com.mojang/minecraftWorlds/xBgAAAnsAQA=/level.dat"
             android:textColor="#555"
             android:textSize="@dimen/labels_text_size"
-            android:textStyle="italic"/>
+            android:textStyle="italic"
+            tools:text="/storage/emulated/0/games/com.mojang/minecraftWorlds/xBgAAAnsAQA=/level.dat" />
 
     </LinearLayout>
 
 
-
-
-</RelativeLayout>
+</LinearLayout>

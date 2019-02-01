@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="layer"
+            type="com.mithrilmania.blocktopograph.flat.Layer" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|start"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_folder_open" />
+
+        <LinearLayout
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{(layer.block.subName==null) ? layer.block.str:layer.block.subName}"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`minecraft:`+layer.block.str+`:`+layer.block.subId+` x`+layer.amount}" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:alpha="0.5"
+            android:src="@drawable/ic_add_black" />
+
+    </LinearLayout>
+
+</layout>

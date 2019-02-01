@@ -134,7 +134,7 @@ public class MarkerManager {
                         }
                     } catch (Exception e) {
                         //ok, probably a comment or something, just ignore
-                        Log.d("Invalid line in marker file: " + line);
+                        Log.d(this, "Invalid line in marker file: " + line);
                     }
                 }
                 br.close();
@@ -165,7 +165,8 @@ public class MarkerManager {
     private synchronized void saveToFile() {
         try {
 
-            if (markerFile.createNewFile()) Log.d("Created " + this.markerFile.getAbsolutePath());
+            if (markerFile.createNewFile())
+                Log.d(this, "Created " + this.markerFile.getAbsolutePath());
 
             //append to file
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(this.markerFile, false)));

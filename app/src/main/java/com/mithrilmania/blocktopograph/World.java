@@ -1,31 +1,25 @@
 package com.mithrilmania.blocktopograph;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.SparseIntArray;
 
+import com.litl.leveldb.Iterator;
 import com.mithrilmania.blocktopograph.map.MarkerManager;
 import com.mithrilmania.blocktopograph.nbt.convert.LevelDataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
-import com.mithrilmania.blocktopograph.nbt.tags.IntArrayTag;
 import com.mithrilmania.blocktopograph.nbt.tags.IntTag;
 import com.mithrilmania.blocktopograph.nbt.tags.ListTag;
 import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
 import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.mithrilmania.blocktopograph.util.io.TextFile;
-import com.litl.leveldb.Iterator;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class World implements Serializable {
 
@@ -45,17 +39,20 @@ public class World implements Serializable {
     public static final String KEY_LAST_VERSION_SHORT = "lastWithVersion";
     public static final String KEY_SHOW_COORDINATES = "showcoordinates";
 
-    public final String worldName;
+    public String mark;
+    private final String worldName;
     public final File worldFolder;
     public final File levelFile;
-    public CompoundTag level;
+    private CompoundTag level;
     private transient WorldData worldData;
-    private MarkerManager markersManager;
+    private transient MarkerManager markersManager;
 
-    public World(File worldFolder) throws WorldLoadException {
+    public World(File worldFolder, String mark) throws WorldLoadException {
 
         if (!worldFolder.exists())
             throw new WorldLoadException("Error: '" + worldFolder.getPath() + "' does not exist!");
+
+        this.mark = mark;
 
         this.worldFolder = worldFolder;
 
@@ -70,13 +67,17 @@ public class World implements Serializable {
         if (!levelFile.exists())
             throw new WorldLoadException("Error: Level-file: '" + levelFile.getPath() + "' does not exist!");
 
-        try {
-            this.level = LevelDataConverter.read(levelFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new WorldLoadException("Error: failed to read level: '" + levelFile.getPath() + "' !");
-        }
 
+    }
+
+    public CompoundTag getLevel() {
+        if (level == null)
+            try {
+                this.level = LevelDataConverter.read(levelFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        return level;
     }
 
     public String getWorldDisplayName() {
@@ -174,7 +175,7 @@ public class World implements Serializable {
             }
             return bundle;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(this, e);
             return null;
         }
     }
@@ -198,6 +199,7 @@ public class World implements Serializable {
         return this.worldFolder.getName();
     }
 
+    @NonNull
     public WorldData getWorldData() {
         if (this.worldData == null) {
             this.worldData = new WorldData(this);
@@ -212,36 +214,6 @@ public class World implements Serializable {
     public void pause() throws WorldData.WorldDBException {
         closeDown();
     }
-
-    /*
-    public byte[] loadChunkData(int chunkX, int chunkZ, ChunkTag dataType, Dimension dimension) throws WorldData.WorldDBLoadException, WorldData.WorldDBException {
-        return getWorldData().getChunkData(chunkX, chunkZ, dataType, dimension);
-    }
-
-    public void saveChunkData(int chunkX, int chunkZ, ChunkData chunkData) throws IOException, WorldData.WorldDBException {
-        byte[] bData = chunkData.toByteArray();
-        if (bData != null) getWorldData().writeChunkData(chunkX, chunkZ, chunkData.dataType, bData, chunkData.dimension);
-        else getWorldData().removeChunkData(chunkX, chunkZ, chunkData.dataType, chunkData.dimension);
-    }
-
-
-    //returns true if creating and saving was successful
-    public ChunkData createEmptyChunkData(int chunkX, int chunkZ, ChunkTag dataType, Dimension dimension){
-
-        ChunkData data = dataType.newInstance(dimension);
-        if(data == null) return null;
-
-        data.createEmpty();
-
-        try {
-            this.saveChunkData(chunkX, chunkZ, data);
-            return data;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    */
 
     public void resume() throws WorldData.WorldDBException {
 
@@ -264,7 +236,7 @@ public class World implements Serializable {
                 byte[] key = it.getKey();
                 byte[] value = it.getValue();
                 /*if(key.length == 9 && key[8] == RegionDataType.TERRAIN.dataID) */
-                Log.d("key: " + new String(key) + " key in Hex: " + WorldData.bytesToHex(key, 0, key.length) + " size: " + value.length);
+                Log.d(this, "key: " + new String(key) + " key in Hex: " + WorldData.bytesToHex(key, 0, key.length) + " size: " + value.length);
 
             }
 

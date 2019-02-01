@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -9,17 +10,25 @@ android {
         versionCode 13
         versionName "1.8.3"
     }
+    dataBinding {
+        enabled true
+    }
     buildTypes {
 
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ext.alwaysUpdateBuildId = false
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 
@@ -33,8 +42,11 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.github.bmelnychuk:atv:1.2.8'
+    implementation 'com.github.woxthebox:draglistview:1.6.3'
+    implementation 'com.andreabaccega:android-edittext-validator:1.3.5'
     //core is the new recommended alias for analytics
     implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
     implementation 'org.jetbrains:annotations-java5:15.0'
 }
 

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="layer"
+            type="com.mithrilmania.blocktopograph.flat.Layer" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:background="@drawable/rect_border_round_corner"
+            android:gravity="center"
+            android:onClick="onClickChangeBlock"
+            android:padding="2dp">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/ic_folder_open" />
+
+            <LinearLayout
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{(layer.block.subName==null) ? layer.block.str:layer.block.subName}"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{`minecraft:`+layer.block.str+`(`+layer.block.id+`):`+layer.block.subId}" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:alpha="0.5"
+                android:src="@drawable/ic_action_search" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_layer_amount" />
+
+            <com.andreabaccega.widget.FormEditText
+                android:id="@+id/amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:text="@{Integer.toString(layer.amount)}"
+                app:emptyAllowed="true" />
+
+            <!--ImageView
+                android:id="@+id/help_amount"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_help_black" /-->
+
+        </LinearLayout>
+
+        <include layout="@layout/common_dialog_activity_posibtn_bar" />
+
+    </LinearLayout>
+
+</layout>
