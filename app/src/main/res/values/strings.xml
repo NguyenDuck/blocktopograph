@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name" translatable="false">Blocktopograph</string>
 
@@ -31,15 +31,13 @@
         contributed by
         <a href="https://github.com/MithrilMania/blocktopograph">@MithrilMania</a>,
         <a href="https://github.com/flagmaggot/blocktopograph">@flagmaggot</a>,
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a> and others as well.\n
-        Releases would be published to
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph/releases">this page</a>,
-        you need to turn \"request desktop version\" on your browser, or use a PC, otherwise
-        apk downloads won\'t be shown. We may release on Google Play in the future.
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a>,
+        <a href="https://github.com/MiemieMethod/blocktopograph">@MiemieMethod</a> and others as well.\n\n
+        Available on Google Play.\n\n
         Current active github repository:
         <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
         Feel free to star or fork, help with the project or simply add your own language support.
-        <b>All non-destructive pull requests will be accepted.</b>
+        <b>Your github contribution is welcomed!</b>
         More information (including the roadmap, changelog and help-information) can be found at:
         <a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>. \n
         \n
@@ -309,9 +307,9 @@
         [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
     <string name="action_teleport">Teleport!</string>
     <string name="go_to_spawn">Go to spawn</string>
-    <string name="err_noworld_1" tools:ignore="MissingTranslation">No worlds found.</string>
-    <string name="err_noworld_2" tools:ignore="MissingTranslation">
-        Note that newer Minecrafts puts your worlds in its private data by default.
+    <string name="err_noworld_1">No worlds found.</string>
+    <string name="err_noworld_2">
+        Note that newer Minecraft puts your worlds in its private data by default.
         For this reason, all tools won\'t be able to access the worlds.
         You\'d have to set Minecraft to use \"external\" storage, by go to Minecraft-&gt;
         Settings-&gt;Profile-&gt;File Storage Location, and change the option from
@@ -324,7 +322,7 @@
     <string name="create_world_title">Create Flat World</string>
     <string name="create_world_name">Name:</string>
     <string name="create_world_default_name">My World</string>
-    <string name="create_world_version_aqua">1.2.13 till now</string>
+    <string name="create_world_version_aqua">1.2.13~latest</string>
     <string name="create_world_version">Version:</string>
     <string name="create_world_layers">Layers:</string>
     <string name="error_general">Unknown Error.</string>
@@ -334,4 +332,39 @@
     <string name="edit_flat_add_layer_title">Add a layer...</string>
     <string name="edit_flat_edit_layer_title">Edit</string>
     <string name="pick_block_title">Pick a block</string>
+    <string name="edit_flat_help">
+        "1. Drag block icon to sort.\n"
+        "2. Click any item to edit.\n"
+        "3. Click \"Add\" button to add a layer.\n"
+        "4. Swipe left to delete."
+        "."
+    </string>
+    <string name="edit_flat_atleast">There has to be at least one layer.</string>
+    <string name="general_done">Done.</string>
+    <string name="general_failed">Failed.</string>
+    <string name="create_need_restart">After creating, the world will appear in Minecraft after restarting the game.</string>
+    <string name="title_test_page">Test Page</string>
+    <string name="create_world_book_title">Meow~</string>
+    <string name="create_world_book_page_0"><!--
+        -->"\n§cWelcome~ Meow~"<!--
+        -->"\n§rCreated by"<!--
+        -->"\n§3Blocktopograph"<!--
+        -->"\n"<!--
+        -->"\n§1Get from Play Store"<!--
+        -->"\n§5and create your"<!--
+        -->"\n§5own customized world!"<!--
+        -->"\n"<!--
+        -->"\n§rWorld generated at"<!--
+        -->"\n§d%1$s"<!--
+    --></string>
+    <string name="create_world_book_recipe_header">World recipe:\n</string>
+    <string name="create_world_book_recipe_format" translatable="false">§r%1$dx §b%2$s\n</string>
+    <string name="create_world_book_recipe_many">"  §r..And more"</string>
+    <string name="create_world_extra_file_name">"by_Blocktopograph.txt"</string>
+    <string name="create_world_extra_file_text"><!--
+        -->"Welcome~ Meow~"<!--
+        -->"\nThe world was created by Blocktopograph,"<!--
+        -->"\nan Minecraft world editor and terrain viewer."<!--
+        -->"\nGet from Play Store and create your own customized world!"<!--
+    --></string>
 </resources>

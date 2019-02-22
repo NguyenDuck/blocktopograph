@@ -82,12 +82,6 @@
                 android:text="@{Integer.toString(layer.amount)}"
                 app:emptyAllowed="true" />
 
-            <!--ImageView
-                android:id="@+id/help_amount"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_help_black" /-->
-
         </LinearLayout>
 
         <include layout="@layout/common_dialog_activity_posibtn_bar" />

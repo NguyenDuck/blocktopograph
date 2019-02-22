@@ -2,14 +2,10 @@ package com.mithrilmania.blocktopograph.flat;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +14,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.DialogPickBlockBinding;
 import com.mithrilmania.blocktopograph.databinding.ItemPickBlockBinding;
 import com.mithrilmania.blocktopograph.map.Block;
-import com.mithrilmania.blocktopograph.util.Color;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import java.lang.ref.WeakReference;
@@ -47,6 +41,7 @@ public final class PickBlockActivity extends AppCompatActivity {
         list.setLayoutManager(mListManager);
         mAdapter = new MeowAdapter();
         list.setAdapter(mAdapter);
+        setResult(RESULT_CANCELED);
 
         mBinding.text.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,7 +57,8 @@ public final class PickBlockActivity extends AppCompatActivity {
                 new UpdateListTask(PickBlockActivity.this).execute();
             }
         });
-        //
+
+        new UpdateListTask(PickBlockActivity.this).execute();
     }
 
     private class MeowAdapter extends RecyclerView.Adapter<MeowAdapter.MeowHolder> {
@@ -82,7 +78,9 @@ public final class PickBlockActivity extends AppCompatActivity {
             MeowHolder holder = new MeowHolder(root);
             holder.binding = binding;
             root.setOnClickListener(v -> {
-                setResult(RESULT_OK, new Intent().putExtra(EXTRA_KEY_BLOCK, mBlocks.get(i)));//;(Block) v.getTag()));
+                //UiUtil.toast(PickBlockActivity.this,""+i);
+                setResult(RESULT_OK, new Intent()
+                        .putExtra(EXTRA_KEY_BLOCK, holder.binding.getBlock()));//;(Block) v.getTag()));
                 finish();
             });
             return holder;

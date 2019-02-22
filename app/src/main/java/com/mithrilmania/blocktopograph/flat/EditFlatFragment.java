@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,9 +23,13 @@ import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.woxthebox.draglistview.DragItemAdapter;
 import com.woxthebox.draglistview.DragListView;
+import com.woxthebox.draglistview.swipe.ListSwipeHelper;
+import com.woxthebox.draglistview.swipe.ListSwipeItem;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
+import java.util.List;
 
 public final class EditFlatFragment extends Fragment {
 
@@ -61,13 +66,26 @@ public final class EditFlatFragment extends Fragment {
         switch (requestCode) {
             case REQUEST_CODE_EDIT_LAYER: {
                 if (resultCode != Activity.RESULT_OK) return;
+                int index = data.getIntExtra(EXTRA_KEY_LIST_INDEX, 0);
+                Serializable ser = data.getSerializableExtra(EXTRA_KEY_LIST_LAYER);
+                assert ser instanceof Layer;
+                Layer layer = (Layer) ser;
+                if (data.getBooleanExtra(EXTRA_KEY_LIST_IS_ADD, true)) {
+                    mMeowAdapter.insert(index + 1, layer);
+                } else {
+                    mMeowAdapter.change(index, layer);
+                }
                 return;
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private class MeowAdapter extends DragItemAdapter<Layer, MeowAdapter.MeowHolder> {
+    public List<Layer> getResultLayers() {
+        return mMeowAdapter.getItemList();
+    }
+
+    private class MeowAdapter extends DragItemAdapter<Layer, MeowAdapter.MeowHolder> implements ListSwipeHelper.OnSwipeListener {
 
         MeowAdapter() {
             setItemList(new LinkedList<>());
@@ -76,7 +94,8 @@ public final class EditFlatFragment extends Fragment {
         @Override
         public long getUniqueItemId(int i) {
             Layer layer = mItemList.get(i);
-            return (layer.block.id << 16) | (layer.block.subId << 8) | layer.amount;
+            //return (((long) i) << 32) | (layer.block.id << 16) | (layer.block.subId << 8) | layer.amount;
+            return layer.uid;
         }
 
         void loadDefault() {
@@ -88,12 +107,43 @@ public final class EditFlatFragment extends Fragment {
             addItem(0, layer);
         }
 
+        void insert(int index, Layer layer) {
+            assert index <= mItemList.size();
+            mItemList.add(index, layer);
+            notifyItemInserted(index);
+        }
+
+        void change(int index, Layer layer) {
+            assert index < mItemList.size();
+            mItemList.set(index, layer);
+            notifyItemChanged(index, layer);
+        }
+
         @NonNull
         @Override
-        public MeowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        public MeowHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int in) {
             ItemWorldLayerBinding binding = DataBindingUtil.inflate(
                     getLayoutInflater(), R.layout.item_world_layer, mBinding.list, false);
-            return new MeowHolder(binding);
+            MeowHolder holder = new MeowHolder(binding);
+            holder.binding.add.setOnClickListener(view -> {
+                int sum = 0;//Existing height. Total height shall be less then 128 we need to ensure.
+                for (Layer l : mItemList) {
+                    sum += l.amount;
+                }
+                onClickAddOrEditLayer(holder.getLayoutPosition(), new Layer(), true, sum);
+            });
+            holder.binding.root.setOnClickListener(view -> {
+                int index = holder.getLayoutPosition();
+                int sum = 0;//Existing height. Total height shall be less then 128 we need to ensure.
+                for (int i = 0, mItemListSize = mItemList.size(); i < mItemListSize; i++) {
+                    if (i == index) continue;
+                    Layer l = mItemList.get(i);
+                    sum += l.amount;
+                }
+                onClickAddOrEditLayer(index, mItemList.get(index), false, sum);
+            });
+            holder.binding.root.setTag(new WeakReference<>(holder));
+            return holder;
         }
 
         @Override
@@ -102,13 +152,45 @@ public final class EditFlatFragment extends Fragment {
             Layer layer = mItemList.get(position);
             holder.binding.setLayer(layer);
             holder.binding.icon.setImageBitmap(layer.block.bitmap);
-            holder.binding.add.setOnClickListener(view -> {
-                int sum = 0;//Existing height. Total height shall be less then 128 we need to ensure.
-                for (Layer l : mItemList) {
-                    sum += l.amount;
-                }
-                onClickAddOrEditLayer(position, new Layer(), true, sum);
-            });
+        }
+
+        @Override
+        public void onItemSwipeStarted(ListSwipeItem item) {
+        }
+
+        @Nullable
+        private MeowHolder getHolderFromTag(@NonNull ListSwipeItem view) {
+            Object tag = view.getTag();
+            if (!(tag instanceof WeakReference)) return null;
+            WeakReference ref = (WeakReference) tag;
+            Object mho = ref.get();
+            assert mho instanceof MeowHolder;
+            return (MeowHolder) mho;
+        }
+
+        @Override
+        public void onItemSwipeEnded(ListSwipeItem item, ListSwipeItem.SwipeDirection swipedDirection) {
+            if (swipedDirection != ListSwipeItem.SwipeDirection.LEFT) return;
+            MeowHolder mh = getHolderFromTag(item);
+            if (mh == null) return;
+            int position = mh.getAdapterPosition();
+            int size = mItemList.size();
+            if (size > 1) {
+                mItemList.remove(position);
+                notifyItemRemoved(position);
+            } else if (size == 1) {
+                mItemList.set(0, new Layer());
+                Snackbar.make(mBinding.list, R.string.edit_flat_atleast, Snackbar.LENGTH_SHORT).show();
+                notifyItemChanged(0);
+            }
+        }
+
+        @Override
+        public void onItemSwiping(ListSwipeItem item, float swipedDistanceX) {
+            float alpha = -swipedDistanceX / item.getMeasuredWidth() * 1.2f;
+            MeowHolder mh = getHolderFromTag(item);
+            if (mh == null) return;
+            mh.binding.itemRight.setAlpha(alpha);
         }
 
         private class MeowHolder extends DragItemAdapter.ViewHolder {
@@ -118,6 +200,7 @@ public final class EditFlatFragment extends Fragment {
             MeowHolder(@NonNull ItemWorldLayerBinding binding) {
                 super(binding.getRoot(), R.id.icon, false);
                 this.binding = binding;
+                binding.root.setSupportedSwipeDirection(ListSwipeItem.SwipeDirection.LEFT);
             }
         }
     }
@@ -162,6 +245,7 @@ public final class EditFlatFragment extends Fragment {
                 listView.setLayoutManager(new LinearLayoutManager(thiz.getActivity()));
                 listView.setCanDragHorizontally(false);
                 listView.setAdapter(thiz.mMeowAdapter, false);
+                listView.setSwipeListener(thiz.mMeowAdapter);
                 thiz.mMeowAdapter.loadDefault();
             } catch (Exception e) {
                 Log.d(this, e);

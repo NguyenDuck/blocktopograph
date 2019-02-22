@@ -155,7 +155,9 @@ public class EditorFragment extends Fragment {
                     break;
                 }
                 case BYTE: {
-                    String name = tag.getName().toLowerCase();
+                    String name = tag.getName();
+                    if (name == null) name = "";
+                    else name = name.toLowerCase();
 
                     //TODO differentiate boolean tags from byte tags better
                     if (name.startsWith("has") || name.startsWith("is")) {

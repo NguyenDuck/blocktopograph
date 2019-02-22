@@ -1,8 +1,8 @@
 # Blocktopograph
 
 By [@protolambda](https://github.com/protolambda), [@MithrilMania](https://github.com/MithrilMania) and
-[flagmaggot](https://github.com/flagmaggot).  
-This fork is the only one supporting MCPE 1.2~1.9 for now.
+[@flagmaggot](https://github.com/flagmaggot).  
+This fork is the only one supporting MCPE 1.2~1.10 for now.
 
 ## Update paused
 Until next change in Minecraft level format.  
@@ -12,6 +12,9 @@ Pull requests will still be processed in time during the pause unless Meow Cat d
 [>>> Download on Google Play <<<](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)  
 And release page of the repository provides debug version of the app.  
 <img src="arts/scr01.jpg" alt="screenshot" width="320"/>
+
+## Help!
+Would you like to together update block and entity list?  
 
 ## Build
 

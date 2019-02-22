@@ -7,8 +7,8 @@ android {
         applicationId 'rbq2012.blocktopograph'
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 13
-        versionName "1.8.3"
+        versionCode 15
+        versionName "1.8.5"
     }
     dataBinding {
         enabled true
@@ -45,9 +45,10 @@ dependencies {
     implementation 'com.github.woxthebox:draglistview:1.6.3'
     implementation 'com.andreabaccega:android-edittext-validator:1.3.5'
     //core is the new recommended alias for analytics
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
     implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'com.tomergoldst.android:tooltips:1.0.10'
 }
 
 apply plugin: 'com.google.gms.google-services'

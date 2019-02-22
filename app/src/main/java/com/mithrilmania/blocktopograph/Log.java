@@ -12,8 +12,11 @@ import java.io.StringWriter;
 
 public class Log {
 
-    //TODO This is kind of lazy, but repeating the Log.d(*msg*) everywhere is obnoxious
-    //TODO log only if debug mode is on?
+    public static final String ANA_PARAM_CREATE_WORLD_TYPE = "cw_type";
+    public static final String ANA_PARAM_MAINACT_MENU_TYPE = "mam_type";
+    public static final int ANA_PARAM_MAINACT_MENU_TYPE_OPEN = 123;
+    public static final int ANA_PARAM_MAINACT_MENU_TYPE_HELP = 130;
+    public static final int ANA_PARAM_MAINACT_MENU_TYPE_ABOUT = 199;
 
     private static final String LOG_TAG = "Blocktopo";
 
@@ -85,11 +88,10 @@ public class Log {
         NBT_EDITOR_SAVE("nbt_editor_save"),
         WORLD_OPEN("world_open"),
         WORLD_RESUME("world_resume"),
-        GPS_PLAYER("gps_player"),
-        GPS_MULTIPLAYER("gps_multiplayer"),
-        GPS_SPAWN("gps_spawn"),
-        GPS_MARKER("gps_marker"),
-        GPS_COORD("gps_coord");
+        GPS_LOCATE("gps_player"),
+        MAINACT_MENU_OPEN("mainact_menu"),
+        CREATE_WORLD_OPEN("create_world_open"),
+        CREATE_WORLD_SAVE("create_world_save");
 
         public final String eventID;
 

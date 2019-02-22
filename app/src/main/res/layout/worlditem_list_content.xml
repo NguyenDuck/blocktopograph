@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:contentDescription="icon of world"
-        android:src="@mipmap/ic_world_icon"
+        android:src="@drawable/ic_world_icon"
         tools:ignore="HardcodedText" />
 
     <LinearLayout

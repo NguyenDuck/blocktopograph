@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -9,48 +10,78 @@
 
     </data>
 
-    <LinearLayout
+    <com.woxthebox.draglistview.swipe.ListSwipeItem
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center|start"
-        android:orientation="horizontal"
-        android:padding="6dp">
+        android:clickable="true"
+        android:focusable="true"
+        app:leftViewId="@+id/item_left"
+        app:rightViewId="@+id/item_right"
+        app:swipeViewId="@+id/item_layout">
 
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="3dp"
-            android:layout_marginLeft="3dp"
-            android:src="@drawable/ic_folder_open" />
+        <View
+            android:id="@+id/item_left"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_layout"
+            android:layout_alignBottom="@+id/item_layout"
+            android:background="@color/colorAccentDark" />
+
+        <View
+            android:id="@+id/item_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/item_layout"
+            android:layout_alignBottom="@+id/item_layout"
+            android:background="@android:color/holo_red_light" />
 
         <LinearLayout
-            android:id="@+id/name"
-            android:layout_width="0dp"
+            android:id="@+id/item_layout"
+            android:background="@drawable/sel_item_flat_layer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center|start"
+            android:orientation="horizontal"
+            android:padding="6dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{(layer.block.subName==null) ? layer.block.str:layer.block.subName}"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/ic_folder_open" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/name"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{`minecraft:`+layer.block.str+`:`+layer.block.subId+` x`+layer.amount}" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{(layer.block.subName==null) ? layer.block.str:layer.block.subName}"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{`minecraft:`+layer.block.str+`:`+layer.block.subId+` x`+layer.amount}" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/add"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:alpha="0.5"
+                android:src="@drawable/ic_add_black" />
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/add"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:alpha="0.5"
-            android:src="@drawable/ic_add_black" />
-
-    </LinearLayout>
+    </com.woxthebox.draglistview.swipe.ListSwipeItem>
 
 </layout>

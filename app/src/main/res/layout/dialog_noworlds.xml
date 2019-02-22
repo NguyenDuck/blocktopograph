@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Screenshot of the settings page"
-        android:src="@mipmap/external"
+        android:src="@drawable/external"
         tools:ignore="HardcodedText" />
 
 </LinearLayout>

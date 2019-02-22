@@ -27,17 +27,17 @@
         本应用由<a href="http://twitter.com/protolambda">@protolambda</a>原创，
         由<a href="https://github.com/MithrilMania/blocktopograph">@MithrilMania</a>、
         <a href="https://github.com/flagmaggot/blocktopograph">@flagmaggot</a>、
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a>参与更新和维护。
-        在等待前任作者回归（或确认失踪）前，暂时从Github发布更新，您可以
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph/releases">打开发布页面</a>
-        下载最新的apk安装包，需要从浏览器勾选“使用电脑版网页”或用电脑打开，手机默认看不到下载。
-        有账号的可以点一下Star~ 以后可能恢复咕狗商店上架，谁知道呢。
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a>、
+        <a href="https://github.com/MiemieMethod/blocktopograph">@MiemieMethod</a>参与更新和维护。
+        感谢百度贴吧minecraftpe吧的朋友们提供反馈。\n\n
+        可以在Google Play、Github的项目release页面（PC版网页）下载或百度贴吧搜索。\n\n
+        有账号的可以点一下Star~\n
         <i>欢迎在Github查看源代码，并参与更新维护（包括增强翻译）：</i>\n
         <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
         \n使用前请备份你的重要存档，以免发生意外。一点小问题都可能导致Minecraft无法加载整个存档→_→
         \n本应用支持MCPE 0.14至1.9（当前）的存档格式，更旧或者更新的版本【可能】不完全兼容，但不妨一试。
         \n原作者网站：<a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>
-        这会是第二任作者的网站吗？或者只是重名<a href="http://mithrilmania.fc2web.com/">mithrilmania.fc2web.com/</a>
+        这会是第二任作者的网站吗？或者只是重名<a href="http://mithrilmania.fc2web.com/">mithrilmania.fc2web.com/</a>\n\n
         <i>免责声明</i>\n
         <b>此应用程序与Minecraft、Mojang AB或Microsoft无关。</b>\n
         这不是一个官方的而是一个饭制的APP。\n
@@ -265,4 +265,59 @@
     <string name="action_teleport">传送！</string>
     <string name="go_to_spawn">前往出生点</string>
     <string name="world_mark_neteas">[网易]</string>
+    <string name="err_noworld_1">没找到世界。</string>
+    <string name="err_noworld_2">
+        注意，新版的Minecraft默认将世界放到它的私有存储区。
+        因此，所有外部工具不能接入这些世界。
+        您需要设置Minecraft使用“外部”的存储方式，方法是：\n\n
+        Minecraft→设置→档案→文件存储位置，将选项又“应用程序”改为“外部”。\n\n
+        然后，新创建的世界将能被Blocktopograph接入，虽然已经存在的世界可能无法再打开。
+        若想移动那些世界到外部可能需要提取设备的root权限，恕不能提供帮助。
+    </string>
+    <string name="create_world_title">创建平坦世界</string>
+    <string name="create_world_name">名字：</string>
+    <string name="create_world_default_name">我的世界</string>
+    <string name="create_world_version_aqua">1.2.13至今</string>
+    <string name="create_world_version">版本：</string>
+    <string name="create_world_layers">层：</string>
+    <string name="error_general">未知错误。</string>
+    <string name="general_please_wait">请等待...</string>
+    <string name="edit_layer_amount">数量：</string>
+    <string name="edit_layer_amount_constrait">所有层的数量总和应该至少是0而至多是127。</string>
+    <string name="edit_flat_add_layer_title">添加一层...</string>
+    <string name="edit_flat_edit_layer_title">编辑</string>
+    <string name="pick_block_title">选取方块</string>
+    <string name="edit_flat_help">
+        "1. 拖拽方块图标可以排序。"
+        "\n2. 点击任一条目可以编辑。"
+        "\n3. 点击“添加”按钮可以新增一层。"
+        "\n4. 左划删除。"
+    </string>
+    <string name="edit_flat_atleast">至少要有一层。</string>
+    <string name="general_done">好了~</string>
+    <string name="general_failed">失败。</string>
+    <string name="create_need_restart">创建以后，世界会在重启Minecraft后显示在列表里。</string>
+    <string name="title_test_page">测试页</string>
+    <string name="create_world_book_title">喵~</string>
+    <string name="create_world_book_page_0"><!--
+        -->"\n§c欢迎~ 喵呜~"<!--
+        -->"\n§r该世界由"<!--
+        -->"\n§3Blocktopograph"<!--
+        -->"\n§r生成。"<!--
+        -->"\n§1从Play商店/Github"<!--
+        -->"\n§1/贴吧/mineBBS获取，"<!--
+        -->"\n§5创建你的自定义世界。"<!--
+        -->"\n"<!--
+        -->"\n§r生成于"<!--
+        -->"\n§d%1$s"<!--
+    --></string>
+    <string name="create_world_book_recipe_header">世界配料表：\n</string>
+    <string name="create_world_book_recipe_many">"  §r..以及更多"</string>
+    <string name="create_world_extra_file_name">由Blocktopograph.txt</string>
+    <string name="create_world_extra_file_text"><!--
+        -->"欢迎~ 喵呜~"<!--
+        -->"\n该世界由Blocktopograph创建，"<!--
+        -->"\n一款Minecraft的编辑和地图查看工具。"<!--
+        -->"\n从Play商店/Github/贴吧/mineBBS获取，并创建你的自定义世界。"<!--
+    --></string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AlertDialog;
@@ -46,7 +47,7 @@ public final class UiUtil {
         if (!(drawable instanceof GradientDrawable)) return;
         GradientDrawable gradientDrawable = (GradientDrawable) drawable;
         Color color = block.color;
-        int res = ColorUtils.blendARGB(color.asARGB(), 0x7f7f7f7f, 0.5f);
+        int res = (block.id == 0) ? 0 : ColorUtils.blendARGB(color.asARGB(), 0x7f7f7f7f, 0.5f);
         gradientDrawable.setColor(res);
     }
 }

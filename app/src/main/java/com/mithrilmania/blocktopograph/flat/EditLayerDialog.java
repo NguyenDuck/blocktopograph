@@ -37,6 +37,7 @@ public final class EditLayerDialog extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.dialog_edit_layer);
+        setResult(RESULT_CANCELED);
 
         Intent intent = getIntent();
         if (savedInstanceState != null || intent == null) {
@@ -78,6 +79,7 @@ public final class EditLayerDialog extends AppCompatActivity {
         amountBar.addValidator(new AmountValidator(getString(R.string.edit_layer_amount_constrait)));
 
         mBinding.icon.setImageBitmap(layer.block.bitmap);
+        UiUtil.blendBlockColor(mBinding.frame, layer.block);
     }
 
     public void onClickChangeBlock(View view) {
@@ -87,7 +89,20 @@ public final class EditLayerDialog extends AppCompatActivity {
     }
 
     public void onClickPositiveButton(View view) {
-        //
+        Layer layer = mBinding.getLayer();
+        String am = mBinding.amount.getText().toString();
+        int ami = 1;
+        if (!am.isEmpty()) try {
+            ami = Integer.parseInt(am);
+        } catch (NumberFormatException e) {
+            //
+        }
+        layer.amount = ami;
+        setResult(RESULT_OK, new Intent()
+                .putExtra(EXTRA_KEY_LIST_INDEX, mPositon)
+                .putExtra(EXTRA_KEY_LIST_IS_ADD, mIsAdd)
+                .putExtra(EXTRA_KEY_LIST_LAYER, layer));
+        finish();
     }
 
     @Override
@@ -97,9 +112,11 @@ public final class EditLayerDialog extends AppCompatActivity {
                 if (resultCode != RESULT_OK) return;
                 assert data != null;
                 Block block = (Block) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
-                mBinding.getLayer().block = block;
+                Layer layer = mBinding.getLayer();
+                layer.block = block;
+                mBinding.setLayer(layer);
                 UiUtil.blendBlockColor(mBinding.frame, block);
-                mBinding.notifyChange();
+                //mBinding.notifyChange();
                 return;
             }
         }
@@ -115,12 +132,12 @@ public final class EditLayerDialog extends AppCompatActivity {
         @Override
         public boolean isValid(EditText et) {
             String text = et.getText().toString();
+            if (text.isEmpty()) return true;
             int val;
             try {
                 val = Integer.parseInt(text);
             } catch (NumberFormatException e) {
-                et.setText("");
-                return true;
+                return false;
             }
             return val >= 0 && val < 128 - mExistingSum;
         }

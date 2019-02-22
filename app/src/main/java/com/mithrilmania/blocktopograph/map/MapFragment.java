@@ -35,7 +35,6 @@ import com.mithrilmania.blocktopograph.WorldActivity;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
-import com.mithrilmania.blocktopograph.chunk.TempChunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
@@ -282,7 +281,7 @@ public class MapFragment extends Fragment {
                         worldProvider.changeMapType(playerPos.dimension.defaultMapType, playerPos.dimension);
                     }
 
-                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_PLAYER);
+                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_LOCATE);
 
                     frameTo((double) playerPos.x, (double) playerPos.z);
 
@@ -316,7 +315,7 @@ public class MapFragment extends Fragment {
                         worldProvider.changeMapType(spawnPos.dimension.defaultMapType, spawnPos.dimension);
                     }
 
-                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_SPAWN);
+                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_LOCATE);
 
                     frameTo((double) spawnPos.x, (double) spawnPos.z);
 
@@ -408,7 +407,7 @@ public class MapFragment extends Fragment {
 
                                         frameTo((double) m.x, (double) m.z);
 
-                                        Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_MARKER);
+                                        Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_LOCATE);
                                     }
                                 });
                         markerDialogBuilder.show();
@@ -487,7 +486,7 @@ public class MapFragment extends Fragment {
                                         return;
                                     }
 
-                                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_COORD);
+                                    Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.GPS_LOCATE);
 
                                     frameTo((double) inX, (double) inZ);
                                 }
@@ -1510,7 +1509,7 @@ public class MapFragment extends Fragment {
                                                 .setAction("Action", null).show();
 
                                         WorldActivityInterface worldProvider = owner.get().worldProvider.get();
-                                        Log.logFirebaseEvent(activity.get(), Log.CustomFirebaseEvent.GPS_MULTIPLAYER);
+                                        Log.logFirebaseEvent(activity.get(), Log.CustomFirebaseEvent.GPS_LOCATE);
 
                                         if (playerPos.dimension != worldProvider.getDimension()) {
                                             worldProvider.changeMapType(playerPos.dimension.defaultMapType, playerPos.dimension);

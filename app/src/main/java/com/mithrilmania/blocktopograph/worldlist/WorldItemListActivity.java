@@ -29,11 +29,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.mithrilmania.blocktopograph.BuildConfig;
 import com.mithrilmania.blocktopograph.CreateWorldActivity;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
-import com.mithrilmania.blocktopograph.util.io.IOUtil;
+import com.mithrilmania.blocktopograph.util.IoUtil;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -42,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 public class WorldItemListActivity extends AppCompatActivity {
 
@@ -82,7 +86,7 @@ public class WorldItemListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG) Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_worldlist);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -179,6 +183,24 @@ public class WorldItemListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Bundle params = new Bundle();
+        int type;
+        switch (item.getItemId()) {
+            case R.id.action_open:
+                type = Log.ANA_PARAM_MAINACT_MENU_TYPE_OPEN;
+                break;
+            case R.id.action_help:
+                type = Log.ANA_PARAM_MAINACT_MENU_TYPE_HELP;
+                break;
+            case R.id.action_about:
+                type = Log.ANA_PARAM_MAINACT_MENU_TYPE_ABOUT;
+                break;
+            default:
+                type = 0;
+        }
+        params.putInt(Log.ANA_PARAM_MAINACT_MENU_TYPE, type);
+        Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.MAINACT_MENU_OPEN, params);
 
         //some text pop-up dialogs, some with simple HTML tags.
         switch (item.getItemId()) {
@@ -441,31 +463,28 @@ public class WorldItemListActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             holder.mWorld = mWorlds.get(position);
             holder.mWorldNameView.setText(holder.mWorld.getWorldDisplayName());
-            holder.mWorldSize.setText(IOUtil.getFileSizeInText(holder.mWorld.worldFolder));
+            holder.mWorldSize.setText(IoUtil.getFileSizeInText(holder.mWorld.worldFolder));
             holder.mWorldGamemode.setText(WorldListUtil.getWorldGamemodeText(WorldItemListActivity.this, holder.mWorld));
             holder.mWorldLastPlayed.setText(WorldListUtil.getLastPlayedText(WorldItemListActivity.this, holder.mWorld));
             holder.mWorldPath.setText(holder.mWorld.worldFolder.getName());
             holder.mWorldMark.setText(holder.mWorld.mark);
 
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        arguments.putSerializable(World.ARG_WORLD_SERIALIZED, holder.mWorld);
-                        WorldItemDetailFragment fragment = new WorldItemDetailFragment();
-                        fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.worlditem_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, WorldItemDetailActivity.class);
-                        intent.putExtra(World.ARG_WORLD_SERIALIZED, holder.mWorld);
+            holder.mView.setOnClickListener(v -> {
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    arguments.putSerializable(World.ARG_WORLD_SERIALIZED, holder.mWorld);
+                    WorldItemDetailFragment fragment = new WorldItemDetailFragment();
+                    fragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.worlditem_detail_container, fragment)
+                            .commit();
+                } else {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, WorldItemDetailActivity.class);
+                    intent.putExtra(World.ARG_WORLD_SERIALIZED, holder.mWorld);
 
-                        context.startActivity(intent);
-                    }
+                    context.startActivity(intent);
                 }
             });
         }

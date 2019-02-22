@@ -9,8 +9,6 @@ import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /*
 Entity enum for MCPE __ by @mithrilmania
@@ -124,11 +122,11 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
     MINECART_TNT(97, "Minecart with TNT", new String[]{"MinecartTNT"}, "minecart_with_tnt", 69),
     MINECART_CHEST(98, "Storage Minecart", new String[]{"MinecartChest"}, "minecart_chest", 35),
     LINGERING_POTION(101, "Lingering potion", new String[]{"LingeringPotion"}, "lingering_potion", 144),
-
     DROWNED(110, "Drowned", new String[]{"Drowned"}, "drowned", 133),
 
     CAT(122, "Cat", new String[]{"Cat"}, "cat", 142),//95 ; FireworksRocketEntity is not in the game yet
     PANDA(123, "Panda", new String[]{"Panda"}, "panda", 136),//95 ; FireworksRocketEntity is not in the game yet
+    PARROT(1001, "Parrot", new String[]{"Parrot"}, "parrot", 109),
 
     //id 900+ is ignored for functions like map_filtering, these are placeholders for when the game adds more expected features.
     MINECART_SPAWNER(900, "Minecart with Spawner", new String[]{"MinecartSpawner"}, "minecart_with_spawner", 71),//99 ; MinecartSpawner is not yet in the game

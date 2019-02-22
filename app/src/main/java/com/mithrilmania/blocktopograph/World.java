@@ -14,7 +14,7 @@ import com.mithrilmania.blocktopograph.nbt.tags.ListTag;
 import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
 import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
-import com.mithrilmania.blocktopograph.util.io.TextFile;
+import com.mithrilmania.blocktopograph.util.IoUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,14 +59,13 @@ public class World implements Serializable {
         // check for a custom world name
         File levelNameTxt = new File(this.worldFolder, "levelname.txt");
         if (levelNameTxt.exists())
-            worldName = TextFile.readTextFileFirstLine(levelNameTxt);// new way of naming worlds
+            worldName = IoUtil.readTextFileFirstLine(levelNameTxt);// new way of naming worlds
         else worldName = this.worldFolder.getName();// legacy way of naming worlds
 
 
         this.levelFile = new File(this.worldFolder, "level.dat");
         if (!levelFile.exists())
             throw new WorldLoadException("Error: Level-file: '" + levelFile.getPath() + "' does not exist!");
-
 
     }
 
@@ -175,7 +174,8 @@ public class World implements Serializable {
             }
             return bundle;
         } catch (Exception e) {
-            Log.d(this, e);
+            // This will log the exception and an upcoming crash will take it.
+            Log.e(this, e);
             return null;
         }
     }

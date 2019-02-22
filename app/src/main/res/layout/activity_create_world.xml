@@ -13,55 +13,82 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/help_frame_layers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/create_world_name" />
-
-                <EditText
-                    android:id="@+id/world_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/create_world_default_name"
-                    android:inputType="text"
-                    tools:ignore="Autofill" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/create_world_version" />
-
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checkedButton="@id/version_aqua"
                     android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/version_aqua"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/create_world_version_aqua" />
+                        android:text="@string/create_world_name" />
 
-                </RadioGroup>
+                    <EditText
+                        android:id="@+id/world_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_world_default_name"
+                        android:inputType="text"
+                        tools:ignore="Autofill" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/create_world_layers" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_world_version" />
 
-                <fragment
-                    android:id="@+id/frag_layers"
-                    android:name="com.mithrilmania.blocktopograph.flat.EditFlatFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <RadioGroup
+                        android:id="@+id/version"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkedButton="@id/version_aqua"
+                        android:orientation="vertical">
 
-            </LinearLayout>
+                        <RadioButton
+                            android:id="@+id/version_aqua"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/create_world_version_aqua" />
+
+                    </RadioGroup>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/create_world_layers" />
+
+                        <ImageView
+                            android:id="@+id/help_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:onClick="onClickHelpLayers"
+                            android:src="@drawable/ic_help_black" />
+
+                    </LinearLayout>
+
+                    <fragment
+                        android:id="@+id/frag_layers"
+                        android:name="com.mithrilmania.blocktopograph.flat.EditFlatFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_need_restart" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </ScrollView>
 

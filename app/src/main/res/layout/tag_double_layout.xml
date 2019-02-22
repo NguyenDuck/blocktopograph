@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="horizontal">
 
     <ImageView
+        android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_tag_double"
-        android:id="@+id/icon" />
+        android:src="@drawable/ic_tag_double" />
 
     <TextView
-        android:textSize="19sp"
-        android:layout_marginStart="10dp"
         android:id="@+id/tag_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Tag name here"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="19sp"
+        tools:text="Tag name here" />
 
     <EditText
+        android:id="@+id/doubleField"
         android:layout_width="188dp"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:inputType="numberSigned|numberDecimal"
+        android:layout_marginLeft="10dp"
         android:ems="10"
-        android:id="@+id/doubleField"
-        android:layout_marginLeft="10dp" />
+        android:inputType="numberSigned|numberDecimal" />
 
 </LinearLayout>

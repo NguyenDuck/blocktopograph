@@ -16,6 +16,15 @@ public final class LevelDataConverter {
 
     public static final byte[] header = {0x04, 0x00, 0x00, 0x00};
 
+    public static CompoundTag read(InputStream inputStream) throws IOException {
+        skip(inputStream, 8);
+        // Skip the length? Yeah I know it's redundant but...
+        NBTInputStream in = new NBTInputStream(inputStream);
+        CompoundTag levelTag = (CompoundTag) in.readTag();
+        in.close();
+        return levelTag;
+    }
+
     public static CompoundTag read(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream is = new BufferedInputStream(fis);
