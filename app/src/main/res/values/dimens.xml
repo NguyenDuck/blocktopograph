@@ -7,7 +7,10 @@
     <dimen name="item_width">450dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-
     <dimen name="nav_header_vertical_spacing">10dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
+
+    <dimen name="map_float_page_margin_h">24dp</dimen>
+    <dimen name="map_float_page_margin_h_full">@dimen/map_float_page_margin_h</dimen>
+    <dimen name="map_float_page_margin_v">48dp</dimen>
 </resources>

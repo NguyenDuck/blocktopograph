@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="map_float_page_margin_v">48dp</dimen>
+</resources>

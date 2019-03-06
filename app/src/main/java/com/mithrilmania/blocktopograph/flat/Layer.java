@@ -1,6 +1,6 @@
 package com.mithrilmania.blocktopograph.flat;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mithrilmania.blocktopograph.map.Block;
 

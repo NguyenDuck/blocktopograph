@@ -236,7 +236,7 @@
     <string name="failed_find_spawn">Failed to find spawn.</string>
     <string name="go_to_a_marker_list">Go to a marker:</string>
     <string name="go_to_local_player">Go to local player</string>
-    <string name="go_to__other_player">Go to other player</string>
+    <string name="go_to_other_player">Go to other player</string>
     <string name="player">Player</string>
     <string name="spawn">Spawn</string>
     <string name="something_at_xyz_dim_float" formatted="false">
@@ -252,7 +252,7 @@
         <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)
         [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
     <string name="no_map_available">No map available.</string>
-    <string name="searching_for_players">Searching for players…</string>
+    <string name="searching_for_players">Searching for markers…</string>
     <string name="failed_to_retrieve_player_data">Failed to retrieve player data.</string>
     <string name="go_to_player">Go to player</string>
     <string name="go_loud">Go!</string>
@@ -281,7 +281,7 @@
     <string name="the_end">The End</string>
     <string name="map_options">Map options</string>
     <string name="toggle_grid">Toggle grid</string>
-    <string name="toggle_markers">Toggle markers</string>
+    <string name="toggle_markers">Toggle markers/mobs</string>
     <string name="advanced_options">Advanced Options</string>
     <!-- all these NBT options should not be translated;
       these correspond with the internal data names within the save file -->
@@ -345,7 +345,7 @@
     <string name="create_need_restart">After creating, the world will appear in Minecraft after restarting the game.</string>
     <string name="title_test_page">Test Page</string>
     <string name="create_world_book_title">Meow~</string>
-    <string name="create_world_book_page_0"><!--
+    <string name="create_world_book_page_0" translatable="false"><!--
         -->"\n§cWelcome~ Meow~"<!--
         -->"\n§rCreated by"<!--
         -->"\n§3Blocktopograph"<!--
@@ -367,4 +367,35 @@
         -->"\nan Minecraft world editor and terrain viewer."<!--
         -->"\nGet from Play Store and create your own customized world!"<!--
     --></string>
+    <string name="locator_page_player">Players</string>
+    <string name="player_position_desc">At (%1$d, %2$d, %3$d) of %4$s</string>
+    <string name="gps_advanced_locator">Advanced Locator...</string>
+    <string name="locator_page_marker">Markers</string>
+    <string name="locator_page_coor">Coordinate</string>
+    <string name="gps_picer">Get full picture\nof world</string>
+    <string name="picer_title">Full Picture</string>
+    <string name="picer_dowhat">This would generate a picture of the world.</string>
+    <string name="picer_ask_wrong_chunks">There are corrupted or unsupported data, skip or cancel?</string>
+    <string name="picer_ask_old_chunks">There\'re data from old Minecraft version in the world. You may want to cancel now, and open the world in newer Minecraft to have data automatically updated. You can also ignore these data.</string>
+    <string name="general_ignore">Ignore</string>
+    <string name="picer_button_cancel"><![CDATA[Cancel & Return]]></string>
+    <string name="picer_failed_corrupt">Your world cannot be understood by Blocktopograph, perhaps your game version is too old or too new.</string>
+    <string name="picer_failed_old">This world is of a too old Minecraft version therefore cannot be read.</string>
+    <string name="picer_failed_nodata">No terrain found.</string>
+    <string name="picer_warn_wrong_chunks">Warning: There\'re corrupted or unsupported chunks found and ignored.</string>
+    <string name="picer_warn_old_chunks">Warning: There\'re old and unsupported chunks found and ignored. Reloading the world with newer Minecraft may fix this.</string>
+    <string name="picer_progress_analyzing">Analyzing</string>
+    <string name="picer_progress_generating">Generating</string>
+    <string name="picer_preview">Preview:</string>
+    <string name="picer_save">Save</string>
+    <string name="picer_save_text">Picture will be saved to your Download folder.</string>
+    <string name="picer_saved">Picture saved.</string>
+    <string name="general_share">Share</string>
+    <string name="picer_share_title">Share With</string>
+    <string name="picer_preview_generating">Generating preview...</string>
+    <string name="picer_scale_title">Select scale:</string>
+    <string name="picer_scale_approxim">Approximately %1$dx%2$d.</string>
+    <string name="picer_failed_too_large">Sorry but the area is too large.</string>
+    <string name="picer_warn_not_scalable">(Not scalable)</string>
+    <string name="picer_btn_generate">Generate</string>
 </resources>

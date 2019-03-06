@@ -5,11 +5,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.graphics.Bitmap;
 
 import com.mithrilmania.blocktopograph.Log;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 public class IoUtil {
 
@@ -90,11 +94,11 @@ public class IoUtil {
         }
         try {
             if (is != null) is.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         try {
             if (fos != null) fos.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return ret;
     }
@@ -124,7 +128,7 @@ public class IoUtil {
         } finally {
             try {
                 fos.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return res;
@@ -147,7 +151,7 @@ public class IoUtil {
         } finally {
             try {
                 fos.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return res;
@@ -263,5 +267,61 @@ public class IoUtil {
         int permission = ActivityCompat.checkSelfPermission(
                 context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return permission == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Save a bitmap to file using Android's compress methods.
+     *
+     * @param bmp        bitmap to save.
+     * @param format     format required by Android. Png, Jpeg and Webp supported.
+     * @param quality    Quality if using Jpeg.
+     * @param dir        Directory to save to, should be folder not ordinary file.
+     * @param baseName   Name of the file, without extension.
+     * @param autoRename Should file be automatically renamed to "xxx (1).jpg" things
+     *                   if a conflict happened.
+     * @return The file the bitmap was saved to, null if failed.
+     */
+    @Nullable
+    public static File saveBitmap(@NotNull Bitmap bmp, @NotNull Bitmap.CompressFormat format,
+                                  int quality, @NotNull File dir, @NotNull String baseName,
+                                  boolean autoRename) {
+        String extension;
+        if (!dir.exists()) {
+            if (autoRename) {
+                // If allowed to auto rename lets assume mkdir's also reasonable.
+                if (makeSureDirIsDir(dir) != Errno.OK) return null;
+            } else return null;
+        }
+        switch (format) {
+            case JPEG:
+                extension = ".jpg";
+                break;
+            case PNG:
+                extension = ".png";
+                break;
+            case WEBP:
+                extension = ".webp";
+                break;
+            default:
+                return null;
+        }
+        File saveTo = autoRename ?
+                getFileWithFirstAvailableName(dir, baseName, extension, "(", ")")
+                : new File(dir, baseName + extension);
+        if (saveTo == null) return null;
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(saveTo);
+            bmp.compress(format, quality, fos);
+            fos.close();
+            return saveTo;
+        } catch (Exception e) {
+            Log.d(IoUtil.class, e);
+            if (fos != null) try {
+                fos.close();
+            } catch (Exception ignore) {
+            }
+            return null;
+        }
     }
 }

@@ -1,15 +1,12 @@
 package com.mithrilmania.blocktopograph.chunk;
 
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.SparseArray;
 
-import com.mithrilmania.blocktopograph.chunk.terrain.TerrainChunkData;
-import com.mithrilmania.blocktopograph.chunk.terrain.V0_9_TerrainChunkData;
-import com.mithrilmania.blocktopograph.chunk.terrain.V1_0_TerrainChunkData;
-import com.mithrilmania.blocktopograph.chunk.terrain.V1_1_TerrainChunkData;
-import com.mithrilmania.blocktopograph.chunk.terrain.V1_2_Plus_TerrainChunkData;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public enum Version {
 
@@ -68,28 +65,7 @@ public enum Version {
         }
     }
 
-    public TerrainChunkData createTerrainChunkData(Chunk chunk, byte subChunk) throws VersionException {
-        return null;
-//        switch (this) {
-//            case ERROR:
-//            case NULL:
-//                return null;
-//            case OLD_LIMITED:
-//                throw new VersionException("Handling terrain chunk data is NOT supported for this version!", this);
-//            case v0_9:
-//                return new V0_9_TerrainChunkData(chunk, subChunk);
-//            case V1_0:
-//                return new V1_0_TerrainChunkData(chunk, subChunk);
-//            case V1_1:
-//                //This was used as default and the author said:
-//                //use the latest version, like nothing will ever happen...
-//                return new V1_1_TerrainChunkData(chunk, subChunk);
-//            case V1_2_PLUS:
-//            default:
-//                return new V1_2_Plus_TerrainChunkData(chunk, subChunk);
-//        }
-    }
-
+    @Nullable
     public NBTChunkData createEntityChunkData(Chunk chunk) throws VersionException {
         switch (this) {
             case ERROR:
@@ -103,6 +79,7 @@ public enum Version {
         }
     }
 
+    @Nullable
     public NBTChunkData createBlockEntityChunkData(Chunk chunk) throws VersionException {
         switch (this) {
             case ERROR:
@@ -116,6 +93,8 @@ public enum Version {
         }
     }
 
+    @NotNull
+    @Contract(pure = true)
     @Override
     public String toString() {
         return "[MCPE version \"" + displayName + "\" (version-code: " + id + ")]";
@@ -123,7 +102,7 @@ public enum Version {
 
     public static class VersionException extends Exception {
 
-        VersionException(String msg, Version version) {
+        VersionException(String msg, @NotNull Version version) {
             super(msg + " " + version.toString());
         }
     }

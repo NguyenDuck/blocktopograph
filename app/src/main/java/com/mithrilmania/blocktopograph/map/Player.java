@@ -1,0 +1,57 @@
+package com.mithrilmania.blocktopograph.map;
+
+import android.content.Context;
+
+import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+public class Player {
+
+    public static final String LOCAL_PLAYER_NAME = "~local_player";
+
+    private final boolean isLocal;
+    private String dbName;
+    private DimensionVector3<Float> position;
+
+    private Player(boolean isLocal, String dbName) {
+        this.isLocal = isLocal;
+        this.dbName = dbName;
+    }
+
+    @NotNull
+    @Contract(" -> new")
+    public static Player localPlayer() {
+        return new Player(true, LOCAL_PLAYER_NAME);
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    public static Player networkPlayer(String dbName) {
+        return new Player(false, dbName);
+    }
+
+    public boolean isLocal() {
+        return isLocal;
+    }
+
+    public String getDbName() {
+        return dbName;
+    }
+
+    public DimensionVector3<Float> getPosition() {
+        return position;
+    }
+
+    public String getPositionDescription(Context context) {
+        return context.getString(R.string.player_position_desc,
+                Math.round(position.x), Math.round(position.y),
+                Math.round(position.z), context.getString(position.dimension.getName()));
+    }
+
+    public void setPosition(DimensionVector3<Float> position) {
+        this.position = position;
+    }
+}

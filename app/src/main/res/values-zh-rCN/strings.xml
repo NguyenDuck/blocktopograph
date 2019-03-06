@@ -94,7 +94,7 @@
     <string name="failed_to_read_x_from_db" formatted="false">
         不能从该世界的数据库中读取<xliff:g example="very_long_DB_key" id="some_db_key">%1$s</xliff:g>\"。
     </string>
-    <string name="no_multiplayer_data_found">无法找到联机玩家的数据</string>
+    <string name="no_multiplayer_data_found">未找到联机玩家的数据</string>
     <string name="select_player">选择玩家</string>
     <string name="open_nbt">打开NBT</string>
     <string name="failed_read_player_from_db_with_key_x">无法从数据库中打开玩家的记录。键：
@@ -214,7 +214,7 @@
     <string name="failed_to_retrieve_player_data">检索玩家数据失败</string>
     <string name="go_to_player">前往玩家位置</string>
     <string name="go_to_local_player">前往单机玩家位置</string>
-    <string name="go_to__other_player">前往其他玩家位置</string>
+    <string name="go_to_other_player">前往其他玩家位置</string>
     <string name="go_loud">前往！</string>
     <string name="go_to_coordinate">前往坐标</string>
     <string name="teleported_player_to_xyz_dimension">已传送玩家到：</string>
@@ -320,4 +320,9 @@
         -->"\n一款Minecraft的编辑和地图查看工具。"<!--
         -->"\n从Play商店/Github/贴吧/mineBBS获取，并创建你的自定义世界。"<!--
     --></string>
+    <string name="locator_page_player">玩家</string>
+    <string name="player_position_desc">在%4$s的(%1$d, %2$d, %3$d)</string>
+    <string name="gps_advanced_locator">高级查找...</string>
+    <string name="locator_page_marker">标记</string>
+    <string name="locator_page_coor">坐标</string>
 </resources>

@@ -1,10 +1,7 @@
 package com.mithrilmania.blocktopograph;
 
-import android.os.Bundle;
-
 import android.view.ViewGroup;
 
-import com.mithrilmania.blocktopograph.chunk.ChunkData;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
@@ -23,6 +20,8 @@ public interface WorldActivityInterface {
     MapType getMapType();
 
     boolean getShowGrid();
+
+    boolean getShowMarkers();
 
     void onFatalDBError(WorldData.WorldDBException worldDB);
 

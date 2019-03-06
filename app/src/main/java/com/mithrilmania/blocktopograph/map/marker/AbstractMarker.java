@@ -1,9 +1,10 @@
 package com.mithrilmania.blocktopograph.map.marker;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
@@ -27,25 +28,33 @@ public class AbstractMarker implements NamedBitmapProviderHandle {
         this.isCustom = isCustom;
     }
 
-    public int getChunkX(){
+    public String getPositionDescription(Context context) {
+        return context.getString(R.string.player_position_desc,
+                Math.round(x), Math.round(y),
+                Math.round(z), context.getString(dimension.getName()));
+    }
+
+    public int getChunkX() {
         return x >> 4;
     }
 
-    public int getChunkZ(){
+    public int getChunkZ() {
         return z >> 4;
     }
 
     public MarkerImageView view;
 
     public MarkerImageView getView(Context context) {
-        if(view != null) return view;
-        view = new MarkerImageView(context, this);
-        this.loadIcon(view);
+        if (view == null) {
+            view = new MarkerImageView(context, this);
+            this.loadIcon(view);
+        }
         return view;
     }
 
     /**
      * Loads the provided bitmap into the image view.
+     *
      * @param iconView The view to load the icon into.
      */
     public void loadIcon(ImageView iconView) {
@@ -70,10 +79,10 @@ public class AbstractMarker implements NamedBitmapProviderHandle {
         AbstractMarker that = (AbstractMarker) o;
 
         return x == that.x
-            && y == that.y
-            && z == that.z
-            && dimension == that.dimension
-            && (namedBitmapProvider != null
+                && y == that.y
+                && z == that.z
+                && dimension == that.dimension
+                && (namedBitmapProvider != null
                 ? namedBitmapProvider.equals(that.namedBitmapProvider)
                 : that.namedBitmapProvider == null);
 

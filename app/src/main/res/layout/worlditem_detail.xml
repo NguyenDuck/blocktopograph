@@ -210,7 +210,7 @@
         </LinearLayout>
 
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_open_world"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -220,7 +220,7 @@
 
 
         <!-- TODO developer mode button only outputs save-data as text file, no special interaction mode yet.
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_dev_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

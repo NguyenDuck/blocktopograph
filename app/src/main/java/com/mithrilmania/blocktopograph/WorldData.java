@@ -1,11 +1,14 @@
 package com.mithrilmania.blocktopograph;
 
 import android.annotation.SuppressLint;
+import androidx.annotation.Nullable;
+import android.util.LruCache;
 
+import com.litl.leveldb.DB;
+import com.litl.leveldb.Iterator;
+import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.map.Dimension;
-import com.litl.leveldb.Iterator;
-import com.litl.leveldb.DB;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -23,6 +26,7 @@ public class WorldData {
     public DB db;
 
     private WeakReference<World> world;
+    private LruCache<Key, Chunk> chunks = new ChunkCache(this, 256);
 
     public WorldData(World world) {
         this.world = new WeakReference<>(world);
@@ -151,9 +155,18 @@ public class WorldData {
         db.delete(getChunkDataKey(x, z, type, dimension, subChunk, asSubChunk));
     }
 
-    public String[] getPlayers() {
+    public Chunk getChunk(int cX, int cZ, Dimension dimension) {
+        Key key = new Key(cX, cZ, dimension);
+        return chunks.get(key);
+    }
+
+    public void resetCache() {
+        this.chunks.evictAll();
+    }
+
+    public String[] getNetworkPlayerNames() {
         List<String> players = getDBKeysStartingWith("player_");
-        return players.toArray(new String[players.size()]);
+        return players.toArray(new String[0]);
     }
 
     public List<String> getDBKeysStartingWith(String startWith) {
@@ -169,6 +182,49 @@ public class WorldData {
         it.close();
 
         return items;
+    }
+
+    private static class ChunkCache extends LruCache<Key, Chunk> {
+
+        private WeakReference<WorldData> worldData;
+
+        ChunkCache(WorldData worldData, int maxSize) {
+            super(maxSize);
+            this.worldData = new WeakReference<>(worldData);
+        }
+
+        @Nullable
+        @Override
+        protected Chunk create(Key key) {
+            WorldData worldData = this.worldData.get();
+            if (worldData == null) return null;
+            return Chunk.create(worldData, key.x, key.z, key.dim);
+        }
+    }
+
+    static class Key {
+
+        public int x, z;
+        Dimension dim;
+
+        Key(int x, int z, Dimension dim) {
+            this.x = x;
+            this.z = z;
+            this.dim = dim;
+        }
+
+        @Override
+        public int hashCode() {
+            return (x * 31 + z) * 31 + dim.id;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Key)) return false;
+            Key another = (Key) obj;
+            return ((x == another.x) && (z == another.z) && (dim != null)
+                    && (another.dim != null) && (dim.id == another.dim.id));
+        }
     }
 
     public static class WorldDataLoadException extends Exception {

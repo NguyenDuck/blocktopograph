@@ -1,17 +1,10 @@
 package com.mithrilmania.blocktopograph.util;
 
-import android.content.res.AssetManager;
-import android.support.annotation.NonNull;
-
-import com.mithrilmania.blocktopograph.Log;
+import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 
 public final class McUtil {
 

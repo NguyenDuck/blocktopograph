@@ -1,7 +1,7 @@
 package com.mithrilmania.blocktopograph.chunk;
 
 import android.graphics.Color;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainSubChunk;

@@ -1,7 +1,9 @@
 package com.mithrilmania.blocktopograph.util;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Convert utils
@@ -93,8 +95,27 @@ public class ConvertUtil {
         return ret;
     }
 
-    public static String getLegalFileName(String text) {
+    @NotNull
+    public static String getLegalFileName(@NotNull String text) {
         return text.replaceAll("[\\\\/:*?\"<>|.]", "_");
+    }
+
+    @Nullable
+    public static String guessPictureMimeFromExtension(@NotNull String extension, boolean inLower) {
+        // assert extension.length()>0;
+        if (extension.charAt(0) == '.') extension = extension.substring(1);
+        if (!inLower) extension = extension.toLowerCase();
+        String MIME_PNG = "image/png";
+        String MIME_JPG = "image/jpg";
+        switch (extension) {
+            case "png":
+                return MIME_PNG;
+            case "jpg":
+            case "jpeg":
+                return MIME_JPG;
+            default:
+                return null;
+        }
     }
 
 }

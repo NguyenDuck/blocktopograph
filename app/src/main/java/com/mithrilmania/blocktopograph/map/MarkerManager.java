@@ -3,7 +3,6 @@ package com.mithrilmania.blocktopograph.map;
 import android.util.LongSparseArray;
 
 import com.mithrilmania.blocktopograph.Log;
-import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 import com.mithrilmania.blocktopograph.map.marker.CustomNamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <include
+        android:id="@+id/left"
+        layout="@layout/include_selection_dragger" />
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/include_selection_dragger" />
+
+    <include
+        android:id="@+id/right"
+        layout="@layout/include_selection_dragger" />
+
+    <include
+        android:id="@+id/bottom"
+        layout="@layout/include_selection_dragger" />
+
+</merge>

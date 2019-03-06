@@ -1,11 +1,14 @@
 package com.mithrilmania.blocktopograph;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.SparseIntArray;
 
 import com.litl.leveldb.Iterator;
+import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.map.MarkerManager;
+import com.mithrilmania.blocktopograph.nbt.convert.DataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.LevelDataConverter;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
@@ -15,6 +18,7 @@ import com.mithrilmania.blocktopograph.nbt.tags.LongTag;
 import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.mithrilmania.blocktopograph.util.IoUtil;
+import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
 
 import java.io.File;
 import java.io.IOException;
@@ -183,6 +187,97 @@ public class World implements Serializable {
     public void writeLevel(CompoundTag level) throws IOException {
         LevelDataConverter.write(level, this.levelFile);
         this.level = level;
+    }
+
+    @NonNull
+    public DimensionVector3<Float> getMultiPlayerPos(String dbKey) throws Exception {
+        try {
+            WorldData wData = getWorldData();
+            wData.openDB();
+            byte[] data = wData.db.get(dbKey.getBytes(NBTConstants.CHARSET));
+            if (data == null) throw new Exception("no data!");
+            final CompoundTag player = (CompoundTag) DataConverter.read(data).get(0);
+
+            ListTag posVec = (ListTag) player.getChildTagByKey("Pos");
+            if (posVec == null || posVec.getValue() == null)
+                throw new Exception("No \"Pos\" specified");
+            if (posVec.getValue().size() != 3)
+                throw new Exception("\"Pos\" value is invalid. value: " + posVec.getValue().toString());
+
+            IntTag dimensionId = (IntTag) player.getChildTagByKey("DimensionId");
+            if (dimensionId == null || dimensionId.getValue() == null)
+                throw new Exception("No \"DimensionId\" specified");
+            Dimension dimension = Dimension.getDimension(dimensionId.getValue());
+            if (dimension == null) dimension = Dimension.OVERWORLD;
+
+            return new DimensionVector3<>(
+                    (float) posVec.getValue().get(0).getValue(),
+                    (float) posVec.getValue().get(1).getValue(),
+                    (float) posVec.getValue().get(2).getValue(),
+                    dimension);
+
+        } catch (Exception e) {
+            Log.d(this, e);
+            Exception e2 = new Exception("Could not find " + dbKey);
+            e2.setStackTrace(e.getStackTrace());
+            throw e2;
+        }
+    }
+
+    @NonNull
+    public DimensionVector3<Float> getPlayerPos() throws Exception {
+        try {
+            WorldData wData = getWorldData();
+            wData.openDB();
+            byte[] data = wData.db.get(World.SpecialDBEntryType.LOCAL_PLAYER.keyBytes);
+
+            final CompoundTag player = data != null
+                    ? (CompoundTag) DataConverter.read(data).get(0)
+                    : (CompoundTag) getLevel().getChildTagByKey("Player");
+
+            ListTag posVec = (ListTag) player.getChildTagByKey("Pos");
+            if (posVec == null || posVec.getValue() == null)
+                throw new Exception("No \"Pos\" specified");
+            if (posVec.getValue().size() != 3)
+                throw new Exception("\"Pos\" value is invalid. value: " + posVec.getValue().toString());
+
+            IntTag dimensionId = (IntTag) player.getChildTagByKey("DimensionId");
+            if (dimensionId == null || dimensionId.getValue() == null)
+                throw new Exception("No \"DimensionId\" specified");
+            Dimension dimension = Dimension.getDimension(dimensionId.getValue());
+            if (dimension == null) dimension = Dimension.OVERWORLD;
+
+            return new DimensionVector3<>(
+                    (float) posVec.getValue().get(0).getValue(),
+                    (float) posVec.getValue().get(1).getValue(),
+                    (float) posVec.getValue().get(2).getValue(),
+                    dimension);
+
+        } catch (Exception e) {
+            e = new Exception("Could not find player.");
+            e.setStackTrace(e.getStackTrace());
+            Log.d(this, e);
+            throw e;
+        }
+    }
+
+    public DimensionVector3<Integer> getSpawnPos() throws Exception {
+        try {
+            CompoundTag level = getLevel();
+            int spawnX = ((IntTag) level.getChildTagByKey("SpawnX")).getValue();
+            int spawnY = ((IntTag) level.getChildTagByKey("SpawnY")).getValue();
+            int spawnZ = ((IntTag) level.getChildTagByKey("SpawnZ")).getValue();
+            if (spawnY >= 256) try {
+                Chunk chunk = getWorldData().getChunk(spawnX >> 4, spawnZ >> 4, Dimension.OVERWORLD);
+                if (!chunk.isError())
+                    spawnY = chunk.getHeightMapValue(spawnX % 16, spawnZ % 16) + 1;
+            } catch (Exception ignored) {
+            }
+            return new DimensionVector3<>(spawnX, spawnY, spawnZ, Dimension.OVERWORLD);
+        } catch (Exception e) {
+            Log.d(this, e);
+            throw new Exception("Could not find spawn");
+        }
     }
 
     public MarkerManager getMarkerManager() {

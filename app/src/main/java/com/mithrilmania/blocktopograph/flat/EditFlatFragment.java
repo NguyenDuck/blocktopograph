@@ -2,19 +2,13 @@ package com.mithrilmania.blocktopograph.flat;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragLayersBinding;
@@ -30,6 +24,13 @@ import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public final class EditFlatFragment extends Fragment {
 
@@ -218,7 +219,7 @@ public final class EditFlatFragment extends Fragment {
         protected void onPreExecute() {
             Activity activity = thiz.get().getActivity();
             if (activity == null) return;
-            mWaitDialog = UiUtil.buildWaitDialog(activity);
+            mWaitDialog = UiUtil.buildProgressWaitDialog(activity, 0, null);
             mWaitDialog.show();
         }
 

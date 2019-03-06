@@ -1,11 +1,12 @@
 package com.mithrilmania.blocktopograph.map;
 
 import android.os.AsyncTask;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
-import com.mithrilmania.blocktopograph.chunk.ChunkManager;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
@@ -25,14 +26,13 @@ import java.util.List;
 public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
 
     private final WeakReference<WorldActivityInterface> worldProvider;
-    private final WeakReference<ChunkManager> chunkManager;
 
     private final int minChunkX, minChunkZ, maxChunkX, maxChunkZ;
     private final Dimension dimension;
 
 
-    public MarkerAsyncTask(WorldActivityInterface worldProvider, ChunkManager chunkManager,
-                           int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ, Dimension dimension) {
+    public MarkerAsyncTask(WorldActivityInterface worldProvider, int minChunkX, int minChunkZ,
+                           int maxChunkX, int maxChunkZ, Dimension dimension) {
         this.minChunkX = minChunkX;
         this.minChunkZ = minChunkZ;
         this.maxChunkX = maxChunkX;
@@ -40,7 +40,6 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
         this.dimension = dimension;
 
         this.worldProvider = new WeakReference<>(worldProvider);
-        this.chunkManager = new WeakReference<>(chunkManager);
     }
 
     @Override
@@ -60,7 +59,8 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
 
     private void loadEntityMarkers(int chunkX, int chunkZ) {
         try {
-            Chunk chunk = chunkManager.get().getChunk(chunkX, chunkZ, dimension);
+            Chunk chunk = worldProvider.get().getWorld().getWorldData()
+                    .getChunk(chunkX, chunkZ, dimension);
 
             NBTChunkData entityData = chunk.getEntity();
 
@@ -104,7 +104,8 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
 
     private void loadTileEntityMarkers(int chunkX, int chunkZ) {
         try {
-            Chunk chunk = chunkManager.get().getChunk(chunkX, chunkZ, dimension);
+            Chunk chunk = worldProvider.get().getWorld().getWorldData()
+                    .getChunk(chunkX, chunkZ, dimension);
 
             NBTChunkData tileEntityData = chunk.getBlockEntity();
 
@@ -135,7 +136,8 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
     }
 
     private void loadCustomMarkers(int chunkX, int chunkZ) {
-        Collection<AbstractMarker> chunk = worldProvider.get().getWorld().getMarkerManager()
+        WorldActivityInterface wai = worldProvider.get();
+        Collection<AbstractMarker> chunk = wai.getWorld().getMarkerManager()
                 .getMarkersOfChunk(chunkX, chunkZ);
         AbstractMarker[] markers = new AbstractMarker[chunk.size()];
         this.publishProgress(chunk.toArray(markers));
@@ -143,8 +145,27 @@ public class MarkerAsyncTask extends AsyncTask<Void, AbstractMarker, Void> {
 
     @Override
     protected void onProgressUpdate(AbstractMarker... values) {
+        WorldActivityInterface wai = worldProvider.get();
+
+        // Some of the marks may have been added to screen already, remove first.
+        // TODO: Why not just skipping them?
         for (AbstractMarker marker : values) {
-            worldProvider.get().addMarker(marker);
+            // 2019/2/27 fixing crash here.
+            // Fatal Exception: java.lang.IllegalStateException
+            // The specified child already has a parent.
+            // You must call removeView() on the child's parent first.
+            // com.qozix.tileview.markers.MarkerLayout.addMarker
+            // We found it caused by custom markers reusing issue.
+            // Entity and TileEntity marks are all newly created.
+            // So we're removing custom marks from parent if present.
+
+            if (marker.view != null) {
+                ViewParent par = marker.view.getParent();
+                if (par instanceof ViewGroup)
+                    ((ViewGroup) par).removeView(marker.view);
+            }
+
+            wai.addMarker(marker);
         }
     }
 

@@ -10,9 +10,8 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
+import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
-import com.mithrilmania.blocktopograph.chunk.ChunkManager;
-import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.renderer.MapType;
 import com.qozix.tileview.graphics.BitmapProvider;
 import com.qozix.tileview.tiles.Tile;
@@ -36,11 +35,8 @@ public class MCTileProvider implements BitmapProvider {
 
     public final WeakReference<WorldActivityInterface> worldProvider;
 
-    private WeakReference<ChunkManager> mChunkManager;
-
-    public MCTileProvider(WorldActivityInterface worldProvider, ChunkManager chunkManager) {
+    public MCTileProvider(WorldActivityInterface worldProvider) {
         this.worldProvider = new WeakReference<>(worldProvider);
-        mChunkManager = new WeakReference<>(chunkManager);
     }
 
     public static Bitmap drawText(String text, Bitmap b, int textColor, int bgColor) {
@@ -103,7 +99,9 @@ public class MCTileProvider implements BitmapProvider {
             int minChunkZ = (tile.getRow() - tilesInHalfWorldL) * invScale;
             int maxChunkX = minChunkX + invScale;
             int maxChunkZ = minChunkZ + invScale;
-            Dimension dimension = worldProvider.get().getDimension();
+
+            WorldActivityInterface worldProvider = this.worldProvider.get();
+            Dimension dimension = worldProvider.getDimension();
 
             MapType mapType = (MapType) tile.getDetailLevel().getLevelType();
             if (mapType == null) return null;
@@ -122,31 +120,31 @@ public class MCTileProvider implements BitmapProvider {
             int pixelsPerChunkW = pixelsPerBlockW * 16;
             int pixelsPerChunkL = pixelsPerBlockL * 16;
 
-            ChunkManager chunkManager = mChunkManager.get();
-
             Canvas canvas = new Canvas(bm);
             Paint paint = new Paint();
+
+            WorldData worldData = worldProvider.getWorld().getWorldData();
 
             for (z = minChunkZ, pY = 0; z < maxChunkZ; z++, pY += pixelsPerChunkL)
                 for (x = minChunkX, pX = 0; x < maxChunkX; x++, pX += pixelsPerChunkW) {
 
-                    Chunk chunk = chunkManager.getChunk(x, z, dimension);
+                    Chunk chunk = worldData.getChunk(x, z, dimension);
                     if (chunk.isError()) {
                         MapType.ERROR.renderer.renderToBitmap(chunk, canvas, dimension,
-                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
+                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, worldData);
                         continue;
                     }
                     MapType.CHESS.renderer.renderToBitmap(chunk, canvas, dimension,
-                            x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
+                            x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, worldData);
                     if (chunk.isVoid()) continue;
                     try {
                         mapType.renderer.renderToBitmap(chunk, canvas, dimension, x, z,
-                                pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
+                                pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, worldData);
 
                     } catch (Exception e) {
 
                         MapType.ERROR.renderer.renderToBitmap(chunk, canvas, dimension,
-                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, chunkManager);
+                                x, z, pX, pY, pixelsPerBlockW, pixelsPerBlockL, paint, worldData);
                         e.printStackTrace();
 
                     }
@@ -156,11 +154,12 @@ public class MCTileProvider implements BitmapProvider {
 
             //load all those markers with an async task, this task publishes its progress,
             // the UI thread picks it up and renders the markers
-            new MarkerAsyncTask(worldProvider.get(), mChunkManager.get(), minChunkX, minChunkZ, maxChunkX, maxChunkZ, dimension).execute();
+            if (worldProvider.getShowMarkers())
+                new MarkerAsyncTask(worldProvider, minChunkX, minChunkZ, maxChunkX, maxChunkZ, dimension).execute();
 
 
             //draw the grid
-            if (worldProvider.get().getShowGrid()) {
+            if (worldProvider.getShowGrid()) {
 
                 //draw tile-edges white
                 for (int i = 0; i < TILESIZE; i++) {

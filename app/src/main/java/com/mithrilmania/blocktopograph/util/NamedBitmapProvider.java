@@ -1,7 +1,7 @@
 package com.mithrilmania.blocktopograph.util;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public interface NamedBitmapProvider {
 

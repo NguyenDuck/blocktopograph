@@ -1,6 +1,6 @@
 package com.mithrilmania.blocktopograph.nbt;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mithrilmania.blocktopograph.nbt.tags.ByteTag;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;

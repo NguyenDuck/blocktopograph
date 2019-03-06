@@ -2,7 +2,7 @@ package com.mithrilmania.blocktopograph.map.marker;
 
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 
