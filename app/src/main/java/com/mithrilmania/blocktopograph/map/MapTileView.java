@@ -46,7 +46,8 @@ public class MapTileView extends TileView {
 
     public void updateSelection() {
         SelectionView selectionView;
-        if (mSelectionView != null && (selectionView = mSelectionView.get()) != null) {
+        if (mSelectionView != null && (selectionView = mSelectionView.get()) != null
+                && selectionView.hasSelection()) {
             //selectionView.invalidate();
             selectionView.requestLayout();
         }

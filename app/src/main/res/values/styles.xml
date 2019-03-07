@@ -13,6 +13,7 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="colorAccent">@android:color/white</item>
         <item name="colorControlNormal">#bbbbbb</item>
+        <item name="textColorAlertDialogListItem">@android:color/white</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">

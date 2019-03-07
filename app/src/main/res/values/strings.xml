@@ -374,7 +374,7 @@
     <string name="locator_page_coor">Coordinate</string>
     <string name="gps_picer">Get full picture\nof world</string>
     <string name="picer_title">Full Picture</string>
-    <string name="picer_dowhat">This would generate a picture of the world.</string>
+    <string name="picer_dowhat">This would generate a picture of the world, and crash.</string>
     <string name="picer_ask_wrong_chunks">There are corrupted or unsupported data, skip or cancel?</string>
     <string name="picer_ask_old_chunks">There\'re data from old Minecraft version in the world. You may want to cancel now, and open the world in newer Minecraft to have data automatically updated. You can also ignore these data.</string>
     <string name="general_ignore">Ignore</string>
@@ -398,4 +398,6 @@
     <string name="picer_failed_too_large">Sorry but the area is too large.</string>
     <string name="picer_warn_not_scalable">(Not scalable)</string>
     <string name="picer_btn_generate">Generate</string>
+    <string name="func_begin_selection">Begin selection</string>
+    <string name="func_cancel_selection">Cancel selection</string>
 </resources>

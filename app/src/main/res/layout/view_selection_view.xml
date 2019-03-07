@@ -17,4 +17,13 @@
         android:id="@+id/bottom"
         layout="@layout/include_selection_dragger" />
 
+    <ImageView
+        android:id="@+id/current_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_fab_transparent"
+        android:padding="32dp"
+        android:src="@drawable/ic_selection_extend"
+        android:visibility="gone" />
+
 </merge>
