@@ -1,9 +1,6 @@
 package com.mithrilmania.blocktopograph.chunk;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.chunk.Chunk;
-import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
-import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
 public final class VoidChunk extends Chunk {
@@ -44,6 +41,15 @@ public final class VoidChunk extends Chunk {
     }
 
     @Override
+    public int getBlockRuntimeId(int x, int y, int z, int layer) {
+        return 0;
+    }
+
+    @Override
+    public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId) {
+    }
+
+    @Override
     public int getBlockLightValue(int x, int y, int z) {
         return 0;
     }
@@ -61,5 +67,9 @@ public final class VoidChunk extends Chunk {
     @Override
     public int getCaveYUnderAt(int x, int z, int y) {
         return -1;
+    }
+
+    @Override
+    public void save() {
     }
 }

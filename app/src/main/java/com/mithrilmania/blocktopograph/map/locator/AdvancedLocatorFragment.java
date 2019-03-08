@@ -2,14 +2,7 @@ package com.mithrilmania.blocktopograph.map.locator;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +15,14 @@ import com.mithrilmania.blocktopograph.map.FloatPaneFragment;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public final class AdvancedLocatorFragment extends FloatPaneFragment {
 
@@ -47,7 +48,7 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
         });
         Activity act = getActivity();
         assert act != null;
-        int page = act.getPreferences(Context.MODE_PRIVATE).getInt(PREF_KEY_LOCATOR_PAGE, 0);
+        int page = act.getPreferences(Context.MODE_PRIVATE).getInt(PREF_KEY_LOCATOR_PAGE, 1);
         if (page >= 0 && page < LocatorPagerAdapter.PAGES_COUNT)
             binding.pager.setCurrentItem(page);
         binding.pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -122,11 +123,11 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
             AdvancedLocatorFragment owner = this.owner.get();
             if (owner == null) return null;
             switch (position) {
-                case 0:
-                    return owner.getString(R.string.locator_page_player);
                 case 1:
-                    return owner.getString(R.string.locator_page_marker);
+                    return owner.getString(R.string.locator_page_player);
                 case 2:
+                    return owner.getString(R.string.locator_page_marker);
+                case 0:
                     return owner.getString(R.string.locator_page_coor);
                 default:
                     return null;
@@ -139,11 +140,11 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
             AdvancedLocatorFragment owner = this.owner.get();
             if (owner == null) return null;
             switch (i) {
-                case 0:
-                    return getLocatorPlayersFragment(owner);
                 case 1:
-                    return getLocatorMarkersFragment(owner);
+                    return getLocatorPlayersFragment(owner);
                 case 2:
+                    return getLocatorMarkersFragment(owner);
+                case 0:
                     return getLocatorCoordFragment(owner);
                 default:
                     return null;

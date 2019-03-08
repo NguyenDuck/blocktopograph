@@ -149,6 +149,16 @@ public final class PocketChunk extends Chunk {
     }
 
     @Override
+    public int getBlockRuntimeId(int x, int y, int z, int layer) {
+        return getBlockRuntimeId(x, y, z);
+    }
+
+    @Override
+    public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId) {
+        //TODO implement setBlock for pocket chunk
+    }
+
+    @Override
     public int getBlockLightValue(int x, int y, int z) {
         if (x >= 16 || y >= 128 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
             return 0;
@@ -180,5 +190,10 @@ public final class PocketChunk extends Chunk {
             if (getBlockRuntimeId(x & 0xf, yy, z & 0xf) == 0) return yy;
         }
         return -1;
+    }
+
+    @Override
+    public void save() {
+        // TODO implement save for pocket chunk
     }
 }

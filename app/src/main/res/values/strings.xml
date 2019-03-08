@@ -400,4 +400,16 @@
     <string name="picer_btn_generate">Generate</string>
     <string name="func_begin_selection">Begin selection</string>
     <string name="func_cancel_selection">Cancel selection</string>
+    <string name="map_sel_panel_title">Selection Options</string>
+    <string name="map_sel_menu_sel">Selection</string>
+    <string name="map_sel_from_seg_1">From: [</string>
+    <string name="map_sel_from_seg_2">,</string>
+    <string name="map_sel_from_seg_3">]</string>
+    <string name="map_sel_to">To [ %1$d, %2$d ] (including from and to)</string>
+    <string name="map_sel_range_seg_1">Range</string>
+    <string name="map_sel_range_seg_2">x</string>
+    <string name="map_sel_menu_apply">Apply</string>
+    <string name="map_sel_error_size_one">Width and height shall be at least 1.</string>
+    <string name="map_sel_menu_op">Operations</string>
+    <string name="map_edit_func_lampshade">Lampshade all torches</string>
 </resources>

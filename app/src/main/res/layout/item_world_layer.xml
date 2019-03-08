@@ -51,7 +51,7 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
-                android:src="@drawable/ic_folder_open" />
+                app:srcCompat="@drawable/ic_folder_open" />
 
             <LinearLayout
                 android:id="@+id/name"
@@ -78,7 +78,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:alpha="0.5"
-                android:src="@drawable/ic_add_black" />
+                app:srcCompat="@drawable/ic_add_black" />
 
         </LinearLayout>
 

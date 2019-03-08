@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -216,7 +217,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_action_arrow_right" />
+            app:srcCompat="@drawable/ic_action_arrow_right" />
 
 
         <!-- TODO developer mode button only outputs save-data as text file, no special interaction mode yet.
@@ -225,7 +226,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:src="@drawable/ic_developer_mode"
+            app:srcCompat="@drawable/ic_developer_mode"
             android:layout_margin="@dimen/fab_margin"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/fab_open_world"

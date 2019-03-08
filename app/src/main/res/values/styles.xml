@@ -14,6 +14,11 @@
         <item name="colorAccent">@android:color/white</item>
         <item name="colorControlNormal">#bbbbbb</item>
         <item name="textColorAlertDialogListItem">@android:color/white</item>
+        <item name="editTextStyle">@style/AppTheme.Floating.EditTextStyle</item>
+    </style>
+
+    <style name="AppTheme.Floating.EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
@@ -29,6 +34,13 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.FullScreen" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

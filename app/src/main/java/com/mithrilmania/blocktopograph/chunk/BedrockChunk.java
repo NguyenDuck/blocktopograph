@@ -1,7 +1,6 @@
 package com.mithrilmania.blocktopograph.chunk;
 
 import android.graphics.Color;
-import androidx.annotation.Nullable;
 
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainSubChunk;
@@ -10,6 +9,8 @@ import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.util.Noise;
 
 import java.nio.ByteBuffer;
+
+import androidx.annotation.Nullable;
 
 public final class BedrockChunk extends Chunk {
 
@@ -138,6 +139,16 @@ public final class BedrockChunk extends Chunk {
     }
 
     @Override
+    public int getBlockRuntimeId(int x, int y, int z, int layer) {
+        return 0;
+    }
+
+    @Override
+    public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId) {
+        //
+    }
+
+    @Override
     public int getBlockLightValue(int x, int y, int z) {
         if (!mHasBlockLight || x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
             return 0;
@@ -183,5 +194,22 @@ public final class BedrockChunk extends Chunk {
             }
         }
         return -1;
+    }
+
+    @Override
+    public void save() throws WorldData.WorldDBException {
+        WorldData worldData = mWorldData.get();
+        if (worldData == null)
+            throw new RuntimeException("World data is null.");
+
+        // Save biome and hightmap.
+        worldData.writeChunkData(
+                mChunkX, mChunkZ, ChunkTag.DATA_2D, mDimension, (byte) 0, false, data2D.array());
+
+        // Save subChunks.
+        for (TerrainSubChunk subChunk : mTerrainSubChunks) {
+            if (subChunk == null) continue;
+            subChunk.save(worldData);
+        }
     }
 }

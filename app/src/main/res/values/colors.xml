@@ -11,4 +11,5 @@
 
     <color name="waterMark">#fff</color>
     <color name="waterMarkShadow">#212121</color>
+    <color name="color_float_grey">#cdcdcd</color>
 </resources>

@@ -50,7 +50,7 @@
 
                 <!--com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab_choose_worldfile"
-                    android:src="@drawable/ic_folder_open"
+                    app:srcCompat="@drawable/ic_folder_open"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
@@ -67,7 +67,7 @@
                     android:layout_marginRight="@dimen/fab_margin"
                     android:layout_marginBottom="40dp"
                     android:focusable="false"
-                    android:src="@drawable/ic_add" />
+                    app:srcCompat="@drawable/ic_add" />
 
 
             </LinearLayout>

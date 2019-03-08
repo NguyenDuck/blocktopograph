@@ -88,6 +88,10 @@ public abstract class Chunk {
 
     abstract public int getBlockRuntimeId(int x, int y, int z);
 
+    abstract public int getBlockRuntimeId(int x, int y, int z, int layer);
+
+    abstract public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId);
+
     abstract public int getBlockLightValue(int x, int y, int z);
 
     abstract public int getSkyLightValue(int x, int y, int z);
@@ -95,6 +99,8 @@ public abstract class Chunk {
     abstract public int getHighestBlockYUnderAt(int x, int z, int y);
 
     abstract public int getCaveYUnderAt(int x, int z, int y);
+
+    abstract public void save() throws WorldData.WorldDBException;
 
     public final NBTChunkData getEntity() {
         return mEntity;

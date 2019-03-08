@@ -1,11 +1,13 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.mithrilmania.blocktopograph.WorldData;
 
 import org.jetbrains.annotations.Contract;
 
 import java.nio.ByteBuffer;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public abstract class TerrainSubChunk {
 
@@ -25,11 +27,11 @@ public abstract class TerrainSubChunk {
             case 5:
             case 6:
             case 7:
-                subChunk = new PreAquaTerrainSubChunk(byteBuffer);
+                subChunk = new PreV1d2d13TerrainSubChunk(byteBuffer);
                 break;
             case 1:
             case 8:
-                subChunk = new AquaTerrainSubChunk(byteBuffer);
+                subChunk = new V1d2d13TerrainSubChunk(byteBuffer);
                 break;
             default:
                 subChunk = null;
@@ -39,9 +41,15 @@ public abstract class TerrainSubChunk {
 
     abstract public int getBlockRuntimeId(int x, int y, int z);
 
+    abstract public int getBlockRuntimeId(int x, int y, int z, int layer);
+
+    abstract public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId);
+
     abstract public int getBlockLightValue(int x, int y, int z);
 
     abstract public int getSkyLightValue(int x, int y, int z);
+
+    abstract public void save(WorldData worldData) throws WorldData.WorldDBException;
 
     @Contract(pure = true)
     public final boolean hasBlockLight() {

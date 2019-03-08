@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -11,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="#494E8E">
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -20,12 +21,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <com.mithrilmania.blocktopograph.map.SelectionView
+            <com.mithrilmania.blocktopograph.map.selection.SelectionView
                 android:id="@+id/selection_board"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </RelativeLayout>
+        </FrameLayout>
 
 
         <RelativeLayout
@@ -77,7 +78,7 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_gps_fixed"
+                    app:srcCompat="@drawable/ic_gps_fixed"
                     fab:fab_label="@string/go_to_coordinate" /-->
 
                 <com.github.clans.fab.FloatingActionButton
@@ -85,7 +86,7 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_home"
+                    app:srcCompat="@drawable/ic_action_home"
                     fab:fab_label="@string/go_to_spawn" />
 
                 <com.github.clans.fab.FloatingActionButton
@@ -93,15 +94,15 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_emoticon"
-                    fab:fab_label="@string/go_to_player" />
+                    fab:fab_label="@string/go_to_player"
+                    fab:srcCompat="@drawable/ic_emoticon" />
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/fab_menu_gps_others"
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_people_outline"
+                    app:srcCompat="@drawable/ic_people_outline"
                     fab:fab_label="@string/gps_advanced_locator" />
 
                 <com.github.clans.fab.FloatingActionButton
@@ -109,7 +110,7 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location"
+                    app:srcCompat="@drawable/ic_location"
                     fab:fab_label="@string/gps_picer" />
 
             </com.github.clans.fab.FloatingActionMenu>

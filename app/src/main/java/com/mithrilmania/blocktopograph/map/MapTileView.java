@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.mithrilmania.blocktopograph.map.selection.SelectionView;
 import com.qozix.tileview.TileView;
 
 import java.lang.ref.WeakReference;
