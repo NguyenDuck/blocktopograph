@@ -11,8 +11,8 @@ Pull requests will still be processed in time during the pause unless Meow Cat d
 ## Download
 [>>> Download on Google Play <<<](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)  
 And release page of the repository provides debug version of the app.  
-<img src="arts/scr02.jpg" alt="screenshot" width="320"/>
-<img src="arts/scr03.jpg" alt="screenshot" width="320"/>
+<img src="arts/scr02.png" alt="screenshot" width="320"/>
+<img src="arts/scr03.png" alt="screenshot" width="320"/>
 
 ## Help!
 Would you like to together update block and entity list?  
