@@ -1,7 +1,6 @@
 package com.mithrilmania.blocktopograph;
 
 import android.annotation.SuppressLint;
-import androidx.annotation.Nullable;
 import android.util.LruCache;
 
 import com.litl.leveldb.DB;
@@ -14,6 +13,8 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * Wrapper around level.dat world spec en levelDB database.
@@ -160,6 +161,12 @@ public class WorldData {
         return chunks.get(key);
     }
 
+    // Avoid using cache for stream like operations.
+    // Caller shall lock cache before operation and invalidate cache afterwards.
+    public Chunk getChunkStreaming(int cx, int cz, Dimension dimension) {
+        return Chunk.create(this, cx, cz, dimension);
+    }
+
     public void resetCache() {
         this.chunks.evictAll();
     }
@@ -191,6 +198,15 @@ public class WorldData {
         ChunkCache(WorldData worldData, int maxSize) {
             super(maxSize);
             this.worldData = new WeakReference<>(worldData);
+        }
+
+        @Override
+        protected void entryRemoved(boolean evicted, Key key, Chunk oldValue, Chunk newValue) {
+            try {
+                oldValue.save();
+            } catch (Exception e) {
+                Log.d(this, e);
+            }
         }
 
         @Nullable

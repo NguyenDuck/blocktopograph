@@ -189,6 +189,20 @@ public class MapFragment extends Fragment {
      */
     @UiThread
     private void moveCameraToPlayer(View view) {
+//        if (Math.random() < 2) {
+//            try {
+//                Chunk chunk = world.getWorldData().getChunk(0, 0, Dimension.OVERWORLD);
+//                //byte[] arr = world.getWorldData().getChunkData(0, 0, ChunkTag.TERRAIN, Dimension.OVERWORLD, (byte) 0, true);
+//                //V1d2d13TerrainSubChunk subChunk = new V1d2d13TerrainSubChunk(ByteBuffer.wrap(arr));
+//                for (int z = 0; z < 16; z++)
+//                    chunk.setBlockRuntimeId(0, 6, z, 0, Block.B_5_0_PLANKS_OAK.getRuntimeId());
+//                chunk.save();//world.getWorldData(), 0, 0, Dimension.OVERWORLD, 1);
+//                Log.d(this, "ok");
+//            } catch (Exception e) {
+//                Log.d(this, e);
+//            }
+//            return;
+//        }
         try {
 
             Activity activity = getActivity();
@@ -655,7 +669,7 @@ public class MapFragment extends Fragment {
     private void doSelectionBasedEdit(@NotNull EditFunction func) {
         WorldActivityInterface worldActivityInterface = worldProvider.get();
         if (worldActivityInterface == null) return;
-        new SelectionBasedContextFreeEditTask(func).execute(
+        new SelectionBasedContextFreeEditTask(func, this).execute(
                 new RectEditTarget(
                         world.getWorldData(),
                         mBinding.selectionBoard.getSelection(),

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
@@ -51,6 +52,8 @@ public class SelectionBasedContextFreeEditTask extends
     }
 
     private int randomEdit(Chunk chunk, int x, int y, int z) {
+        if ((chunk.getBlockRuntimeId(x, y, z) & 0xffff00) == (Block.B_50_0_TORCH.getRuntimeId() & 0xffff00))
+            chunk.setBlockRuntimeId(x, y, z, 1, Block.B_20_0_GLASS.getRuntimeId());
         return 0;
     }
 

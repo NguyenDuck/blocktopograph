@@ -1,6 +1,7 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.map.Dimension;
 
 import java.nio.ByteBuffer;
 
@@ -28,18 +29,13 @@ public final class PreV1d2d13TerrainSubChunk extends TerrainSubChunk {
     }
 
     @Override
-    public int getBlockRuntimeId(int x, int y, int z) {
+    public int getBlockRuntimeId(int x, int y, int z, int layer) {
         if (mIsError) return 0;
         int offset = getOffset(x, y, z);
         int id = mData.get(POS_BLOCK_IDS + offset) & 0xff;
         int data = mData.get(POS_META_DATA + (offset >>> 1));
         data = (offset & 1) == 1 ? ((data >>> 4) & 0xf) : (data & 0xf);
         return (id << 8) | data;
-    }
-
-    @Override
-    public int getBlockRuntimeId(int x, int y, int z, int layer) {
-        return getBlockRuntimeId(x, y, z);
     }
 
     @Override
@@ -64,7 +60,7 @@ public final class PreV1d2d13TerrainSubChunk extends TerrainSubChunk {
     }
 
     @Override
-    public void save(WorldData worldData) {
+    public void save(WorldData worldData, int chunkX, int chunkZ, Dimension dimension, int which) {
         // TODO implement save for pre v1.2.13 subChunk.
     }
 }

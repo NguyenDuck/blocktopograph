@@ -1,9 +1,11 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.map.Dimension;
 
 import org.jetbrains.annotations.Contract;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import androidx.annotation.NonNull;
@@ -39,8 +41,6 @@ public abstract class TerrainSubChunk {
         return subChunk;
     }
 
-    abstract public int getBlockRuntimeId(int x, int y, int z);
-
     abstract public int getBlockRuntimeId(int x, int y, int z, int layer);
 
     abstract public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId);
@@ -49,7 +49,9 @@ public abstract class TerrainSubChunk {
 
     abstract public int getSkyLightValue(int x, int y, int z);
 
-    abstract public void save(WorldData worldData) throws WorldData.WorldDBException;
+    protected static final int getOffset(int x, int y, int z) {
+        return (((x << 4) | z) << 4) | y;
+    }
 
     @Contract(pure = true)
     public final boolean hasBlockLight() {
@@ -61,8 +63,6 @@ public abstract class TerrainSubChunk {
         return mIsError;
     }
 
-    final int getOffset(int x, int y, int z) {
-        return (((x << 4) | z) << 4) | y;
-    }
+    abstract public void save(WorldData worldData, int chunkX, int chunkZ, Dimension dimension, int which) throws WorldData.WorldDBException, IOException;
 
 }

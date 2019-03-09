@@ -3,19 +3,20 @@ package com.mithrilmania.blocktopograph.map;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.SparseArray;
 
 import com.mithrilmania.blocktopograph.Log;
+import com.mithrilmania.blocktopograph.util.Color;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
-import com.mithrilmania.blocktopograph.util.Color;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by mithrilmania
@@ -673,6 +674,10 @@ public enum Block implements NamedBitmapProviderHandle, NamedBitmapProvider {
         Integer i = nameService.get(identifier);
         if (i == null) return 0;
         return i;
+    }
+
+    public int getRuntimeId() {
+        return (id << 8) | subId;
     }
 
     @Override

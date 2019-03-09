@@ -8,6 +8,7 @@ import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.util.Noise;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import androidx.annotation.Nullable;
@@ -19,8 +20,10 @@ public final class BedrockChunk extends Chunk {
     public static final int DATA2D_LENGTH = 0x300;
 
     private boolean mHasBlockLight;
+    private final boolean[] mDirtyList;
     private final boolean[] mVoidList;
     private final boolean[] mErrorList;
+    private boolean mIs2dDirty;
     private final TerrainSubChunk[] mTerrainSubChunks;
     private volatile ByteBuffer data2D;
 
@@ -28,9 +31,11 @@ public final class BedrockChunk extends Chunk {
         super(worldData, version, chunkX, chunkZ, dimension);
         mVoidList = new boolean[16];
         mErrorList = new boolean[16];
+        mDirtyList = new boolean[16];
         mTerrainSubChunks = new TerrainSubChunk[16];
         load2dData();
         mHasBlockLight = true;
+        mIs2dDirty = false;
     }
 
     private void load2dData() {
@@ -90,6 +95,11 @@ public final class BedrockChunk extends Chunk {
     }
 
     @Override
+    public boolean supportsHeightMap() {
+        return true;
+    }
+
+    @Override
     public int getHeightLimit() {
         return 256;
     }
@@ -98,6 +108,10 @@ public final class BedrockChunk extends Chunk {
     public int getHeightMapValue(int x, int z) {
         short h = data2D.getShort(POS_HEIGHTMAP + (get2dOffset(x, z) << 1));
         return ((h & 0xff) << 8) | ((h >> 8) & 0xff);
+    }
+
+    private void setHeightMapValue(int x, int z, short height) {
+        data2D.putShort(POS_HEIGHTMAP + (get2dOffset(x, z) << 1), Short.reverseBytes(height));
     }
 
     @Override
@@ -131,21 +145,44 @@ public final class BedrockChunk extends Chunk {
 
     @Override
     public int getBlockRuntimeId(int x, int y, int z) {
-        if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
-            return 0;
-        TerrainSubChunk subChunk = getSubChunk(y >> 4);
-        if (subChunk == null) return 0;
-        return subChunk.getBlockRuntimeId(x, y & 0xf, z);
+        return getBlockRuntimeId(x, y, z, 0);
     }
 
     @Override
     public int getBlockRuntimeId(int x, int y, int z, int layer) {
-        return 0;
+        if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
+            return 0;
+        TerrainSubChunk subChunk = getSubChunk(y >> 4);
+        if (subChunk == null) return 0;
+        return subChunk.getBlockRuntimeId(x, y & 0xf, z, layer);
     }
 
     @Override
     public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId) {
-        //
+        if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
+            return;
+        int which = y >> 4;
+        TerrainSubChunk subChunk = getSubChunk(which);
+        if (subChunk == null) return;
+        subChunk.setBlockRuntimeId(x, y & 0xf, z, layer, runtimeId);
+        mDirtyList[which] = true;
+
+        // Height increased.
+        if (runtimeId != 0 && getHeightMapValue(x, z) < y) {
+            mIs2dDirty = true;
+            setHeightMapValue(x, z, (short) (y + 1));
+            // Roof removed.
+        } else if (runtimeId == 0 && getHeightMapValue(x, z) == y) {
+            mIs2dDirty = true;
+            int height = 0;
+            for (int h = y - 1; h >= 0; h--) {
+                if (getBlockRuntimeId(x, h, z) != 0) {
+                    height = h + 1;
+                    break;
+                }
+            }
+            setHeightMapValue(x, z, (short) height);
+        }
     }
 
     @Override
@@ -175,7 +212,7 @@ public final class BedrockChunk extends Chunk {
             subChunk = getSubChunk(which);
             if (subChunk == null) continue;
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
-                if (subChunk.getBlockRuntimeId(x, innerY, z) != 0) return (which << 4) | innerY;
+                if (subChunk.getBlockRuntimeId(x, innerY, z, 0) != 0) return (which << 4) | innerY;
             }
         }
         return -1;
@@ -190,26 +227,29 @@ public final class BedrockChunk extends Chunk {
             subChunk = getSubChunk(which);
             if (subChunk == null) continue;
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
-                if (subChunk.getBlockRuntimeId(x, innerY, z) == 0) return (which << 4) | innerY;
+                if (subChunk.getBlockRuntimeId(x, innerY, z, 0) == 0) return (which << 4) | innerY;
             }
         }
         return -1;
     }
 
     @Override
-    public void save() throws WorldData.WorldDBException {
+    public void save() throws WorldData.WorldDBException, IOException {
         WorldData worldData = mWorldData.get();
         if (worldData == null)
             throw new RuntimeException("World data is null.");
 
         // Save biome and hightmap.
-        worldData.writeChunkData(
-                mChunkX, mChunkZ, ChunkTag.DATA_2D, mDimension, (byte) 0, false, data2D.array());
+        if (mIs2dDirty)
+            worldData.writeChunkData(
+                    mChunkX, mChunkZ, ChunkTag.DATA_2D, mDimension, (byte) 0, false, data2D.array());
 
         // Save subChunks.
-        for (TerrainSubChunk subChunk : mTerrainSubChunks) {
-            if (subChunk == null) continue;
-            subChunk.save(worldData);
+        for (int i = 0, mTerrainSubChunksLength = mTerrainSubChunks.length; i < mTerrainSubChunksLength; i++) {
+            TerrainSubChunk subChunk = mTerrainSubChunks[i];
+            if (subChunk == null || mVoidList[i] || !mDirtyList[i]) continue;
+            //Log.d(this,"Saving "+i);
+            subChunk.save(worldData, mChunkX, mChunkZ, mDimension, i);
         }
     }
 }

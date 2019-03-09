@@ -110,6 +110,11 @@ public final class PocketChunk extends Chunk {
     }
 
     @Override
+    public boolean supportsHeightMap() {
+        return false;
+    }
+
+    @Override
     public int getHeightLimit() {
         return 128;
     }

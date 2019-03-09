@@ -1,8 +1,13 @@
 package com.mithrilmania.blocktopograph.chunk;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 public abstract class Chunk {
@@ -29,17 +34,17 @@ public abstract class Chunk {
             mEntity = version.createEntityChunkData(this);
             mTileEntity = version.createBlockEntityChunkData(this);
         } catch (Version.VersionException e) {
-            e.printStackTrace();
+            Log.d(this, e);
         }
     }
 
-    public static Chunk create(WorldData worldData, int chunkX, int chunkZ, Dimension dimension) {
+    public static Chunk create(@NotNull WorldData worldData, int chunkX, int chunkZ, Dimension dimension) {
         Version version;
         try {
             byte[] data = worldData.getChunkData(chunkX, chunkZ, ChunkTag.VERSION, dimension, (byte) 0, false);
             version = Version.getVersion(data);
         } catch (WorldData.WorldDBLoadException | WorldData.WorldDBException e) {
-            e.printStackTrace();
+            Log.d(Chunk.class, e);
             version = Version.ERROR;
         }
         Chunk chunk;
@@ -68,15 +73,19 @@ public abstract class Chunk {
         return mWorldData.get();
     }
 
+    @Contract(pure = true)
     public final boolean isVoid() {
         return mIsVoid;
     }
 
+    @Contract(pure = true)
     public final boolean isError() {
         return mIsError;
     }
 
     abstract public boolean supportsBlockLightValues();
+
+    abstract public boolean supportsHeightMap();
 
     abstract public int getHeightLimit();
 
@@ -100,12 +109,14 @@ public abstract class Chunk {
 
     abstract public int getCaveYUnderAt(int x, int z, int y);
 
-    abstract public void save() throws WorldData.WorldDBException;
+    abstract public void save() throws WorldData.WorldDBException, IOException;
 
+    @Contract(pure = true)
     public final NBTChunkData getEntity() {
         return mEntity;
     }
 
+    @Contract(pure = true)
     public final NBTChunkData getBlockEntity() {
         return mTileEntity;
     }

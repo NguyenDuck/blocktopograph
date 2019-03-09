@@ -16,6 +16,11 @@ public final class VoidChunk extends Chunk {
     }
 
     @Override
+    public boolean supportsHeightMap() {
+        return false;
+    }
+
+    @Override
     public int getHeightLimit() {
         return 0;
     }
