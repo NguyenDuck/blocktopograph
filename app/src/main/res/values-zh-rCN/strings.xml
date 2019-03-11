@@ -271,8 +271,7 @@
         因此，所有外部工具不能接入这些世界。
         您需要设置Minecraft使用“外部”的存储方式，方法是：\n\n
         Minecraft→设置→档案→文件存储位置，将选项又“应用程序”改为“外部”。\n\n
-        然后，新创建的世界将能被Blocktopograph接入，虽然已经存在的世界可能无法再打开。
-        若想移动那些世界到外部可能需要提取设备的root权限，恕不能提供帮助。
+        然后，新创建的世界将能被Blocktopograph接入。您可以上网查询如何将之前的存档移动到外部。
     </string>
     <string name="create_world_title">创建平坦世界</string>
     <string name="create_world_name">名字：</string>
@@ -353,4 +352,33 @@
     <string name="picer_btn_generate">没用</string>
     <string name="func_begin_selection">开始框选</string>
     <string name="func_cancel_selection">取消选区</string>
+    <string name="map_sel_panel_title">选区选项</string>
+    <string name="map_sel_menu_sel">选区调整</string>
+    <string name="map_sel_from_seg_1">从 [</string>
+    <string name="map_sel_from_seg_2">，</string>
+    <string name="map_sel_from_seg_3">]</string>
+    <string name="map_sel_to">到[ %1$d, %2$d ]（含起点、终点）</string>
+    <string name="map_sel_range_seg_1">范围</string>
+    <string name="map_sel_range_seg_2">x</string>
+    <string name="map_sel_menu_apply">好的</string>
+    <string name="map_sel_error_size_one">宽度和高度至少该是1。</string>
+    <string name="map_sel_menu_op">操作</string>
+    <string name="map_edit_func_lampshade">为火把装灯罩</string>
+    <string name="map_edit_lampshade_note">这会给范围内的火把加上玻璃灯罩。适用于Minecraft基岩版1.4.x或更高版本的世界。建议您在Blocktopograph进行编辑前，备份您的世界。</string>
+    <string name="map_edit_snr_find_in">查找在</string>
+    <string name="map_edit_snr_bg">背景</string>
+    <string name="map_edit_snr_fg">前景</string>
+    <string name="map_edit_snr_or">任何</string>
+    <string name="map_edit_snr_both">全部</string>
+    <string name="map_edit_snr_find_for">查找方块</string>
+    <string name="map_edit_snr_fg_slot">前景层：</string>
+    <string name="map_edit_snr_bg_slot">背景层：</string>
+    <string name="map_edit_snr_place_in">然后放置在</string>
+    <string name="map_edit_snr_and_long">前景和背景</string>
+    <string name="map_edit_func_snr">查找&amp;替换</string>
+    <string name="map_edit_snr_ignore_subtype">忽略子类型</string>
+    <string name="map_edit_snr_help_background">简单的查找替换可以无视背景层。从Minecraft BE 1.4.x开始，背景层被用于存储与其他方块共存的水，不过其实可以放任何方块。作为高级地图作者，您可以利用这个特性。</string>
+    <string name="map_sel_warn_backup">使用前请先备份！</string>
+    <string name="create_world_biome_id">生物群系：</string>
+    <string name="create_world_biome_hint">数字ID，默认21（丛林）</string>
 </resources>

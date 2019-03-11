@@ -25,7 +25,10 @@
             android:id="@+id/edit_x"
             android:layout_width="0dp"
             android:layout_gravity="fill_horizontal"
-            android:inputType="numberSigned" />
+            android:imeOptions="actionNext"
+            android:inputType="numberSigned"
+            android:nextFocusDown="@id/edit_z"
+            android:nextFocusForward="@id/edit_z" />
 
         <TextView
             android:layout_margin="8dp"
@@ -36,6 +39,8 @@
             android:id="@+id/edit_z"
             android:layout_width="0dp"
             android:layout_gravity="fill_horizontal"
+            android:imeActionId="233"
+            android:imeOptions="actionGo"
             android:inputType="numberSigned" />
 
         <Button

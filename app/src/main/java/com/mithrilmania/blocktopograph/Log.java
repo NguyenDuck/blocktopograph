@@ -2,13 +2,14 @@ package com.mithrilmania.blocktopograph;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import androidx.annotation.NonNull;
 
 public class Log {
 
@@ -91,7 +92,10 @@ public class Log {
         GPS_LOCATE("gps_player"),
         MAINACT_MENU_OPEN("mainact_menu"),
         CREATE_WORLD_OPEN("create_world_open"),
-        CREATE_WORLD_SAVE("create_world_save");
+        CREATE_WORLD_SAVE("create_world_save"),
+        SELECTION("selection_begin"),
+        SNR_OPEN("snr_open"),
+        SNR_EXEC("snr_exec");
 
         public final String eventID;
 

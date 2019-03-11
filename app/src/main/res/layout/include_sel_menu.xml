@@ -38,7 +38,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:imeOptions="actionNext"
                 android:inputType="numberSigned"
+                android:nextFocusForward="@id/from_y_text"
                 android:text="@{selection==null ? null : Integer.toString(selection.left)}" />
 
             <TextView
@@ -51,7 +53,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:imeOptions="actionNext"
                 android:inputType="numberSigned"
+                android:nextFocusForward="@id/range_w_text"
                 android:text="@{selection==null ? null : Integer.toString(selection.top)}" />
 
             <TextView
@@ -81,7 +85,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:imeOptions="actionNext"
                 android:inputType="number"
+                android:nextFocusForward="@id/range_h_text"
                 android:text="@{selection==null ? null : Integer.toString(selection.right - selection.left)}" />
 
             <TextView
@@ -94,6 +100,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:imeActionId="233"
+                android:imeOptions="actionGo"
                 android:inputType="number"
                 android:text="@{selection==null ? null : Integer.toString(selection.bottom - selection.top)}" />
 
@@ -120,6 +128,21 @@
             android:text="@string/map_edit_func_lampshade"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/func_snr"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/map_edit_func_snr"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_sel_warn_backup"
+            android:textColor="@color/color_float_grey" />
 
     </LinearLayout>
 

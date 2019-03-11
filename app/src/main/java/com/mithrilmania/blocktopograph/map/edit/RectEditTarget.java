@@ -24,6 +24,8 @@ public class RectEditTarget extends EditTarget {
     public RectEditTarget(@NotNull WorldData worldData, @NotNull Rect area, @NotNull Dimension dimension) {
         super(true, worldData);
         mArea = new Rect(area);
+        mArea.right--;
+        mArea.bottom--;
         yLowest = 0;
         yHighest = 255;
         this.dimension = dimension;

@@ -8,7 +8,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 15
-        versionName "1.8.5"
+        versionName "1.8.6"
         vectorDrawables.useSupportLibrary = true
     }
     dataBinding {
@@ -56,6 +56,7 @@ dependencies {
     //implementation 'com.github.MikeOrtiz:TouchImageView:2.1.1'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.github.florent37:expansionpanel:1.2.2'
+    implementation 'com.jbvincey:nestedradiobutton:1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

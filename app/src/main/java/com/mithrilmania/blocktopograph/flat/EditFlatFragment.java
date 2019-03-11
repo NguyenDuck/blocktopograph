@@ -102,9 +102,11 @@ public final class EditFlatFragment extends Fragment {
         void loadDefault() {
             Layer layer = new Layer(Block.B_7_0_BEDROCK, 1);
             addItem(0, layer);
-            layer = new Layer(Block.B_3_0_DIRT, 2);
+            layer = new Layer(Block.B_3_0_DIRT, 29);
             addItem(0, layer);
             layer = new Layer(Block.B_2_0_GRASS, 1);
+            addItem(0, layer);
+            layer = new Layer(Block.B_31_2_TALLGRASS_GRASS, 1);
             addItem(0, layer);
         }
 

@@ -315,8 +315,8 @@
         Settings-&gt;Profile-&gt;File Storage Location, and change the option from
         \"Application\" to \"External\".
         After that, newly created worlds would be accessible by Blocktopograph, while
-        existing worlds may not be opened. Moving those worlds to external may requires
-        root your device, and we\'re not available to help.
+        existing worlds may not be opened. You may want to google about
+        how to move previous worlds to external.
     </string>
     <string name="world_mark_neteas">[NetEase]</string>
     <string name="create_world_title">Create Flat World</string>
@@ -402,7 +402,7 @@
     <string name="func_cancel_selection">Cancel selection</string>
     <string name="map_sel_panel_title">Selection Options</string>
     <string name="map_sel_menu_sel">Selection</string>
-    <string name="map_sel_from_seg_1">From: [</string>
+    <string name="map_sel_from_seg_1">From [</string>
     <string name="map_sel_from_seg_2">,</string>
     <string name="map_sel_from_seg_3">]</string>
     <string name="map_sel_to">To [ %1$d, %2$d ] (including from and to)</string>
@@ -412,4 +412,21 @@
     <string name="map_sel_error_size_one">Width and height shall be at least 1.</string>
     <string name="map_sel_menu_op">Operations</string>
     <string name="map_edit_func_lampshade">Lampshade all torches</string>
+    <string name="map_edit_lampshade_note">This would add glass shades to torches in selected area. Worlds of Minecraft Bedrock 1.4.x or higher are supported. We advice you to back up your world before any modification in Blocktopograph.</string>
+    <string name="map_edit_snr_find_in">Find in</string>
+    <string name="map_edit_snr_bg">Background</string>
+    <string name="map_edit_snr_fg">Foreground</string>
+    <string name="map_edit_snr_or">Either</string>
+    <string name="map_edit_snr_both">Both</string>
+    <string name="map_edit_snr_find_for">Find for</string>
+    <string name="map_edit_snr_fg_slot">Foreground slot:</string>
+    <string name="map_edit_snr_bg_slot">Background slot:</string>
+    <string name="map_edit_snr_place_in">Then place in</string>
+    <string name="map_edit_snr_and_long">Foreground and background</string>
+    <string name="map_edit_func_snr">Find &amp; Replace</string>
+    <string name="map_edit_snr_ignore_subtype">Ignore sub-types</string>
+    <string name="map_edit_snr_help_background">Simple find and replace can be done ignoring background slot. Since Minecraft BE 1.4.x, background slots are used to store water coexisting with other blocks, however they can be used to place any block. For advanced map makers you can really make good use of the feature.</string>
+    <string name="map_sel_warn_backup">MAKE A BACKUP BEFORE PROCEED!</string>
+    <string name="create_world_biome_id">Biome:</string>
+    <string name="create_world_biome_hint">Numeric ID of biome, 21 by default</string>
 </resources>

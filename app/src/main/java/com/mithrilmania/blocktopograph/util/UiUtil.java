@@ -70,6 +70,17 @@ public final class UiUtil {
         }
     }
 
+    public static int readIntFromViewWithDefault(@NonNull EditText editText, int defaultVal) {
+        String string = editText.getText().toString();
+        if (string.trim().isEmpty()) return defaultVal;
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+
     public static AlertDialog buildProgressWaitDialog(
             @NotNull Context context, @StringRes int text,
             @Nullable DialogInterface.OnCancelListener onCancelListener) {

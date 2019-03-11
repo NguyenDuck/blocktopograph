@@ -134,11 +134,22 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
             }
         }
 
+        @NotNull
+        private Fragment getAnyPlaceHolderFragment() {
+            if (locatorPlayersFragment != null) return locatorPlayersFragment;
+            if (locatorMarkersFragment != null) return locatorMarkersFragment;
+            if (locatorCoordFragment != null) return locatorCoordFragment;
+            throw new RuntimeException();
+        }
+
         @Override
-        @Nullable
+        @NotNull
         public Fragment getItem(int i) {
             AdvancedLocatorFragment owner = this.owner.get();
-            if (owner == null) return null;
+            if (owner == null) {
+                // Try not trigger a crash.
+                return getAnyPlaceHolderFragment();
+            }
             switch (i) {
                 case 1:
                     return getLocatorPlayersFragment(owner);
@@ -147,7 +158,7 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
                 case 0:
                     return getLocatorCoordFragment(owner);
                 default:
-                    return null;
+                    return getAnyPlaceHolderFragment();
             }
         }
 

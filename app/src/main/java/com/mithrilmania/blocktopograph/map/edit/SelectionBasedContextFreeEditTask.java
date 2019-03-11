@@ -3,15 +3,18 @@ package com.mithrilmania.blocktopograph.map.edit;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.Toast;
 
 import com.mithrilmania.blocktopograph.R;
-import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 import androidx.appcompat.app.AlertDialog;
@@ -22,13 +25,17 @@ public class SelectionBasedContextFreeEditTask extends
     @NotNull
     private final EditFunction mFunction;
 
+    @Nullable
+    private Bundle mArgs;
+
     @NotNull
     private final WeakReference<MapFragment> mOwner;
     private AlertDialog mWaitDialog;
 
     public SelectionBasedContextFreeEditTask(
-            @NotNull EditFunction func, @NotNull MapFragment owner) {
+            @NotNull EditFunction func, @Nullable Bundle args, @NotNull MapFragment owner) {
         mFunction = func;
+        mArgs = args;
         mOwner = new WeakReference<>(owner);
     }
 
@@ -45,16 +52,34 @@ public class SelectionBasedContextFreeEditTask extends
 
     @Override
     protected EditResultCode doInBackground(EditTarget... editTargets) {
-        for (EditTarget editTarget : editTargets) {
-            editTarget.forEachXyzd(this::randomEdit);
+
+        switch (mFunction) {
+            case LAMPSHADE: {
+                SnrConfig cfg = new SnrConfig();
+                cfg.searchMode = 2;
+                cfg.placeMode = 1;
+                cfg.searchBlockMain = Block.B_50_0_TORCH;
+                cfg.placeBlockSub = Block.B_20_0_GLASS;
+                cfg.ignoreSubId = true;
+                return doSnr(cfg, editTargets);
+            }
+            case SNR: {
+                Serializable ser;
+                if (mArgs == null || !((ser = mArgs.getSerializable(SearchAndReplaceFragment.CONFIG)) instanceof SnrConfig))
+                    return EditResultCode.GENERAL_FAILURE;
+                return doSnr((SnrConfig) ser, editTargets);
+            }
         }
+
         return null;
     }
 
-    private int randomEdit(Chunk chunk, int x, int y, int z) {
-        if ((chunk.getBlockRuntimeId(x, y, z) & 0xffff00) == (Block.B_50_0_TORCH.getRuntimeId() & 0xffff00))
-            chunk.setBlockRuntimeId(x, y, z, 1, Block.B_20_0_GLASS.getRuntimeId());
-        return 0;
+    private EditResultCode doSnr(SnrConfig cfg, @NotNull EditTarget... editTargets) {
+        SnrEdit edit = new SnrEdit(cfg);
+        for (EditTarget editTarget : editTargets) {
+            editTarget.forEachXyzd(edit);
+        }
+        return EditResultCode.SUCCESS;
     }
 
     private void onCancel(DialogInterface dialogInterface) {
@@ -66,6 +91,18 @@ public class SelectionBasedContextFreeEditTask extends
     protected void onPostExecute(EditResultCode editResultCode) {
         if (mWaitDialog != null) {
             mWaitDialog.dismiss();
+        }
+        MapFragment owner = mOwner.get();
+        Activity activity;
+        if (owner != null && (activity = owner.getActivity()) != null) {
+            switch (editResultCode) {
+                case SUCCESS:
+                    Toast.makeText(activity, R.string.general_done, Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(activity, R.string.general_failed, Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     }
 }

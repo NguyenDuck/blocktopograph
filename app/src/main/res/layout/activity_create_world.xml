@@ -12,7 +12,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:fadeScrollbars="false">
 
             <RelativeLayout
                 android:id="@+id/help_frame_layers"
@@ -35,6 +36,19 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/create_world_default_name"
                         android:inputType="text"
+                        tools:ignore="Autofill" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_world_biome_id" />
+
+                    <EditText
+                        android:id="@+id/world_biome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_world_biome_hint"
+                        android:inputType="number"
                         tools:ignore="Autofill" />
 
                     <TextView

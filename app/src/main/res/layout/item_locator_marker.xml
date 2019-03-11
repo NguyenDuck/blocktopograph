@@ -38,12 +38,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{marker.getNamedBitmapProvider().getBitmapDisplayName()}" />
+                android:text="@{marker==null? null : marker.getNamedBitmapProvider().getBitmapDisplayName()}" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{marker.getPositionDescription(context)}" />
+                android:text="@{marker==null? null : marker.getPositionDescription(context)}" />
 
         </LinearLayout>
 

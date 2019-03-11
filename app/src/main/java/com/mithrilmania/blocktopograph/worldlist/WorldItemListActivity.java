@@ -9,15 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -30,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.BuildConfig;
 import com.mithrilmania.blocktopograph.CreateWorldActivity;
 import com.mithrilmania.blocktopograph.Log;
@@ -45,6 +38,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import io.fabric.sdk.android.Fabric;
 
 public class WorldItemListActivity extends AppCompatActivity {
@@ -442,6 +442,7 @@ public class WorldItemListActivity extends AppCompatActivity {
                 AlertDialog dia = new AlertDialog.Builder(WorldItemListActivity.this)
                         .setTitle(R.string.err_noworld_1)
                         .setView(R.layout.dialog_noworlds)
+                        .setPositiveButton(android.R.string.ok, null)
                         .create();
                 dia.show();
             }

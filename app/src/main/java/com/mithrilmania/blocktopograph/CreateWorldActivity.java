@@ -30,6 +30,7 @@ import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.mithrilmania.blocktopograph.util.ConvertUtil;
 import com.mithrilmania.blocktopograph.util.IoUtil;
 import com.mithrilmania.blocktopograph.util.McUtil;
+import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.tomergoldst.tooltips.ToolTip;
 import com.tomergoldst.tooltips.ToolTipsManager;
 
@@ -85,6 +86,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
         private boolean canProceed;
         private boolean mIsVanillaFlat;
         private String mName;
+        private int mBiome;
         private int mVersion;
         private List<Layer> layers;
 
@@ -108,6 +110,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
             canProceed = true;
             mName = activity.mBinding.worldName.getText().toString();
             mVersion = activity.mBinding.version.getCheckedRadioButtonId();
+            mBiome = UiUtil.readIntFromViewWithDefault(activity.mBinding.worldBiome, 21);
             Fragment fr = activity.getSupportFragmentManager().findFragmentById(R.id.frag_layers);
             assert fr instanceof EditFlatFragment;
             EditFlatFragment frag = (EditFlatFragment) fr;
@@ -136,6 +139,9 @@ public final class CreateWorldActivity extends AppCompatActivity {
             if (name.isEmpty() || name.trim().isEmpty()) {
                 name = activity.getString(R.string.create_world_default_name);
             }
+
+            // Get biome.
+            //
 
             // Get version.
             String verStr;
@@ -181,12 +187,13 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 tag = rootTag.getChildTagByKey(Keys.FLAT_WORLD_LAYERS);
                 assert tag instanceof StringTag;
                 int lsize = layers.size();
-                if (lsize != 3) mIsVanillaFlat = false;
+                if (lsize != 4) mIsVanillaFlat = false;
                 else {
                     Layer ltest = layers.get(0);
-                    mIsVanillaFlat = ltest.block == Block.B_2_0_GRASS && ltest.amount == 1
-                            && (ltest = layers.get(1)).block == Block.B_3_0_DIRT && ltest.amount == 2
-                            && (ltest = layers.get(2)).block == Block.B_7_0_BEDROCK && ltest.amount == 1;
+                    mIsVanillaFlat = ltest.block == Block.B_31_2_TALLGRASS_GRASS && ltest.amount == 1
+                            && (ltest = layers.get(1)).block == Block.B_2_0_GRASS && ltest.amount == 1
+                            && (ltest = layers.get(2)).block == Block.B_3_0_DIRT && ltest.amount == 29
+                            && (ltest = layers.get(3)).block == Block.B_7_0_BEDROCK && ltest.amount == 1;
                 }
                 Layer[] alayers = new Layer[lsize < 3 ? 3 : lsize];
                 for (int i = 0; i < lsize; i++) {
@@ -199,7 +206,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
                     air.amount = 0;
                     alayers[i] = air;
                 }
-                FlatLayers flatLayers = FlatLayers.createNew(1, alayers);
+                FlatLayers flatLayers = FlatLayers.createNew(mBiome, alayers);
                 stag = (StringTag) tag;
                 stag.setValue(flatLayers.write());
 

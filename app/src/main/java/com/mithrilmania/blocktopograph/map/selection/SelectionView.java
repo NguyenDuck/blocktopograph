@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.map.MCTileProvider;
 import com.mithrilmania.blocktopograph.map.MapTileView;
+import com.mithrilmania.blocktopograph.util.ConvertUtil;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import org.jetbrains.annotations.Contract;
@@ -29,6 +30,8 @@ import androidx.annotation.RequiresApi;
 
 public class SelectionView extends FrameLayout {
 
+    public static final int MIN_DIST_DRAGGERS = 50;
+    public static final int HALF_MIN_DIST_DRAGGERS = MIN_DIST_DRAGGERS / 2;
     /**
      * The view being dragged now.
      */
@@ -440,6 +443,45 @@ public class SelectionView extends FrameLayout {
 
     public void onSelectionChangedOutsides(Rect rect) {
         mSelectionRect.set(rect);
+        // If the selection's far away from current viewport,
+        // We want tho scroll the tileView to a nearest corner of the selection.
+        MapTileView tileView;
+        if (mTileView != null && (tileView = mTileView.get()) != null) {
+            float pxPerBlx = tileView.getScale() * MCTileProvider.TILESIZE / 16;
+            RectF r = new RectF();
+            r.left = (rect.left + MCTileProvider.HALF_WORLDSIZE) * pxPerBlx;
+            r.top = (rect.top + MCTileProvider.HALF_WORLDSIZE) * pxPerBlx;
+            r.right = (rect.right + MCTileProvider.HALF_WORLDSIZE) * pxPerBlx;
+            r.bottom = (rect.bottom + MCTileProvider.HALF_WORLDSIZE) * pxPerBlx;
+            int scrollX = tileView.getScrollX();
+            int scrollY = tileView.getScrollY();
+            int sw = getMeasuredWidth();
+            int sh = getMeasuredHeight();
+            RectF viewport = new RectF(scrollX, scrollY, scrollX + sw, scrollY + sh);
+            if (!viewport.intersect(r)) {
+                float hw = sw / 2.0f;
+                float currentX = scrollX + hw;
+                float hh = sh / 2.0f;
+                float currentY = scrollY + hh;
+                float dlt = ConvertUtil.distance(currentX, currentY, r.left, r.top);
+                float drt = ConvertUtil.distance(currentX, currentY, r.right, r.top);
+                float dlb = ConvertUtil.distance(currentX, currentY, r.left, r.bottom);
+                float drb = ConvertUtil.distance(currentX, currentY, r.right, r.bottom);
+                if (dlt < drt && dlt < dlb && dlt < drb) {
+                    tileView.setScrollX((int) (r.left - hw));
+                    tileView.setScrollY((int) (r.top - hh));
+                } else if (drt < dlb && drt < drb) {
+                    tileView.setScrollX((int) (r.right - hw));
+                    tileView.setScrollY((int) (r.top - hh));
+                } else if (dlb < drb) {
+                    tileView.setScrollX((int) (r.left - hw));
+                    tileView.setScrollY((int) (r.bottom - hh));
+                } else {
+                    tileView.setScrollX((int) (r.right - hw));
+                    tileView.setScrollY((int) (r.bottom - hh));
+                }
+            }
+        }
         requestLayout();
     }
 
@@ -521,6 +563,18 @@ public class SelectionView extends FrameLayout {
         int vertr = (int) mSelectionPixelRange.right;
         int horixi = (int) horix;
         int vertyi = (int) verty;
+
+        // Let's prevent draggers collapse together when the selection's small.
+
+        if (horib - horit <= MIN_DIST_DRAGGERS) {
+            horit -= HALF_MIN_DIST_DRAGGERS;
+            horib += HALF_MIN_DIST_DRAGGERS;
+        }
+
+        if (vertr - vertl <= MIN_DIST_DRAGGERS) {
+            vertl -= HALF_MIN_DIST_DRAGGERS;
+            vertr += HALF_MIN_DIST_DRAGGERS;
+        }
 
         // Left
         View view = getChildAt(0);

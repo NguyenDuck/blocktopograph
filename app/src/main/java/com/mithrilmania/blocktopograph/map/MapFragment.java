@@ -666,15 +666,23 @@ public class MapFragment extends Fragment {
         return newMarker;
     }
 
-    private void doSelectionBasedEdit(@NotNull EditFunction func) {
+    private void doSelectionBasedEdit(@NotNull EditFunction func, @Nullable Bundle args) {
         WorldActivityInterface worldActivityInterface = worldProvider.get();
         if (worldActivityInterface == null) return;
-        new SelectionBasedContextFreeEditTask(func, this).execute(
+        new SelectionBasedContextFreeEditTask(func, args, this).execute(
                 new RectEditTarget(
                         world.getWorldData(),
                         mBinding.selectionBoard.getSelection(),
                         worldActivityInterface.getDimension())
         );
+        FragmentActivity activity = getActivity();
+        if (activity != null)
+            switch (func) {
+                case LAMPSHADE:
+                case SNR:
+                    Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.SNR_OPEN);
+                    break;
+            }
     }
 
     /**
@@ -885,6 +893,9 @@ public class MapFragment extends Fragment {
                     .newInstance(mBinding.selectionBoard.getSelection(), this::doSelectionBasedEdit);
             openFloatPane(fragment);
             setUpSelectionMenu();
+            Activity activity = getActivity();
+            if (activity != null)
+                Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.SELECTION);
         }
     }
 

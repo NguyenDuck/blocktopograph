@@ -1,12 +1,7 @@
 package com.mithrilmania.blocktopograph.map.locator;
 
-import androidx.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +17,12 @@ import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public final class LocatorPlayersFragment extends LocatorPageFragment {
 
@@ -111,38 +112,34 @@ public final class LocatorPlayersFragment extends LocatorPageFragment {
 
         @Override
         protected Player[] doInBackground(World... worlds) {
-            assert worlds.length == 1;
-            World world = worlds[0];
+            World world;
+            if (worlds.length != 1 || (world = worlds[0]) == null) return null;
             WorldData worldData = world.getWorldData();
             try {
                 worldData.openDB();
-            } catch (WorldData.WorldDBException e) {
-                return null;
-            }
-            String[] mlst = worldData.getNetworkPlayerNames();
-            Player[] players = new Player[mlst.length + 1];
-            try {
+                String[] mlst = worldData.getNetworkPlayerNames();
+                Player[] players = new Player[mlst.length + 1];
                 players[0] = Player.localPlayer();
                 players[0].setPosition(world.getPlayerPos());
+                for (int i = 0; i < mlst.length; i++) {
+                    Player player = Player.networkPlayer(mlst[i]);
+                    try {
+                        player.setPosition(world.getMultiPlayerPos(mlst[i]));
+                    } catch (Exception ignore) {
+                    }
+                    players[i + 1] = player;
+                }
+                return players;
             } catch (Exception e) {
                 return null;
             }
-            for (int i = 0; i < mlst.length; i++) {
-                Player player = Player.networkPlayer(mlst[i]);
-                try {
-                    player.setPosition(world.getMultiPlayerPos(mlst[i]));
-                } catch (Exception ignore) {
-                }
-                players[i + 1] = player;
-            }
-            return players;
         }
 
         @Override
         protected void onPostExecute(Player[] players) {
             LocatorPlayersFragment owner = this.owner.get();
             if (owner == null) return;
-            if (players == null) {
+            if (players == null || players.length == 0) {
                 owner.mBinding.recycleView.setVisibility(View.GONE);
             } else {
                 owner.mBinding.recycleView.setLayoutManager(

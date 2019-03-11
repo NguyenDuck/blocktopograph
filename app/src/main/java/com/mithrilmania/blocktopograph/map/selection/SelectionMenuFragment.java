@@ -5,16 +5,19 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragSelMenuBinding;
 import com.mithrilmania.blocktopograph.map.FloatPaneFragment;
 import com.mithrilmania.blocktopograph.map.edit.EditFunction;
+import com.mithrilmania.blocktopograph.map.edit.SearchAndReplaceFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,10 +26,14 @@ import java.lang.ref.WeakReference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 public class SelectionMenuFragment extends FloatPaneFragment {
 
+    public static final String TAG_SNR = "Snr";
     @NotNull
     private final Rect mSelection = new Rect();
     private FragSelMenuBinding mBinding;
@@ -54,6 +61,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         mBinding.content.rangeHText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeHText));
         mBinding.content.applyButton.setOnClickListener(this::onApply);
         mBinding.content.funcLampshade.setOnClickListener(this::onChooseLampshade);
+        mBinding.content.funcSnr.setOnClickListener(this::onChooseSnr);
         return mBinding.getRoot();
     }
 
@@ -110,12 +118,30 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         }
     }
 
-    private void onChooseLampshade(View view) {
-        mEditFunctionEntry.invokeEditFunction(EditFunction.LAMPSHADE);
+    private void onChooseLampshade(@NotNull View view) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(view.getContext(), R.style.AppTheme))
+                .setView(R.layout.dialog_lampshade)
+                .setTitle(R.string.map_edit_func_lampshade)
+                .setPositiveButton(android.R.string.ok,
+                        (dialogInterface, i) -> mEditFunctionEntry.invokeEditFunction(EditFunction.LAMPSHADE, null))
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        dialog.show();
+        Log.logFirebaseEvent(view.getContext(), Log.CustomFirebaseEvent.SNR_OPEN);
+    }
+
+    private void onChooseSnr(View view) {
+        SearchAndReplaceFragment fragment = SearchAndReplaceFragment.newInstance(mEditFunctionEntry);
+        FragmentActivity activity = getActivity();
+        FragmentManager fragmentManager = null;
+        if (activity != null) fragmentManager = activity.getSupportFragmentManager();
+        if (fragmentManager == null) fragmentManager = getChildFragmentManager();
+        fragment.show(fragmentManager, TAG_SNR);
+        Log.logFirebaseEvent(view.getContext(), Log.CustomFirebaseEvent.SNR_OPEN);
     }
 
     public interface EditFunctionEntry {
-        void invokeEditFunction(EditFunction func);
+        void invokeEditFunction(@NotNull EditFunction func, @Nullable Bundle args);
     }
 
     private class MeowWatcher implements TextWatcher {

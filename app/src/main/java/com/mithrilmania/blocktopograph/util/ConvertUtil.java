@@ -118,4 +118,16 @@ public class ConvertUtil {
         }
     }
 
+    public static float distance(float x1, float y1, float x2, float y2) {
+        float d1 = x2 - x1;
+        float d2 = y2 - y1;
+        return (float) Math.sqrt(d1 * d1 + d2 * d2);
+    }
+
+    public static double distance(double x1, double y1, double x2, double y2) {
+        double d1 = x2 - x1;
+        double d2 = y2 - y1;
+        return Math.sqrt(d1 * d1 + d2 * d2);
+    }
+
 }
