@@ -115,17 +115,14 @@
     <string name="nbt_chunk_data">该区块的NBT</string>
     <string name="marker_info" formatted="false">
         <xliff:g example="My awesome marker" id="marker_displayname">%1$s</xliff:g>
-        ~ <xliff:g example="blue_marker" id="marker_dataname">%2$s</xliff:g>
-        (<xliff:g example="123.45" id="x_coordinate">%3$d</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%4$d</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%5$d</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%6$s</xliff:g>].
+        (<xliff:g example="123" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123" id="z_coordinate">%4$d</xliff:g>)
     </string>
     <string name="teleported_player_to_xyz_dim">
-        已传送玩家到(<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%2$.2f</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%3$.2f</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%4$s</xliff:g>]
+        已传送玩家到(<xliff:g example="123.4" id="x_coordinate">%1$.1f</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%3$.1f</xliff:g>)
     </string>
     <string name="failed_teleporting_player">传送玩家失败</string>
     <string name="failed_to_find_or_edit_local_player_data">找不到或者无法编辑本地玩家数据</string>
@@ -197,17 +194,15 @@
     <string name="player">玩家位置</string>
     <string name="spawn">出生点</string>
     <string name="something_at_xyz_dim_float" formatted="false">
-        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>在：
-        (<xliff:g example="123.45" id="x_coordinate">%2$.2f</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%3$.2f</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%4$.2f</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>
+        (<xliff:g example="123.4" id="x_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%3$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%4$.1f</xliff:g>)</string>
     <string name="something_at_xyz_dim_int" formatted="false">
-        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>在：
-        (<xliff:g example="123.45" id="x_coordinate">%2$d</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%3$d</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>
+        (<xliff:g example="123.4" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%4$d</xliff:g>).
     </string>
     <string name="no_map_available">没有有效的地图</string>
     <string name="searching_for_players">寻找玩家中……</string>
@@ -256,11 +251,10 @@
     <string name="gamemode_creative">创造</string>
     <string name="gamemode_adventure">冒险</string>
     <string name="postion_2D_floats_with_chunkpos">
-    位置：(<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
-    <xliff:g example="-123.987" id="z_coordinate">%2$.2f</xliff:g>)
-    区块：(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>;
+    (<xliff:g example="123.45" id="x_coordinate">%1$.1f</xliff:g>,
+    <xliff:g example="-123.987" id="z_coordinate">%2$.1f</xliff:g>)
+    区块(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
     <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
-    [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].
     </string>
     <string name="action_teleport">传送！</string>
     <string name="go_to_spawn">前往出生点</string>

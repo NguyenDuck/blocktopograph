@@ -1,6 +1,7 @@
 package com.mithrilmania.blocktopograph.map.edit;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import java.io.Serializable;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
@@ -101,7 +103,13 @@ public class SearchAndReplaceFragment extends DialogFragment {
         mBinding.ok.setOnClickListener(this::onClickOk);
         mBinding.help.setOnClickListener(this::onClickHelpMain);
         mToolTipsManager = new ToolTipsManager();
-        return mBinding.getRoot();
+        View root = mBinding.getRoot();
+        Dialog dialog = getDialog();
+        if (dialog instanceof AlertDialog) {
+            ((AlertDialog) dialog).setView(root);
+        }
+        mBinding.scroll.post(() -> mBinding.scroll.scrollTo(0, 0));
+        return root;
     }
 
     private void onClickHelpMain(@NotNull View view) {
@@ -257,8 +265,11 @@ public class SearchAndReplaceFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setTitle(R.string.map_edit_func_snr);
+        Context context = requireContext();
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                //.setView(onCreateView(LayoutInflater.from(context), null, savedInstanceState))
+                .setTitle(R.string.map_edit_func_snr)
+                .create();
         return dialog;
     }
 

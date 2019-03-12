@@ -30,8 +30,6 @@ import androidx.annotation.RequiresApi;
 
 public class SelectionView extends FrameLayout {
 
-    public static final int MIN_DIST_DRAGGERS = 50;
-    public static final int HALF_MIN_DIST_DRAGGERS = MIN_DIST_DRAGGERS / 2;
     /**
      * The view being dragged now.
      */
@@ -116,6 +114,19 @@ public class SelectionView extends FrameLayout {
     private float BUTTON_TO_BOUND_MIN_DIST;
 
     /**
+     * The minimal non-auto-scroll distance from touched point to screen boundary.
+     *
+     * <p>
+     * Once it's exceed the tileView would be scrolled automatically.
+     * </p>
+     */
+    private int MIN_DIST_TO_SCREEN_BOUND;
+
+    private int MIN_DIST_DRAGGERS;
+
+    private int HALF_MIN_DIST_DRAGGERS;
+
+    /**
      * Runnable used to frequently alter selection while user dragging a adjust button.
      */
     private final Runnable mHoldingMover = this::onMove;
@@ -160,6 +171,9 @@ public class SelectionView extends FrameLayout {
         mPaint.setColor(Color.argb(0x80, 0, 0, 0));
         setWillNotDraw(false);// Otherwise `onDraw` won't be called.
         BUTTON_TO_BOUND_MIN_DIST = UiUtil.dpToPx(context, 72);
+        MIN_DIST_TO_SCREEN_BOUND = UiUtil.dpToPxInt(context, 100);
+        MIN_DIST_DRAGGERS = UiUtil.dpToPxInt(context, 50);
+        HALF_MIN_DIST_DRAGGERS = MIN_DIST_DRAGGERS / 2;
 
         mDragger = null;
     }
@@ -385,15 +399,35 @@ public class SelectionView extends FrameLayout {
             if (mSelectionChangedListener != null)
                 mSelectionChangedListener.onSelectionChanged(mSelectionRect);
 
-            // Move the tileView as well.
+            // Should we move the underlying tileView as well?
+            // If touched point is near the moving direction (not the dragger position)
+            // then we scroll.
+
+            int sw = getMeasuredWidth();
+            int sh = getMeasuredHeight();
+            int minw = Math.max(MIN_DIST_TO_SCREEN_BOUND, sw / 8);
+            int minh = Math.max(MIN_DIST_TO_SCREEN_BOUND, sh / 8);
+
             switch (draggerId) {
                 case R.id.left:
                 case R.id.right:
-                    tileView.setScrollX((int) (tileView.getScrollX() + movement));
+                    // (Moving right and near right bound) or
+                    // (Moving left and near left bound)
+                    if (mDragDirection > 0 && sw - mDragCurrentPos < minw
+                            || (mDragDirection < 0 && mDragCurrentPos < minw)
+                    )
+                        tileView.setScrollX((int) (tileView.getScrollX() + movement));
+                    else
+                        requestLayout();
                     break;
                 case R.id.top:
                 case R.id.bottom:
-                    tileView.setScrollY((int) (tileView.getScrollY() + movement));
+                    if (mDragDirection > 0 && sh - mDragCurrentPos < minh
+                            || (mDragDirection < 0 && mDragCurrentPos < minh)
+                    )
+                        tileView.setScrollY((int) (tileView.getScrollY() + movement));
+                    else
+                        requestLayout();
                     break;
             }
         }

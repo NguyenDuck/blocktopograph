@@ -141,16 +141,13 @@
     <string name="nbt_chunk_data">NBT chunk data</string>
     <string name="marker_info" formatted="false">
         <xliff:g example="My awesome marker" id="marker_displayname">%1$s</xliff:g>
-        ~ <xliff:g example="blue_marker" id="marker_dataname">%2$s</xliff:g>
-        (<xliff:g example="123.45" id="x_coordinate">%3$d</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%4$d</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%5$d</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%6$s</xliff:g>].</string>
-    <string name="teleported_player_to_xyz_dim" formatted="false">Teleported the player to:
-        (<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%2$.2f</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%3$.2f</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%4$s</xliff:g>].</string>
+        (<xliff:g example="123" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123" id="z_coordinate">%4$d</xliff:g>)</string>
+    <string name="teleported_player_to_xyz_dim" formatted="false">Teleported the player to
+        (<xliff:g example="123.4" id="x_coordinate">%1$.1f</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%3$.1f</xliff:g>)</string>
     <string name="failed_teleporting_player">Failed to teleport player.</string>
     <string name="failed_to_find_or_edit_local_player_data">
         Failed to find/edit local player data.</string>
@@ -240,17 +237,15 @@
     <string name="player">Player</string>
     <string name="spawn">Spawn</string>
     <string name="something_at_xyz_dim_float" formatted="false">
-        <xliff:g example="Steve" id="something_name">%1$s</xliff:g> at:
-        (<xliff:g example="123.45" id="x_coordinate">%2$.2f</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%3$.2f</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%4$.2f</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>
+        (<xliff:g example="123.45" id="x_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="42.122333" id="y_coordinate">%3$.1f</xliff:g>,
+        <xliff:g example="-123.987" id="z_coordinate">%4$.1f</xliff:g>)</string>
     <string name="something_at_xyz_dim_int" formatted="false">
-        <xliff:g example="Steve" id="something_name">%1$s</xliff:g> at:
-        (<xliff:g example="123.45" id="x_coordinate">%2$d</xliff:g>;
-        <xliff:g example="42.122333" id="y_coordinate">%3$d</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g> at,
+        (<xliff:g example="123.45" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42.122333" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)</string>
     <string name="no_map_available">No map available.</string>
     <string name="searching_for_players">Searching for markers…</string>
     <string name="failed_to_retrieve_player_data">Failed to retrieve player data.</string>
@@ -300,11 +295,10 @@
     <string name="gamemode_creative">Creative</string>
     <string name="gamemode_adventure">Adventure</string>
     <string name="postion_2D_floats_with_chunkpos">
-        Pos: (<xliff:g example="123.45" id="x_coordinate">%1$.2f</xliff:g>;
-        <xliff:g example="-123.987" id="z_coordinate">%2$.2f</xliff:g>)
-        Chunk: (<xliff:g example="123" id="x_chunk">%3$d</xliff:g>;
-        <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
-        [<xliff:g example="Overworld" id="dimension">%5$s</xliff:g>].</string>
+        (<xliff:g example="123.4" id="x_coordinate">%1$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%2$.1f</xliff:g>)
+        Chunk(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
+        <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)</string>
     <string name="action_teleport">Teleport!</string>
     <string name="go_to_spawn">Go to spawn</string>
     <string name="err_noworld_1">No worlds found.</string>

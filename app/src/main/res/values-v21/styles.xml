@@ -1,4 +1,4 @@
-<resources>>
+<resources>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -6,4 +6,12 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
+
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:colorEdgeEffect">@color/colorPrimary</item>
+    </style>
+
 </resources>

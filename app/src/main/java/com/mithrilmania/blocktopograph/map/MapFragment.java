@@ -3,6 +3,7 @@ package com.mithrilmania.blocktopograph.map;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -212,7 +213,7 @@ public class MapFragment extends Fragment {
 
             Snackbar.make(mBinding.tileView,
                     getString(R.string.something_at_xyz_dim_float, getString(R.string.player),
-                            playerPos.x, playerPos.y, playerPos.z, playerPos.dimension.name),
+                            playerPos.x, playerPos.y, playerPos.z),
                     Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show();
 
@@ -251,7 +252,7 @@ public class MapFragment extends Fragment {
 
             Snackbar.make(mBinding.tileView,
                     getString(R.string.something_at_xyz_dim_int, getString(R.string.spawn),
-                            spawnPos.x, spawnPos.y, spawnPos.z, spawnPos.dimension.name),
+                            spawnPos.x, spawnPos.y, spawnPos.z),
                     Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show();
 
@@ -287,11 +288,28 @@ public class MapFragment extends Fragment {
                         .newInstance(mBinding.selectionBoard.getSelection(),
                                 this::doSelectionBasedEdit);
                 trans.add(R.id.float_window_container, fragment);
-                setUpSelectionMenu();
                 mFloatingFragment = fragment;
+                setUpSelectionMenu();
             } else mFloatingFragment = null;
 
             trans.commit();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mFloatingFragment != null) {
+            FloatPaneFragment fragment;
+            if (mFloatingFragment instanceof AdvancedLocatorFragment) {
+                fragment = AdvancedLocatorFragment.create(world, this::frameTo);
+            } else if (mFloatingFragment instanceof SelectionMenuFragment) {
+                fragment = SelectionMenuFragment
+                        .newInstance(mBinding.selectionBoard.getSelection(), this::doSelectionBasedEdit);
+            } else return;
+            closeFloatPane();
+            openFloatPane(fragment);
+            setUpSelectionMenu();
         }
     }
 
@@ -517,20 +535,14 @@ public class MapFragment extends Fragment {
         tileView.getMarkerLayout().setMarkerTapListener(new MarkerLayout.MarkerTapListener() {
             @Override
             public void onMarkerTap(View view, int tapX, int tapY) {
-                if (!(view instanceof MarkerImageView)) {
-                    Log.d(this, "Markertaplistener found a marker that is not a MarkerImageView! " + view.toString());
-                    return;
-                }
+                if (!(view instanceof MarkerImageView)) return;
 
                 final AbstractMarker marker = ((MarkerImageView) view).getMarkerHook();
-                if (marker == null) {
-                    Log.d(this, "abstract marker is null! " + view.toString());
-                    return;
-                }
+                if (marker == null) return;
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder
-                        .setTitle(String.format(getString(R.string.marker_info), marker.getNamedBitmapProvider().getBitmapDisplayName(), marker.getNamedBitmapProvider().getBitmapDataName(), marker.x, marker.y, marker.z, marker.dimension))
+                        .setTitle(String.format(getString(R.string.marker_info), marker.getNamedBitmapProvider().getBitmapDisplayName(), marker.x, marker.y, marker.z))
                         .setItems(getMarkerTapOptions(), new DialogInterface.OnClickListener() {
                             @SuppressWarnings("RedundantCast")
                             public void onClick(DialogInterface dialog, int which) {
@@ -848,7 +860,7 @@ public class MapFragment extends Fragment {
         }
 
         AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme_Floating))
-                .setTitle(getString(R.string.postion_2D_floats_with_chunkpos, worldX, worldZ, chunkXint, chunkZint, dim.name))
+                .setTitle(getString(R.string.postion_2D_floats_with_chunkpos, worldX, worldZ, chunkXint, chunkZint))
                 .setItems(getLongClickOptions(), (dialog, which) -> {
 
 
@@ -874,6 +886,8 @@ public class MapFragment extends Fragment {
                 .setCancelable(true)
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
+        alertDialog.getListView().post(() ->
+                alertDialog.getListView().smoothScrollToPositionFromTop(4, 40));
         Window window = alertDialog.getWindow();
         if (window != null) {
             window.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_dialog_transparent));
@@ -1069,7 +1083,7 @@ public class MapFragment extends Fragment {
                                     (int) newX, (int) newY, (int) newZ, dim);
 
                             Snackbar.make(container,
-                                    String.format(getString(R.string.teleported_player_to_xyz_dim), newX, newY, newZ, dim.name),
+                                    getString(R.string.teleported_player_to_xyz_dim, newX, newY, newZ),
                                     Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                         } else {
@@ -1430,8 +1444,7 @@ public class MapFragment extends Fragment {
                                                     playerKey,
                                                     playerPos.x,
                                                     playerPos.y,
-                                                    playerPos.z,
-                                                    playerPos.dimension.name),
+                                                    playerPos.z),
                                             Snackbar.LENGTH_LONG)
                                             .setAction("Action", null).show();
 

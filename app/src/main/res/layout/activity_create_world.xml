@@ -10,10 +10,10 @@
         android:padding="6dp">
 
         <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fadeScrollbars="false">
+            android:layout_weight="1">
 
             <RelativeLayout
                 android:id="@+id/help_frame_layers"

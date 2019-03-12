@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.Log;
-
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -30,6 +29,7 @@ public class SatelliteRenderer implements MapRenderer {
             for (x = 0, tX = pX; x < 16; x++, tX += pW) {
 
                 y = chunk.getHeightMapValue(x, z);
+                if (y == 0) continue;
 
                 color = getColumnColour(chunk, x, y, z,
                         (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge

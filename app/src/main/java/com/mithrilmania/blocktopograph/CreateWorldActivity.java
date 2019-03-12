@@ -64,6 +64,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_world);
         mToolTipsManager = new ToolTipsManager();
         Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.CREATE_WORLD_OPEN);
+        mBinding.scroll.post(() -> mBinding.scroll.scrollTo(0, 0));
     }
 
     public void onClickPositiveButton(View view) {

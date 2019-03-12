@@ -61,6 +61,16 @@ public class MapTileView extends TileView {
         return false;
     }
 
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent event) {
+        if (super.onSingleTapConfirmed(event)) return true;
+        if (mOnLongPressListener != null) {
+            mOnLongPressListener.onLongPressed(event);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Sets the long press callback.
      *

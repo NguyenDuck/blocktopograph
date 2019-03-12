@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.github.florent37.expansionpanel.ExpansionLayout;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragSelMenuBinding;
@@ -62,7 +63,15 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         mBinding.content.applyButton.setOnClickListener(this::onApply);
         mBinding.content.funcLampshade.setOnClickListener(this::onChooseLampshade);
         mBinding.content.funcSnr.setOnClickListener(this::onChooseSnr);
+        mBinding.expansionLayout.post(() -> mBinding.expansionLayout.scrollTo(0, 0));
+        if (mBinding.scroll != null)
+            mBinding.expansionLayout.addListener(this::onExpansionChanged);
         return mBinding.getRoot();
+    }
+
+    private void onExpansionChanged(ExpansionLayout layout, boolean expanded) {
+        mBinding.scroll.setScrollY(mBinding.scroll.getChildAt(0).getMeasuredHeight());
+        mBinding.scroll.post(() -> mBinding.scroll.smoothScrollTo(0, 0));
     }
 
     @Override
