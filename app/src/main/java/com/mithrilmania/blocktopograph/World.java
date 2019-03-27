@@ -1,7 +1,6 @@
 package com.mithrilmania.blocktopograph;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.util.SparseIntArray;
 
 import com.litl.leveldb.Iterator;
@@ -24,6 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class World implements Serializable {
 
@@ -50,6 +52,8 @@ public class World implements Serializable {
     private CompoundTag level;
     private transient WorldData worldData;
     private transient MarkerManager markersManager;
+
+    private boolean mHaveBackgroundJob;
 
     public World(File worldFolder, String mark) throws WorldLoadException {
 
@@ -224,8 +228,8 @@ public class World implements Serializable {
         }
     }
 
-    @NonNull
-    public DimensionVector3<Float> getPlayerPos() throws Exception {
+    @Nullable
+    public DimensionVector3<Float> getPlayerPos() {
         try {
             WorldData wData = getWorldData();
             wData.openDB();
@@ -235,15 +239,13 @@ public class World implements Serializable {
                     ? (CompoundTag) DataConverter.read(data).get(0)
                     : (CompoundTag) getLevel().getChildTagByKey("Player");
 
-            ListTag posVec = (ListTag) player.getChildTagByKey("Pos");
-            if (posVec == null || posVec.getValue() == null)
-                throw new Exception("No \"Pos\" specified");
-            if (posVec.getValue().size() != 3)
-                throw new Exception("\"Pos\" value is invalid. value: " + posVec.getValue().toString());
+            if (player == null) {
+                Log.d(this, "No local player. A server world?");
+                return null;
+            }
 
+            ListTag posVec = (ListTag) player.getChildTagByKey("Pos");
             IntTag dimensionId = (IntTag) player.getChildTagByKey("DimensionId");
-            if (dimensionId == null || dimensionId.getValue() == null)
-                throw new Exception("No \"DimensionId\" specified");
             Dimension dimension = Dimension.getDimension(dimensionId.getValue());
             if (dimension == null) dimension = Dimension.OVERWORLD;
 
@@ -252,12 +254,9 @@ public class World implements Serializable {
                     (float) posVec.getValue().get(1).getValue(),
                     (float) posVec.getValue().get(2).getValue(),
                     dimension);
-
         } catch (Exception e) {
-            e = new Exception("Could not find player.");
-            e.setStackTrace(e.getStackTrace());
             Log.d(this, e);
-            throw e;
+            return null;
         }
     }
 
@@ -307,7 +306,10 @@ public class World implements Serializable {
     }
 
     public void pause() throws WorldData.WorldDBException {
-        closeDown();
+        if (mHaveBackgroundJob)
+            Log.d(this, "User is doing background job with the app really in background!");
+        else
+            closeDown();
     }
 
     public void resume() throws WorldData.WorldDBException {
@@ -340,6 +342,10 @@ public class World implements Serializable {
         } catch (WorldData.WorldDBException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setHaveBackgroundJob(boolean haveBackgroundJob) {
+        mHaveBackgroundJob = haveBackgroundJob;
     }
 
     public enum SpecialDBEntryType {

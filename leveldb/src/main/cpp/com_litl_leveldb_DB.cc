@@ -32,10 +32,7 @@ public:
     }
 };
 
-static jlong
-nativeOpen(JNIEnv *env,
-           jclass clazz,
-           jstring dbpath) {
+static void initDb(JNIEnv *env) {
     static bool gInited;
 
     if (!gInited) {
@@ -50,6 +47,14 @@ nativeOpen(JNIEnv *env,
                                                      "array", "()[B");
         gInited = true;
     }
+}
+
+static jlong
+nativeOpen(JNIEnv *env,
+           jclass clazz,
+           jstring dbpath) {
+
+    initDb(env);
 
     const char *path = env->GetStringUTFChars(dbpath, 0);
     LOGI("Opening database %s", path);
@@ -83,6 +88,7 @@ nativeOpen(JNIEnv *env,
     options.compressors[0] = zlibCompressorRawInstance;
 
     options.compressors[1] = zlibCompressorInstance;
+
     leveldb::Status status = leveldb::DB::Open(options, path, &db);
     env->ReleaseStringUTFChars(dbpath, path);
 
@@ -95,11 +101,58 @@ nativeOpen(JNIEnv *env,
     return reinterpret_cast<jlong>(db);
 }
 
+static jstring nativeFixLdb(JNIEnv *env,
+                            jclass clazz,
+                            jstring dbpath) {
+
+    initDb(env);
+
+    const char *path = env->GetStringUTFChars(dbpath, 0);
+    LOGI("Fixing database %s", path);
+
+    leveldb::DB *db = nullptr;
+    leveldb::Options options;
+    options.create_if_missing = false;
+    options.paranoid_checks = true;
+    if (zlibCompressorInstance == nullptr)
+        zlibCompressorInstance = new leveldb::ZlibCompressor();
+    if (zlibCompressorRawInstance == nullptr)
+        zlibCompressorRawInstance = new leveldb::ZlibCompressorRaw(-1);
+    if (nullLoggerInstance == nullptr)
+        nullLoggerInstance = new NullLogger();
+    if (decompressAllocatorInstance == nullptr)
+        decompressAllocatorInstance = new leveldb::DecompressAllocator();
+
+    //create a bloom filter to quickly tell if a key is in the database or not
+    options.filter_policy = leveldb::NewBloomFilterPolicy(10);
+
+    //create a 40 mb cache (we use this on ~1gb devices)
+    options.block_cache = leveldb::NewLRUCache(40 * 1024 * 1024);
+
+    //create a 4mb write buffer, to improve compression and touch the disk less
+    options.write_buffer_size = 4 * 1024 * 1024;
+
+    //disable internal logging. The default logger will still print out things to a file
+    options.info_log = nullLoggerInstance;
+
+    //use the new raw-zip compressor to write (and read)
+    options.compressors[0] = zlibCompressorRawInstance;
+
+    options.compressors[1] = zlibCompressorInstance;
+
+    leveldb::Status status = leveldb::RepairDB(path, options);
+    env->ReleaseStringUTFChars(dbpath, path);
+
+    delete db;
+
+    return env->NewStringUTF(status.ToString().c_str());
+}
+
 static void
 nativeClose(JNIEnv *env,
             jclass clazz,
             jlong dbPtr) {
-    leveldb::DB *db = reinterpret_cast<leveldb::DB *>(dbPtr);
+    auto *db = reinterpret_cast<leveldb::DB *>(dbPtr);
     delete db;
 
     LOGI("Database closed");
@@ -111,7 +164,7 @@ nativeGet(JNIEnv *env,
           jlong dbPtr,
           jlong snapshotPtr,
           jbyteArray keyObj) {
-    leveldb::DB *db = reinterpret_cast<leveldb::DB *>(dbPtr);
+    auto *db = reinterpret_cast<leveldb::DB *>(dbPtr);
     leveldb::ReadOptions options = leveldb::ReadOptions();
     options.decompress_allocator = decompressAllocatorInstance;
     //options.snapshot = reinterpret_cast<leveldb::Snapshot *>(snapshotPtr);
@@ -126,16 +179,16 @@ nativeGet(JNIEnv *env,
     //if (iter->Valid() && key == iter->key()) {
     //leveldb::Slice value = iter->value();
     std::string str;
-    leveldb::Status status=db->Get(options, key, &str);
+    leveldb::Status status = db->Get(options, key, &str);
     env->ReleaseByteArrayElements(keyObj, buffer, JNI_ABORT);
-    if(status.ok()){
+    if (status.ok()) {
         size_t len = str.size();
         result = env->NewByteArray(static_cast<jsize>(len));
         env->SetByteArrayRegion(result, 0, static_cast<jsize>(len), (const jbyte *) str.c_str());
-    }else if(status.IsNotFound())result=NULL;
+    } else if (status.IsNotFound())result = NULL;
     else {
-        throwException(env,status);
-        result=NULL;
+        throwException(env, status);
+        result = NULL;
     }
 
     //} else {
@@ -298,13 +351,15 @@ nativeDestroy(JNIEnv *env,
 
 static JNINativeMethod sMethods[] =
     {
-        {"nativeOpen",            "(Ljava/lang/String;)J",       (void *) nativeOpen},
-        {"nativeClose",           "(J)V",                        (void *) nativeClose},
-        {"nativeGet",             "(JJ[B)[B",                    (void *) nativeGet},
-        {"nativeGet",             "(JJLjava/nio/ByteBuffer;)[B", (void *) nativeGetBB},
-        {"nativePut",             "(J[B[B)V",                    (void *) nativePut},
-        {"nativeDelete",          "(J[B)V",                      (void *) nativeDelete},
-        {"nativeWrite",           "(JJ)V",                       (void *) nativeWrite},
+        {"nativeOpen",   "(Ljava/lang/String;)J",       (void *) nativeOpen},
+        {"fixLdb",       "(Ljava/lang/String;)"
+                         "Ljava/lang/String;",          (void *) nativeFixLdb},
+        {"nativeClose",  "(J)V",                        (void *) nativeClose},
+        {"nativeGet",    "(JJ[B)[B",                    (void *) nativeGet},
+        {"nativeGet",    "(JJLjava/nio/ByteBuffer;)[B", (void *) nativeGetBB},
+        {"nativePut",    "(J[B[B)V",                    (void *) nativePut},
+        {"nativeDelete", "(J[B)V",                      (void *) nativeDelete},
+        {"nativeWrite",  "(JJ)V",                       (void *) nativeWrite},
         {"nativeIterator",        "(JJ)J",                       (void *) nativeIterator},
         {"nativeGetSnapshot",     "(J)J",                        (void *) nativeGetSnapshot},
         {"nativeReleaseSnapshot", "(JJ)V",                       (void *) nativeReleaseSnapshot},

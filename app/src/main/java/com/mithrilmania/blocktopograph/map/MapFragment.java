@@ -3,7 +3,9 @@ package com.mithrilmania.blocktopograph.map;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
@@ -73,19 +76,21 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 
 public class MapFragment extends Fragment {
 
     private final static int MARKER_INTERVAL_CHECK = 50;
     public static final String TAG_PICER = "picer";
+    public static final int MARKERS_ON_SCREEN_TOO_MANY = 100;
+    public static final String PREF_KEY_HAS_NOTIFIED_MARKERS_TOO_MANY = "has_notified_markers_too_many";
     //static, remember choice while app is open.
     static Map<NamedBitmapProvider, BitmapChoiceListAdapter.NamedBitmapChoice> markerFilter = new HashMap<>();
 
@@ -115,7 +120,7 @@ public class MapFragment extends Fragment {
     public AbstractMarker spawnMarker;
     public AbstractMarker localPlayerMarker;
     private WeakReference<WorldActivityInterface> worldProvider;
-    private World world;
+    public World world;
     private MCTileProvider minecraftTileProvider;
     private int proceduralMarkersInterval = 0;
     private volatile AsyncTask shrinkProceduralMarkersTask;
@@ -157,7 +162,10 @@ public class MapFragment extends Fragment {
         FragmentActivity activity = getActivity();
         if (activity == null) return;
 
-        Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.MAPFRAGMENT_RESUME);
+        Toast toast = new Toast(activity);
+        toast.setView(getLayoutInflater().inflate(R.layout.toast_warn, (ViewGroup) activity.getWindow().getDecorView(), false));
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.show();
     }
 
     public void closeChunks() {
@@ -383,19 +391,20 @@ public class MapFragment extends Fragment {
 
         // GPS button: moves camera to player position
         mBinding.fabMenuGpsPlayer.setOnClickListener(this::moveCameraToPlayer);
+        Resources resources = activity.getResources();
         mBinding.fabMenuGpsPlayer.setImageDrawable(
-                ContextCompat.getDrawable(activity, R.drawable.ic_person));
+                VectorDrawableCompat.create(resources, R.drawable.ic_person, null));
 
         // GPS button: moves camera to spawn
         mBinding.fabMenuGpsSpawn.setOnClickListener(this::moveCameraToSpawn);
         mBinding.fabMenuGpsSpawn.setImageDrawable(
-                ContextCompat.getDrawable(activity, R.drawable.ic_action_home));
+                VectorDrawableCompat.create(resources, R.drawable.ic_action_home, null));
 
         // Display a menu allowing user to move camera to many places.
         mBinding.fabMenuGpsOthers.setOnClickListener(unusedView ->
                 openFloatPane(AdvancedLocatorFragment.create(world, this::frameTo)));
         mBinding.fabMenuGpsOthers.setImageDrawable(
-                ContextCompat.getDrawable(activity, R.drawable.ic_action_search));
+                VectorDrawableCompat.create(resources, R.drawable.ic_action_search, null));
 
         mBinding.fabMenuGpsPicer.setOnClickListener(unusedView -> {
             WorldActivityInterface worldProvider = this.worldProvider.get();
@@ -405,13 +414,15 @@ public class MapFragment extends Fragment {
             fragment.show(getChildFragmentManager(), TAG_PICER);
         });
         mBinding.fabMenuGpsPicer.setImageDrawable(
-                ContextCompat.getDrawable(activity, R.drawable.ic_menu_camera));
+                VectorDrawableCompat.create(resources, R.drawable.ic_menu_camera, null));
 
         // Show the toolbar if the fab menu is opened
         mBinding.fabMenu.setOnMenuToggleListener(opened -> {
             WorldActivityInterface worldProvider = MapFragment.this.worldProvider.get();
-            if (opened) worldProvider.showActionBar();
-            else worldProvider.hideActionBar();
+            if (opened) {
+                worldProvider.showActionBar();
+                //worldProvider.openDrawer();
+            } else worldProvider.hideActionBar();
         });
 
 
@@ -648,7 +659,6 @@ public class MapFragment extends Fragment {
 
         tileView.setSaveEnabled(true);
 
-
         return mBinding.getRoot();
     }
 
@@ -773,6 +783,21 @@ public class MapFragment extends Fragment {
         }
 
         proceduralMarkers.add(marker);
+
+        if (proceduralMarkers.size() > MARKERS_ON_SCREEN_TOO_MANY) {
+            SharedPreferences pref = act.getPreferences(Context.MODE_PRIVATE);
+            if (!pref.getBoolean(PREF_KEY_HAS_NOTIFIED_MARKERS_TOO_MANY, false)) {
+                pref.edit().putBoolean(PREF_KEY_HAS_NOTIFIED_MARKERS_TOO_MANY, true).apply();
+                AlertDialog dialog = new AlertDialog.Builder(act)
+                        .setTitle(R.string.map_smart_notice_too_many_markers)
+                        .setMessage(R.string.map_smart_notice_too_many_markers_message)
+                        .setPositiveButton(R.string.map_uioption_open_drawer, (dialogInterface, i) -> worldProvider.get().openDrawer())
+                        .setNegativeButton(R.string.general_got_it, null)
+                        .create();
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+            }
+        }
 
         MarkerImageView markerView = marker.getView(act);
 
@@ -1194,10 +1219,14 @@ public class MapFragment extends Fragment {
         }
     }
 
+    public void refreshAfterEdit() {
+        mBinding.tileView.getTileCanvasViewGroup().clear();
+        mBinding.tileView.getTileCanvasViewGroup().requiredBeginRenderTask();
+    }
+
     public void resetTileView() {
         if (mBinding.tileView != null) {
             WorldActivityInterface worldProvider = this.worldProvider.get();
-            Log.logFirebaseEvent(getActivity(), Log.CustomFirebaseEvent.MAPFRAGMENT_RESET);
 
             updateMarkerFilter();
 

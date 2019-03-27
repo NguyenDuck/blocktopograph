@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    tools:context="com.mithrilmania.blocktopograph.WorldActivity"
-    tools:showIn="@layout/app_bar_world"
-    android:id="@+id/world_content_wrapper"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
 
     <RelativeLayout
+        android:id="@+id/world_content_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="0dp"
         android:paddingLeft="0dp"
-        android:paddingRight="0dp"
         android:paddingTop="0dp"
-        android:id="@+id/world_content">
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.mithrilmania.blocktopograph.WorldActivity"
+        tools:showIn="@layout/app_bar_world">
 
-        <!-- fragments are inserted here -->
+        <RelativeLayout
+            android:id="@+id/world_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp">
+
+            <!-- fragments are inserted here -->
 
         </RelativeLayout>
 
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

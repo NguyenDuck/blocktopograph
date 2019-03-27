@@ -14,61 +14,55 @@
         android:theme="@style/AppTheme.Floating"
         android:weightSum="1.0">
 
-        <ScrollView
-            android:id="@+id/scroll"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:theme="@style/AppTheme.Floating">
 
-            <LinearLayout
+            <com.github.florent37.expansionpanel.ExpansionHeader
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:theme="@style/AppTheme.Floating">
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_float_transparent"
+                app:expansion_headerIndicator="@id/headerIndicator"
+                app:expansion_layout="@id/expansionLayout"
+                app:expansion_toggleOnClick="true">
 
-                <com.github.florent37.expansionpanel.ExpansionHeader
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:background="@drawable/bg_float_transparent"
-                    app:expansion_headerIndicator="@id/headerIndicator"
-                    app:expansion_layout="@id/expansionLayout"
-                    app:expansion_toggleOnClick="true">
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/map_sel_panel_title" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:text="@string/map_sel_panel_title" />
-
-                    <ImageView
-                        android:id="@+id/headerIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_margin="8dp"
-                        android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
-
-
-                </com.github.florent37.expansionpanel.ExpansionHeader>
-
-                <com.github.florent37.expansionpanel.ExpansionLayout
-                    android:id="@+id/expansionLayout"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/headerIndicator"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fadeScrollbars="false">
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_margin="8dp"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
 
-                    <include
-                        android:id="@+id/content"
-                        layout="@layout/include_sel_menu" />
 
-                </com.github.florent37.expansionpanel.ExpansionLayout>
+            </com.github.florent37.expansionpanel.ExpansionHeader>
 
-            </LinearLayout>
-        </ScrollView>
+            <com.mithrilmania.blocktopograph.view.MeowExpansionLayout
+                android:id="@+id/expansionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadeScrollbars="false">
+
+                <include
+                    android:id="@+id/content"
+                    layout="@layout/include_sel_menu" />
+
+            </com.mithrilmania.blocktopograph.view.MeowExpansionLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

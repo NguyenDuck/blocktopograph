@@ -235,6 +235,9 @@ public final class BedrockChunk extends Chunk {
 
     @Override
     public void save() throws WorldData.WorldDBException, IOException {
+
+        if (mIsError || mIsVoid) return;
+
         WorldData worldData = mWorldData.get();
         if (worldData == null)
             throw new RuntimeException("World data is null.");

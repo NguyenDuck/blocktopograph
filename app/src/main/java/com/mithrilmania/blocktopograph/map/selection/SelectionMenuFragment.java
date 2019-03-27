@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.github.florent37.expansionpanel.ExpansionLayout;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragSelMenuBinding;
@@ -51,27 +50,9 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         return fragment;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_sel_menu, container, false);
-        mBinding.content.setSelection(mSelection);
-        mBinding.content.fromXText.addTextChangedListener(new MeowWatcher(mBinding.content.fromXText));
-        mBinding.content.fromYText.addTextChangedListener(new MeowWatcher(mBinding.content.fromYText));
-        mBinding.content.rangeWText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeWText));
-        mBinding.content.rangeHText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeHText));
-        mBinding.content.applyButton.setOnClickListener(this::onApply);
-        mBinding.content.funcLampshade.setOnClickListener(this::onChooseLampshade);
-        mBinding.content.funcSnr.setOnClickListener(this::onChooseSnr);
-        mBinding.expansionLayout.post(() -> mBinding.expansionLayout.scrollTo(0, 0));
-        if (mBinding.scroll != null)
-            mBinding.expansionLayout.addListener(this::onExpansionChanged);
-        return mBinding.getRoot();
-    }
-
-    private void onExpansionChanged(ExpansionLayout layout, boolean expanded) {
-        mBinding.scroll.setScrollY(mBinding.scroll.getChildAt(0).getMeasuredHeight());
-        mBinding.scroll.post(() -> mBinding.scroll.smoothScrollTo(0, 0));
+    private static boolean isSelectionChunkAligned(@NotNull Rect selection) {
+        return (selection.left & 0xf) == 0 && (selection.right & 0xf) == 0
+                && (selection.top & 0xf) == 0 && (selection.bottom & 0xf) == 0;
     }
 
     @Override
@@ -147,6 +128,37 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         if (fragmentManager == null) fragmentManager = getChildFragmentManager();
         fragment.show(fragmentManager, TAG_SNR);
         Log.logFirebaseEvent(view.getContext(), Log.CustomFirebaseEvent.SNR_OPEN);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_sel_menu, container, false);
+        mBinding.content.setSelection(mSelection);
+        mBinding.content.fromXText.addTextChangedListener(new MeowWatcher(mBinding.content.fromXText));
+        mBinding.content.fromYText.addTextChangedListener(new MeowWatcher(mBinding.content.fromYText));
+        mBinding.content.rangeWText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeWText));
+        mBinding.content.rangeHText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeHText));
+        mBinding.content.applyButton.setOnClickListener(this::onApply);
+        mBinding.content.funcLampshade.setOnClickListener(this::onChooseLampshade);
+        mBinding.content.funcSnr.setOnClickListener(this::onChooseSnr);
+        mBinding.content.funcDchunk.setOnClickListener(this::onChooseDchunk);
+        return mBinding.getRoot();
+    }
+
+    private void onChooseDchunk(View view) {
+        String text = getString(R.string.map_edit_dchunk_explain);
+        boolean aligned = isSelectionChunkAligned(mSelection);
+        if (!aligned)
+            text += "\n\n" + getString(R.string.map_edit_dchunk_warn_not_aligned);
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(view.getContext(), R.style.AppTheme))
+                .setTitle(R.string.map_edit_func_dchunk)
+                .setMessage(text)
+                .setPositiveButton(aligned ? android.R.string.ok : R.string.map_edit_dchunk_posbtn_with_auto_adjust,
+                        ((dialogInterface, i) -> mEditFunctionEntry.invokeEditFunction(EditFunction.DCHUNK, null)))
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        dialog.show();
     }
 
     public interface EditFunctionEntry {

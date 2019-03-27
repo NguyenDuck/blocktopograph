@@ -7,7 +7,7 @@ android {
         applicationId 'rbq2012.blocktopograph'
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 15
+        versionCode 1080621
         versionName "1.8.6"
         vectorDrawables.useSupportLibrary = true
     }

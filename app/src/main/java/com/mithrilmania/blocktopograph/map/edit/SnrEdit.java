@@ -1,8 +1,11 @@
 package com.mithrilmania.blocktopograph.map.edit;
 
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
+import com.mithrilmania.blocktopograph.map.Block;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SnrEdit implements EditTarget.RandomAccessEdit {
 
@@ -18,11 +21,11 @@ public class SnrEdit implements EditTarget.RandomAccessEdit {
             case 1:
             case 2:
             case 3:
-                b1 = cfg.searchBlockMain.getRuntimeId();
+                b1 = getRuntimeIdWithWarningIfNull(cfg.searchBlockMain);
                 break;
             case 4:
-                b1 = cfg.searchBlockMain.getRuntimeId();
-                b2 = cfg.searchBlockSub.getRuntimeId();
+                b1 = getRuntimeIdWithWarningIfNull(cfg.searchBlockMain);
+                b2 = getRuntimeIdWithWarningIfNull(cfg.searchBlockSub);
                 break;
         }
         if (cfg.ignoreSubId) {
@@ -32,13 +35,21 @@ public class SnrEdit implements EditTarget.RandomAccessEdit {
         switch (cfg.placeMode) {
             case 1:
             case 2:
-                b3 = cfg.placeBlockMain.getRuntimeId();
+                b3 = getRuntimeIdWithWarningIfNull(cfg.placeBlockMain);
                 break;
             case 3:
-                b3 = cfg.placeBlockMain.getRuntimeId();
-                b4 = cfg.placeBlockSub.getRuntimeId();
+                b3 = getRuntimeIdWithWarningIfNull(cfg.placeBlockMain);
+                b4 = getRuntimeIdWithWarningIfNull(cfg.placeBlockSub);
                 break;
         }
+    }
+
+    private int getRuntimeIdWithWarningIfNull(@Nullable Block block) {
+        if (block == null) {
+            Log.d(this, "Doing find and replace with mal-configuration.");
+            return 0;
+        }
+        return block.getRuntimeId();
     }
 
     @Override

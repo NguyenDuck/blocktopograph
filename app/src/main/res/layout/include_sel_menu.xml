@@ -120,23 +120,38 @@
             android:text="@string/map_sel_menu_op"
             android:textColor="@color/color_float_grey" />
 
-        <Button
-            android:id="@+id/func_lampshade"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+        <GridLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/map_edit_func_lampshade"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:columnCount="2">
 
-        <Button
-            android:id="@+id/func_snr"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/map_edit_func_snr"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/func_lampshade"
+                style="@style/AppTheme.Floating.SmallTextButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/map_edit_func_lampshade" />
+
+            <TextView
+                android:id="@+id/func_snr"
+                style="@style/AppTheme.Floating.SmallTextButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/map_edit_func_snr" />
+
+            <TextView
+                android:id="@+id/func_dchunk"
+                style="@style/AppTheme.Floating.SmallTextButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/map_edit_func_dchunk" />
+
+        </GridLayout>
 
         <TextView
             android:layout_width="match_parent"

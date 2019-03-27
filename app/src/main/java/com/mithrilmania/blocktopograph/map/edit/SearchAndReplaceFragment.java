@@ -108,7 +108,6 @@ public class SearchAndReplaceFragment extends DialogFragment {
         if (dialog instanceof AlertDialog) {
             ((AlertDialog) dialog).setView(root);
         }
-        mBinding.scroll.post(() -> mBinding.scroll.scrollTo(0, 0));
         return root;
     }
 

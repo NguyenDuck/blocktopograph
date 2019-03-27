@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:padding="6dp">
 
-        <ScrollView
+        <com.mithrilmania.blocktopograph.view.MeowScrollView
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -105,7 +105,7 @@
 
             </RelativeLayout>
 
-        </ScrollView>
+        </com.mithrilmania.blocktopograph.view.MeowScrollView>
 
         <include layout="@layout/common_dialog_activity_posibtn_bar" />
 

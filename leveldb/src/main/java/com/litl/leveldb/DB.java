@@ -111,11 +111,17 @@ public class DB extends NativeObject {
         };
     }
 
+    public static native String fixLdb(String dbpath);
+
     public static void destroy(File path) {
         nativeDestroy(path.getAbsolutePath());
     }
 
     private static native long nativeOpen(String dbpath);
+
+    public File getPath() {
+        return mPath;
+    }
 
     private static native void nativeClose(long dbPtr);
 

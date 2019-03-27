@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,10 +21,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.mithrilmania.blocktopograph.BuildConfig;
 import com.mithrilmania.blocktopograph.CreateWorldActivity;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
@@ -45,7 +44,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import io.fabric.sdk.android.Fabric;
 
 public class WorldItemListActivity extends AppCompatActivity {
 
@@ -56,6 +54,7 @@ public class WorldItemListActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     public static final int REQUEST_CODE_CREATE_WORLD = 2012;
+    public static final String PREF_KEY_ACCEPT_DATA_USAGE = "accept_data_usage";
     /**
      * Whether or not the activity is in two-pane mode, d.e. running on a tablet.
      */
@@ -83,16 +82,49 @@ public class WorldItemListActivity extends AppCompatActivity {
         } else return true;
     }
 
+    private void showFeedbackRequestDialogIfNeeded() {
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        if (prefs.getInt(PREF_KEY_ACCEPT_DATA_USAGE, 0) == 1) {
+            Log.enableCrashlytics(this);
+            Log.enableFirebaseAnalytics(this);
+            return;
+        }
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.privacy_promo_title)
+                .setMessage(R.string.privacy_promo_text)
+                .setPositiveButton(R.string.privacy_promo_accept_btn, this::onAcceptedRequestDialog)
+                .setNegativeButton(R.string.privacy_promo_reject_btn, this::onRejectedRequestDialog)
+                .setCancelable(false)
+                .create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        View view = dialog.findViewById(android.R.id.message);
+        if (view instanceof TextView)
+            ((TextView) view).setMovementMethod(LinkMovementMethod.getInstance());
+        else Log.d(this, "cannot find android.R.id.message for privacy request dialog.");
+    }
+
+    private void onAcceptedRequestDialog(DialogInterface dialogInterface, int i) {
+        Log.enableCrashlytics(this);
+        Log.enableFirebaseAnalytics(this);
+        getPreferences(MODE_PRIVATE).edit().putInt(PREF_KEY_ACCEPT_DATA_USAGE, 1).apply();
+    }
+
+    private void onRejectedRequestDialog(DialogInterface dialogInterface, int i) {
+        finishAffinity();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!BuildConfig.DEBUG) Fabric.with(this, new Crashlytics());
+
         setContentView(R.layout.activity_worldlist);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         setSupportActionBar(toolbar);
+        showFeedbackRequestDialogIfNeeded();
 
         if (findViewById(R.id.worlditem_detail_container) != null) {
             // The detail container view will be present only in the

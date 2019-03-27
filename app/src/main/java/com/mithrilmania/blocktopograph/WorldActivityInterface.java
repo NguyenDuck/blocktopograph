@@ -31,6 +31,8 @@ public interface WorldActivityInterface {
 
     void hideActionBar();
 
+    void openDrawer();
+
     EditableNBT getEditablePlayer() throws Exception;
 
     void changeMapType(MapType mapType, Dimension dimension);

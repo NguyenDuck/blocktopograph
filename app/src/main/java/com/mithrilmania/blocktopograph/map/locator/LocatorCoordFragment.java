@@ -51,4 +51,8 @@ public final class LocatorCoordFragment extends LocatorPageFragment {
         return mBinding.getRoot();
     }
 
+    public void doOverScroll() {
+        mBinding.scroll.doOverScroll();
+    }
+
 }

@@ -372,7 +372,16 @@
     <string name="map_edit_func_snr">查找&amp;替换</string>
     <string name="map_edit_snr_ignore_subtype">忽略子类型</string>
     <string name="map_edit_snr_help_background">简单的查找替换可以无视背景层。从Minecraft BE 1.4.x开始，背景层被用于存储与其他方块共存的水，不过其实可以放任何方块。作为高级地图作者，您可以利用这个特性。</string>
-    <string name="map_sel_warn_backup">使用前请先备份！</string>
+    <string name="map_sel_warn_backup">使用前先备份，请！（震声）</string>
     <string name="create_world_biome_id">生物群系：</string>
     <string name="create_world_biome_hint">数字ID，默认21（丛林）</string>
+    <string name="map_edit_func_dchunk">删除区块</string>
+    <string name="map_edit_dchunk_explain">这会【删除】您选择区域所涉及的区块。Minecraft稍后能重新生成这片区域，但是您在当中的进度会丢失。除非你知道你在做什么以及为什么这么做，请不要继续。</string>
+    <string name="map_edit_dchunk_posbtn_with_auto_adjust">自动调整并继续</string>
+    <string name="open_up_warning_1">这东西很危险，用之前请先备份！</string>
+    <string name="map_edit_dchunk_warn_not_aligned">您选择的区域没有对齐到区块边界。Blocktopograph可以自动调整。实际删除的区域会比您选择的稍大。准确说，每个方向上会多出0~15方块。这是因为区域必须按整个区块删除，才能被重新生成。如果不喜欢自动调整，您可以取消并手动调节。</string>
+    <string name="map_smart_notice_too_many_markers">标记过多！</string>
+    <string name="map_smart_notice_too_many_markers_message">屏幕上有太多标记，比如怪物。您可以在滑动抽屉页点击“标记开关”来关闭，或者设置过滤选项。</string>
+    <string name="map_uioption_open_drawer">打开抽屉</string>
+    <string name="general_got_it">哦</string>
 </resources>

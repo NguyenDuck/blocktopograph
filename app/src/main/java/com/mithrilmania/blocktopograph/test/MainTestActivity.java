@@ -1,15 +1,16 @@
 package com.mithrilmania.blocktopograph.test;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.litl.leveldb.DB;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
@@ -19,9 +20,16 @@ import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
 import com.mithrilmania.blocktopograph.util.ConvertUtil;
 import com.mithrilmania.blocktopograph.util.IoUtil;
 import com.mithrilmania.blocktopograph.util.McUtil;
+import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 public final class MainTestActivity extends AppCompatActivity {
 
@@ -58,6 +66,7 @@ public final class MainTestActivity extends AppCompatActivity {
         }
         File file = Environment.getExternalStorageDirectory();
         file = McUtil.getBtgTestDir(file);
+        mBinding.fabMenuFixLdb.setOnClickListener(this::onClickFixLdb);
         mBinding.setPath(file.getPath());
     }
 
@@ -99,6 +108,7 @@ public final class MainTestActivity extends AppCompatActivity {
         try {
             wdata.closeDB();
         } catch (WorldData.WorldDBException e) {
+            Log.d(this, e);
         }
         return ret;
     }
@@ -140,5 +150,61 @@ public final class MainTestActivity extends AppCompatActivity {
         if (errno == IoUtil.Errno.OK) Snackbar.make(getWindow().getDecorView(),
                 R.string.general_done, Snackbar.LENGTH_SHORT).show();
         else Toast.makeText(this, errno.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void onClickFixLdb(View view) {
+        new FixLdbTask(this, mWorld.getWorldData()).execute();
+    }
+
+    private static class FixLdbTask extends AsyncTask<Void, Void, Void> {
+
+        private WeakReference<Context> mContext;
+        private WeakReference<Dialog> mDialog;
+        private WorldData mWorldData;
+        private String result;
+
+        FixLdbTask(Context context, WorldData worldData) {
+            mContext = new WeakReference<>(context);
+            mWorldData = worldData;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Context context = mContext.get();
+            if (context == null) return;
+            AlertDialog dialog = UiUtil.buildProgressWaitDialog(context, R.string.general_please_wait, null);
+            dialog.show();
+            mDialog = new WeakReference<>(dialog);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                mWorldData.closeDB();
+            } catch (WorldData.WorldDBException e) {
+                Log.d(this, e);
+            }
+            result = DB.fixLdb(mWorldData.db.getPath().getAbsolutePath());
+            mWorldData = null;
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Dialog dialog;
+            if (mDialog != null && (dialog = mDialog.get()) != null) {
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    Log.e(this, e);
+                }
+            }
+            Context context;
+            if (result != null && (context = mContext.get()) != null) {
+                new AlertDialog.Builder(context)
+                        .setMessage(result)
+                        .create().show();
+            }
+        }
     }
 }

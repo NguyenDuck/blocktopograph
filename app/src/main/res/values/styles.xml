@@ -16,9 +16,16 @@
         <item name="colorControlNormal">#bbbbbb</item>
         <item name="textColorAlertDialogListItem">@android:color/white</item>
         <item name="editTextStyle">@style/AppTheme.Floating.EditTextStyle</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.Floating.EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.Floating.SmallTextButtonStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:padding">6dp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 

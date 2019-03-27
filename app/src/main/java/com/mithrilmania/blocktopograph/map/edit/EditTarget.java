@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class EditTarget {
 
+    protected int mMaxError = 10;
 
     protected final boolean mIsChunkAware;
     @NotNull
@@ -18,9 +19,13 @@ public abstract class EditTarget {
         mWorldData = worldData;
     }
 
-    public abstract void forEachXyzd(RandomAccessEdit edit);
+    public abstract EditResultCode forEachXyzd(RandomAccessEdit edit);
 
-    public abstract void forEachChunk(ChunkBasedEdit edit);
+    public abstract EditResultCode forEachChunk(ChunkBasedEdit edit);
+
+    public final void setMaxError(int maxError) {
+        mMaxError = maxError;
+    }
 
     @Contract(pure = true)
     public final boolean isChunkAware() {

@@ -200,5 +200,6 @@ public final class PocketChunk extends Chunk {
     @Override
     public void save() {
         // TODO implement save for pocket chunk
+        if (mIsError || mIsVoid) return;
     }
 }

@@ -6,51 +6,59 @@
 
     </data>
 
-    <GridLayout
+    <com.mithrilmania.blocktopograph.view.MeowScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:theme="@style/AppTheme.Floating"
-        tools:ignore="Autofill,LabelFor,HardcodedText">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_margin="8dp"
-            android:labelFor="@id/edit_x"
-            android:text="X:" />
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:theme="@style/AppTheme.Floating"
+            tools:ignore="Autofill,LabelFor,HardcodedText">
 
-        <EditText
-            android:id="@+id/edit_x"
-            android:layout_width="0dp"
-            android:layout_gravity="fill_horizontal"
-            android:imeOptions="actionNext"
-            android:inputType="numberSigned"
-            android:nextFocusDown="@id/edit_z"
-            android:nextFocusForward="@id/edit_z" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_margin="8dp"
+                android:labelFor="@id/edit_x"
+                android:text="X:" />
 
-        <TextView
-            android:layout_margin="8dp"
-            android:labelFor="@id/edit_z"
-            android:text="Z:" />
+            <EditText
+                android:id="@+id/edit_x"
+                android:layout_width="0dp"
+                android:layout_gravity="fill_horizontal"
+                android:imeOptions="actionNext"
+                android:inputType="numberSigned"
+                android:nextFocusDown="@id/edit_z"
+                android:nextFocusForward="@id/edit_z" />
 
-        <EditText
-            android:id="@+id/edit_z"
-            android:layout_width="0dp"
-            android:layout_gravity="fill_horizontal"
-            android:imeActionId="233"
-            android:imeOptions="actionGo"
-            android:inputType="numberSigned" />
+            <TextView
+                android:layout_margin="8dp"
+                android:labelFor="@id/edit_z"
+                android:text="Z:" />
 
-        <Button
-            android:id="@+id/button_go"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_column="1"
-            android:layout_gravity="end"
-            android:text="@string/go_loud"
-            android:textColor="@android:color/white" />
+            <EditText
+                android:id="@+id/edit_z"
+                android:layout_width="0dp"
+                android:layout_gravity="fill_horizontal"
+                android:imeActionId="233"
+                android:imeOptions="actionGo"
+                android:inputType="numberSigned" />
 
-    </GridLayout>
+            <Button
+                android:id="@+id/button_go"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_column="1"
+                android:layout_gravity="end"
+                android:text="@string/go_loud"
+                android:textColor="@android:color/white" />
+
+        </GridLayout>
+
+    </com.mithrilmania.blocktopograph.view.MeowScrollView>
 
 </layout>

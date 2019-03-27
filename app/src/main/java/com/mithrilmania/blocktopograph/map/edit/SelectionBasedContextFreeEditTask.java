@@ -48,6 +48,7 @@ public class SelectionBasedContextFreeEditTask extends
                 activity, R.string.general_please_wait, this::onCancel
         );
         mWaitDialog.show();
+        owner.world.setHaveBackgroundJob(true);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class SelectionBasedContextFreeEditTask extends
                 cfg.searchMode = 2;
                 cfg.placeMode = 1;
                 cfg.searchBlockMain = Block.B_50_0_TORCH;
-                cfg.placeBlockSub = Block.B_20_0_GLASS;
+                cfg.placeBlockMain = Block.B_20_0_GLASS;
                 cfg.ignoreSubId = true;
                 return doSnr(cfg, editTargets);
             }
@@ -69,6 +70,8 @@ public class SelectionBasedContextFreeEditTask extends
                     return EditResultCode.GENERAL_FAILURE;
                 return doSnr((SnrConfig) ser, editTargets);
             }
+            case DCHUNK:
+                return doDchunk(editTargets);
         }
 
         return null;
@@ -77,7 +80,17 @@ public class SelectionBasedContextFreeEditTask extends
     private EditResultCode doSnr(SnrConfig cfg, @NotNull EditTarget... editTargets) {
         SnrEdit edit = new SnrEdit(cfg);
         for (EditTarget editTarget : editTargets) {
+            editTarget.setMaxError(Integer.MAX_VALUE);
             editTarget.forEachXyzd(edit);
+        }
+        return EditResultCode.SUCCESS;
+    }
+
+    private EditResultCode doDchunk(@NotNull EditTarget... editTargets) {
+        DchunkEdit edit = new DchunkEdit();
+        for (EditTarget editTarget : editTargets) {
+            editTarget.setMaxError(Integer.MAX_VALUE);
+            editTarget.forEachChunk(edit);
         }
         return EditResultCode.SUCCESS;
     }
@@ -85,6 +98,9 @@ public class SelectionBasedContextFreeEditTask extends
     private void onCancel(DialogInterface dialogInterface) {
         cancel(true);
         mWaitDialog = null;
+        MapFragment owner;
+        if ((owner = mOwner.get()) != null)
+            owner.world.setHaveBackgroundJob(false);
     }
 
     @Override
@@ -95,9 +111,11 @@ public class SelectionBasedContextFreeEditTask extends
         MapFragment owner = mOwner.get();
         Activity activity;
         if (owner != null && (activity = owner.getActivity()) != null) {
+            owner.world.setHaveBackgroundJob(false);
             switch (editResultCode) {
                 case SUCCESS:
                     Toast.makeText(activity, R.string.general_done, Toast.LENGTH_SHORT).show();
+                    owner.refreshAfterEdit();
                     break;
                 default:
                     Toast.makeText(activity, R.string.general_failed, Toast.LENGTH_SHORT).show();

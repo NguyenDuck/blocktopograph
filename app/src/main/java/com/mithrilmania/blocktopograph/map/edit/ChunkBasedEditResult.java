@@ -2,6 +2,9 @@ package com.mithrilmania.blocktopograph.map.edit;
 
 import com.mithrilmania.blocktopograph.map.Dimension;
 
+/**
+ * Used to publish result for every chunks in chunk-cased edit.
+ */
 public class ChunkBasedEditResult {
 
     public int x;
