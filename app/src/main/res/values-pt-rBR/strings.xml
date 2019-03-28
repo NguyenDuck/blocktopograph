@@ -54,7 +54,7 @@
         Minecraft é uma aquisição de Mojang AB.\n
         Por favor observe:\n
             &#8226; NÃO É UM PRODUTO OFICIAL DE MINECRAFT. NÃO APROVADO POR/OU  ASSOCIADO COM A MOJANG.\n
-            &#8226; O APLICATIVO É DISPONIBILIZADO \"AS IS\", SEM QUALQUER GARANTIA.\n
+            &#8226; O APLICATIVO É DISPONIBILIZADO \"\", SEM QUALQUER GARANTIA.\n
         \n
         \n
         <i>Bibliotecas usadas:</i>\n
@@ -79,7 +79,7 @@
     <string name="app_changelog" formatted="false">
         Version: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>
         <![CDATA[<br/><br/>
-        Cjangelog completo pode ser encontrado em (desatualizado):
+        Changelog completo pode ser encontrado em (desatualizado):
         <a href="http://blocktopograph.protolambda.com/changelog">
             blocktopograph.protolambda.com/changelog
         </a>]]>
@@ -92,9 +92,9 @@
 
     <string name="create_marker_info">
         Ícones de marcador:\n
-        &#8226; default_marker, blue_marker, green_marker, red_marker \n
-        &#8226; Entity data-names (case sensitive) \n
-        &#8226; Block data-names (case sensitive) \n
+        &#8226; marcador_padrão, marcador_azul, marcador_verde, marcador_vermelho \n
+        &#8226; Data-names de entidades (case sensitive) \n
+        &#8226; Data-names de blocos (case sensitive) \n
     </string>
 
     <!-- New as of *The Translation Update* -->
@@ -124,11 +124,11 @@
     <string name="no_multiplayer_data_found">Dados de multiplayer não encontrados.</string>
     <string name="select_player">Selecionar jogador</string>
     <string name="open_nbt">Abrir NBT</string>
-    <string name="failed_read_player_from_db_with_key_x">Failed to open player entry in DB. key:
+    <string name="failed_read_player_from_db_with_key_x">Falha ao ler a entrada de player na DB com a chave. Chave:
         <xliff:g example="player_123456790" id="player_db_key">%1$s</xliff:g></string>
     <string name="error_cannot_open_world_close_and_try_again">
-        The current Minecraft world could not be opened.
-        Try restarting this app, and close the world in MCPE if it was open.</string>
+        O atual mundo do Minecraft não pode ser aberto.
+        Tente reiniciar o aplicativo, e feche o mundo no MCPE caso ele esteja aberto.</string>
     <string name="confirm_close_world">Você deseja fechar esse mundo?</string>
     <string name="confirm_close_nbt_editor">Você realmente deseja fechar o editor NBT?</string>
     <string name="teleport_local_player">Teleportar jogador local</string>
@@ -150,7 +150,7 @@
         <xliff:g example="-123.9" id="z_coordinate">%3$.1f</xliff:g>)</string>
     <string name="failed_teleporting_player">Falha ao Teleportar jogador.</string>
     <string name="failed_to_find_or_edit_local_player_data">
-        Failed to find/edit local player data.</string>
+        Falha ao encontrar/editar dados do jogador local.</string>
     <string name="default_custom_marker_name">Meu marcador personalizado</string>
     <string name="marker_invalid_name">Nome de marcador inválido!</string>
     <string name="invalid_icon_name">Nome de ícone inválido!</string>
@@ -166,17 +166,17 @@
         Esse tipo de dado ainda não existe para o chunk
         Isso precisa que você saia primeiro, você deseja criar isso?</string>
     <string name="creating_and_saving_chunk_NBT_data">
-        Creating and saving new NBT chunk data…</string>
+        Criando e salvando novos dados NBT do chunk…</string>
     <string name="created_and_saved_chunk_NBT_data">
         Criado e salvo novos dados NBT do chunk!</string>
     <string name="failed_to_create_or_save_chunk_NBT_data">
-        Error: failed to create/save the new NBT chunk data.</string>
+        Erro: Falha ao criar/salvar novos dados NBT dos chunks atuais.</string>
     <string name="full_date_format" translatable="false">dd/MM/yyyy hh:mm a</string>
     <string name="error_could_not_open_world_details_lost_track_world">
-        Error: could not open world details; lost track of world.</string>
-    <string name="error_could_not_open_world">Error: could not open world.</string>
+        Erro: Não é possível abrir dados do mundo; Perda do caminho do mundo.</string>
+    <string name="error_could_not_open_world">Erro: Não é possível abrir o mundo.</string>
 
-    <string name="no_level_data_available">no level-data available</string>
+    <string name="no_level_data_available">Sem dados disponíveis</string>
     <string name="worldlist_detail_world_name">Nome do mundo:</string>
     <string name="worldlist_detail_world_size">Tamanho do mundo:</string>
     <string name="worldlist_detail_gamemode">Modo de jogo:</string>
@@ -208,15 +208,15 @@
     <string name="failed_to_do_NBT_change">Erro: Falha ao alterar tag NBT.</string>
     <string name="nbt_tag_options">Opções da tag NBT</string>
     <string name="clipboard_key_exists_in_compound">
-        Error: clipboard-key already exists in the compound!</string>
+        Erro: A chave da área de transferência ja existe na DB!</string>
     <string name="error_cannot_overwrite_tag_unknow_parent_type">
-        Error: cannot overwrite tag: unknown parent NBT type.</string>
+        Erro: Não é possível sobrescrever tag: Tipo de NBT pai desconhecido.</string>
     <string name="error_cannot_overwrite_in_empty_parent">
-        Error: cannot overwrite NBT in an empty parent tag.</string>
+        Erro: Não é possível sobrescrever tag em um NBT pai vazio.</string>
     <string name="error_cannot_paste_as_sub_unknown_parent_type">
-        Error: cannot paste as sub-tag: unknown parent NBT type.</string>
+        Erro: Não foi possível copiar como sub-tag: NBT pai desconhecido.</string>
     <string name="error_cannot_remove_from_empty_list">
-        Error: cannot remove NBT from empty list.</string>
+        Erro: Não é possível remover NBT de uma lista vazio.</string>
     <string name="rename_nbt_tag">Renomear tag NBT</string>
     <string name="rename">Renomear</string>
     <string name="error_parent_already_contains_child_with_same_key">
@@ -226,7 +226,7 @@
     <string name="sub_tags_only_add_compound_list">
         Error: sub-tags can only be added to compound tags and list tags.</string>
     <string name="no_data_changed_nothing_to_save">
-        No data has changed, nothing to save.</string>
+        Nenhum dado foi alterado, nada para salvar...</string>
     <string name="confirm_nbt_editor_changes">
         Você realmente deseja salvar suas alterações?</string>
     <string name="failed_find_player">Falha ao localizar jogador.</string>
@@ -247,15 +247,15 @@
         <xliff:g example="42.122333" id="y_coordinate">%3$d</xliff:g>,
         <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)</string>
     <string name="no_map_available">Mapa não disponível.</string>
-    <string name="searching_for_players">Searching for markers…</string>
-    <string name="failed_to_retrieve_player_data">Failed to retrieve player data.</string>
+    <string name="searching_for_players">Pesquisando por marcadores…</string>
+    <string name="failed_to_retrieve_player_data">Falha ao carregar dados do jogador.</string>
     <string name="go_to_player">Ir para jogador</string>
     <string name="go_loud">Ir!</string>
     <string name="go_to_coordinate">Ir para coordenada</string>
     <string name="teleported_player_to_xyz_dimension">Jogador teleportado para: </string>
-    <string name="marker_is_not_removable">This marker is not meant to be removed!</string>
+    <string name="marker_is_not_removable">Esse marcador não pode ser removido!</string>
     <string name="sub_chunk">Sub-chunk</string>
-    <string name="choose_subchunk">Choose a sub–chunk (0…):</string>
+    <string name="choose_subchunk">Selecione um ub–chunk (0…):</string>
     <string name="filter_markers">Filtrar marcadores</string>
     <string name="show_map">Exibir mapa</string>
     <string name="select_world">Selecionar mundo</string>
@@ -303,14 +303,14 @@
     <string name="go_to_spawn">Ir para o Spawn</string>
     <string name="err_noworld_1">Nenhum mundo encontrado.</string>
     <string name="err_noworld_2">
-        Note that newer Minecraft puts your worlds in its private data by default.
-        For this reason, all tools won\'t be able to access the worlds.
-        You\'d have to set Minecraft to use \"external\" storage, by go to Minecraft-&gt;
-        Settings-&gt;Profile-&gt;File Storage Location, and change the option from
-        \"Application\" to \"External\".
-        After that, newly created worlds would be accessible by Blocktopograph, while
-        existing worlds may not be opened. You may want to google about
-        how to move previous worlds to external.
+        Nota: As novas versões do Minecraft colocam os mundos na data privada do dispositivo.
+        Por essa razão, apenas o Minecraft pode acessar esses mundos.
+        Você precisa definir o Minecraft para salvar seus mundos no armazenamento "externo\" , vá para Minecraft-&gt;
+        Configurações-&gt;Perfil-&gt; Localização de armazenamento de mundos, e altere a opção de
+        \"Aplicativo\" to \"Externo\".
+        Após isso, novos mundos poderão ser acessados pelo Blocktopograph, mas
+        Mundos já existentes não poderão ser acessados. Você deverá procurar no Google
+        como mover os mundos para o armazenamento externo.
     </string>
     <string name="world_mark_neteas">[NetEase]</string>
     <string name="create_world_title">Criar mundo plano</string>
@@ -361,11 +361,11 @@
         -->"\nan Minecraft world editor and terrain viewer."<!--
         -->"\nGet from Play Store and create your own customized world!"<!--
     --></string>
-    <string name="locator_page_player">Players</string>
+    <string name="locator_page_player">Jogadores</string>
     <string name="player_position_desc">At (%1$d, %2$d, %3$d) of %4$s</string>
     <string name="gps_advanced_locator">Advanced Locator...</string>
-    <string name="locator_page_marker">Markers</string>
-    <string name="locator_page_coor">Coordinate</string>
+    <string name="locator_page_marker">Marcadores</string>
+    <string name="locator_page_coor">Coordenadas</string>
     <string name="gps_picer">Get full picture\nof world</string>
     <string name="picer_title">Full Picture</string>
     <string name="picer_dowhat">This would generate a picture of the world, and crash.</string>
@@ -378,49 +378,49 @@
     <string name="picer_failed_nodata">No terrain found.</string>
     <string name="picer_warn_wrong_chunks">Warning: There\'re corrupted or unsupported chunks found and ignored.</string>
     <string name="picer_warn_old_chunks">Warning: There\'re old and unsupported chunks found and ignored. Reloading the world with newer Minecraft may fix this.</string>
-    <string name="picer_progress_analyzing">Analyzing</string>
-    <string name="picer_progress_generating">Generating</string>
+    <string name="picer_progress_analyzing">Analisando</string>
+    <string name="picer_progress_generating">Gerando</string>
     <string name="picer_preview">Preview:</string>
-    <string name="picer_save">Save</string>
+    <string name="picer_save">Salvar</string>
     <string name="picer_save_text">Picture will be saved to your Download folder.</string>
     <string name="picer_saved">Picture saved.</string>
-    <string name="general_share">Share</string>
-    <string name="picer_share_title">Share With</string>
-    <string name="picer_preview_generating">Generating preview...</string>
+    <string name="general_share">Compartilhar</string>
+    <string name="picer_share_title">Compartilhar com</string>
+    <string name="picer_preview_generating">Gerando preview...</string>
     <string name="picer_scale_title">Select scale:</string>
     <string name="picer_scale_approxim">Approximately %1$dx%2$d.</string>
     <string name="picer_failed_too_large">Sorry but the area is too large.</string>
     <string name="picer_warn_not_scalable">(Not scalable)</string>
-    <string name="picer_btn_generate">Generate</string>
-    <string name="func_begin_selection">Begin selection</string>
-    <string name="func_cancel_selection">Cancel selection</string>
+    <string name="picer_btn_generate">Gerar</string>
+    <string name="func_begin_selection">Iniciar seleção</string>
+    <string name="func_cancel_selection">Cancelar seleção</string>
     <string name="map_sel_panel_title">Selection Options</string>
-    <string name="map_sel_menu_sel">Selection</string>
-    <string name="map_sel_from_seg_1">From [</string>
+    <string name="map_sel_menu_sel">Seleção</string>
+    <string name="map_sel_from_seg_1">Para [</string>
     <string name="map_sel_from_seg_2">,</string>
     <string name="map_sel_from_seg_3">]</string>
     <string name="map_sel_to">To [ %1$d, %2$d ] (including from and to)</string>
     <string name="map_sel_range_seg_1">Range</string>
     <string name="map_sel_range_seg_2">x</string>
-    <string name="map_sel_menu_apply">Apply</string>
+    <string name="map_sel_menu_apply">Aplicar</string>
     <string name="map_sel_error_size_one">Width and height shall be at least 1.</string>
     <string name="map_sel_menu_op">Operations</string>
     <string name="map_edit_func_lampshade">Lampshade all torches</string>
     <string name="map_edit_lampshade_note">This would add glass shades to torches in selected area. Worlds of Minecraft Bedrock 1.4.x or higher are supported. We advice you to back up your world before any modification in Blocktopograph.</string>
-    <string name="map_edit_snr_find_in">Find in</string>
-    <string name="map_edit_snr_bg">Background</string>
-    <string name="map_edit_snr_fg">Foreground</string>
-    <string name="map_edit_snr_or">Either</string>
-    <string name="map_edit_snr_both">Both</string>
-    <string name="map_edit_snr_find_for">Find for</string>
-    <string name="map_edit_snr_fg_slot">Foreground slot:</string>
-    <string name="map_edit_snr_bg_slot">Background slot:</string>
+    <string name="map_edit_snr_find_in">Procurar em</string>
+    <string name="map_edit_snr_bg">Fundo</string>
+    <string name="map_edit_snr_fg">Primeiro-Plano</string>
+    <string name="map_edit_snr_or">Ou</string>
+    <string name="map_edit_snr_both">Ambos</string>
+    <string name="map_edit_snr_find_for">Procurar por</string>
+    <string name="map_edit_snr_fg_slot">Slot primeiro-plano:</string>
+    <string name="map_edit_snr_bg_slot">Slot background:</string>
     <string name="map_edit_snr_place_in">Then place in</string>
     <string name="map_edit_snr_and_long">Foreground and background</string>
     <string name="map_edit_func_snr">Find &amp; Replace</string>
     <string name="map_edit_snr_ignore_subtype">Ignore sub-types</string>
     <string name="map_edit_snr_help_background">Simple find and replace can be done ignoring background slot. Since Minecraft BE 1.4.x, background slots are used to store water coexisting with other blocks, however they can be used to place any block. For advanced map makers you can really make good use of the feature.</string>
     <string name="map_sel_warn_backup">MAKE A BACKUP BEFORE PROCEED!</string>
-    <string name="create_world_biome_id">Biome:</string>
-    <string name="create_world_biome_hint">Numeric ID of biome, 21 by default</string>
+    <string name="create_world_biome_id">Bioma:</string>
+    <string name="create_world_biome_hint">ID numérico do bioma, 21 por padrão</string>
 </resources>
