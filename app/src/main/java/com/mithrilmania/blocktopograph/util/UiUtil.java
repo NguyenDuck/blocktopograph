@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.GeneralWaitBinding;
+import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.Block;
 
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +48,14 @@ public final class UiUtil {
         GradientDrawable gradientDrawable = (GradientDrawable) drawable;
         Color color = block.color;
         int res = (block.id == 0) ? 0 : ColorUtils.blendARGB(color.asARGB(), 0x7f7f7f7f, 0.5f);
+        gradientDrawable.setColor(res);
+    }
+
+    public static void blendBlockColor(@NotNull View view, Biome biome) {
+        Drawable drawable = view.getBackground();
+        if (!(drawable instanceof GradientDrawable)) return;
+        GradientDrawable gradientDrawable = (GradientDrawable) drawable;
+        int res = ColorUtils.blendARGB(biome.color.asARGB(), 0x7f7f7f7f, 0.5f);
         gradientDrawable.setColor(res);
     }
 

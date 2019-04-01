@@ -91,6 +91,7 @@ public class MapFragment extends Fragment {
     public static final String TAG_PICER = "picer";
     public static final int MARKERS_ON_SCREEN_TOO_MANY = 100;
     public static final String PREF_KEY_HAS_NOTIFIED_MARKERS_TOO_MANY = "has_notified_markers_too_many";
+    public static final String PREF_KEY_HAS_USED_SELECTION = "hasUsedSelection";
     //static, remember choice while app is open.
     static Map<NamedBitmapProvider, BitmapChoiceListAdapter.NamedBitmapChoice> markerFilter = new HashMap<>();
 
@@ -410,7 +411,7 @@ public class MapFragment extends Fragment {
             WorldActivityInterface worldProvider = this.worldProvider.get();
             if (worldProvider == null) return;
             DialogFragment fragment = PicerFragment.create(world,
-                    new DimensionVector3<>(0, 0, 0, worldProvider.getDimension()));
+                    worldProvider.getDimension(), null, this::triggerLongPressAtCenter);
             fragment.show(getChildFragmentManager(), TAG_PICER);
         });
         mBinding.fabMenuGpsPicer.setImageDrawable(
@@ -490,6 +491,22 @@ public class MapFragment extends Fragment {
 
         tileView.setScale(0.5f);
 
+        // Notify user to try using selection.
+        if (!activity.getPreferences(Context.MODE_PRIVATE).getBoolean(PREF_KEY_HAS_USED_SELECTION, false)) {
+            if (System.currentTimeMillis() % 25 == 0) tileView.postDelayed(() -> {
+                FragmentActivity activity1 = getActivity();
+                if (activity1 == null) return;
+                new AlertDialog.Builder(activity1)
+                        .setMessage(R.string.map_notice_try_selection)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .create()
+                        .show();
+                activity1.getPreferences(Context.MODE_PRIVATE)
+                        .edit()
+                        .putBoolean(PREF_KEY_HAS_USED_SELECTION, true)
+                        .apply();
+            }, 1000);
+        }
 
         boolean framedToPlayer = false;
 
@@ -690,21 +707,28 @@ public class MapFragment extends Fragment {
 
     private void doSelectionBasedEdit(@NotNull EditFunction func, @Nullable Bundle args) {
         WorldActivityInterface worldActivityInterface = worldProvider.get();
-        if (worldActivityInterface == null) return;
-        new SelectionBasedContextFreeEditTask(func, args, this).execute(
-                new RectEditTarget(
-                        world.getWorldData(),
-                        mBinding.selectionBoard.getSelection(),
-                        worldActivityInterface.getDimension())
-        );
         FragmentActivity activity = getActivity();
-        if (activity != null)
-            switch (func) {
-                case LAMPSHADE:
-                case SNR:
-                    Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.SNR_OPEN);
-                    break;
+        if (worldActivityInterface == null || activity == null) return;
+        switch (func) {
+            case SNR:
+            case LAMPSHADE:
+            case CHBIOME:
+            case DCHUNK:
+                new SelectionBasedContextFreeEditTask(func, args, this).execute(
+                        new RectEditTarget(
+                                world.getWorldData(),
+                                mBinding.selectionBoard.getSelection(),
+                                worldActivityInterface.getDimension())
+                );
+                break;
+            case PICER: {
+                PicerFragment fragment = PicerFragment.create(
+                        world, worldActivityInterface.getDimension(),
+                        mBinding.selectionBoard.getSelection(), null
+                );
+                fragment.show(activity.getSupportFragmentManager(), TAG_PICER);
             }
+        }
     }
 
     /**
@@ -841,13 +865,20 @@ public class MapFragment extends Fragment {
         return values;
     }
 
+    private void triggerLongPressAtCenter() {
+        MotionEvent event = MotionEvent.obtain(0L, 0L, 0,
+                (float) (mBinding.tileView.getMeasuredWidth() / 2),
+                (float) (mBinding.tileView.getMeasuredHeight() / 2), 0);
+        onLongPressed(event);
+        // ...
+    }
+
     /**
      * Map long press handler, shows a list of options.
      *
      * @param event long press event.
      */
     private void onLongPressed(@NotNull MotionEvent event) {
-
         Dimension dimension = worldProvider.get().getDimension();
 
         // 1 chunk per tile on scale 1.0
@@ -933,8 +964,11 @@ public class MapFragment extends Fragment {
             openFloatPane(fragment);
             setUpSelectionMenu();
             Activity activity = getActivity();
-            if (activity != null)
+            if (activity != null) {
                 Log.logFirebaseEvent(activity, Log.CustomFirebaseEvent.SELECTION);
+                activity.getPreferences(Context.MODE_PRIVATE).edit()
+                        .putBoolean(PREF_KEY_HAS_USED_SELECTION, true).apply();
+            }
         }
     }
 

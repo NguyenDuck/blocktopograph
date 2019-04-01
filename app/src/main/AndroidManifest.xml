@@ -88,6 +88,11 @@
             android:label="@string/title_test_page"
             android:parentActivityName=".worldlist.WorldItemListActivity" />
 
+        <activity
+            android:name=".BiomeSelectDialog"
+            android:label="@string/biome_pick_title"
+            android:theme="@style/AppTheme.Dialog" />
+
         <meta-data
             android:name="android.support.VERSION"
             android:value="28.0.0"

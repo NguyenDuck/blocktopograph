@@ -115,7 +115,9 @@ public class Log {
         CREATE_WORLD_SAVE("create_world_save"),
         SELECTION("selection_begin"),
         SNR_OPEN("snr_open"),
-        SNR_EXEC("snr_exec");
+        SNR_EXEC("snr_exec"),
+        DCHUNK("dchunk_open"),
+        CH_BIOME("ch_biome_open");
 
         public final String eventID;
 

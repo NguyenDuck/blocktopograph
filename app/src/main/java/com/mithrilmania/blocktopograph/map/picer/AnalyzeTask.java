@@ -1,6 +1,7 @@
 package com.mithrilmania.blocktopograph.map.picer;
 
 import android.app.Activity;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 
 import com.litl.leveldb.DB;
@@ -16,14 +17,12 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
-class AnalyzeTask extends AsyncTask<Void, Void, Area> {
+class AnalyzeTask extends AsyncTask<Void, Void, Rect> {
 
     private final WeakReference<PicerFragment> owner;
     private boolean hasWrongChunks;
@@ -52,7 +51,7 @@ class AnalyzeTask extends AsyncTask<Void, Void, Area> {
 
     @Override
     @Nullable
-    protected Area doInBackground(Void... voids) {
+    protected Rect doInBackground(Void... voids) {
 
         PicerFragment owner = this.owner.get();
         if (owner == null) return null;
@@ -87,8 +86,12 @@ class AnalyzeTask extends AsyncTask<Void, Void, Area> {
                 return null;
         }
 
-        List<Area> areas = new ArrayList<>(32);
-        Area.maxDist = 10;
+        // We used to separate world into areas or clusters, now that
+        // we have selection so just measure whole world here.
+        // If it's too large we just say select before using this.
+        //List<Area> areas = new ArrayList<>(32);
+        //Area.maxDist = 10;
+        Rect rect = null;
 
         // Iterate over all items.
         try {
@@ -127,18 +130,31 @@ class AnalyzeTask extends AsyncTask<Void, Void, Area> {
                         continue loop;
                 }
 
-                // Add the chunk to area list.
-                add:
-                {
-                    for (Area area : areas) {
-                        // Try add to existing areas.
-                        if (area.add(x, z)) break add;
-                    }
-                    // Failed then create new.
-                    areas.add(new Area(x, z));
+                if (rect != null) {
+                    if (x < rect.left) rect.left = x;
+                    else if (x > rect.right) rect.right = x;
+                    if (z < rect.top) rect.top = z;
+                    else if (z > rect.bottom) rect.bottom = z;
+                    if (rect.right - rect.left > PicerFragment.MAX_LENGTH
+                            || rect.bottom - rect.top > PicerFragment.MAX_LENGTH
+                            || loopCount % 36 == 0 && (rect.right - rect.left) * (rect.bottom - rect.top) > PicerFragment.MAX_AREA)
+                        break;
+                } else {
+                    rect = new Rect(x, z, x, z);
                 }
-                // As more chunks were read maybe we can merge more of them.
-                if (loopCount > 16) Area.absMergeList(areas);
+
+                // Add the chunk to area list.
+//                add:
+//                {
+//                    for (Area area : areas) {
+//                        // Try add to existing areas.
+//                        if (area.add(x, z)) break add;
+//                    }
+//                    // Failed then create new.
+//                    areas.add(new Area(x, z));
+//                }
+//                // As more chunks were read maybe we can merge more of them.
+//                if (loopCount > 16) Area.absMergeList(areas);
             }
             iterator.close();
             if (cancelled) return null;
@@ -148,17 +164,24 @@ class AnalyzeTask extends AsyncTask<Void, Void, Area> {
         }
 
         // Final merge. Redundant? Who cares.
-        Area.absMergeList(areas);
-
-        owner = this.owner.get();
-        if (owner == null) return null;
-
-        if (areas.size() == 0) return null;
-        if (areas.size() == 1) return areas.get(0);
-
-        // Then should decide which area to use based on camera position.
-        // For not let's ignore.
-        return areas.get(0);
+//        Area.absMergeList(areas);
+//
+//        owner = this.owner.get();
+//        if (owner == null) return null;
+//
+//        if (areas.size() == 0) return null;
+//        if (areas.size() == 1) return areas.get(0);
+//
+//        // Then should decide which area to use based on camera position.
+//        // For not let's ignore.
+//        return areas.get(0);
+        if (rect != null) {
+            rect.left *= 16;
+            rect.top *= 16;
+            rect.right *= 16 + 15;
+            rect.bottom *= 16 + 15;
+        }
+        return rect;
     }
 
     @Override
@@ -171,7 +194,7 @@ class AnalyzeTask extends AsyncTask<Void, Void, Area> {
     }
 
     @Override
-    protected void onPostExecute(@Nullable Area area) {
+    protected void onPostExecute(@Nullable Rect rect) {
 
         // We finished too late. No longer needed.
         PicerFragment owner = this.owner.get();
@@ -179,13 +202,8 @@ class AnalyzeTask extends AsyncTask<Void, Void, Area> {
         owner.mOngoingTask = null;
         waitDialog.dismiss();
 
-        if (area != null) {
-            // Show warnings if exist.
-            if (hasWrongChunks)
-                owner.showWarningForWrongChunks();
-            if (hasOldChunks)
-                owner.showWarningForOldChunks();
-            owner.onAnalyzeDone(area);
+        if (rect != null) {
+            owner.onAnalyzeDone(rect);
 
         } else if (hasWrongChunks || hasOldChunks) {
             // Size 0 with exception, dismiss and show exception in dialog.

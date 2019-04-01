@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_edit_chbiome_for"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <RadioGroup
+            android:id="@+id/change_for"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@id/biome_for_all"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/biome_for_all"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/map_edit_chbiome_all" />
+
+            <RadioButton
+                android:id="@+id/biome_for_specific"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/map_edit_chbiome_for_specific" />
+
+        </RadioGroup>
+
+        <include
+            android:id="@+id/biome_view"
+            layout="@layout/include_biome_disp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/map_edit_chbiome_to"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <include
+            android:id="@+id/biome_replace"
+            layout="@layout/include_biome_disp" />
+
+    </LinearLayout>
+</layout>

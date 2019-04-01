@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,13 +47,9 @@
                         android:layout_height="wrap_content"
                         android:text="@string/create_world_biome_id" />
 
-                    <EditText
-                        android:id="@+id/world_biome"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/create_world_biome_hint"
-                        android:inputType="number"
-                        tools:ignore="Autofill" />
+                    <include
+                        android:id="@+id/biome_view"
+                        layout="@layout/include_biome_disp" />
 
                     <TextView
                         android:layout_width="match_parent"

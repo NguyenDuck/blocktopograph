@@ -29,10 +29,11 @@
     <string name="app_about">
         This app is created by <a href="http://twitter.com/protolambda">@protolambda</a>,
         contributed by
-        <a href="https://github.com/MithrilMania/blocktopograph">@MithrilMania</a>,
-        <a href="https://github.com/flagmaggot/blocktopograph">@flagmaggot</a>,
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a>,
-        <a href="https://github.com/MiemieMethod/blocktopograph">@MiemieMethod</a> and others as well.\n\n
+        <a href="https://github.com/MithrilMania">@MithrilMania</a>,
+        <a href="https://github.com/flagmaggot">@flagmaggot</a>,
+        <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>,
+        <a href="https://github.com/MiemieMethod">@MiemieMethod</a>,
+        <a href="https://github.com/LordJunior">Manuel</a> and many others as well.\n\n
         Available on Google Play.\n\n
         Current active github repository:
         <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
@@ -339,7 +340,7 @@
     <string name="create_need_restart">After creating, the world will appear in Minecraft after restarting the game.</string>
     <string name="title_test_page">Test Page</string>
     <string name="create_world_book_title">Meow~</string>
-    <string name="create_world_book_page_0" translatable="false"><!--
+    <string name="create_world_book_page_0"><!--
         -->"\n§cWelcome~ Meow~"<!--
         -->"\n§rCreated by"<!--
         -->"\n§3Blocktopograph"<!--
@@ -367,8 +368,8 @@
     <string name="locator_page_marker">Markers</string>
     <string name="locator_page_coor">Coordinate</string>
     <string name="gps_picer">Get full picture\nof world</string>
-    <string name="picer_title">Full Picture</string>
-    <string name="picer_dowhat">This would generate a picture of the world, and crash.</string>
+    <string name="picer_title">Take Picture</string>
+    <string name="picer_dowhat">This would generate a picture of the world, and may crash.</string>
     <string name="picer_ask_wrong_chunks">There are corrupted or unsupported data, skip or cancel?</string>
     <string name="picer_ask_old_chunks">There\'re data from old Minecraft version in the world. You may want to cancel now, and open the world in newer Minecraft to have data automatically updated. You can also ignore these data.</string>
     <string name="general_ignore">Ignore</string>
@@ -376,8 +377,6 @@
     <string name="picer_failed_corrupt">Your world cannot be understood by Blocktopograph, perhaps your game version is too old or too new.</string>
     <string name="picer_failed_old">This world is of a too old Minecraft version therefore cannot be read.</string>
     <string name="picer_failed_nodata">No terrain found.</string>
-    <string name="picer_warn_wrong_chunks">Warning: There\'re corrupted or unsupported chunks found and ignored.</string>
-    <string name="picer_warn_old_chunks">Warning: There\'re old and unsupported chunks found and ignored. Reloading the world with newer Minecraft may fix this.</string>
     <string name="picer_progress_analyzing">Analyzing</string>
     <string name="picer_progress_generating">Generating</string>
     <string name="picer_preview">Preview:</string>
@@ -386,11 +385,8 @@
     <string name="picer_saved">Picture saved.</string>
     <string name="general_share">Share</string>
     <string name="picer_share_title">Share With</string>
-    <string name="picer_preview_generating">Generating preview...</string>
     <string name="picer_scale_title">Select scale:</string>
-    <string name="picer_scale_approxim">Approximately %1$dx%2$d.</string>
-    <string name="picer_failed_too_large">Sorry but the area is too large.</string>
-    <string name="picer_warn_not_scalable">(Not scalable)</string>
+    <string name="picer_warn_not_scalable">Each block will be one pixel\'s large. If you select a smaller area, then you will be able to scale the picture larger.</string>
     <string name="picer_btn_generate">Generate</string>
     <string name="func_begin_selection">Begin selection</string>
     <string name="func_cancel_selection">Cancel selection</string>
@@ -405,7 +401,7 @@
     <string name="map_sel_menu_apply">Apply</string>
     <string name="map_sel_error_size_one">Width and height shall be at least 1.</string>
     <string name="map_sel_menu_op">Operations</string>
-    <string name="map_edit_func_lampshade">Lampshade all torches</string>
+    <string name="map_edit_func_lampshade">Lampshade Torches</string>
     <string name="map_edit_lampshade_note">This would add glass shades to torches in selected area. Worlds of Minecraft Bedrock 1.4.x or higher are supported. We advice you to back up your world before any modification in Blocktopograph.</string>
     <string name="map_edit_snr_find_in">Find in</string>
     <string name="map_edit_snr_bg">Background</string>
@@ -423,7 +419,8 @@
     <string name="map_sel_warn_backup">ALWAYS MAKE A BACKUP BEFORE PROCEED!</string>
     <string name="create_world_biome_id">Biome:</string>
     <string name="create_world_biome_hint">Numeric ID of biome, 21 by default</string>
-    <string name="map_edit_func_dchunk">Delete chunks</string>
+    <string name="picer_scale_approxim">Approximately %1$dx%2$d.</string>
+    <string name="map_edit_func_dchunk">Delete Chunks</string>
     <string name="map_edit_dchunk_explain">This would DELETE all chunks involved within your selected area. Minecraft could later generate the area again, but your progress within would be lost. Unless you know what \"chunk\" is in Minecraft and understand the consequence, you shouln\'t proceed. Don\'t just follow random online articles.</string>
     <string name="map_edit_dchunk_warn_not_aligned">Your selected area was not aligned to chunk boundary. Don\'t worry, Blocktopograph can adjust for you. The actual deleted area would be slightly larger than the selection. To be accurate, it would be 0~15 blocks larger at each side. That\'s because the area can only be re-generated if it was deleted with its containing chunks. If you don\'t like the auto-adjustment you can cancel and change the selection yourself.</string>
     <string name="map_edit_dchunk_posbtn_with_auto_adjust">Continue with auto-adjust</string>
@@ -451,4 +448,19 @@
      --></string>
     <string name="privacy_promo_accept_btn" translatable="false">Accept></string>
     <string name="privacy_promo_reject_btn" translatable="false">Quit</string>
+    <string name="biome_pick_title">Pick A Biome</string>
+    <string name="map_edit_func_chbiome">Change Biome</string>
+    <string name="map_edit_chbiome_for">For</string>
+    <string name="map_edit_chbiome_all">All</string>
+    <string name="map_edit_chbiome_for_specific">Specific biome</string>
+    <string name="map_edit_chbiome_to">Change to</string>
+    <string name="map_notice_try_selection">You can long click on map, choose \"Begin selection\" and try editing.</string>
+    <string name="map_picer_world_too_large">World Too Large</string>
+    <string name="map_picer_use_selection_instead">The world is too large. You can either:\n(1) Use a similar tool on PC;\n(2) Or begin a selection of part of the world, and choose \"Generate Picture\" from selection menu.</string>
+    <string name="map_picer_scale_guide">You can scale the picture larger. One pixel per block at least.</string>
+    <string name="map_picer_selection_too_large">Selection Too Large</string>
+    <string name="map_picer_selection_too_large_detail">Your selected area is too large. Width and height should both be within %1$d blocks, and the area should be within %2$d block²s.</string>
+    <string name="map_edit_func_picer">Generate Picture</string>
+    <string name="picer_preview_generating">Generating Preview...</string>
+    <string name="map_locator_player_pos_unknown">Position unknown</string>
 </resources>

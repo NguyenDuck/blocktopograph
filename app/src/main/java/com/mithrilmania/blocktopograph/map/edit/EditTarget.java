@@ -19,7 +19,9 @@ public abstract class EditTarget {
         mWorldData = worldData;
     }
 
-    public abstract EditResultCode forEachXyzd(RandomAccessEdit edit);
+    public abstract EditResultCode forEachXyz(RandomAccessEdit edit);
+
+    public abstract EditResultCode forEachXz(RandomAccessEdit edit);
 
     public abstract EditResultCode forEachChunk(ChunkBasedEdit edit);
 

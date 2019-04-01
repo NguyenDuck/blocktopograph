@@ -151,6 +151,22 @@
                 android:layout_gravity="start"
                 android:text="@string/map_edit_func_dchunk" />
 
+            <TextView
+                android:id="@+id/func_chbiome"
+                style="@style/AppTheme.Floating.SmallTextButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/map_edit_func_chbiome" />
+
+            <TextView
+                android:id="@+id/func_picer"
+                style="@style/AppTheme.Floating.SmallTextButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/map_edit_func_picer" />
+
         </GridLayout>
 
         <TextView

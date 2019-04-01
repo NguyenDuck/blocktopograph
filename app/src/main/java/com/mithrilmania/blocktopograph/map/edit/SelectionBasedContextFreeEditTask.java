@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
@@ -72,6 +73,13 @@ public class SelectionBasedContextFreeEditTask extends
             }
             case DCHUNK:
                 return doDchunk(editTargets);
+            case CHBIOME: {
+                Serializable serFrom, serTo;
+                if (mArgs == null || !((serTo = mArgs.getSerializable(ChBiomeFragment.KEY_TO)) instanceof Biome))
+                    return EditResultCode.GENERAL_FAILURE;
+                serFrom = mArgs.getSerializable(ChBiomeFragment.KEY_FROM);
+                return doChBiome(serFrom instanceof Biome ? (Biome) serFrom : null, (Biome) serTo, editTargets);
+            }
         }
 
         return null;
@@ -81,7 +89,7 @@ public class SelectionBasedContextFreeEditTask extends
         SnrEdit edit = new SnrEdit(cfg);
         for (EditTarget editTarget : editTargets) {
             editTarget.setMaxError(Integer.MAX_VALUE);
-            editTarget.forEachXyzd(edit);
+            editTarget.forEachXyz(edit);
         }
         return EditResultCode.SUCCESS;
     }
@@ -91,6 +99,16 @@ public class SelectionBasedContextFreeEditTask extends
         for (EditTarget editTarget : editTargets) {
             editTarget.setMaxError(Integer.MAX_VALUE);
             editTarget.forEachChunk(edit);
+        }
+        return EditResultCode.SUCCESS;
+    }
+
+    private EditResultCode doChBiome(@Nullable Biome from, @NotNull Biome to,
+                                     @NotNull EditTarget... editTargets) {
+        ChBiomeEdit edit = new ChBiomeEdit(from, to);
+        for (EditTarget editTarget : editTargets) {
+            editTarget.setMaxError(Integer.MAX_VALUE);
+            editTarget.forEachXz(edit);
         }
         return EditResultCode.SUCCESS;
     }

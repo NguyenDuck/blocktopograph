@@ -2,6 +2,7 @@ package com.mithrilmania.blocktopograph;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import com.mithrilmania.blocktopograph.databinding.ActivityCreateWorldBinding;
 import com.mithrilmania.blocktopograph.flat.EditFlatFragment;
 import com.mithrilmania.blocktopograph.flat.FlatLayers;
 import com.mithrilmania.blocktopograph.flat.Layer;
+import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.nbt.InventoryHolder;
 import com.mithrilmania.blocktopograph.nbt.ItemTag;
@@ -34,10 +36,13 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.tomergoldst.tooltips.ToolTip;
 import com.tomergoldst.tooltips.ToolTipsManager;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,6 +60,7 @@ import static android.content.res.AssetManager.ACCESS_STREAMING;
 
 public final class CreateWorldActivity extends AppCompatActivity {
 
+    public static final int REQUEST_CODE_PICK_BIOME = 2012;
     private ActivityCreateWorldBinding mBinding;
     private ToolTipsManager mToolTipsManager;
 
@@ -65,6 +71,8 @@ public final class CreateWorldActivity extends AppCompatActivity {
         //mBinding.scroll.post(()->mBinding.scroll.doOverScroll());
         mToolTipsManager = new ToolTipsManager();
         Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.CREATE_WORLD_OPEN);
+
+        setBiomeToView(Biome.JUNGLE);
     }
 
     public void onClickPositiveButton(View view) {
@@ -79,6 +87,28 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 getString(R.string.edit_flat_help), ToolTip.POSITION_ABOVE)
                 .setAlign(ToolTip.ALIGN_LEFT);
         mToolTipsManager.show(builder.build());
+    }
+
+    public void onClickChangeBiome(View view) {
+        startActivityForResult(new Intent(this, BiomeSelectDialog.class), REQUEST_CODE_PICK_BIOME);
+    }
+
+    private void setBiomeToView(@NotNull Biome biome) {
+        UiUtil.blendBlockColor(mBinding.biomeView.root, biome);
+        mBinding.biomeView.setBiome(biome);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PICK_BIOME:
+                if (resultCode == RESULT_OK && data != null) {
+                    Serializable ser = data.getSerializableExtra(BiomeSelectDialog.KEY_BIOME);
+                    if (ser instanceof Biome) setBiomeToView((Biome) ser);
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private static class CreateWorldTask extends AsyncTask<Void, Void, Boolean> {
@@ -111,7 +141,8 @@ public final class CreateWorldActivity extends AppCompatActivity {
             canProceed = true;
             mName = activity.mBinding.worldName.getText().toString();
             mVersion = activity.mBinding.version.getCheckedRadioButtonId();
-            mBiome = UiUtil.readIntFromViewWithDefault(activity.mBinding.worldBiome, 21);
+            Biome biome = activity.mBinding.biomeView.getBiome();
+            mBiome = biome == null ? 21 : biome.id;
             Fragment fr = activity.getSupportFragmentManager().findFragmentById(R.id.frag_layers);
             assert fr instanceof EditFlatFragment;
             EditFlatFragment frag = (EditFlatFragment) fr;

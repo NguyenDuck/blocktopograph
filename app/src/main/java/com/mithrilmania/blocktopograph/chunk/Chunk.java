@@ -93,6 +93,8 @@ public abstract class Chunk {
 
     abstract public int getBiome(int x, int z);
 
+    abstract public void setBiome(int x, int z, int id);
+
     abstract public int getGrassColor(int x, int z);
 
     abstract public int getBlockRuntimeId(int x, int y, int z);
