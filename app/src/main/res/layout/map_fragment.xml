@@ -110,7 +110,6 @@
                     style="@style/MenuButtonsStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     app:srcCompat="@drawable/ic_location"
                     fab:fab_label="@string/gps_picer" />
 

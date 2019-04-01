@@ -3,7 +3,6 @@ package com.mithrilmania.blocktopograph.chunk.terrain;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.map.Block;
-import com.mithrilmania.blocktopograph.map.BlockNameResolver;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTInputStream;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTOutputStream;
@@ -206,7 +205,10 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
             //Read `name` and `val` then resolve the `name` into numeric id.
             String name = ((StringTag) tag.getChildTagByKey(PALETTE_KEY_NAME)).getValue();
             int data = ((ShortTag) tag.getChildTagByKey(PALETTE_KEY_VAL)).getValue();
-            storage.palette.add(BlockNameResolver.resolve(name) << 8 | data);
+            storage.palette.add(
+//                    BlockNameResolver.resolve(name)
+                    Block.resolve(name)
+                            << 8 | data);
         }
 
         //If one day we need to read more BlockStorage's, this line helps.

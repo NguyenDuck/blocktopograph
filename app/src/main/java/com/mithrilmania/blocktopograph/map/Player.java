@@ -46,6 +46,8 @@ public class Player {
     }
 
     public String getPositionDescription(Context context) {
+        if (position == null)
+            return context.getString(R.string.map_locator_player_pos_unknown);
         return context.getString(R.string.player_position_desc,
                 Math.round(position.x), Math.round(position.y),
                 Math.round(position.z), context.getString(position.dimension.getName()));

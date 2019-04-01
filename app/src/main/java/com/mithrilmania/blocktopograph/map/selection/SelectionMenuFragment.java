@@ -16,6 +16,7 @@ import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragSelMenuBinding;
 import com.mithrilmania.blocktopograph.map.FloatPaneFragment;
+import com.mithrilmania.blocktopograph.map.edit.ChBiomeFragment;
 import com.mithrilmania.blocktopograph.map.edit.EditFunction;
 import com.mithrilmania.blocktopograph.map.edit.SearchAndReplaceFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
@@ -34,6 +35,8 @@ import androidx.fragment.app.FragmentManager;
 public class SelectionMenuFragment extends FloatPaneFragment {
 
     public static final String TAG_SNR = "Snr";
+    public static final String TAG_CHBIOME = "Chbiome";
+
     @NotNull
     private final Rect mSelection = new Rect();
     private FragSelMenuBinding mBinding;
@@ -122,28 +125,9 @@ public class SelectionMenuFragment extends FloatPaneFragment {
 
     private void onChooseSnr(View view) {
         SearchAndReplaceFragment fragment = SearchAndReplaceFragment.newInstance(mEditFunctionEntry);
-        FragmentActivity activity = getActivity();
-        FragmentManager fragmentManager = null;
-        if (activity != null) fragmentManager = activity.getSupportFragmentManager();
-        if (fragmentManager == null) fragmentManager = getChildFragmentManager();
+        FragmentManager fragmentManager = getMeowFragmentManager();
         fragment.show(fragmentManager, TAG_SNR);
         Log.logFirebaseEvent(view.getContext(), Log.CustomFirebaseEvent.SNR_OPEN);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_sel_menu, container, false);
-        mBinding.content.setSelection(mSelection);
-        mBinding.content.fromXText.addTextChangedListener(new MeowWatcher(mBinding.content.fromXText));
-        mBinding.content.fromYText.addTextChangedListener(new MeowWatcher(mBinding.content.fromYText));
-        mBinding.content.rangeWText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeWText));
-        mBinding.content.rangeHText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeHText));
-        mBinding.content.applyButton.setOnClickListener(this::onApply);
-        mBinding.content.funcLampshade.setOnClickListener(this::onChooseLampshade);
-        mBinding.content.funcSnr.setOnClickListener(this::onChooseSnr);
-        mBinding.content.funcDchunk.setOnClickListener(this::onChooseDchunk);
-        return mBinding.getRoot();
     }
 
     private void onChooseDchunk(View view) {
@@ -159,6 +143,45 @@ public class SelectionMenuFragment extends FloatPaneFragment {
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
         dialog.show();
+        Log.logFirebaseEvent(view.getContext(), Log.CustomFirebaseEvent.DCHUNK);
+    }
+
+    private void onChooseChbiome(View view) {
+        ChBiomeFragment fragment = ChBiomeFragment.newInstance(mEditFunctionEntry);
+        FragmentManager fragmentManager = getMeowFragmentManager();
+        fragment.show(fragmentManager, TAG_CHBIOME);
+        Log.logFirebaseEvent(view.getContext(), Log.CustomFirebaseEvent.CH_BIOME);
+    }
+
+    private void onChoosePicer(View view) {
+        mEditFunctionEntry.invokeEditFunction(EditFunction.PICER, null);
+    }
+
+    @NotNull
+    private FragmentManager getMeowFragmentManager() {
+        FragmentActivity activity = getActivity();
+        FragmentManager fragmentManager = null;
+        if (activity != null) fragmentManager = activity.getSupportFragmentManager();
+        if (fragmentManager == null) fragmentManager = getChildFragmentManager();
+        return fragmentManager;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_sel_menu, container, false);
+        mBinding.content.setSelection(mSelection);
+        mBinding.content.fromXText.addTextChangedListener(new MeowWatcher(mBinding.content.fromXText));
+        mBinding.content.fromYText.addTextChangedListener(new MeowWatcher(mBinding.content.fromYText));
+        mBinding.content.rangeWText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeWText));
+        mBinding.content.rangeHText.addTextChangedListener(new MeowWatcher(mBinding.content.rangeHText));
+        mBinding.content.applyButton.setOnClickListener(this::onApply);
+        mBinding.content.funcLampshade.setOnClickListener(this::onChooseLampshade);
+        mBinding.content.funcSnr.setOnClickListener(this::onChooseSnr);
+        mBinding.content.funcDchunk.setOnClickListener(this::onChooseDchunk);
+        mBinding.content.funcChbiome.setOnClickListener(this::onChooseChbiome);
+        mBinding.content.funcPicer.setOnClickListener(this::onChoosePicer);
+        return mBinding.getRoot();
     }
 
     public interface EditFunctionEntry {

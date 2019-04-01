@@ -137,6 +137,11 @@ public final class PocketChunk extends Chunk {
     }
 
     @Override
+    public void setBiome(int x, int z, int id) {
+        mData.put(POS_BIOME_DATA + (get2dOffset(x, z) << 2), (byte) id);
+    }
+
+    @Override
     public int getGrassColor(int x, int z) {
         int offset = POS_BIOME_DATA + (get2dOffset(x, z) << 2);
         return Color.rgb(mData.get(offset + 1) & 0xff, mData.get(offset + 2) & 0xff, mData.get(offset + 3) & 0xff);

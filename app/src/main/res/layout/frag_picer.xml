@@ -38,47 +38,39 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/warningWrongChunks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="@string/picer_warn_wrong_chunks"
-                        android:textColor="@android:color/darker_gray"
-                        android:textStyle="italic"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/warningOldChunks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:text="@string/picer_warn_old_chunks"
-                        android:textColor="@android:color/darker_gray"
-                        android:textStyle="italic"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/picer_scale_title" />
-
                     <LinearLayout
                         android:id="@+id/scale_box"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <SeekBar
-                            android:id="@+id/scale_seek"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.0" />
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{Integer.toString(scale)}" />
+                            android:text="@string/picer_scale_title" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/map_picer_scale_guide" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <SeekBar
+                                android:id="@+id/scale_seek"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.0" />
+
+                            <TextView
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:text="@{Integer.toString(scale)}" />
+                        </LinearLayout>
 
                     </LinearLayout>
 

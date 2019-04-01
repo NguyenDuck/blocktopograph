@@ -4,6 +4,8 @@ import android.util.SparseArray;
 
 import com.mithrilmania.blocktopograph.util.Color;
 
+import org.jetbrains.annotations.Contract;
+
 /*
 Biome enum for MCPE -- by @mithrilmania
 
@@ -53,17 +55,17 @@ public enum Biome {
     MESA_PLATEAU(39, "Mesa Plateau", Color.fromRGB(202, 139, 98)),
 
     //fix the colors for these
-    SMALL_END_ISLANDS(40, "Small End Islands",Color.fromRGB(202, 139, 98)),
-    END_MIDLANDS(41, "End Midlands",Color.fromRGB(202, 139, 98)),
-    END_HIGHLANDS(42, "End Highlands",Color.fromRGB(202, 139, 98)),
-    END_BARRENS(43, "End Barrens",Color.fromRGB(202, 139, 98)),
-    WARM_OCEAN(44, "Warm Ocean",Color.fromRGB(202, 139, 98)),
-    LUKEWARM_OCEAN(45, "Lukewarm Ocean",Color.fromRGB(202, 139, 98)),
-    COLD_OCEAN(46, "Cold Ocean",Color.fromRGB(202, 139, 98)),
-    DEEP_WARM_OCEAN(47, "Deep Warm Ocean",Color.fromRGB(202, 139, 98)),
-    DEEP_LUKEWARM_OCEAN(48, "Deep Lukewarm Ocean",Color.fromRGB(202, 139, 98)),
-    DEEP_COLD_OCEAN(49, "Deep Cold Ocean",Color.fromRGB(202, 139, 98)),
-    DEEP_FROZEN_OCEAN(50, "Deep Frozen Ocean",Color.fromRGB(202, 139, 98)),
+    SMALL_END_ISLANDS(40, "Small End Islands", Color.fromRGB(202, 139, 98)),
+    END_MIDLANDS(41, "End Midlands", Color.fromRGB(202, 139, 98)),
+    END_HIGHLANDS(42, "End Highlands", Color.fromRGB(202, 139, 98)),
+    END_BARRENS(43, "End Barrens", Color.fromRGB(202, 139, 98)),
+    WARM_OCEAN(44, "Warm Ocean", Color.fromRGB(202, 139, 98)),
+    LUKEWARM_OCEAN(45, "Lukewarm Ocean", Color.fromRGB(202, 139, 98)),
+    COLD_OCEAN(46, "Cold Ocean", Color.fromRGB(202, 139, 98)),
+    DEEP_WARM_OCEAN(47, "Deep Warm Ocean", Color.fromRGB(202, 139, 98)),
+    DEEP_LUKEWARM_OCEAN(48, "Deep Lukewarm Ocean", Color.fromRGB(202, 139, 98)),
+    DEEP_COLD_OCEAN(49, "Deep Cold Ocean", Color.fromRGB(202, 139, 98)),
+    DEEP_FROZEN_OCEAN(50, "Deep Frozen Ocean", Color.fromRGB(202, 139, 98)),
 
     //fix the colors for the void
     THE_VOID(127, "The Void", Color.fromRGB(81, 79, 195)),
@@ -111,25 +113,31 @@ public enum Biome {
     BAMBOO_JUNGLE(168, "Bamboo Jungle", Color.fromRGB(255, 220, 184)),
     BAMBOO_JUNGLE_HILLS(169, "Bamboo Jungle Hills", Color.fromRGB(255, 220, 184));
 
+    private static final SparseArray<Biome> biomeMap;
+
+    static {
+        biomeMap = new SparseArray<>();
+        for (Biome b : Biome.values()) {
+            biomeMap.put(b.id, b);
+        }
+    }
+
     public final int id;
     public final String name;
     public final Color color;
 
-    Biome(int id, String name, Color color){
+    Biome(int id, String name, Color color) {
         this.id = id;
         this.name = name;
         this.color = color;
     }
 
-    private static final SparseArray<Biome> biomeMap;
-    static {
-        biomeMap = new SparseArray<>();
-        for(Biome b : Biome.values()){
-            biomeMap.put(b.id, b);
-        }
+    public static Biome getBiome(int id) {
+        return biomeMap.get(id);
     }
 
-    public static Biome getBiome(int id){
-        return biomeMap.get(id);
+    @Contract(pure = true)
+    public String getName() {
+        return name;
     }
 }

@@ -121,7 +121,7 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
         }
 
         void doOverScroll(int i) {
-            if (i == 0)
+            if (i == 0 && locatorCoordFragment != null)
                 locatorCoordFragment.doOverScroll();
         }
 

@@ -96,7 +96,8 @@ public final class LocatorPlayersFragment extends LocatorPageFragment {
                 if (owner.mCameraMoveCallback != null) {
                     int index = getAdapterPosition();
                     DimensionVector3<Float> pos = players[index].getPosition();
-                    owner.mCameraMoveCallback.moveCamera(pos.x, pos.z);
+                    if (pos != null)
+                        owner.mCameraMoveCallback.moveCamera(pos.x, pos.z);
                 }
             }
         }

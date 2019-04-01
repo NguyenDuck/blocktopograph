@@ -36,6 +36,10 @@ public final class VoidChunk extends Chunk {
     }
 
     @Override
+    public void setBiome(int x, int z, int id) {
+    }
+
+    @Override
     public int getGrassColor(int x, int z) {
         return 0;
     }

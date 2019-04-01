@@ -119,6 +119,12 @@ public final class BedrockChunk extends Chunk {
         return data2D.get(POS_BIOME_DATA + get2dOffset(x, z));
     }
 
+    @Override
+    public void setBiome(int x, int z, int id) {
+        data2D.put(POS_BIOME_DATA + get2dOffset(x, z), (byte) id);
+        mIs2dDirty = true;
+    }
+
     private int getNoise(int base, int x, int z) {
         // noise values are between -1 and 1
         // 0.0001 is added to the coordinates because integer values result in 0

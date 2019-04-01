@@ -34,17 +34,24 @@ public class RectEditTarget extends EditTarget {
     }
 
     @Override
-    public EditResultCode forEachXyzd(RandomAccessEdit edit) {
-        return forEach(false, null, edit);
+    public EditResultCode forEachXyz(RandomAccessEdit edit) {
+        return forEach(false, false, null, edit);
+    }
+
+    @Override
+    public EditResultCode forEachXz(RandomAccessEdit edit) {
+        return forEach(false, true, null, edit);
     }
 
     @Override
     public EditResultCode forEachChunk(ChunkBasedEdit edit) {
-        return forEach(true, edit, null);
+        return forEach(true, false, edit, null);
     }
 
     @SuppressLint("DefaultLocale")
-    private EditResultCode forEach(boolean chunkBased, @Nullable ChunkBasedEdit chunkBasedEdit, @Nullable RandomAccessEdit randomAccessEdit) {
+    private EditResultCode forEach(boolean chunkBased, boolean is2d,
+                                   @Nullable ChunkBasedEdit chunkBasedEdit,
+                                   @Nullable RandomAccessEdit randomAccessEdit) {
 
         int exceptionCount = 0;
 
@@ -83,21 +90,37 @@ public class RectEditTarget extends EditTarget {
                     for (int innerX = innerMinX; innerX <= innerMaxX; innerX++) {
                         for (int innerZ = innerMinZ; innerZ <= innerMaxZ; innerZ++) {
 
-                            int h = yHighest;//supportHightMap ?
-                            //Math.min(yHighest, chunk.getHeightMapValue(innerX, innerZ) - 1)
-                            //: yHighest;
-                            for (int y = yLowest; y <= h; y++) {
-                                int result = randomAccessEdit.edit(chunk, innerX, y, innerZ);
+                            if (is2d) {
+                                int result = randomAccessEdit.edit(chunk, innerX, 0, innerZ);
                                 if (result != 0) {
                                     if (exceptionCount < 5 || exceptionCount > mMaxError) {
                                         Log.d(this, String.format(
-                                                "Failed with chunk (%d,%d), rel (%d,%d,%d), code %d",
-                                                chunkX, chunkZ, innerX, y, innerZ, result));
+                                                "Failed with chunk (%d,%d), rel (%d,%d), code %d",
+                                                chunkX, chunkZ, innerX, innerZ, result));
                                         if (exceptionCount > mMaxError)
                                             return EditResultCode.QUIT_TOO_MANY_ERROR;
                                         exceptionCount++;
                                     }
                                 }
+                            } else {
+
+                                int h = yHighest;//supportHightMap ?
+                                //Math.min(yHighest, chunk.getHeightMapValue(innerX, innerZ) - 1)
+                                //: yHighest;
+                                for (int y = yLowest; y <= h; y++) {
+                                    int result = randomAccessEdit.edit(chunk, innerX, y, innerZ);
+                                    if (result != 0) {
+                                        if (exceptionCount < 5 || exceptionCount > mMaxError) {
+                                            Log.d(this, String.format(
+                                                    "Failed with chunk (%d,%d), rel (%d,%d,%d), code %d",
+                                                    chunkX, chunkZ, innerX, y, innerZ, result));
+                                            if (exceptionCount > mMaxError)
+                                                return EditResultCode.QUIT_TOO_MANY_ERROR;
+                                            exceptionCount++;
+                                        }
+                                    }
+                                }// End for y
+
                             }
                         }// End for innerZ
                     }// End for innerX

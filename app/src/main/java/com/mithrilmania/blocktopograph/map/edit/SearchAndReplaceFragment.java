@@ -265,11 +265,9 @@ public class SearchAndReplaceFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Context context = requireContext();
-        AlertDialog dialog = new AlertDialog.Builder(context)
-                //.setView(onCreateView(LayoutInflater.from(context), null, savedInstanceState))
+        return new AlertDialog.Builder(context)
                 .setTitle(R.string.map_edit_func_snr)
                 .create();
-        return dialog;
     }
 
     private void onCheckedChanged(@NotNull NestedRadioGroupManager group, @IdRes int checkedId) {

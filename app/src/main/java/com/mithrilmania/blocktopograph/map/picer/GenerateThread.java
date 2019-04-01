@@ -3,12 +3,15 @@ package com.mithrilmania.blocktopograph.map.picer;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.edit.RectEditTarget;
 import com.mithrilmania.blocktopograph.map.renderer.MapRenderer;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -21,7 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 
 class GenerateThread extends Thread {
 
-    private final Area area;
+    private final Rect area;
     private final WeakReference<PicerFragment> owner;
     private final int scale;
     private final Bitmap.Config config;
@@ -29,7 +32,7 @@ class GenerateThread extends Thread {
 
     private boolean cancelled;
 
-    GenerateThread(PicerFragment owner, Area area, int scale, Bitmap.Config config,
+    GenerateThread(PicerFragment owner, Rect area, int scale, Bitmap.Config config,
                    AlertDialog dialog) {
         this.owner = new WeakReference<>(owner);
         this.area = area;
@@ -48,16 +51,11 @@ class GenerateThread extends Thread {
         MapRenderer renderer = dimension.defaultMapType.renderer;
         WorldData wdata = owner.mWorld.getWorldData();
 
-        int chunksCountX = area.mMaxX - area.mMinX;
-        int chunksCountY = area.mMaxZ - area.mMinZ;
+        int width = area.right - area.left + 1;
+        int height = area.bottom - area.top + 1;
 
-        int size = scale * 16;
-
-        Bitmap bitmap = Bitmap.createBitmap(chunksCountX * size,
-                chunksCountY * size, config);
+        Bitmap bitmap = Bitmap.createBitmap(width * scale, height * scale, config);
         Canvas canvas = new Canvas(bitmap);
-
-        Paint paint = new Paint();
 
         int poolSize = 5;
 
@@ -65,23 +63,33 @@ class GenerateThread extends Thread {
                 new ThreadPoolExecutor(poolSize, poolSize, 0, TimeUnit.MILLISECONDS,
                         new ArrayBlockingQueue<>(poolSize << 1),
                         new ThreadPoolExecutor.CallerRunsPolicy());
-        for (Area.Member member : area.getList()) {
-            if (cancelled) {
-                executor.shutdownNow();
-                return;
+
+        ThreadLocal<Paint> paintSub = new ThreadLocal<Paint>() {
+            @NotNull
+            @Override
+            protected Paint initialValue() {
+                return new Paint();
             }
-            executor.execute(() -> {
-                Chunk chunk = wdata.getChunk(member.x, member.z, dimension);
-                try {
-                    renderer.renderToBitmap(chunk, canvas, dimension, member.x, member.z,
-                            (member.x - area.mMinX) * size,
-                            (member.z - area.mMinZ) * size,
-                            scale, scale, paint, wdata);
-                } catch (Exception e) {
-                    Log.d(this, e);
-                }
-            });
-        }
+        };
+
+        new RectEditTarget(wdata, area, dimension).forEachChunk(
+                (chunk, fromX, toX, fromY, toY, fromZ, toZ) -> {
+                    if (cancelled) {
+                        executor.shutdownNow();
+                        return 0;
+                    }
+                    executor.execute(() -> {
+                        try {
+                            renderer.renderToBitmap(chunk, canvas, dimension, chunk.mChunkX, chunk.mChunkZ,
+                                    (chunk.mChunkX * 16 - area.left) * scale,
+                                    (chunk.mChunkZ * 16 - area.top) * scale,
+                                    scale, scale, paintSub.get(), wdata);
+                        } catch (Exception e) {
+                            Log.d(this, e);
+                        }
+                    });
+                    return 0;
+                });
         executor.shutdown();
         try {
             executor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);

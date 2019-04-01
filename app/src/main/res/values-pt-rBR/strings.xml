@@ -1,7 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name" translatable="false">Blocktopograph</string>
-
     <string name="brand_sub">Por @protolambda</string>
 
     <string name="title_worlditem_list">Selecione um mundo</string>
@@ -29,10 +27,11 @@
     <string name="app_about">
         Esse app foi criado por: <a href="http://twitter.com/protolambda">@protolambda</a>,
         contribuidores:
-        <a href="https://github.com/MithrilMania/blocktopograph">@MithrilMania</a>,
-        <a href="https://github.com/flagmaggot/blocktopograph">@flagmaggot</a>,
-        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">@MeowCat</a>,
-        <a href="https://github.com/MiemieMethod/blocktopograph">@MiemieMethod</a> e muitos outros.\n\n
+        <a href="https://github.com/MithrilMania">@MithrilMania</a>,
+        <a href="https://github.com/flagmaggot">@flagmaggot</a>,
+        <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>,
+        <a href="https://github.com/MiemieMethod">@MiemieMethod</a>,
+        <a href="https://github.com/LordJunior">Manuel</a> e muitos outros.\n\n
         Disponível já no Google Play!\n\n
         Repositório do Github atual:
         <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
@@ -87,8 +86,6 @@
 
 
     <string name="world_seed_prefix">Seed do mundo:</string>
-
-    <string name="map_water_mark" translatable="false">Blocktopograph</string>
 
     <string name="create_marker_info">
         Ícones de marcador:\n
@@ -171,7 +168,6 @@
         Criado e salvo novos dados NBT do chunk!</string>
     <string name="failed_to_create_or_save_chunk_NBT_data">
         Erro: Falha ao criar/salvar novos dados NBT dos chunks atuais.</string>
-    <string name="full_date_format" translatable="false">dd/MM/yyyy hh:mm a</string>
     <string name="error_could_not_open_world_details_lost_track_world">
         Erro: Não é possível abrir dados do mundo; Perda do caminho do mundo.</string>
     <string name="error_could_not_open_world">Erro: Não é possível abrir o mundo.</string>
@@ -322,91 +318,31 @@
     <string name="error_general">Erro desconhecido.</string>
     <string name="general_please_wait">Por favor, aguarde...</string>
     <string name="edit_layer_amount">Quantidade:</string>
-    <string name="edit_layer_amount_constrait">Sum of amount from all layers should be at least 0 and at most 127.</string>
     <string name="edit_flat_add_layer_title">Adicionar uma camada...</string>
     <string name="edit_flat_edit_layer_title">Editar</string>
     <string name="pick_block_title">Selecionar um bloco</string>
-    <string name="edit_flat_help">
-        "1. Drag block icon to sort.\n"
-        "2. Click any item to edit.\n"
-        "3. Click \"Add\" button to add a layer.\n"
-        "4. Swipe left to delete."
-        "."
-    </string>
-    <string name="edit_flat_atleast">There has to be at least one layer.</string>
     <string name="general_done">Concluído.</string>
     <string name="general_failed">Falhou.</string>
-    <string name="create_need_restart">After creating, the world will appear in Minecraft after restarting the game.</string>
-    <string name="title_test_page">Test Page</string>
     <string name="create_world_book_title">Meow~</string>
-    <string name="create_world_book_page_0" translatable="false"><!--
-        -->"\n§cWelcome~ Meow~"<!--
-        -->"\n§rCreated by"<!--
-        -->"\n§3Blocktopograph"<!--
-        -->"\n"<!--
-        -->"\n§1Get from Play Store"<!--
-        -->"\n§5and create your"<!--
-        -->"\n§5own customized world!"<!--
-        -->"\n"<!--
-        -->"\n§rWorld generated at"<!--
-        -->"\n§d%1$s"<!--
-    --></string>
-    <string name="create_world_book_recipe_header">World recipe:\n</string>
-    <string name="create_world_book_recipe_format" translatable="false">§r%1$dx §b%2$s\n</string>
-    <string name="create_world_book_recipe_many">"  §r..And more"</string>
-    <string name="create_world_extra_file_name">"by_Blocktopograph.txt"</string>
-    <string name="create_world_extra_file_text"><!--
-        -->"Welcome~ Meow~"<!--
-        -->"\nThe world was created by Blocktopograph,"<!--
-        -->"\nan Minecraft world editor and terrain viewer."<!--
-        -->"\nGet from Play Store and create your own customized world!"<!--
-    --></string>
     <string name="locator_page_player">Jogadores</string>
     <string name="player_position_desc">At (%1$d, %2$d, %3$d) of %4$s</string>
-    <string name="gps_advanced_locator">Advanced Locator...</string>
     <string name="locator_page_marker">Marcadores</string>
     <string name="locator_page_coor">Coordenadas</string>
-    <string name="gps_picer">Get full picture\nof world</string>
-    <string name="picer_title">Full Picture</string>
-    <string name="picer_dowhat">This would generate a picture of the world, and crash.</string>
-    <string name="picer_ask_wrong_chunks">There are corrupted or unsupported data, skip or cancel?</string>
-    <string name="picer_ask_old_chunks">There\'re data from old Minecraft version in the world. You may want to cancel now, and open the world in newer Minecraft to have data automatically updated. You can also ignore these data.</string>
-    <string name="general_ignore">Ignore</string>
-    <string name="picer_button_cancel"><![CDATA[Cancel & Return]]></string>
-    <string name="picer_failed_corrupt">Your world cannot be understood by Blocktopograph, perhaps your game version is too old or too new.</string>
-    <string name="picer_failed_old">This world is of a too old Minecraft version therefore cannot be read.</string>
-    <string name="picer_failed_nodata">No terrain found.</string>
-    <string name="picer_warn_wrong_chunks">Warning: There\'re corrupted or unsupported chunks found and ignored.</string>
-    <string name="picer_warn_old_chunks">Warning: There\'re old and unsupported chunks found and ignored. Reloading the world with newer Minecraft may fix this.</string>
     <string name="picer_progress_analyzing">Analisando</string>
     <string name="picer_progress_generating">Gerando</string>
-    <string name="picer_preview">Preview:</string>
     <string name="picer_save">Salvar</string>
-    <string name="picer_save_text">Picture will be saved to your Download folder.</string>
-    <string name="picer_saved">Picture saved.</string>
     <string name="general_share">Compartilhar</string>
     <string name="picer_share_title">Compartilhar com</string>
     <string name="picer_preview_generating">Gerando preview...</string>
-    <string name="picer_scale_title">Select scale:</string>
-    <string name="picer_scale_approxim">Approximately %1$dx%2$d.</string>
-    <string name="picer_failed_too_large">Sorry but the area is too large.</string>
-    <string name="picer_warn_not_scalable">(Not scalable)</string>
     <string name="picer_btn_generate">Gerar</string>
     <string name="func_begin_selection">Iniciar seleção</string>
     <string name="func_cancel_selection">Cancelar seleção</string>
-    <string name="map_sel_panel_title">Selection Options</string>
     <string name="map_sel_menu_sel">Seleção</string>
     <string name="map_sel_from_seg_1">Para [</string>
     <string name="map_sel_from_seg_2">,</string>
     <string name="map_sel_from_seg_3">]</string>
-    <string name="map_sel_to">To [ %1$d, %2$d ] (including from and to)</string>
-    <string name="map_sel_range_seg_1">Range</string>
     <string name="map_sel_range_seg_2">x</string>
     <string name="map_sel_menu_apply">Aplicar</string>
-    <string name="map_sel_error_size_one">Width and height shall be at least 1.</string>
-    <string name="map_sel_menu_op">Operations</string>
-    <string name="map_edit_func_lampshade">Lampshade all torches</string>
-    <string name="map_edit_lampshade_note">This would add glass shades to torches in selected area. Worlds of Minecraft Bedrock 1.4.x or higher are supported. We advice you to back up your world before any modification in Blocktopograph.</string>
     <string name="map_edit_snr_find_in">Procurar em</string>
     <string name="map_edit_snr_bg">Fundo</string>
     <string name="map_edit_snr_fg">Primeiro-Plano</string>
@@ -414,13 +350,7 @@
     <string name="map_edit_snr_both">Ambos</string>
     <string name="map_edit_snr_find_for">Procurar por</string>
     <string name="map_edit_snr_fg_slot">Slot primeiro-plano:</string>
-    <string name="map_edit_snr_bg_slot">Slot background:</string>
-    <string name="map_edit_snr_place_in">Then place in</string>
-    <string name="map_edit_snr_and_long">Foreground and background</string>
-    <string name="map_edit_func_snr">Find &amp; Replace</string>
-    <string name="map_edit_snr_ignore_subtype">Ignore sub-types</string>
-    <string name="map_edit_snr_help_background">Simple find and replace can be done ignoring background slot. Since Minecraft BE 1.4.x, background slots are used to store water coexisting with other blocks, however they can be used to place any block. For advanced map makers you can really make good use of the feature.</string>
-    <string name="map_sel_warn_backup">MAKE A BACKUP BEFORE PROCEED!</string>
     <string name="create_world_biome_id">Bioma:</string>
     <string name="create_world_biome_hint">ID numérico do bioma, 21 por padrão</string>
+
 </resources>
