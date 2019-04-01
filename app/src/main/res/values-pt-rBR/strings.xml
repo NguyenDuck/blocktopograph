@@ -53,7 +53,7 @@
         Minecraft é uma aquisição de Mojang AB.\n
         Por favor observe:\n
             &#8226; NÃO É UM PRODUTO OFICIAL DE MINECRAFT. NÃO APROVADO POR/OU  ASSOCIADO COM A MOJANG.\n
-            &#8226; O APLICATIVO É DISPONIBILIZADO \"\", SEM QUALQUER GARANTIA.\n
+            &#8226; O APLICATIVO É DISPONIBILIZADO, SEM QUALQUER GARANTIA.\n
         \n
         \n
         <i>Bibliotecas usadas:</i>\n
@@ -352,5 +352,32 @@
     <string name="map_edit_snr_fg_slot">Slot primeiro-plano:</string>
     <string name="create_world_biome_id">Bioma:</string>
     <string name="create_world_biome_hint">ID numérico do bioma, 21 por padrão</string>
+    <string name="picer_scale_approxim">Aproximadamente %1$dx%2$d.</string>
+    <string name="map_edit_func_dchunk">Apagar Chunks</string>
+    <string name="map_edit_dchunk_explain">Isso podera APAGAR todos os chunks inseridos dentro da area selecionada. O Minecraft poderá futuramente gerar novamente esses chunks, mas seu progresso nessa área será perdido. Amenos que você saiba o que é \"chunk\" no Minecraft e ebtenda as consequências, você não deveria continuar. Não siga apenas informações aleatórias disponíveis na internet.</string>
+    <string name="map_edit_dchunk_warn_not_aligned">Sua área selecionada não está alinhada com a borda do chunk. Não se preocupe, Blocktopograph pode ajustar isso para você. A área a ser apagada podera ser um pouco maior que a área selecionada anterior. Para ser preciso,isso podera ser de 0 a 15 blocos para cada lado. Isso acontece porque a área só pode ser regenerada se for apagado todo o chunk. Se você não quer o auto-ajuste você pode cancelar e editar a seleção você mesmo.</string>
+    <string name="map_edit_dchunk_posbtn_with_auto_adjust">Continuar com auto-ajuste</string>
+    <string name="open_up_warning_1">Esse aplicativo é perigoso, \nfaça um backup antes de editar!</string>
+    <string name="map_smart_notice_too_many_markers">Muitos marcadores!</string>
+    <string name="map_smart_notice_too_many_markers_message">Existem muitos marcadores em sua tela, como por exemplo mobs. Se você quiser remove-lo clique em \"mudar marcadores\" ao lado da gaveta, ou defina um filtro para os marcadores.</string>
+    <string name="map_uioption_open_drawer">Abrir gavetas</string>
+    <string name="general_got_it">Faça isso</string>
+
+
+    <string name="biome_pick_title">Selecione um bioma</string>
+    <string name="map_edit_func_chbiome">Mudar bioma</string>
+    <string name="map_edit_chbiome_for">Para</string>
+    <string name="map_edit_chbiome_all">Todos</string>
+    <string name="map_edit_chbiome_for_specific">Bioma específico</string>
+    <string name="map_edit_chbiome_to">Mudar para</string>
+    <string name="map_notice_try_selection">Você pode fazer um clique longo, selecionar \"Iniciar seleção\" e tentar editar.</string>
+    <string name="map_picer_world_too_large">Mundo muito grande</string>
+    <string name="map_picer_use_selection_instead">O mundo é muito grande. Você pode ou:\n(1) Use uma ferramenta similar no PC;\n(2) Ou começar a seleção de parte do mundo, e selecionar \"Gerar Imagem\" no menu de seleção.</string>
+    <string name="map_picer_scale_guide">You can scale the picture larger. One pixel per block at least.</string>
+    <string name="map_picer_selection_too_large">Seleção muito grande</string>
+    <string name="map_picer_selection_too_large_detail">Your selected area is too large. Width and height should both be within %1$d blocks, and the area should be within %2$d block²s.</string>
+    <string name="map_edit_func_picer">Gerar imagem</string>
+    <string name="picer_preview_generating">Gerando pré-visualização...</string>
+    <string name="map_locator_player_pos_unknown">Posição desconhecida</string>
 
 </resources>
