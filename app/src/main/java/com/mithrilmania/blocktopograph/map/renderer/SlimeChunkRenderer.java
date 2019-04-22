@@ -62,11 +62,11 @@ public class SlimeChunkRenderer implements MapRenderer {
 
 
     // See: https://gist.github.com/mithrilmania/00b85bf34a75fd8176342b1ad28bfccc
-    public static boolean isSlimeChunk(int cX, int cZ) {
+    private static boolean isSlimeChunk(int cX, int cZ) {
         //
         // MCPE slime-chunk checker
         // From Minecraft: Pocket Edition 0.15.0 (0.15.0.50_V870150050)
-        // Reverse engineered by @mithrilmania and @jocopa3
+        // Reverse engineered by @protolambda and @jocopa3
         //
         // NOTE:
         // - The world-seed doesn't seem to be incorporated into the randomness, which is very odd.
@@ -75,7 +75,7 @@ public class SlimeChunkRenderer implements MapRenderer {
         // - Reverse engineering this code cost a lot of time,
         //   please add CREDITS when you are copying this.
         //   Copy the following into your program source:
-        //     MCPE slime-chunk checker; reverse engineered by @mithrilmania and @jocopa3
+        //     MCPE slime-chunk checker; reverse engineered by @protolambda and @jocopa3
         //
 
         // chunkX/Z are the chunk-coordinates, used in the DB keys etc.

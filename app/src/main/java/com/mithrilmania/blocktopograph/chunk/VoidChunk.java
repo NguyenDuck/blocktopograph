@@ -1,7 +1,11 @@
 package com.mithrilmania.blocktopograph.chunk;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
+
+import org.jetbrains.annotations.NotNull;
 
 public final class VoidChunk extends Chunk {
 
@@ -44,18 +48,26 @@ public final class VoidChunk extends Chunk {
         return 0;
     }
 
+    @NotNull
     @Override
-    public int getBlockRuntimeId(int x, int y, int z) {
-        return 0;
+    public Block getBlock(int x, int y, int z) {
+        return getBlock(x, y, z, 0);
+    }
+
+    @NotNull
+    @Override
+    public Block getBlock(int x, int y, int z, int layer) {
+        return getKnownBlock(x, y, z, layer);
+    }
+
+    @NotNull
+    @Override
+    public KnownBlock getKnownBlock(int x, int y, int z, int layer) {
+        return KnownBlock.B_0_0_AIR;
     }
 
     @Override
-    public int getBlockRuntimeId(int x, int y, int z, int layer) {
-        return 0;
-    }
-
-    @Override
-    public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId) {
+    public void setBlock(int x, int y, int z, int layer, @NotNull Block block) {
     }
 
     @Override

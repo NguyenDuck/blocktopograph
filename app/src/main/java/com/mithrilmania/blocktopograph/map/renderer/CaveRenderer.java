@@ -8,8 +8,8 @@ import android.graphics.Rect;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
-import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 
 public class CaveRenderer implements MapRenderer {
@@ -18,7 +18,7 @@ public class CaveRenderer implements MapRenderer {
 
         boolean solid, intoSurface;
         int id, meta, cavyness, layers, offset;
-        Block block;
+        KnownBlock block;
         int x, y, z, subChunk, color, i, j, tX, tY, r, g, b;
 
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
@@ -50,13 +50,9 @@ public class CaveRenderer implements MapRenderer {
                 subChunkLoop:
                 for (y = chunk.getHeightMapValue(x, z); y >= 0; y--) {
 
-                    id = chunk.getBlockRuntimeId(x, y, z);
-                    block = Block.getBlock(id);
+                    block = chunk.getKnownBlock(x, y, z, 0);
 
-                    //try the default meta value: 0
-                    if (block == null) block = Block.getBlock(id & 0x7fffff00);
-
-                    switch (id) {
+                    switch (block.id) {
                         case 0:
                             //count the number of times it goes from solid to air
                             if (solid) layers++;

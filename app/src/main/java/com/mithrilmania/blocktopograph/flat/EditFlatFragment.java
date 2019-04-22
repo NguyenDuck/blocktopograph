@@ -13,7 +13,7 @@ import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragLayersBinding;
 import com.mithrilmania.blocktopograph.databinding.ItemWorldLayerBinding;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.woxthebox.draglistview.DragItemAdapter;
 import com.woxthebox.draglistview.DragListView;
@@ -86,6 +86,57 @@ public final class EditFlatFragment extends Fragment {
         return mMeowAdapter.getItemList();
     }
 
+    private static class LoadTask extends AsyncTask<Void, Void, Void> {
+
+        private final WeakReference<EditFlatFragment> thiz;
+        private AlertDialog mWaitDialog;
+
+        private LoadTask(EditFlatFragment thiz) {
+            this.thiz = new WeakReference<>(thiz);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Activity activity = thiz.get().getActivity();
+            if (activity == null) return;
+            mWaitDialog = UiUtil.buildProgressWaitDialog(activity, 0, null);
+            mWaitDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Activity activity = thiz.get().getActivity();
+                if (activity == null) return null;
+                KnownBlock.loadBitmaps(activity.getAssets());
+            } catch (Exception e) {
+                Log.d(this, e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            EditFlatFragment thiz = this.thiz.get();
+            //If the activity quit nothing needs to be done.
+            if (thiz == null) return;
+            try {
+                DragListView listView = thiz.mBinding.list;
+                thiz.mMeowAdapter = thiz.new MeowAdapter();
+                listView.setLayoutManager(new LinearLayoutManager(thiz.getActivity()));
+                listView.setCanDragHorizontally(false);
+                listView.setAdapter(thiz.mMeowAdapter, false);
+                listView.setSwipeListener(thiz.mMeowAdapter);
+                thiz.mMeowAdapter.loadDefault();
+            } catch (Exception e) {
+                Log.d(this, e);
+                Activity activity = thiz.getActivity();
+                if (activity != null) UiUtil.toastError(activity);
+            }
+            mWaitDialog.dismiss();
+        }
+    }
+
     private class MeowAdapter extends DragItemAdapter<Layer, MeowAdapter.MeowHolder> implements ListSwipeHelper.OnSwipeListener {
 
         MeowAdapter() {
@@ -100,13 +151,13 @@ public final class EditFlatFragment extends Fragment {
         }
 
         void loadDefault() {
-            Layer layer = new Layer(Block.B_7_0_BEDROCK, 1);
+            Layer layer = new Layer(KnownBlock.B_7_0_BEDROCK, 1);
             addItem(0, layer);
-            layer = new Layer(Block.B_3_0_DIRT, 29);
+            layer = new Layer(KnownBlock.B_3_0_DIRT, 29);
             addItem(0, layer);
-            layer = new Layer(Block.B_2_0_GRASS, 1);
+            layer = new Layer(KnownBlock.B_2_0_GRASS, 1);
             addItem(0, layer);
-            layer = new Layer(Block.B_31_2_TALLGRASS_GRASS, 1);
+            layer = new Layer(KnownBlock.B_31_2_TALLGRASS_GRASS, 1);
             addItem(0, layer);
         }
 
@@ -205,57 +256,6 @@ public final class EditFlatFragment extends Fragment {
                 this.binding = binding;
                 binding.root.setSupportedSwipeDirection(ListSwipeItem.SwipeDirection.LEFT);
             }
-        }
-    }
-
-    private static class LoadTask extends AsyncTask<Void, Void, Void> {
-
-        private final WeakReference<EditFlatFragment> thiz;
-        private AlertDialog mWaitDialog;
-
-        private LoadTask(EditFlatFragment thiz) {
-            this.thiz = new WeakReference<>(thiz);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Activity activity = thiz.get().getActivity();
-            if (activity == null) return;
-            mWaitDialog = UiUtil.buildProgressWaitDialog(activity, 0, null);
-            mWaitDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                Activity activity = thiz.get().getActivity();
-                if (activity == null) return null;
-                Block.loadBitmaps(activity.getAssets());
-            } catch (Exception e) {
-                Log.d(this, e);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            EditFlatFragment thiz = this.thiz.get();
-            //If the activity quit nothing needs to be done.
-            if (thiz == null) return;
-            try {
-                DragListView listView = thiz.mBinding.list;
-                thiz.mMeowAdapter = thiz.new MeowAdapter();
-                listView.setLayoutManager(new LinearLayoutManager(thiz.getActivity()));
-                listView.setCanDragHorizontally(false);
-                listView.setAdapter(thiz.mMeowAdapter, false);
-                listView.setSwipeListener(thiz.mMeowAdapter);
-                thiz.mMeowAdapter.loadDefault();
-            } catch (Exception e) {
-                Log.d(this, e);
-                Activity activity = thiz.getActivity();
-                if (activity != null) UiUtil.toastError(activity);
-            }
-            mWaitDialog.dismiss();
         }
     }
 }

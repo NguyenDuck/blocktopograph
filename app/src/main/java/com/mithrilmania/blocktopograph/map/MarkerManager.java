@@ -197,7 +197,7 @@ public class MarkerManager {
 
     public static AbstractMarker markerFromData(String displayName, String iconName, int x, int y, int z, Dimension dimension) {
 
-        NamedBitmapProvider nbp = Block.getByDataName(iconName);
+        NamedBitmapProvider nbp = KnownBlock.getByDataName(iconName);
         if (nbp == null || nbp.getBitmap() == null) nbp = Entity.getEntity(iconName);
         if (nbp == null || nbp.getBitmap() == null) nbp = TileEntity.getTileEntity(iconName);
         if (nbp == null || nbp.getBitmap() == null) nbp = CustomIcon.getCustomIcon(iconName);

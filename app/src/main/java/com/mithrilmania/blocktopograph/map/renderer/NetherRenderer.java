@@ -8,8 +8,8 @@ import android.graphics.Rect;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
-import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 
 public class NetherRenderer implements MapRenderer {
@@ -26,7 +26,7 @@ public class NetherRenderer implements MapRenderer {
         int layers;
         int caveceil, cavefloor, cavefloorW, cavefloorN;
         int x, y, z, color, tX, tY, r, g, b;
-        Block block;
+        KnownBlock block;
         int id;
         int worth;
         float heightShading, lightShading, sliceShading, avgShading;
@@ -76,21 +76,12 @@ public class NetherRenderer implements MapRenderer {
 
                     for (y = caveceil; y >= cavefloor; y--) {
 
-                        id = chunk.getBlockRuntimeId(x, y, z);
+                        block = chunk.getKnownBlock(x, y, z, 0);
 
-                        if (id == 0) continue;//skip air blocks
-
-                        block = Block.getBlock(id);
-
-                        if (block == null) block = Block.getBlock(id & 0x7fffff00);
+                        if (block == KnownBlock.B_0_0_AIR) continue;//skip air blocks
 
                         //try the default meta value: 0
-                        //if (block == null) block = Block.getBlock(id, 0);
-
-                        if (block == null) {
-                            //Log.w("UNKNOWN block: id: " + id + " meta: " + meta);
-                            continue;
-                        }
+                        //if (block == null) block = KnownBlock.getBlock(id, 0);
 
                         // no need to process block if it is fully transparent
                         if (block.color.alpha == 0) continue;
@@ -137,7 +128,7 @@ public class NetherRenderer implements MapRenderer {
                 for (y = 0; y < chunk.getHeightLimit(); y++) {
 
                     //some x-ray for important stuff like portals
-                    switch (chunk.getBlockRuntimeId(x, y, z) >>> 8) {
+                    switch (chunk.getKnownBlock(x, y, z, 0).id) {
                         case 52://monster spawner
                             r = g = b = 255;
                             break;

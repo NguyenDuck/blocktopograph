@@ -2,7 +2,9 @@ package com.mithrilmania.blocktopograph.chunk;
 
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -97,11 +99,16 @@ public abstract class Chunk {
 
     abstract public int getGrassColor(int x, int z);
 
-    abstract public int getBlockRuntimeId(int x, int y, int z);
+    @NotNull
+    abstract public Block getBlock(int x, int y, int z);
 
-    abstract public int getBlockRuntimeId(int x, int y, int z, int layer);
+    @NotNull
+    abstract public Block getBlock(int x, int y, int z, int layer);
 
-    abstract public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId);
+    @NotNull
+    abstract public KnownBlock getKnownBlock(int x, int y, int z, int layer);
+
+    abstract public void setBlock(int x, int y, int z, int layer, @NotNull Block block);
 
     abstract public int getBlockLightValue(int x, int y, int z);
 

@@ -5,12 +5,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
-import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
+
+import org.jetbrains.annotations.NotNull;
 
 
 public class SatelliteRenderer implements MapRenderer {
@@ -47,7 +48,7 @@ public class SatelliteRenderer implements MapRenderer {
     }
 
     //calculate color of one column
-    public static int getColumnColour(Chunk chunk, int x, int y, int z, int heightW, int heightN) throws Version.VersionException {
+    static int getColumnColour(@NotNull Chunk chunk, int x, int y, int z, int heightW, int heightN) throws Version.VersionException {
         float a = 1f;
         float r = 0f;
         float g = 0f;
@@ -64,26 +65,14 @@ public class SatelliteRenderer implements MapRenderer {
         float blockA, blockR, blockG, blockB;
 
 
-        Block block;
-        int id;
+        KnownBlock block;
 
         y--;
         for (; y >= 0; y--) {
 
-            id = chunk.getBlockRuntimeId(x, y, z);
+            block = chunk.getKnownBlock(x, y, z, 0);
 
-            if (id == 0) continue;//skip air blocks
-            block = Block.getBlock(id);
-
-            //try the default meta value: 0
-            if (block == null) block = Block.getBlock(id & 0xffffff00);
-
-
-            //TODO log null blocks to debug missing blocks
-            if (block == null) {
-                Log.d(SatelliteRenderer.class, "UNKNOWN block: id: " + id);
-                continue;
-            }
+            if (block == KnownBlock.B_0_0_AIR) continue;//skip air blocks
 
             // no need to process block if it is fully transparent
             if (block.color == null || block.color.alpha == 0) continue;

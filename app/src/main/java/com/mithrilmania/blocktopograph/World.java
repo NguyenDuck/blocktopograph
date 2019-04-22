@@ -102,6 +102,7 @@ public class World implements Serializable {
         return seed == null ? 0 : seed.getValue();
     }
 
+    @Nullable
     public Bundle getMapVersionData() {
         try {
             Bundle bundle = new Bundle();
@@ -182,7 +183,6 @@ public class World implements Serializable {
             }
             return bundle;
         } catch (Exception e) {
-            // This will log the exception and an upcoming crash will take it.
             Log.e(this, e);
             return null;
         }

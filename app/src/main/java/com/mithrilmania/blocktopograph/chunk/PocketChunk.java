@@ -3,7 +3,11 @@ package com.mithrilmania.blocktopograph.chunk;
 import android.graphics.Color;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
@@ -147,24 +151,32 @@ public final class PocketChunk extends Chunk {
         return Color.rgb(mData.get(offset + 1) & 0xff, mData.get(offset + 2) & 0xff, mData.get(offset + 3) & 0xff);
     }
 
+    @NotNull
     @Override
-    public int getBlockRuntimeId(int x, int y, int z) {
+    public Block getBlock(int x, int y, int z) {
+        return getBlock(x, y, z, 0);
+    }
+
+    @NotNull
+    @Override
+    public Block getBlock(int x, int y, int z, int layer) {
+        return getKnownBlock(x, y, z, layer);
+    }
+
+    @NotNull
+    @Override
+    public KnownBlock getKnownBlock(int x, int y, int z, int layer) {
         if (x >= 16 || y >= 128 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
-            return 0;
+            return KnownBlock.B_0_0_AIR;
         int offset = getOffset(x, y, z);
         int id = mData.get(POS_BLOCK_IDS + offset) & 0xff;
         int data = mData.get(POS_META_DATA + (offset >>> 1));
         data = (offset & 1) == 1 ? ((data >>> 4) & 0xf) : (data & 0xf);
-        return (id << 8) | data;
+        return KnownBlock.getBestBlock(id, data);
     }
 
     @Override
-    public int getBlockRuntimeId(int x, int y, int z, int layer) {
-        return getBlockRuntimeId(x, y, z);
-    }
-
-    @Override
-    public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId) {
+    public void setBlock(int x, int y, int z, int layer, @NotNull Block block) {
         //TODO implement setBlock for pocket chunk
     }
 
@@ -189,7 +201,7 @@ public final class PocketChunk extends Chunk {
     @Override
     public int getHighestBlockYUnderAt(int x, int z, int y) {
         for (int yy = y; yy >= 0; yy--) {
-            if (getBlockRuntimeId(x & 0xf, yy, z & 0xf) != 0) return yy;
+            if (getKnownBlock(x & 0xf, yy, z & 0xf, 0) != KnownBlock.B_0_0_AIR) return yy;
         }
         return -1;
     }
@@ -197,7 +209,7 @@ public final class PocketChunk extends Chunk {
     @Override
     public int getCaveYUnderAt(int x, int z, int y) {
         for (int yy = y; yy >= 0; yy--) {
-            if (getBlockRuntimeId(x & 0xf, yy, z & 0xf) == 0) return yy;
+            if (getKnownBlock(x & 0xf, yy, z & 0xf, 0) == KnownBlock.B_0_0_AIR) return yy;
         }
         return -1;
     }

@@ -17,7 +17,7 @@ import com.mithrilmania.blocktopograph.flat.EditFlatFragment;
 import com.mithrilmania.blocktopograph.flat.FlatLayers;
 import com.mithrilmania.blocktopograph.flat.Layer;
 import com.mithrilmania.blocktopograph.map.Biome;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.nbt.InventoryHolder;
 import com.mithrilmania.blocktopograph.nbt.ItemTag;
 import com.mithrilmania.blocktopograph.nbt.Keys;
@@ -222,10 +222,10 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 if (lsize != 4) mIsVanillaFlat = false;
                 else {
                     Layer ltest = layers.get(0);
-                    mIsVanillaFlat = ltest.block == Block.B_31_2_TALLGRASS_GRASS && ltest.amount == 1
-                            && (ltest = layers.get(1)).block == Block.B_2_0_GRASS && ltest.amount == 1
-                            && (ltest = layers.get(2)).block == Block.B_3_0_DIRT && ltest.amount == 29
-                            && (ltest = layers.get(3)).block == Block.B_7_0_BEDROCK && ltest.amount == 1;
+                    mIsVanillaFlat = ltest.block == KnownBlock.B_31_2_TALLGRASS_GRASS && ltest.amount == 1
+                            && (ltest = layers.get(1)).block == KnownBlock.B_2_0_GRASS && ltest.amount == 1
+                            && (ltest = layers.get(2)).block == KnownBlock.B_3_0_DIRT && ltest.amount == 29
+                            && (ltest = layers.get(3)).block == KnownBlock.B_7_0_BEDROCK && ltest.amount == 1;
                 }
                 Layer[] alayers = new Layer[lsize < 3 ? 3 : lsize];
                 for (int i = 0; i < lsize; i++) {

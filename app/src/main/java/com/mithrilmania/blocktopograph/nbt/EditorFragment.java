@@ -6,10 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -26,6 +22,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
@@ -43,8 +41,13 @@ import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 public class EditorFragment extends Fragment {
 
@@ -63,425 +66,6 @@ public class EditorFragment extends Fragment {
 
     public void setNbt(@NonNull EditableNBT nbt) {
         this.nbt = nbt;
-    }
-
-    public static class ChainTag {
-
-        public Tag parent, self;
-
-        public ChainTag(Tag parent, Tag self) {
-            this.parent = parent;
-            this.self = self;
-        }
-    }
-
-    public static class RootNodeHolder extends TreeNode.BaseNodeViewHolder<EditableNBT> {
-
-
-        public RootNodeHolder(Context context) {
-            super(context);
-        }
-
-        @Override
-        public View createNodeView(TreeNode node, EditableNBT value) {
-
-            final LayoutInflater inflater = LayoutInflater.from(context);
-
-            final View tagView = inflater.inflate(R.layout.tag_root_layout, null, false);
-            TextView tagName = tagView.findViewById(R.id.tag_name);
-            tagName.setText(value.getRootTitle());
-
-            return tagView;
-        }
-
-        @Override
-        public void toggle(boolean active) {
-        }
-
-        @Override
-        public int getContainerStyle() {
-            return R.style.TreeNodeStyleCustomRoot;
-        }
-    }
-
-
-    public static class NBTNodeHolder extends TreeNode.BaseNodeViewHolder<ChainTag> {
-
-        private final EditableNBT nbt;
-
-        public NBTNodeHolder(EditableNBT nbt, Context context) {
-            super(context);
-            this.nbt = nbt;
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        public View createNodeView(TreeNode node, final ChainTag chain) {
-
-            if (chain == null) return null;
-            Tag tag = chain.self;
-            if (tag == null) return null;
-
-            final LayoutInflater inflater = LayoutInflater.from(context);
-
-            int layoutID;
-
-            switch (tag.getType()) {
-                case COMPOUND: {
-                    List<Tag> value = ((CompoundTag) tag).getValue();
-                    if (value != null) {
-                        for (Tag child : value) {
-                            node.addChild(new TreeNode(new ChainTag(tag, child)).setViewHolder(new NBTNodeHolder(nbt, context)));
-                        }
-                    }
-
-                    layoutID = R.layout.tag_compound_layout;
-                    break;
-                }
-                case LIST: {
-                    List<Tag> value = ((ListTag) tag).getValue();
-
-                    if (value != null) {
-                        for (Tag child : value) {
-                            node.addChild(new TreeNode(new ChainTag(tag, child)).setViewHolder(new NBTNodeHolder(nbt, context)));
-                        }
-                    }
-
-                    layoutID = R.layout.tag_list_layout;
-                    break;
-                }
-                case BYTE_ARRAY: {
-                    layoutID = R.layout.tag_default_layout;
-                    break;
-                }
-                case BYTE: {
-                    String name = tag.getName();
-                    if (name == null) name = "";
-                    else name = name.toLowerCase();
-
-                    //TODO differentiate boolean tags from byte tags better
-                    if (name.startsWith("has") || name.startsWith("is")) {
-                        layoutID = R.layout.tag_boolean_layout;
-                    } else {
-                        layoutID = R.layout.tag_byte_layout;
-                    }
-                    break;
-                }
-                case SHORT:
-                    layoutID = R.layout.tag_short_layout;
-                    break;
-                case INT:
-                    layoutID = R.layout.tag_int_layout;
-                    break;
-                case LONG:
-                    layoutID = R.layout.tag_long_layout;
-                    break;
-                case FLOAT:
-                    layoutID = R.layout.tag_float_layout;
-                    break;
-                case DOUBLE:
-                    layoutID = R.layout.tag_double_layout;
-                    break;
-                case STRING:
-                    layoutID = R.layout.tag_string_layout;
-                    break;
-                default:
-                    layoutID = R.layout.tag_default_layout;
-                    break;
-            }
-
-            final View tagView = inflater.inflate(layoutID, null, false);
-            TextView tagName = tagView.findViewById(R.id.tag_name);
-            tagName.setText(tag.getName());
-
-            switch (layoutID) {
-                case R.layout.tag_boolean_layout: {
-                    final CheckBox checkBox = tagView.findViewById(R.id.checkBox);
-                    final ByteTag byteTag = (ByteTag) tag;
-                    checkBox.setChecked(byteTag.getValue() == (byte) 1);
-                    checkBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-                        /**
-                         * Called when the checked state of a compound button has changed.
-                         *
-                         * @param buttonView The compound button view whose state has changed.
-                         * @param isChecked  The new checked state of buttonView.
-                         */
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            byteTag.setValue(isChecked ? (byte) 1 : (byte) 0);
-                            nbt.setModified();
-                        }
-                    });
-                    break;
-                }
-                case R.layout.tag_byte_layout: {
-                    final EditText editText = tagView.findViewById(R.id.byteField);
-                    final ByteTag byteTag = (ByteTag) tag;
-                    //parse the byte as an unsigned byte
-                    editText.setText("" + (((int) byteTag.getValue()) & 0xFF));
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            String sValue = s.toString();
-                            try {
-                                int value = Integer.parseInt(sValue);
-                                if (value < 0 || value > 0xff)
-                                    throw new NumberFormatException("No unsigned byte.");
-                                byteTag.setValue((byte) value);
-                                nbt.setModified();
-                            } catch (NumberFormatException e) {
-                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
-                            }
-                        }
-                    });
-                    break;
-                }
-                case R.layout.tag_short_layout: {
-                    final EditText editText = tagView.findViewById(R.id.shortField);
-                    final ShortTag shortTag = (ShortTag) tag;
-                    editText.setText(shortTag.getValue().toString());
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            String sValue = s.toString();
-                            try {
-                                shortTag.setValue(Short.valueOf(sValue));
-                                nbt.setModified();
-                            } catch (NumberFormatException e) {
-                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
-                            }
-                        }
-                    });
-                    break;
-                }
-                case R.layout.tag_int_layout: {
-                    final EditText editText = tagView.findViewById(R.id.intField);
-                    final IntTag intTag = (IntTag) tag;
-                    editText.setText(intTag.getValue().toString());
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            String sValue = s.toString();
-                            try {
-                                intTag.setValue(Integer.valueOf(sValue));
-                                nbt.setModified();
-                            } catch (NumberFormatException e) {
-                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
-                            }
-                        }
-                    });
-                    break;
-                }
-                case R.layout.tag_long_layout: {
-                    final EditText editText = tagView.findViewById(R.id.longField);
-                    final LongTag longTag = (LongTag) tag;
-                    editText.setText(longTag.getValue().toString());
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            String sValue = s.toString();
-                            try {
-                                longTag.setValue(Long.valueOf(sValue));
-                                nbt.setModified();
-                            } catch (NumberFormatException e) {
-                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
-                            }
-                        }
-                    });
-                    break;
-                }
-                case R.layout.tag_float_layout: {
-                    final EditText editText = tagView.findViewById(R.id.floatField);
-                    final FloatTag floatTag = (FloatTag) tag;
-                    editText.setText(floatTag.getValue().toString());
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            String sValue = s.toString();
-                            try {
-                                floatTag.setValue(Float.valueOf(sValue));
-                                nbt.setModified();
-                            } catch (NumberFormatException e) {
-                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
-                            }
-                        }
-                    });
-                    break;
-                }
-                case R.layout.tag_double_layout: {
-                    final EditText editText = tagView.findViewById(R.id.doubleField);
-                    final DoubleTag doubleTag = (DoubleTag) tag;
-                    editText.setText(doubleTag.getValue().toString());
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            String sValue = s.toString();
-                            try {
-                                doubleTag.setValue(Double.valueOf(sValue));
-                                nbt.setModified();
-                            } catch (NumberFormatException e) {
-                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
-                            }
-                        }
-                    });
-                    break;
-                }
-                case R.layout.tag_string_layout: {
-                    final EditText editText = tagView.findViewById(R.id.stringField);
-                    final StringTag stringTag = (StringTag) tag;
-                    editText.setText(stringTag.getValue());
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            nbt.setModified();
-                            stringTag.setValue(s.toString());
-                        }
-                    });
-                    break;
-                }
-                default:
-                    break;
-
-            }
-
-            return tagView;
-        }
-
-        @Override
-        public void toggle(boolean active) {
-        }
-
-        @Override
-        public int getContainerStyle() {
-            return R.style.TreeNodeStyleCustom;
-        }
-
-    }
-
-    public enum NBTEditOption {
-
-        CANCEL(R.string.edit_cancel),
-        COPY(R.string.edit_copy),
-        PASTE_OVERWRITE(R.string.edit_paste_overwrite),
-        PASTE_SUBTAG(R.string.edit_paste_sub_tag),
-        DELETE(R.string.edit_delete),
-        RENAME(R.string.edit_rename),
-        ADD_SUBTAG(R.string.edit_add_sub_tag);
-
-        public final int stringId;
-
-        NBTEditOption(int stringId) {
-            this.stringId = stringId;
-        }
-    }
-
-    public String[] getNBTEditOptions() {
-        NBTEditOption[] values = NBTEditOption.values();
-        int len = values.length;
-        String[] options = new String[len];
-        for (int i = 0; i < len; i++) {
-            options[i] = getString(values[i].stringId);
-        }
-        return options;
-    }
-
-    public enum RootNBTEditOption {
-
-        ADD_NBT_TAG(R.string.edit_root_add),
-        PASTE_SUB_TAG(R.string.edit_root_paste_sub_tag),
-        REMOVE_ALL_TAGS(R.string.edit_root_remove_all);
-
-        public final int stringId;
-
-        RootNBTEditOption(int stringId) {
-            this.stringId = stringId;
-        }
-
-    }
-
-    public String[] getRootNBTEditOptions() {
-        RootNBTEditOption[] values = RootNBTEditOption.values();
-        int len = values.length;
-        String[] options = new String[len];
-        for (int i = 0; i < len; i++) {
-            options[i] = getString(values[i].stringId);
-        }
-        return options;
-    }
-
-
-    public static Tag clipboard;
-
-
-    //returns true if there is a tag in content with a name equals to key.
-    boolean checkKeyCollision(String key, List<Tag> content) {
-        if (content == null || content.isEmpty()) return false;
-        if (key == null) key = "";
-        String tagName;
-        for (Tag tag : content) {
-            tagName = tag.getName();
-            if (tagName == null) tagName = "";
-            if (tagName.equals(key)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -515,7 +99,8 @@ public class EditorFragment extends Fragment {
         root.setViewHolder(new RootNodeHolder(activity));
 
         for (Tag tag : nbt.getTags()) {
-            root.addChild(new TreeNode(new ChainTag(null, tag)).setViewHolder(new NBTNodeHolder(nbt, activity)));
+            if (tag != null)
+                root.addChild(new TreeNode(new ChainTag(null, tag)).setViewHolder(new NBTNodeHolder(nbt, activity)));
         }
 
         FrameLayout frame = rootView.findViewById(R.id.nbt_editor_frame);
@@ -1026,6 +611,425 @@ public class EditorFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public static class RootNodeHolder extends TreeNode.BaseNodeViewHolder<EditableNBT> {
+
+
+        public RootNodeHolder(Context context) {
+            super(context);
+        }
+
+        @Override
+        public View createNodeView(TreeNode node, EditableNBT value) {
+
+            final LayoutInflater inflater = LayoutInflater.from(context);
+
+            final View tagView = inflater.inflate(R.layout.tag_root_layout, null, false);
+            TextView tagName = tagView.findViewById(R.id.tag_name);
+            tagName.setText(value.getRootTitle());
+
+            return tagView;
+        }
+
+        @Override
+        public void toggle(boolean active) {
+        }
+
+        @Override
+        public int getContainerStyle() {
+            return R.style.TreeNodeStyleCustomRoot;
+        }
+    }
+
+
+    public static class NBTNodeHolder extends TreeNode.BaseNodeViewHolder<ChainTag> {
+
+        private final EditableNBT nbt;
+
+        public NBTNodeHolder(EditableNBT nbt, Context context) {
+            super(context);
+            this.nbt = nbt;
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        public View createNodeView(TreeNode node, final ChainTag chain) {
+
+            if (chain == null) return null;
+            Tag tag = chain.self;
+            if (tag == null) return null;
+
+            final LayoutInflater inflater = LayoutInflater.from(context);
+
+            int layoutID;
+
+            switch (tag.getType()) {
+                case COMPOUND: {
+                    List<Tag> value = ((CompoundTag) tag).getValue();
+                    if (value != null) {
+                        for (Tag child : value) {
+                            node.addChild(new TreeNode(new ChainTag(tag, child)).setViewHolder(new NBTNodeHolder(nbt, context)));
+                        }
+                    }
+
+                    layoutID = R.layout.tag_compound_layout;
+                    break;
+                }
+                case LIST: {
+                    List<Tag> value = ((ListTag) tag).getValue();
+
+                    if (value != null) {
+                        for (Tag child : value) {
+                            node.addChild(new TreeNode(new ChainTag(tag, child)).setViewHolder(new NBTNodeHolder(nbt, context)));
+                        }
+                    }
+
+                    layoutID = R.layout.tag_list_layout;
+                    break;
+                }
+                case BYTE_ARRAY: {
+                    layoutID = R.layout.tag_default_layout;
+                    break;
+                }
+                case BYTE: {
+                    String name = tag.getName();
+                    if (name == null) name = "";
+                    else name = name.toLowerCase();
+
+                    //TODO differentiate boolean tags from byte tags better
+                    if (name.startsWith("has") || name.startsWith("is")) {
+                        layoutID = R.layout.tag_boolean_layout;
+                    } else {
+                        layoutID = R.layout.tag_byte_layout;
+                    }
+                    break;
+                }
+                case SHORT:
+                    layoutID = R.layout.tag_short_layout;
+                    break;
+                case INT:
+                    layoutID = R.layout.tag_int_layout;
+                    break;
+                case LONG:
+                    layoutID = R.layout.tag_long_layout;
+                    break;
+                case FLOAT:
+                    layoutID = R.layout.tag_float_layout;
+                    break;
+                case DOUBLE:
+                    layoutID = R.layout.tag_double_layout;
+                    break;
+                case STRING:
+                    layoutID = R.layout.tag_string_layout;
+                    break;
+                default:
+                    layoutID = R.layout.tag_default_layout;
+                    break;
+            }
+
+            final View tagView = inflater.inflate(layoutID, null, false);
+            TextView tagName = tagView.findViewById(R.id.tag_name);
+            tagName.setText(tag.getName());
+
+            switch (layoutID) {
+                case R.layout.tag_boolean_layout: {
+                    final CheckBox checkBox = tagView.findViewById(R.id.checkBox);
+                    final ByteTag byteTag = (ByteTag) tag;
+                    checkBox.setChecked(byteTag.getValue() == (byte) 1);
+                    checkBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+                        /**
+                         * Called when the checked state of a compound button has changed.
+                         *
+                         * @param buttonView The compound button view whose state has changed.
+                         * @param isChecked  The new checked state of buttonView.
+                         */
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            byteTag.setValue(isChecked ? (byte) 1 : (byte) 0);
+                            nbt.setModified();
+                        }
+                    });
+                    break;
+                }
+                case R.layout.tag_byte_layout: {
+                    final EditText editText = tagView.findViewById(R.id.byteField);
+                    final ByteTag byteTag = (ByteTag) tag;
+                    //parse the byte as an unsigned byte
+                    editText.setText("" + (((int) byteTag.getValue()) & 0xFF));
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String sValue = s.toString();
+                            try {
+                                int value = Integer.parseInt(sValue);
+                                if (value < 0 || value > 0xff)
+                                    throw new NumberFormatException("No unsigned byte.");
+                                byteTag.setValue((byte) value);
+                                nbt.setModified();
+                            } catch (NumberFormatException e) {
+                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
+                            }
+                        }
+                    });
+                    break;
+                }
+                case R.layout.tag_short_layout: {
+                    final EditText editText = tagView.findViewById(R.id.shortField);
+                    final ShortTag shortTag = (ShortTag) tag;
+                    editText.setText(shortTag.getValue().toString());
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String sValue = s.toString();
+                            try {
+                                shortTag.setValue(Short.valueOf(sValue));
+                                nbt.setModified();
+                            } catch (NumberFormatException e) {
+                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
+                            }
+                        }
+                    });
+                    break;
+                }
+                case R.layout.tag_int_layout: {
+                    final EditText editText = tagView.findViewById(R.id.intField);
+                    final IntTag intTag = (IntTag) tag;
+                    editText.setText(intTag.getValue().toString());
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String sValue = s.toString();
+                            try {
+                                intTag.setValue(Integer.valueOf(sValue));
+                                nbt.setModified();
+                            } catch (NumberFormatException e) {
+                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
+                            }
+                        }
+                    });
+                    break;
+                }
+                case R.layout.tag_long_layout: {
+                    final EditText editText = tagView.findViewById(R.id.longField);
+                    final LongTag longTag = (LongTag) tag;
+                    editText.setText(longTag.getValue().toString());
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String sValue = s.toString();
+                            try {
+                                longTag.setValue(Long.valueOf(sValue));
+                                nbt.setModified();
+                            } catch (NumberFormatException e) {
+                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
+                            }
+                        }
+                    });
+                    break;
+                }
+                case R.layout.tag_float_layout: {
+                    final EditText editText = tagView.findViewById(R.id.floatField);
+                    final FloatTag floatTag = (FloatTag) tag;
+                    editText.setText(floatTag.getValue().toString());
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String sValue = s.toString();
+                            try {
+                                floatTag.setValue(Float.valueOf(sValue));
+                                nbt.setModified();
+                            } catch (NumberFormatException e) {
+                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
+                            }
+                        }
+                    });
+                    break;
+                }
+                case R.layout.tag_double_layout: {
+                    final EditText editText = tagView.findViewById(R.id.doubleField);
+                    final DoubleTag doubleTag = (DoubleTag) tag;
+                    editText.setText(doubleTag.getValue().toString());
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String sValue = s.toString();
+                            try {
+                                doubleTag.setValue(Double.valueOf(sValue));
+                                nbt.setModified();
+                            } catch (NumberFormatException e) {
+                                editText.setError(String.format(context.getString(R.string.x_is_invalid), sValue));
+                            }
+                        }
+                    });
+                    break;
+                }
+                case R.layout.tag_string_layout: {
+                    final EditText editText = tagView.findViewById(R.id.stringField);
+                    final StringTag stringTag = (StringTag) tag;
+                    editText.setText(stringTag.getValue());
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            nbt.setModified();
+                            stringTag.setValue(s.toString());
+                        }
+                    });
+                    break;
+                }
+                default:
+                    break;
+
+            }
+
+            return tagView;
+        }
+
+        @Override
+        public void toggle(boolean active) {
+        }
+
+        @Override
+        public int getContainerStyle() {
+            return R.style.TreeNodeStyleCustom;
+        }
+
+    }
+
+    public enum NBTEditOption {
+
+        CANCEL(R.string.edit_cancel),
+        COPY(R.string.edit_copy),
+        PASTE_OVERWRITE(R.string.edit_paste_overwrite),
+        PASTE_SUBTAG(R.string.edit_paste_sub_tag),
+        DELETE(R.string.edit_delete),
+        RENAME(R.string.edit_rename),
+        ADD_SUBTAG(R.string.edit_add_sub_tag);
+
+        public final int stringId;
+
+        NBTEditOption(int stringId) {
+            this.stringId = stringId;
+        }
+    }
+
+    public String[] getNBTEditOptions() {
+        NBTEditOption[] values = NBTEditOption.values();
+        int len = values.length;
+        String[] options = new String[len];
+        for (int i = 0; i < len; i++) {
+            options[i] = getString(values[i].stringId);
+        }
+        return options;
+    }
+
+    public enum RootNBTEditOption {
+
+        ADD_NBT_TAG(R.string.edit_root_add),
+        PASTE_SUB_TAG(R.string.edit_root_paste_sub_tag),
+        REMOVE_ALL_TAGS(R.string.edit_root_remove_all);
+
+        public final int stringId;
+
+        RootNBTEditOption(int stringId) {
+            this.stringId = stringId;
+        }
+
+    }
+
+    public String[] getRootNBTEditOptions() {
+        RootNBTEditOption[] values = RootNBTEditOption.values();
+        int len = values.length;
+        String[] options = new String[len];
+        for (int i = 0; i < len; i++) {
+            options[i] = getString(values[i].stringId);
+        }
+        return options;
+    }
+
+
+    public static Tag clipboard;
+
+
+    //returns true if there is a tag in content with a name equals to key.
+    boolean checkKeyCollision(String key, List<Tag> content) {
+        if (content == null || content.isEmpty()) return false;
+        if (key == null) key = "";
+        String tagName;
+        for (Tag tag : content) {
+            tagName = tag.getName();
+            if (tagName == null) tagName = "";
+            if (tagName.equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static class ChainTag {
+
+        public Tag parent, self;
+
+        public ChainTag(Tag parent, @NotNull Tag self) {
+            this.parent = parent;
+            this.self = self;
+        }
     }
 
 

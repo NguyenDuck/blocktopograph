@@ -7,13 +7,20 @@ import com.litl.leveldb.DB;
 import com.litl.leveldb.Iterator;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
+import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
+import com.mithrilmania.blocktopograph.map.UnknownBlock;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -28,9 +35,11 @@ public class WorldData {
 
     private WeakReference<World> world;
     private LruCache<Key, Chunk> chunks = new ChunkCache(this, 256);
+    public final BlockRegistry mBlockRegistry;
 
     public WorldData(World world) {
         this.world = new WeakReference<>(world);
+        this.mBlockRegistry = new BlockRegistry();
     }
 
     static String bytesToHex(byte[] bytes, int start, int end) {
@@ -264,6 +273,54 @@ public class WorldData {
 
         public WorldDBLoadException(String msg) {
             super(msg);
+        }
+    }
+
+    public static class BlockRegistry {
+
+        private List<UnknownBlock> mUnknownBlocks;
+        private HashMap<String, UnknownBlock[]> mUnknownBlocksIndex;
+
+        BlockRegistry() {
+            mUnknownBlocks = new ArrayList<>(256);
+            mUnknownBlocksIndex = new HashMap<>(256);
+        }
+
+        @NotNull
+        public Block resolveBlock(@NonNull String name, int val) {
+
+            // Only "minecraft" namespace or no namespace allowed.
+            int dotPos = name.indexOf(':');
+            if (dotPos != -1) {
+                if (!name.substring(0, dotPos).equals("minecraft")) return KnownBlock.B_0_0_AIR;
+                name = name.substring(dotPos + 1);
+            }
+            Block block = KnownBlock.getBlockNew(name, val);
+            if (block != null) return block;
+
+            // Unknown block.
+            UnknownBlock[] unks = mUnknownBlocksIndex.get(name);
+            if (unks == null) {
+                unks = new UnknownBlock[16];
+                mUnknownBlocksIndex.put(name, unks);
+            }
+            if (val < 0 || val > 15) return KnownBlock.B_0_0_AIR;
+            UnknownBlock unk = unks[val];
+            if (unk == null) {
+                unk = new UnknownBlock(mUnknownBlocks.size() + (256 << 8) - 1, name, val);
+                unks[val] = unk;
+                mUnknownBlocks.add(unk);
+            }
+            return unk;
+        }
+
+        @Nullable
+        public Block getBlockByRuntimeId(int runtimeId) {
+            Block block = KnownBlock.getBlock(runtimeId);
+            if (block != null) return block;
+            int index = runtimeId - (256 << 8);
+            if (index < 0 || index >= mUnknownBlocks.size()) return null;
+            return mUnknownBlocks.get(runtimeId);
         }
     }
 

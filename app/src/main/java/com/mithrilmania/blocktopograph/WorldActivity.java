@@ -204,7 +204,8 @@ public class WorldActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putString("seed", worldSeed);
         bundle.putString("name", this.world.getWorldDisplayName());
-        bundle.putAll(world.getMapVersionData());
+        Bundle mapVersionData = world.getMapVersionData();
+        if (mapVersionData != null) bundle.putAll(mapVersionData);
 
         // anonymous global counter of opened worlds
         Log.logFirebaseEvent(this, Log.CustomFirebaseEvent.WORLD_OPEN, bundle);

@@ -5,8 +5,12 @@ import android.graphics.Color;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainSubChunk;
 import com.mithrilmania.blocktopograph.map.Biome;
+import com.mithrilmania.blocktopograph.map.Block;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.util.Noise;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -61,8 +65,9 @@ public final class BedrockChunk extends Chunk {
         TerrainSubChunk ret = mTerrainSubChunks[which];
         if (ret == null) {
             byte[] raw;
+            WorldData worldData = mWorldData.get();
             try {
-                raw = mWorldData.get().getChunkData(mChunkX, mChunkZ,
+                raw = worldData.getChunkData(mChunkX, mChunkZ,
                         ChunkTag.TERRAIN, mDimension, (byte) which, true);
                 if (raw == null) {
                     mVoidList[which] = true;
@@ -74,7 +79,7 @@ public final class BedrockChunk extends Chunk {
                 mVoidList[which] = true;
                 return null;
             }
-            ret = TerrainSubChunk.create(raw);
+            ret = TerrainSubChunk.create(raw, worldData.mBlockRegistry);
             if (ret == null || ret.isError()) {
                 mVoidList[which] = true;
                 mErrorList[which] = true;
@@ -106,21 +111,25 @@ public final class BedrockChunk extends Chunk {
 
     @Override
     public int getHeightMapValue(int x, int z) {
+        if (mIsVoid) return 0;
         short h = data2D.getShort(POS_HEIGHTMAP + (get2dOffset(x, z) << 1));
         return ((h & 0xff) << 8) | ((h >> 8) & 0xff);
     }
 
     private void setHeightMapValue(int x, int z, short height) {
+        if (mIsVoid) return;
         data2D.putShort(POS_HEIGHTMAP + (get2dOffset(x, z) << 1), Short.reverseBytes(height));
     }
 
     @Override
     public int getBiome(int x, int z) {
+        if (mIsVoid) return 0;
         return data2D.get(POS_BIOME_DATA + get2dOffset(x, z));
     }
 
     @Override
     public void setBiome(int x, int z, int id) {
+        if (mIsVoid) return;
         data2D.put(POS_BIOME_DATA + get2dOffset(x, z), (byte) id);
         mIs2dDirty = true;
     }
@@ -149,45 +158,58 @@ public final class BedrockChunk extends Chunk {
         return Color.rgb(r, g, b);
     }
 
+    @NotNull
     @Override
-    public int getBlockRuntimeId(int x, int y, int z) {
-        return getBlockRuntimeId(x, y, z, 0);
+    public Block getBlock(int x, int y, int z) {
+        return getBlock(x, y, z, 0);
     }
 
+    @NotNull
     @Override
-    public int getBlockRuntimeId(int x, int y, int z, int layer) {
+    public Block getBlock(int x, int y, int z, int layer) {
         if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
-            return 0;
+            return KnownBlock.B_0_0_AIR;
         TerrainSubChunk subChunk = getSubChunk(y >> 4);
-        if (subChunk == null) return 0;
-        return subChunk.getBlockRuntimeId(x, y & 0xf, z, layer);
+        if (subChunk == null) return KnownBlock.B_0_0_AIR;
+        return subChunk.getBlock(x, y & 0xf, z, layer);
+    }
+
+    @NotNull
+    @Override
+    public KnownBlock getKnownBlock(int x, int y, int z, int layer) {
+        Block block = getBlock(x, y, z, layer);
+        if (block instanceof KnownBlock) return (KnownBlock) block;
+        return KnownBlock.B_0_0_AIR;
     }
 
     @Override
-    public void setBlockRuntimeId(int x, int y, int z, int layer, int runtimeId) {
+    public void setBlock(int x, int y, int z, int layer, @NotNull Block block) {
         if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
             return;
         int which = y >> 4;
         TerrainSubChunk subChunk = getSubChunk(which);
         if (subChunk == null) return;
-        subChunk.setBlockRuntimeId(x, y & 0xf, z, layer, runtimeId);
+        subChunk.setBlock(x, y & 0xf, z, layer, block);
         mDirtyList[which] = true;
 
-        // Height increased.
-        if (runtimeId != 0 && getHeightMapValue(x, z) < y) {
-            mIs2dDirty = true;
-            setHeightMapValue(x, z, (short) (y + 1));
-            // Roof removed.
-        } else if (runtimeId == 0 && getHeightMapValue(x, z) == y) {
-            mIs2dDirty = true;
-            int height = 0;
-            for (int h = y - 1; h >= 0; h--) {
-                if (getBlockRuntimeId(x, h, z) != 0) {
-                    height = h + 1;
-                    break;
+        if (block instanceof KnownBlock) {
+            // Height increased.
+            if (block != KnownBlock.B_0_0_AIR && getHeightMapValue(x, z) < y) {
+                mIs2dDirty = true;
+                setHeightMapValue(x, z, (short) (y + 1));
+                // Roof removed.
+            } else if (block == KnownBlock.B_0_0_AIR && getHeightMapValue(x, z) == y) {
+                mIs2dDirty = true;
+                int height = 0;
+                for (int h = y - 1; h >= 0; h--) {
+                    Block blockAtHeight = getBlock(x, h, z);
+                    if (blockAtHeight instanceof KnownBlock && blockAtHeight != KnownBlock.B_0_0_AIR) {
+                        height = h + 1;
+                        break;
+                    }
                 }
+                setHeightMapValue(x, z, (short) height);
             }
-            setHeightMapValue(x, z, (short) height);
         }
     }
 
@@ -218,7 +240,9 @@ public final class BedrockChunk extends Chunk {
             subChunk = getSubChunk(which);
             if (subChunk == null) continue;
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
-                if (subChunk.getBlockRuntimeId(x, innerY, z, 0) != 0) return (which << 4) | innerY;
+                Block block = subChunk.getBlock(x, innerY, z, 0);
+                if (block instanceof KnownBlock && block != KnownBlock.B_0_0_AIR)
+                    return (which << 4) | innerY;
             }
         }
         return -1;
@@ -233,7 +257,8 @@ public final class BedrockChunk extends Chunk {
             subChunk = getSubChunk(which);
             if (subChunk == null) continue;
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
-                if (subChunk.getBlockRuntimeId(x, innerY, z, 0) == 0) return (which << 4) | innerY;
+                Block block = subChunk.getBlock(x, innerY, z, 0);
+                if (block == KnownBlock.B_0_0_AIR) return (which << 4) | innerY;
             }
         }
         return -1;

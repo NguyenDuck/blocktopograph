@@ -1,14 +1,14 @@
 package com.mithrilmania.blocktopograph.flat;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.mithrilmania.blocktopograph.Log;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public final class FlatLayers {
 
@@ -37,10 +37,10 @@ public final class FlatLayers {
             for (int i = 0; i < alayers.length; i++) {
                 JSONObject jlayer = jlayers.getJSONObject(i);
                 String name = jlayer.getString(KEY_BLOCK_NAME);
-                int id = Block.resolve(name);
+                int id = KnownBlock.resolve(name);
                 int data = jlayer.getInt(KEY_BLOCK_DATA);
                 int count = jlayer.getInt(KEY_COUNT);
-                Block block = Block.getBestBlock(id, data);
+                KnownBlock block = KnownBlock.getBestBlock(id, data);
                 alayers[i] = new Layer(block, count);
             }
             layers.hasStructureOps = root.has(KEY_STRUCTURE_OPS);

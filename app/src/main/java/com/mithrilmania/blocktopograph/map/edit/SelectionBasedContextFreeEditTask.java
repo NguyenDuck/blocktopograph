@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.map.Biome;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
@@ -60,8 +60,8 @@ public class SelectionBasedContextFreeEditTask extends
                 SnrConfig cfg = new SnrConfig();
                 cfg.searchMode = 2;
                 cfg.placeMode = 1;
-                cfg.searchBlockMain = Block.B_50_0_TORCH;
-                cfg.placeBlockMain = Block.B_20_0_GLASS;
+                cfg.searchBlockMain = KnownBlock.B_50_0_TORCH;
+                cfg.placeBlockMain = KnownBlock.B_20_0_GLASS;
                 cfg.ignoreSubId = true;
                 return doSnr(cfg, editTargets);
             }

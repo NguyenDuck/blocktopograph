@@ -205,7 +205,7 @@ public class MapFragment extends Fragment {
 //                //byte[] arr = world.getWorldData().getChunkData(0, 0, ChunkTag.TERRAIN, Dimension.OVERWORLD, (byte) 0, true);
 //                //V1d2d13TerrainSubChunk subChunk = new V1d2d13TerrainSubChunk(ByteBuffer.wrap(arr));
 //                for (int z = 0; z < 16; z++)
-//                    chunk.setBlockRuntimeId(0, 6, z, 0, Block.B_5_0_PLANKS_OAK.getRuntimeId());
+//                    chunk.setBlock(0, 6, z, 0, KnownBlock.B_5_0_PLANKS_OAK.getRuntimeId());
 //                chunk.save();//world.getWorldData(), 0, 0, Dimension.OVERWORLD, 1);
 //                Log.d(this, "ok");
 //            } catch (Exception e) {
@@ -434,7 +434,7 @@ public class MapFragment extends Fragment {
         }
 
         try {
-            Block.loadBitmaps(activity.getAssets());
+            KnownBlock.loadBitmaps(activity.getAssets());
         } catch (IOException e) {
             Log.d(this, e);
         }

@@ -13,7 +13,7 @@ import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragSerachAndReplaceBinding;
 import com.mithrilmania.blocktopograph.databinding.IncludeBlockBinding;
 import com.mithrilmania.blocktopograph.flat.PickBlockActivity;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.map.selection.SelectionMenuFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.tomergoldst.tooltips.ToolTip;
@@ -84,12 +84,12 @@ public class SearchAndReplaceFragment extends DialogFragment {
             }
             mBinding.cbIgsub.setChecked(cfg.ignoreSubId);
         } else {
-            setBlockToItem(mBinding.searchBlockAny, Block.B_2_0_GRASS);
-            setBlockToItem(mBinding.searchBlockBg, Block.B_0_0_AIR);
-            setBlockToItem(mBinding.searchBlockFg, Block.B_2_0_GRASS);
-            setBlockToItem(mBinding.replaceBlockAny, Block.B_20_0_GLASS);
-            setBlockToItem(mBinding.replaceBlockFg, Block.B_20_0_GLASS);
-            setBlockToItem(mBinding.replaceBlockBg, Block.B_9_0_WATER);
+            setBlockToItem(mBinding.searchBlockAny, KnownBlock.B_2_0_GRASS);
+            setBlockToItem(mBinding.searchBlockBg, KnownBlock.B_0_0_AIR);
+            setBlockToItem(mBinding.searchBlockFg, KnownBlock.B_2_0_GRASS);
+            setBlockToItem(mBinding.replaceBlockAny, KnownBlock.B_20_0_GLASS);
+            setBlockToItem(mBinding.replaceBlockFg, KnownBlock.B_20_0_GLASS);
+            setBlockToItem(mBinding.replaceBlockBg, KnownBlock.B_9_0_WATER);
         }
 
         mBinding.searchIn.setOnCheckedChangeListener(this::onCheckedChanged);
@@ -167,7 +167,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
     }
 
     private void recoverBlock(@NotNull IncludeBlockBinding item, @Nullable Serializable data) {
-        setBlockToItem(item, data instanceof Block ? (Block) data : Block.B_0_0_AIR);
+        setBlockToItem(item, data instanceof KnownBlock ? (KnownBlock) data : KnownBlock.B_0_0_AIR);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK && data != null) {
-            Block block = (Block) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
+            KnownBlock block = (KnownBlock) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
             switch (requestCode - REQUEST_CODE) {
                 case 0:
                     setBlockToItem(mBinding.searchBlockAny, block);
@@ -248,7 +248,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void setBlockToItem(@NotNull IncludeBlockBinding item, @NotNull Block block) {
+    private void setBlockToItem(@NotNull IncludeBlockBinding item, @NotNull KnownBlock block) {
         item.icon.setImageBitmap(block.getBitmap());
         UiUtil.blendBlockColor(item.getRoot(), block);
         item.setBlock(block);

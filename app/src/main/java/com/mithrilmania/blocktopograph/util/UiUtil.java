@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.GeneralWaitBinding;
 import com.mithrilmania.blocktopograph.map.Biome;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,7 @@ public final class UiUtil {
         Snackbar.make(view, text, Snackbar.LENGTH_SHORT).show();
     }
 
-    public static void blendBlockColor(@NotNull View view, Block block) {
+    public static void blendBlockColor(@NotNull View view, KnownBlock block) {
         Drawable drawable = view.getBackground();
         if (!(drawable instanceof GradientDrawable)) return;
         GradientDrawable gradientDrawable = (GradientDrawable) drawable;
