@@ -4,20 +4,25 @@ By [@protolambda](https://github.com/protolambda), [@MithrilMania](https://githu
 [@flagmaggot](https://github.com/flagmaggot) and many other community contributors, including translation.  
 ~~This fork is the only one supporting MCPE 1.2~1.10 for now.~~
 
-A previous contributor, [@MithrilMania](https://github.com/MithrilMania), is now back.
-You may want to check out [her repository](https://github.com/MithrilMania/blocktopograph).
-
-Structures of both repos have been changed since last year, and a merge does seem too hard,
-we'll contact her later and discuss about the solution. 
-
 ## Help improve translation
 [Click here](https://github.com/oO0oO0oO0o0o00/blocktopograph/blob/master/translation.md).
+
+## Update paused
+Due to many reasons, we have decided to pause update of this project.  
+Translations and pull requests **will still be processed**, but we encourage you to
+take over this project and develope on your own.
 
 ## Download
 [>>> Download on Google Play <<<](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)  
 And release page of the repository provides debug version of the app.  
 <img src="arts/scr02.png" alt="screenshot" width="320"/>
 <img src="arts/scr03.png" alt="screenshot" width="320"/>
+
+A previous contributor, [@MithrilMania](https://github.com/MithrilMania), is now back.
+You may want to check out [her repository](https://github.com/MithrilMania/blocktopograph).
+
+Structures of both repos have been changed since last year, and a merge does seem too hard,
+we'll contact her later and discuss about the solution. 
 
 ## Build
 
@@ -77,4 +82,3 @@ LICENSE-head:
 ## Contributing
 
 Always welcome! Fork the project, change what you want, and send back a pull request.
-Good (and properly written) features will be merged into the official app by @mithrilmania.
