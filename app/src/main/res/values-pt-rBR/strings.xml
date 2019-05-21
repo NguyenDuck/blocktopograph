@@ -333,7 +333,6 @@
     <string name="picer_save">Salvar</string>
     <string name="general_share">Compartilhar</string>
     <string name="picer_share_title">Compartilhar com</string>
-    <string name="picer_preview_generating">Gerando preview...</string>
     <string name="picer_btn_generate">Gerar</string>
     <string name="func_begin_selection">Iniciar seleção</string>
     <string name="func_cancel_selection">Cancelar seleção</string>
