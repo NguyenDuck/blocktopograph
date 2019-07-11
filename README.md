@@ -1,8 +1,8 @@
 # Blocktopograph
 
-By [@protolambda](https://github.com/protolambda), [@MithrilMania](https://github.com/MithrilMania),
+By *Proto Lambda*\(Link removed, as he asked to\), [@MithrilMania](https://github.com/MithrilMania),
 [@flagmaggot](https://github.com/flagmaggot) and many other community contributors, including translation.  
-~~This fork is the only one supporting MCPE 1.2~1.10 for now.~~
+~~This fork is the only one supporting MCPE 1.2+ for now.~~
 
 ## Help improve translation
 [Click here](https://github.com/oO0oO0oO0o0o00/blocktopograph/blob/master/translation.md).
@@ -36,7 +36,7 @@ You can build it as debug build or sign it with your own keys.
 
 This Google-Play version will be updated after any significant and well-written feature additions and fixes.
 
-Questions? You can reach [@protolambda on Twitter](https://twitter.com/protolambda)!
+Questions? *Proto* said he does not want to be bothered about this app anymore.
 
 Issues and requests are welcome too, but please use the issue-tracker for this to keep things organized.
 
@@ -55,14 +55,14 @@ Direct consequences: all public distributed changes in the source-code
 
 *Full license can be found in the [**LICENSE**](LICENSE) file in the root folder of this repository.*
 
-NOTE: Please retain the attribution to @protolambda, the original author
+NOTE: Please retain the attribution to *Proto Lambda*, the original author
  and maintainer of the official app, and later significant contributors (See [CONTRIBUTORS.md](CONTRIBUTORS.md))
  out of respect for their work towards this software.
 
 LICENSE-head:
 
     Blocktopograph -- Blocktopograph is a fan-made app for MCPE, it includes a top-down world viewer and a NBT editor.
-    Copyright (C) 2016 @protolambda
+    Copyright (C) 2016 Proto Lambda
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -81,4 +81,4 @@ LICENSE-head:
 
 ## Contributing
 
-Always welcome! Fork the project, change what you want, and send back a pull request.
+Always welcome! Fork the project, improve and publish!

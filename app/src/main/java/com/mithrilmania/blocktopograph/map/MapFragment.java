@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.DisplayMetrics;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,19 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
@@ -71,29 +85,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
-
 
 public class MapFragment extends Fragment {
 
     private final static int MARKER_INTERVAL_CHECK = 50;
-    public static final String TAG_PICER = "picer";
-    public static final int MARKERS_ON_SCREEN_TOO_MANY = 100;
-    public static final String PREF_KEY_HAS_NOTIFIED_MARKERS_TOO_MANY = "has_notified_markers_too_many";
-    public static final String PREF_KEY_HAS_USED_SELECTION = "hasUsedSelection";
+    private static final String TAG_PICER = "picer";
+    private static final int MARKERS_ON_SCREEN_TOO_MANY = 100;
+    private static final String PREF_KEY_HAS_NOTIFIED_MARKERS_TOO_MANY = "has_notified_markers_too_many";
+    private static final String PREF_KEY_HAS_USED_SELECTION = "hasUsedSelection";
+    private static final String KEY_HAS_DOUBLE_TAP = "hasDoubleTap";
     //static, remember choice while app is open.
-    static Map<NamedBitmapProvider, BitmapChoiceListAdapter.NamedBitmapChoice> markerFilter = new HashMap<>();
+    private static Map<NamedBitmapProvider, BitmapChoiceListAdapter.NamedBitmapChoice> markerFilter = new HashMap<>();
 
     static {
         //entities are enabled by default
@@ -114,12 +116,12 @@ public class MapFragment extends Fragment {
 
     //procedural markers can be iterated while other threads add things to it;
     // iterating performance is not really affected because of the small size;
-    public CopyOnWriteArraySet<AbstractMarker> proceduralMarkers = new CopyOnWriteArraySet<>();
+    private CopyOnWriteArraySet<AbstractMarker> proceduralMarkers = new CopyOnWriteArraySet<>();
 
-    public Set<AbstractMarker> staticMarkers = new HashSet<>();
+    private Set<AbstractMarker> staticMarkers = new HashSet<>();
 
-    public AbstractMarker spawnMarker;
-    public AbstractMarker localPlayerMarker;
+    private AbstractMarker spawnMarker;
+    private AbstractMarker localPlayerMarker;
     private WeakReference<WorldActivityInterface> worldProvider;
     public World world;
     private MCTileProvider minecraftTileProvider;
@@ -220,6 +222,7 @@ public class MapFragment extends Fragment {
 
             DimensionVector3<Float> playerPos = world.getPlayerPos();
 
+            assert playerPos != null;
             Snackbar.make(mBinding.tileView,
                     getString(R.string.something_at_xyz_dim_float, getString(R.string.player),
                             playerPos.x, playerPos.y, playerPos.z),
@@ -367,6 +370,23 @@ public class MapFragment extends Fragment {
         mFloatingFragment = fragment;
     }
 
+    private void onOpenFab(View view) {
+        if (mBinding.fabMenu.isOpened())
+            mBinding.fabMenu.close(true);
+        else {
+            mBinding.fabMenu.open(true);
+            FragmentActivity activity = getActivity();
+            if (activity != null) {
+                SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
+                if (!preferences
+                        .getBoolean(KEY_HAS_DOUBLE_TAP, false)) {
+                    Toast.makeText(activity, getString(R.string.map_dblclick_notice), Toast.LENGTH_SHORT).show();
+                    preferences.edit().putBoolean(KEY_HAS_DOUBLE_TAP, true).apply();
+                }
+            }
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -377,6 +397,27 @@ public class MapFragment extends Fragment {
                 inflater, R.layout.map_fragment, container, false);
         mBinding.tileView.setSelectionView(mBinding.selectionBoard);
         mBinding.selectionBoard.setTileView(mBinding.tileView);
+        mBinding.tileView.setOuterDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                worldProvider.get().openDrawer();
+                FragmentActivity activity = getActivity();
+                if (activity != null)
+                    activity.getPreferences(Context.MODE_PRIVATE)
+                            .edit().putBoolean(KEY_HAS_DOUBLE_TAP, true).apply();
+                return false;
+            }
+
+            @Override
+            public boolean onDoubleTapEvent(MotionEvent e) {
+                return false;
+            }
+        });
 
         final Activity activity = getActivity();
 
@@ -385,10 +426,11 @@ public class MapFragment extends Fragment {
             return null;
         }
 
-        assert activity instanceof WorldActivityInterface;
         WorldActivityInterface activityInterface = (WorldActivityInterface) activity;
         worldProvider = new WeakReference<>(activityInterface);
         world = activityInterface.getWorld();
+
+        mBinding.fabMenu.setOnMenuButtonClickListener(this::onOpenFab);
 
         // GPS button: moves camera to player position
         mBinding.fabMenuGpsPlayer.setOnClickListener(this::moveCameraToPlayer);
@@ -690,7 +732,7 @@ public class MapFragment extends Fragment {
      * @param dimension new pos Dimension
      * @return the newly created marker, which should replace the old one.
      */
-    public AbstractMarker moveMarker(AbstractMarker marker, int x, int y, int z, Dimension dimension) {
+    private AbstractMarker moveMarker(AbstractMarker marker, int x, int y, int z, Dimension dimension) {
         AbstractMarker newMarker = marker.copy(x, y, z, dimension);
         if (staticMarkers.remove(marker)) staticMarkers.add(newMarker);
         this.removeMarker(marker);

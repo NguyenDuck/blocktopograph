@@ -3,16 +3,17 @@ package com.mithrilmania.blocktopograph.worldlist;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
@@ -175,7 +176,6 @@ public class WorldItemDetailFragment extends Fragment implements View.OnClickLis
 
     private void sequence(byte code) {
         int pos = mSequence.length - 1;
-        assert pos >= 0;
         System.arraycopy(mSequence, 1, mSequence, 0, pos);
         mSequence[pos] = code;
         if (Arrays.equals(mSequence, SEQ_TEST)) {

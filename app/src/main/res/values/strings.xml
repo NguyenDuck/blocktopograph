@@ -2,7 +2,7 @@
 
     <string name="app_name" translatable="false">Blocktopograph</string>
 
-    <string name="brand_sub">By @protolambda</string>
+    <string name="brand_sub">A community-made app</string>
 
     <string name="title_worlditem_list">Select a world</string>
     <string name="title_worlditem_detail">World</string>
@@ -27,13 +27,14 @@
         And then check if you can find it here!</string>
 
     <string name="app_about">
-        This app is created by <a href="http://twitter.com/protolambda">@protolambda</a>,
+        This app is created by <b>Protol Lambda</b> (Link removed as he asked to),
         contributed by
         <a href="https://github.com/MithrilMania">@MithrilMania</a>,
         <a href="https://github.com/flagmaggot">@flagmaggot</a>,
         <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>,
         <a href="https://github.com/MiemieMethod">@MiemieMethod</a>,
-        <a href="https://github.com/LordJunior">Manuel</a> and many others as well.\n\n
+        <a href="https://github.com/LordJunior">Manuel</a>,
+        ScrapperBox25, Tcbdxh and many others as well.\n\n
         Available on Google Play.\n\n
         Current active github repository:
         <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
@@ -68,7 +69,7 @@
         \n
         <i>Source code on GitHub:</i>\n
         <a href="https://github.com/mithrilmania/blocktopograph">github.com/mithrilmania/blocktopograph</a> \n
-
+        \n
     </string>
 
     <string name="app_help">The app documentation can be found at (maybe out of date):
@@ -463,4 +464,5 @@
     <string name="map_edit_func_picer">Generate Picture</string>
     <string name="picer_preview_generating">Generating Preview...</string>
     <string name="map_locator_player_pos_unknown">Position unknown</string>
+    <string name="map_dblclick_notice">Tap screen twice to open the drawer.</string>
 </resources>

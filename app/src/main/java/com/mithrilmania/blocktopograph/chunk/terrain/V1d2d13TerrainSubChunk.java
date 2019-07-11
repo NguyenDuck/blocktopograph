@@ -1,5 +1,7 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
+import androidx.annotation.NonNull;
+
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.map.Block;
@@ -31,16 +33,14 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     private static final String PREFIX_MINECRAFT = "minecraft:";
     private boolean mIsDualStorageSupported;
 
-    //There could be multiple BlockStorage let's read the first two.
-    // No not anymore.
-    private volatile BlockStorage[] mStorages;
-
-    //Masks used to extract BlockState bits of a certain block out of a int32, and vice-versa.
+    // Masks used to extract BlockState bits of a certain block out of a int32, and vice-versa.
     private static final int[] msk = {0b1, 0b11, 0b111, 0b1111, 0b11111, 0b111111, 0b1111111,
             0b11111111,
             0b111111111, 0b1111111111, 0b11111111111,
             0b111111111111,
             0b1111111111111, 0b11111111111111, 0b11111111111111};
+    // There could be multiple BlockStorage let's read the first two.
+    private volatile BlockStorage[] mStorages;
 
     V1d2d13TerrainSubChunk(@NotNull ByteBuffer raw, @NotNull WorldData.BlockRegistry blockRegistry) {
 
@@ -49,9 +49,9 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         raw.order(ByteOrder.LITTLE_ENDIAN);
         mStorages = new BlockStorage[2];
 
-        //The first byte indicates version.
+        // The first byte indicates version.
         switch (raw.get(0)) {
-            //1: Only one BlockStorage starting from the next byte.
+            // 1: Only one BlockStorage starting from the next byte.
             case 1:
                 mIsDualStorageSupported = false;
                 raw.position(1);
@@ -62,7 +62,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
                     mIsError = true;
                 }
                 break;
-            //8: One or more BlockStorage's, next byte is the count.
+            // 8: One or more BlockStorage's, next byte is the count.
             case 8:
                 mIsDualStorageSupported = true;
                 raw.position(1);
@@ -87,14 +87,27 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         mHasSkyLight = false;
     }
 
+    @NonNull
+    private static BlockStorage.BlockRecord createNewBlockRecordOfNameValFormat(@NonNull Block block) {
+        BlockStorage.BlockRecord blockRecord = new BlockStorage.BlockRecord();
+        blockRecord.blockResolved = block;
+        StringTag nameTag = new StringTag(PALETTE_KEY_NAME, PREFIX_MINECRAFT + block.getName());
+        ShortTag valTag = new ShortTag(PALETTE_KEY_VAL, (short) block.getVal());
+        ArrayList<Tag> pitem = new ArrayList<>(2);
+        pitem.add(nameTag);
+        pitem.add(valTag);
+        blockRecord.tag = new CompoundTag("", pitem);
+        return blockRecord;
+    }
+
     private boolean setBlockIfSpace(
             int x, int y, int z, @NotNull BlockStorage storage, @NotNull Block block) {
         int code = -1;
 
         // If in palette.
-        List<Block> palette = storage.palette;
+        List<BlockStorage.BlockRecord> palette = storage.palette;
         for (int localId = 0, paletteSize = palette.size(); localId < paletteSize; localId++) {
-            Block blockInPalette = palette.get(localId);
+            Block blockInPalette = palette.get(localId).blockResolved;
             if (block.equals(blockInPalette)) {
                 code = localId;
                 break;
@@ -110,17 +123,18 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
             WorldData.BlockRegistry blockRegistry = getBlockRegistry();
             if (blockRegistry == null) return true;
-            palette.add(block);
+
+            palette.add(createNewBlockRecordOfNameValFormat(block));
             code = size;
         }
 
-        //The codeOffset'th BlockState is wanted.
+        // The codeOffset'th BlockState is wanted.
         int codeOffset = getOffset(x, y, z);
 
-        //How much BlockStates can one int32 hold?
+        // How much BlockStates can one int32 hold?
         int intCapa = 32 / storage.blockCodeLenth;
 
-        //The int32 that holds the wanted BlockState.
+        // The int32 that holds the wanted BlockState.
         int whichInt = codeOffset / intCapa;
         int stick = storage.records.get(whichInt);
         int shift = codeOffset % intCapa * storage.blockCodeLenth;
@@ -140,7 +154,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         stream.write(storage.raw);
 
         // Palette size.
-        List<Block> palette = storage.palette;
+        List<BlockStorage.BlockRecord> palette = storage.palette;
         int size = palette.size();
         stream.writeInt(size);
 
@@ -149,16 +163,8 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
         WorldData.BlockRegistry blockRegistry = getBlockRegistry();
         if (blockRegistry == null) return;
-        for (int j = 0; j < size; j++) {
-            Block block = palette.get(j);
-            if (block == null) block = KnownBlock.B_0_0_AIR;
-            StringTag nameTag = new StringTag(PALETTE_KEY_NAME, PREFIX_MINECRAFT + block.getName());
-            ShortTag valTag = new ShortTag(PALETTE_KEY_VAL, (short) block.getVal());
-            ArrayList<Tag> pitem = new ArrayList<>(2);
-            pitem.add(nameTag);
-            pitem.add(valTag);
-            nos.writeTag(new CompoundTag("", pitem));
-        }
+        for (int j = 0; j < size; j++)
+            nos.writeTag(palette.get(j).tag);
     }
 
     private void loadBlockStorage(@NotNull ByteBuffer raw, int which) throws IOException {
@@ -209,14 +215,15 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
             //Read a piece of nbt data, represented by a root CompoundTag.
             CompoundTag tag = (CompoundTag) nis.readTag();
+            BlockStorage.BlockRecord record = new BlockStorage.BlockRecord();
+            record.tag = tag;
 
             //Read `name` and `val` then resolve the `name` into numeric id.
             String name = ((StringTag) tag.getChildTagByKey(PALETTE_KEY_NAME)).getValue();
-            int data = ((ShortTag) tag.getChildTagByKey(PALETTE_KEY_VAL)).getValue();
-            storage.palette.add(
-                    blockRegistry.resolveBlock(name, data)
-//                    BlockNameResolver.resolve(name)
-            );
+            Tag valTag = tag.getChildTagByKey(PALETTE_KEY_VAL);
+            record.blockResolved = blockRegistry.resolveBlock(name,
+                    valTag instanceof ShortTag ? ((ShortTag) valTag).getValue() : 0);
+            storage.palette.add(record);
         }
 
         //If one day we need to read more BlockStorage's, this line helps.
@@ -245,7 +252,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         int ind = (stick >> (codeOffset % intCapa * storage.blockCodeLenth)) & msk[storage.blockCodeLenth - 1];
 
         //Transform the local BlockState into global id<<8|data structure.
-        return storage.palette.get(ind);
+        return storage.palette.get(ind).blockResolved;
     }
 
     @Override
@@ -316,7 +323,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         storage.raw = arr;
 
         storage.palette = new ArrayList<>(4);
-        storage.palette.add(KnownBlock.B_0_0_AIR);
+        storage.palette.add(createNewBlockRecordOfNameValFormat(KnownBlock.B_0_0_AIR));
 
         storage.blockCodeLenth = 1;
 
@@ -352,9 +359,19 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     private static class BlockStorage {
 
         byte[] raw;
+
         IntBuffer records;
-        List<Block> palette;
-        public int blockCodeLenth;
+
+        List<BlockRecord> palette;
+
+        int blockCodeLenth;
+
+        static class BlockRecord {
+
+            CompoundTag tag;
+            Block blockResolved;
+
+        }
 
     }
 }

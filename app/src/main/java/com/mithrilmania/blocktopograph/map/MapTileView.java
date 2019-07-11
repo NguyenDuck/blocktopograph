@@ -2,6 +2,7 @@ package com.mithrilmania.blocktopograph.map;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.mithrilmania.blocktopograph.map.selection.SelectionView;
@@ -19,6 +20,7 @@ public class MapTileView extends TileView {
      */
     private OnLongPressListener mOnLongPressListener;
     private WeakReference<SelectionView> mSelectionView;
+    private GestureDetector.OnDoubleTapListener mOuterDoubleTapListener;
 
     private boolean mTouchable = true;
 
@@ -43,6 +45,16 @@ public class MapTileView extends TileView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         updateSelection();
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent event) {
+        if (mOuterDoubleTapListener != null) mOuterDoubleTapListener.onDoubleTap(event);
+        return true;
+    }
+
+    public void setOuterDoubleTapListener(GestureDetector.OnDoubleTapListener outerDoubleTapListener) {
+        mOuterDoubleTapListener = outerDoubleTapListener;
     }
 
     public void updateSelection() {

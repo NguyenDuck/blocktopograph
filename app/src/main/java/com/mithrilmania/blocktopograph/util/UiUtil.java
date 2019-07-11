@@ -9,6 +9,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.graphics.ColorUtils;
+import androidx.databinding.DataBindingUtil;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.GeneralWaitBinding;
@@ -17,12 +23,6 @@ import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.graphics.ColorUtils;
-import androidx.databinding.DataBindingUtil;
 
 public final class UiUtil {
 
@@ -46,7 +46,7 @@ public final class UiUtil {
         Drawable drawable = view.getBackground();
         if (!(drawable instanceof GradientDrawable)) return;
         GradientDrawable gradientDrawable = (GradientDrawable) drawable;
-        Color color = block.color;
+        ColorWrapper color = block.color;
         int res = (block.id == 0) ? 0 : ColorUtils.blendARGB(color.asARGB(), 0x7f7f7f7f, 0.5f);
         gradientDrawable.setColor(res);
     }

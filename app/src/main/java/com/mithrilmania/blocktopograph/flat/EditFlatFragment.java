@@ -8,6 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
@@ -25,20 +32,13 @@ import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 public final class EditFlatFragment extends Fragment {
 
-    public static final int REQUEST_CODE_EDIT_LAYER = 2013;
-    public static final String EXTRA_KEY_LIST_INDEX = "index";
-    public static final String EXTRA_KEY_LIST_IS_ADD = "isAdd";
-    public static final String EXTRA_KEY_LIST_LAYER = "layer";
-    public static final String EXTRA_KEY_LIST_EXISTING_SUM = "existingSum";
+    static final String EXTRA_KEY_LIST_INDEX = "index";
+    static final String EXTRA_KEY_LIST_IS_ADD = "isAdd";
+    static final String EXTRA_KEY_LIST_LAYER = "layer";
+    static final String EXTRA_KEY_LIST_EXISTING_SUM = "existingSum";
+    private static final int REQUEST_CODE_EDIT_LAYER = 2013;
     private FragLayersBinding mBinding;
     private MeowAdapter mMeowAdapter;
 
@@ -64,20 +64,17 @@ public final class EditFlatFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_EDIT_LAYER: {
-                if (resultCode != Activity.RESULT_OK) return;
-                int index = data.getIntExtra(EXTRA_KEY_LIST_INDEX, 0);
-                Serializable ser = data.getSerializableExtra(EXTRA_KEY_LIST_LAYER);
-                assert ser instanceof Layer;
-                Layer layer = (Layer) ser;
-                if (data.getBooleanExtra(EXTRA_KEY_LIST_IS_ADD, true)) {
-                    mMeowAdapter.insert(index + 1, layer);
-                } else {
-                    mMeowAdapter.change(index, layer);
-                }
-                return;
+        if (requestCode == REQUEST_CODE_EDIT_LAYER) {
+            if (resultCode != Activity.RESULT_OK) return;
+            int index = data.getIntExtra(EXTRA_KEY_LIST_INDEX, 0);
+            Serializable ser = data.getSerializableExtra(EXTRA_KEY_LIST_LAYER);
+            Layer layer = (Layer) ser;
+            if (data.getBooleanExtra(EXTRA_KEY_LIST_IS_ADD, true)) {
+                mMeowAdapter.insert(index + 1, layer);
+            } else {
+                mMeowAdapter.change(index, layer);
             }
+            return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -162,13 +159,11 @@ public final class EditFlatFragment extends Fragment {
         }
 
         void insert(int index, Layer layer) {
-            assert index <= mItemList.size();
             mItemList.add(index, layer);
             notifyItemInserted(index);
         }
 
         void change(int index, Layer layer) {
-            assert index < mItemList.size();
             mItemList.set(index, layer);
             notifyItemChanged(index, layer);
         }
@@ -218,7 +213,6 @@ public final class EditFlatFragment extends Fragment {
             if (!(tag instanceof WeakReference)) return null;
             WeakReference ref = (WeakReference) tag;
             Object mho = ref.get();
-            assert mho instanceof MeowHolder;
             return (MeowHolder) mho;
         }
 

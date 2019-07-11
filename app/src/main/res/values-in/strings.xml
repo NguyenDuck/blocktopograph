@@ -1,6 +1,5 @@
 <resources xmlns:ns0="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" translatable="false">Blocktopograph</string>
-    <string name="brand_sub">Oleh @protolambda</string>
+    <string name="brand_sub">Oleh Proto Lambda</string>
     <string name="title_worlditem_list">Pilih satu dunia</string>
     <string name="title_worlditem_detail">Dunia</string>
     <string name="title_activity_world">Dunia</string>
@@ -13,7 +12,7 @@
     <string name="no_sdcard_access">Tidak bisa membuka dunia, tidak ada akses baca / tulis di penyimpanan! Coba mulai ulang aplikasi dan terima permintaan izin baca / tulis.</string>
     <string name="no_custom_markers_title">Tidak ada spidol khusus!</string>
     <string name="no_custom_markers">Belum ada spidol khusus! \ n Anda dapat membuatnya dengan mengetuk tempat pada peta di mana Anda ingin penanda, lalu ketuk \ "Buat penanda khusus \". Kemudian pilih ikon penanda dan koordinat Y. Dan kemudian periksa apakah Anda dapat menemukannya di sini!</string>
-    <string name="app_about"> Aplikasi ini dibuat oleh<a href="http://twitter.com/protolambda">@protolambda</a>, contributed by <a href="https://github.com/MithrilMania">@MithrilMania</a>, <a href="https://github.com/flagmaggot">@flagmaggot</a>, <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>, <a href="https://github.com/MiemieMethod">@MiemieMethod</a>, <a href="https://github.com/LordJunior">Manuel</a> and many others as well.\n\n Available on Google Play.\n\n Current active github repository: <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a> Feel free to star or fork, help with the project or simply add your own language support. <b>Your github contribution is welcomed!</b> More information (including the roadmap, changelog and help-information) can be found at: <a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>. \n <b>Diterjemahkan kedalam bahasa Indonesia oleh ScrapperBox25(52357).</b> \n \n Please make a backup of all your loved MCPE worlds in case of data-corruption!\n NOTE: Minecraft might not load a whole world because of a single corrupt chunk of NBT!\n \n This app is built and tested for MCPE 1.9.x(beta), 1.8.x, 1.7.x, 1.6.x, 1.5.x, 1.4.x, 1.2.x, 1.1.x, 1.0.x, 0.16.x, 0.15.x, and 0.14.x\n Older MCPE versions are not supported.\n \n \n <i>Disclaimer</i>\n <b>This app is not affiliated with Minecraft, Mojang AB or Microsoft.</b>\n This is not an official but a fan made app.\n Minecraft is a trademark of Mojang AB.\n Please note:\n • NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.\n • THE APP IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND.\n \n \n <i>Used libraries</i>\n • <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n • <a href="https://github.com/mithrilmania/TileView"> Tileview, fork by mithrilmania</a> \n • <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n with <a href="https://github.com/mithrilmania/android-leveldb"> android-leveldb, fork by mithrilmania</a> \n \n <i>Source code on GitHub:</i>\n <a href="https://github.com/mithrilmania/blocktopograph">github.com/mithrilmania/blocktopograph</a> \n </string>
+    <string name="app_about"> Aplikasi ini dibuat oleh<a href="">Proto Lambda</a>, contributed by <a href="https://github.com/MithrilMania">@MithrilMania</a>, <a href="https://github.com/flagmaggot">@flagmaggot</a>, <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>, <a href="https://github.com/MiemieMethod">@MiemieMethod</a>, <a href="https://github.com/LordJunior">Manuel</a> and many others as well.\n\n Available on Google Play.\n\n Current active github repository: <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a> Feel free to star or fork, help with the project or simply add your own language support. <b>Your github contribution is welcomed!</b> More information (including the roadmap, changelog and help-information) can be found at: <a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>. \n <b>Diterjemahkan kedalam bahasa Indonesia oleh ScrapperBox25(52357).</b> \n \n Please make a backup of all your loved MCPE worlds in case of data-corruption!\n NOTE: Minecraft might not load a whole world because of a single corrupt chunk of NBT!\n \n This app is built and tested for MCPE 1.9.x(beta), 1.8.x, 1.7.x, 1.6.x, 1.5.x, 1.4.x, 1.2.x, 1.1.x, 1.0.x, 0.16.x, 0.15.x, and 0.14.x\n Older MCPE versions are not supported.\n \n \n <i>Disclaimer</i>\n <b>This app is not affiliated with Minecraft, Mojang AB or Microsoft.</b>\n This is not an official but a fan made app.\n Minecraft is a trademark of Mojang AB.\n Please note:\n • NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.\n • THE APP IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND.\n \n \n <i>Used libraries</i>\n • <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n • <a href="https://github.com/mithrilmania/TileView"> Tileview, fork by mithrilmania</a> \n • <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n with <a href="https://github.com/mithrilmania/android-leveldb"> android-leveldb, fork by mithrilmania</a> \n \n <i>Source code on GitHub:</i>\n <a href="https://github.com/mithrilmania/blocktopograph">github.com/mithrilmania/blocktopograph</a> \n </string>
     <string name="app_help">Dokumentasi aplikasi dapat ditemukan di (mungkin kedaluwarsa):<a href="http://blocktopograph.protolambda.com/help"> blocktopograph.protolambda.com/help </a>. </string>
     <string name="app_changelog" formatted="false"> Versi:<ns0:g example="0.0.1" id="version">%1$s</ns0:g> &lt;br/&gt;&lt;br/&gt; Full changelog can be found at (out of date): &lt;a href="http://blocktopograph.protolambda.com/changelog"&gt; blocktopograph.protolambda.com/changelog &lt;/a&gt; </string>
     <string name="world_seed_prefix">Benih dunia:</string>
@@ -191,14 +190,14 @@
     <string name="create_need_restart">Setelah membuat, dunia akan muncul di Minecraft setelah memulai kembali gim.</string>
     <string name="title_test_page">Halaman Uji</string>
     <string name="create_world_book_title">Meow ~</string>
-    <string name="create_world_book_page_0">"\ n§cSelamat Datang ~ Meow ~" "\ n§rDiciptakan oleh" "\ n§3Blocktopograph" "\ n" "\ n§1Dapatkan dari Play Store" "\ n§5dan buat" "\ n§5dan buat duniamu yang disesuaikan ! "" \ n "" \ n§rWorld dihasilkan di "" \ n§d% 1 $ s "</string>
+    <string name="create_world_book_page_0">"\ n§cSelamat Datang ~ Meow ~" "\ n§rDiciptakan oleh" "\ n§3Blocktopograph" "\ n" "\ n§1Dapatkan dari Play Store" "\ n§5dan buat" "\ n§5dan buat duniamu yang disesuaikan ! "" \ n "" \ n§rWorld dihasilkan di "" \ n§d %1$s "</string>
     <string name="create_world_book_recipe_header">Resep dunia: \ n</string>
     <string name="create_world_book_recipe_format" translatable="false">§r%1$dx §b%2$s\n</string>
     <string name="create_world_book_recipe_many">"§R..Dan lainnya"</string>
     <string name="create_world_extra_file_name">"by_Blocktopograph.txt"</string>
     <string name="create_world_extra_file_text">"Selamat datang ~ Meow ~" "\ nDunia diciptakan oleh Blocktopograph," "\ editor dunia Minecraft dan penampil medan."</string>
     <string name="locator_page_player">Pemain</string>
-    <string name="player_position_desc">Di (% 1 $ d,% 2 $ d,% 3 $ d) dari% 4 $ s</string>
+    <string name="player_position_desc">Di (%1$d, %2$d, %3$d) dari %4$s</string>
     <string name="gps_advanced_locator">Pencari Lokasi Lanjut ...</string>
     <string name="locator_page_marker">Spidol</string>
     <string name="locator_page_coor">Koordinat</string>
@@ -230,7 +229,7 @@
     <string name="map_sel_from_seg_1">Dari [</string>
     <string name="map_sel_from_seg_2">,</string>
     <string name="map_sel_from_seg_3">]</string>
-    <string name="map_sel_to">Ke [% 1 $ d,% 2 $ d] (termasuk dari dan ke)</string>
+    <string name="map_sel_to">Ke [%1$d, %2$d] (termasuk dari dan ke)</string>
     <string name="map_sel_range_seg_1">Jarak</string>
     <string name="map_sel_range_seg_2">x</string>
     <string name="map_sel_menu_apply">Menerapkan</string>
@@ -254,7 +253,7 @@
     <string name="map_sel_warn_backup">SELALU MEMBUAT CADANGAN SEBELUM DIPROSES!</string>
     <string name="create_world_biome_id">Bioma:</string>
     <string name="create_world_biome_hint">ID numerik bioma, 21 secara default</string>
-    <string name="picer_scale_approxim">Kira-kira% 1 $ dx% 2 $ d.</string>
+    <string name="picer_scale_approxim">Kira-kira %1$dx%2$d.</string>
     <string name="map_edit_func_dchunk">Hapus Potongan</string>
     <string name="map_edit_dchunk_explain">Ini akan HAPUS semua bongkahan yang terlibat dalam area yang Anda pilih. Minecraft nanti dapat menghasilkan daerah itu lagi, tetapi kemajuan Anda di dalam akan hilang. Kecuali Anda tahu apa yang ada di Minecraft dan memahami konsekuensinya, Anda tidak akan melanjutkan. Jangan hanya mengikuti artikel online acak.</string>
     <string name="map_edit_dchunk_warn_not_aligned">Area yang Anda pilih tidak selaras dengan batas chunk. Jangan khawatir, Blocktopograph dapat menyesuaikan untuk Anda. Area yang dihapus sebenarnya akan sedikit lebih besar dari pilihan. Agar akurat, itu akan menjadi 0 ~ 15 blok lebih besar di setiap sisi. Itu karena area hanya dapat dibuat ulang jika dihapus dengan potongan-potongannya. Jika Anda tidak menyukai penyesuaian otomatis, Anda dapat membatalkan dan mengubah pilihan sendiri.</string>
@@ -279,7 +278,7 @@
     <string name="map_picer_use_selection_instead">Dunia ini terlalu besar. Anda dapat: \ n (1) Gunakan alat serupa di PC; \ n (2) Atau mulai memilih bagian dari dunia, dan pilih \ "Hasilkan Gambar \" dari menu pilihan.</string>
     <string name="map_picer_scale_guide">Anda dapat skala gambar yang lebih besar. Setidaknya satu piksel per blok.</string>
     <string name="map_picer_selection_too_large">Seleksi Terlalu Besar</string>
-    <string name="map_picer_selection_too_large_detail">Area yang Anda pilih terlalu besar. Lebar dan tinggi harus dalam% 1 $ d blok, dan area harus dalam% 2 $ d blok²s.</string>
+    <string name="map_picer_selection_too_large_detail">Area yang Anda pilih terlalu besar. Lebar dan tinggi harus dalam %1$d blok, dan area harus dalam %2$d blok²s.</string>
     <string name="map_edit_func_picer">Hasilkan Gambar</string>
     <string name="picer_preview_generating">Membuat Pratinjau ...</string>
     <string name="map_locator_player_pos_unknown">Posisi tidak diketahui</string> <!-- Generated by Automatic String Resource Translation

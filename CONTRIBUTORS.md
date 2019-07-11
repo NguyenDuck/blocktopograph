@@ -2,25 +2,25 @@
 
 # Original author
 
-[@protolambda](https://github.com/protolambda)
+*Proto Lambda*\(Link removed as he asked to\)
 
 
 # Maintainer(s)
 
 Order by joined date.
 
-[@protolambda](https://github.com/protolambda) (Inactive)
+*Proto Lambda*\(Link removed as he asked to\) (Inactive & Do Not Disturb)
 
-[@MithrilMania](https://github.com/MithrilMania) (Active)
+[@MithrilMania](https://github.com/MithrilMania) (Half Active)
 
-[@MeowCat](https://github.com/oO0oO0oO0o0o00) (Active)
+[@MeowCat](https://github.com/oO0oO0oO0o0o00) (Half Active)
 
 
 # Main contributors
 
 Order by joined date.
 
-[@protolambda](https://github.com/protolambda)
+*Proto Lambda*\(Link removed as he asked to\)
 
 [@MithrilMania](https://github.com/MithrilMania)
 
@@ -37,7 +37,9 @@ Order by joined date.
 
 [@Manuel](https://github.com/LordJunior) for Brazilian Portuguese translation.
 
-`Tcbdxh`
+*ScrapperBox25* for Indonesian translation.
+
+*Tcbdxh*
 
 And many others.
 

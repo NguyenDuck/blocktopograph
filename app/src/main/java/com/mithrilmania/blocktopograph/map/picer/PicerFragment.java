@@ -19,6 +19,14 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.annotation.UiThread;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -36,14 +44,6 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.annotation.UiThread;
-import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
 
 public final class PicerFragment extends DialogFragment {
 
@@ -150,6 +150,10 @@ public final class PicerFragment extends DialogFragment {
         mBinding.selectCase.setVisibility(View.VISIBLE);
         int w = mRange.right - mRange.left;
         int h = mRange.bottom - mRange.top;
+        if (w <= 0 || h <= 0) {
+            dismiss();
+            return;
+        }
         int len = w > h ? w : h;
         int maxScale = MAX_LENGTH / len;
         len = w * h;
@@ -322,7 +326,7 @@ public final class PicerFragment extends DialogFragment {
                         shareIntent.setAction(Intent.ACTION_SEND);
                         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
                         shareIntent.setType("image/jpeg");
-                        v.getContext().startActivity(
+                        getActivity().startActivity(
                                 Intent.createChooser(shareIntent,
                                         v.getContext().getString(R.string.picer_share_title)));
                     });

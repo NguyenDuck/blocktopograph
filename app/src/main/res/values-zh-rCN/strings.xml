@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="TypographyEllipsis">
-    <string name="brand_sub">由@protolambda制作</string>
+    <string name="brand_sub">由Proto Lambda制作</string>
     <string name="title_worlditem_list">请选择一个世界</string>
     <string name="title_worlditem_detail">世界</string>
     <string name="title_activity_world">世界</string>
@@ -24,7 +24,7 @@
         </a>.</string>
     <string name="world_seed_prefix">世界种子：</string>
     <string name="app_about">
-        本应用由<a href="http://twitter.com/protolambda">@protolambda</a>原创，
+        本应用由<b>Proto Lambda</b>（应其要求，已移除链接）原创，
         <a href="https://github.com/MithrilMania">@MithrilMania</a>、
         <a href="https://github.com/flagmaggot">@flagmaggot</a>、
         <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>、
@@ -38,7 +38,6 @@
         \n使用前请备份你的重要存档，以免发生意外。一点小问题都可能导致Minecraft无法加载整个存档→_→
         \n本应用支持MCPE 0.14至1.9（当前）的存档格式，更旧或者更新的版本【可能】不完全兼容，但不妨一试。
         \n原作者网站：<a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>
-        这会是第二任作者的网站吗？或者只是重名<a href="http://mithrilmania.fc2web.com/">mithrilmania.fc2web.com/</a>\n\n
         <i>免责声明</i>\n
         <b>此应用程序与Minecraft、Mojang AB或Microsoft无关。</b>\n
         这不是一个官方的而是一个饭制的APP。\n
@@ -395,4 +394,5 @@
     <string name="map_picer_selection_too_large_detail">你选择的区域太♂大了。宽度和高度都应该在%1$d方块以内，同时面积在%2$d方块²以内。</string>
     <string name="map_edit_func_picer">生成图片</string>
     <string name="picer_scale_approxim">大约%1$dx%2$d。</string>
+    <string name="map_dblclick_notice">双击屏幕以打开抽屉。</string>
 </resources>

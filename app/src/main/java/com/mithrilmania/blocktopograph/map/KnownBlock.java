@@ -5,8 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.mithrilmania.blocktopograph.Log;
-import com.mithrilmania.blocktopograph.util.Color;
+import com.mithrilmania.blocktopograph.util.ColorWrapper;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
 
@@ -16,9 +19,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * Created by mithrilmania
@@ -3057,7 +3057,7 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
     public final int id, subId;
     public final String str, subName, displayName, identifier;
     public final String texPath;
-    public final Color color;
+    public final ColorWrapper color;
     public final boolean hasBiomeShading;
     public Bitmap bitmap;
 
@@ -3068,7 +3068,7 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
         this.subName = subName;
         this.displayName = name + " " + subName;
         this.texPath = texPath;
-        this.color = Color.fromARGB(color);
+        this.color = ColorWrapper.fromARGB(color);
         this.hasBiomeShading = hasBiomeShading;
         this.identifier = "" + subName;
     }
@@ -3139,6 +3139,15 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
         KnownBlock[] subMap = resolver.get(name);
         if (subMap == null) return null;
         if (val >= 0 && val <= 15) return subMap[val];
+        return null;
+    }
+
+    @Nullable
+    public static Block guessBlockNew(@NonNull String name) {
+        KnownBlock[] subMap = resolver.get(name);
+        if (subMap == null) return null;
+        for (int i = 0; i <= 15; i++)
+            if (subMap[i] != null) return subMap[i];
         return null;
     }
 

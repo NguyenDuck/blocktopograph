@@ -3,11 +3,12 @@ package com.mithrilmania.blocktopograph.map;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import androidx.annotation.NonNull;
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
+
 import com.mithrilmania.blocktopograph.Log;
-import com.mithrilmania.blocktopograph.util.Color;
+import com.mithrilmania.blocktopograph.util.ColorWrapper;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
 
@@ -261,7 +262,7 @@ public enum Item implements NamedBitmapProviderHandle, NamedBitmapProvider {
     public final int id, subId;
     public final String str, subName, displayName, identifier;
     public final String texPath;
-    public final Color color;
+    public final ColorWrapper color;
     public final boolean hasBiomeShading;
     public Bitmap bitmap;
 

@@ -1,6 +1,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="brand_sub">Por @protolambda</string>
+    <string name="brand_sub">Por Proto Lambda</string>
 
     <string name="title_worlditem_list">Selecione um mundo</string>
     <string name="title_worlditem_detail">Mundo</string>
@@ -25,7 +25,7 @@
         E para finalizar verifique se consegue o encontrar aqui!</string>
 
     <string name="app_about">
-        Esse app foi criado por: <a href="http://twitter.com/protolambda">@protolambda</a>,
+        Esse app foi criado por: <a href="">Proto Lambda</a>,
         contribuidores:
         <a href="https://github.com/MithrilMania">@MithrilMania</a>,
         <a href="https://github.com/flagmaggot">@flagmaggot</a>,

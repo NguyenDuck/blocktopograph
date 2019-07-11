@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
+import androidx.core.view.ViewCompat;
+
 import com.qozix.tileview.geom.FloatMathHelper;
 import com.qozix.tileview.view.TouchUpGestureDetector;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
-
-import androidx.core.view.ViewCompat;
 
 /**
  * ZoomPanLayout extends ViewGroup to provide support for scrolling and zooming.
@@ -69,6 +69,7 @@ public class ZoomPanLayout extends ViewGroup implements
     private TouchUpGestureDetector mTouchUpGestureDetector;
     private MinimumScaleMode mMinimumScaleMode = MinimumScaleMode.FILL;
 
+
     /**
      * Constructor to use when creating a ZoomPanLayout from code.
      *
@@ -91,6 +92,10 @@ public class ZoomPanLayout extends ViewGroup implements
         mScaleGestureDetector = new ScaleGestureDetector(context, this);
         mTouchUpGestureDetector = new TouchUpGestureDetector(this);
     }
+
+//    public void setOuterDoubleTapListener(GestureDetector.OnDoubleTapListener outerDoubleTapListener) {
+//        mOuterDoubleTapListener = outerDoubleTapListener;
+//    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -751,10 +756,11 @@ public class ZoomPanLayout extends ViewGroup implements
 
     @Override
     public boolean onDoubleTap(MotionEvent event) {
-        float destination = (float) (Math.pow(2, Math.floor(Math.log(mScale * 2) / Math.log(2))));
-        float effectiveDestination = mShouldLoopScale && mScale >= mMaxScale ? mMinScale : destination;
-        destination = getConstrainedDestinationScale(effectiveDestination);
-        smoothScaleFromFocalPoint((int) event.getX(), (int) event.getY(), destination);
+//        float destination = (float) (Math.pow(2, Math.floor(Math.log(mScale * 2) / Math.log(2))));
+//        float effectiveDestination = mShouldLoopScale && mScale >= mMaxScale ? mMinScale : destination;
+//        destination = getConstrainedDestinationScale(effectiveDestination);
+//        smoothScaleFromFocalPoint((int) event.getX(), (int) event.getY(), destination);
+        //if (mOuterDoubleTapListener != null) mOuterDoubleTapListener.onDoubleTap(event);
         return true;
     }
 

@@ -14,6 +14,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
@@ -32,17 +41,6 @@ import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class WorldActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, WorldActivityInterface {
@@ -73,18 +71,22 @@ public class WorldActivity extends AppCompatActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        // immersive fullscreen for Android Kitkat and higher
-        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            ActionBar bar = getSupportActionBar();
-            if (bar != null) bar.hide();
-            this.getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         }
+        // immersive fullscreen for Android Kitkat and higher
+//        if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            ActionBar bar = getSupportActionBar();
+//            if (bar != null) bar.hide();
+//            this.getWindow().getDecorView().setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//        }
     }
 
     @Override
@@ -123,21 +125,21 @@ public class WorldActivity extends AppCompatActivity
                 Layout
          */
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_world);
-        Toolbar toolbar = mBinding.bar.toolbar;
-        assert toolbar != null;
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = mBinding.bar.toolbar;
+        //assert toolbar != null;
+        //setSupportActionBar(toolbar);
 
         NavigationView navigationView = mBinding.navView;
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
         // Main drawer, quick access to different menus, tools and map-types.
-        DrawerLayout drawer = mBinding.drawerLayout;
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        assert drawer != null;
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+//        DrawerLayout drawer = mBinding.drawerLayout;
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        assert drawer != null;
+//        drawer.addDrawerListener(toggle);
+//        toggle.syncState();
 
 
         View headerView = navigationView.getHeaderView(0);
@@ -641,7 +643,7 @@ public class WorldActivity extends AppCompatActivity
         //   Or messes this too much with the first perception of present players?
         final String[] players = getWorld().getWorldData().getNetworkPlayerNames();
 
-        final View content = mBinding.bar.content.getRoot();
+        final View content = mBinding.getRoot();
         if (players.length == 0) {
             Snackbar.make(content,
                     R.string.no_multiplayer_data_found,
