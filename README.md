@@ -15,7 +15,7 @@ take over this project and develope on your own.
 
 ## Download
 [>>> Download on Google Play <<<](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)  
-[![Google Play](https://raw.githubusercontent.com/ThirtyDegreesRay/OpenHub/master/art/google_play.png?raw=true)](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)
+[![Google Play](http://ws3.sinaimg.cn/large/006Zo3DUgy1g65u2a2fndj30hy06yjrh.jpg)](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)
 
 And release page of the repository provides debug version of the app.  
 <img src="arts/scr02.png" alt="screenshot" width="320"/>
