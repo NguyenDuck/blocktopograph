@@ -6,7 +6,7 @@
 
         <variable
             name="block"
-            type="com.mithrilmania.blocktopograph.map.KnownBlock" />
+            type="com.mithrilmania.blocktopograph.block.KnownBlockRepr" />
 
     </data>
 

@@ -44,6 +44,7 @@ import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
 import com.mithrilmania.blocktopograph.WorldActivityInterface;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
@@ -207,7 +208,7 @@ public class MapFragment extends Fragment {
 //                //byte[] arr = world.getWorldData().getChunkData(0, 0, ChunkTag.TERRAIN, Dimension.OVERWORLD, (byte) 0, true);
 //                //V1d2d13TerrainSubChunk subChunk = new V1d2d13TerrainSubChunk(ByteBuffer.wrap(arr));
 //                for (int z = 0; z < 16; z++)
-//                    chunk.setBlock(0, 6, z, 0, KnownBlock.B_5_0_PLANKS_OAK.getRuntimeId());
+//                    chunk.setBlock(0, 6, z, 0, KnownBlockRepr.B_5_0_PLANKS_OAK.getRuntimeId());
 //                chunk.save();//world.getWorldData(), 0, 0, Dimension.OVERWORLD, 1);
 //                Log.d(this, "ok");
 //            } catch (Exception e) {
@@ -476,7 +477,7 @@ public class MapFragment extends Fragment {
         }
 
         try {
-            KnownBlock.loadBitmaps(activity.getAssets());
+            KnownBlockRepr.loadBitmaps(activity.getAssets());
         } catch (IOException e) {
             Log.d(this, e);
         }

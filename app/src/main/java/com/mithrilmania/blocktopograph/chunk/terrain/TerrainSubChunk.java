@@ -1,7 +1,12 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockRegistry;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
 import org.jetbrains.annotations.Contract;
@@ -11,23 +16,20 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 public abstract class TerrainSubChunk {
 
-    private final WeakReference<WorldData.BlockRegistry> mBlockRegistry;
+    private final WeakReference<BlockRegistry> mBlockRegistry;
 
     boolean mHasSkyLight;
     boolean mHasBlockLight;
     boolean mIsError;
 
-    protected TerrainSubChunk(@NotNull WorldData.BlockRegistry blockRegistry) {
+    protected TerrainSubChunk(@NotNull BlockRegistry blockRegistry) {
         mBlockRegistry = new WeakReference<>(blockRegistry);
     }
 
     @Nullable
-    public static TerrainSubChunk create(@NonNull byte[] rawData, @NotNull WorldData.BlockRegistry blockRegistry) {
+    public static TerrainSubChunk create(@NonNull byte[] rawData, @NotNull BlockRegistry blockRegistry) {
         TerrainSubChunk subChunk;
         ByteBuffer byteBuffer = ByteBuffer.wrap(rawData);
         switch (rawData[0]) {
@@ -48,6 +50,40 @@ public abstract class TerrainSubChunk {
                 subChunk = null;
         }
         return subChunk;
+    }
+
+    @Nullable
+    public static TerrainSubChunk createEmpty(int preferredVersion, @NotNull BlockRegistry blockRegistry) {
+        TerrainSubChunk subChunk;
+        switch (preferredVersion) {
+            case 0:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                subChunk = null;
+                break;
+            case 1:
+            case 8:
+                subChunk = new V1d2d13TerrainSubChunk(blockRegistry);
+                break;
+            default:
+                subChunk = null;
+        }
+        return subChunk;
+    }
+
+    @NonNull
+    protected Block getAir() {
+        return wrapKnownBlock(KnownBlockRepr.B_0_0_AIR);
+    }
+
+    @NonNull
+    protected Block wrapKnownBlock(KnownBlockRepr knownBlock) {
+        // TODO: This would be not efficiency for old saves, add corresponding block to known blocks.
+        return mBlockRegistry.get().createBlock(knownBlock);
     }
 
     @NotNull
@@ -74,8 +110,8 @@ public abstract class TerrainSubChunk {
     }
 
     @Nullable
-    protected WorldData.BlockRegistry getBlockRegistry() {
-        WorldData.BlockRegistry blockRegistry = mBlockRegistry.get();
+    protected BlockRegistry getBlockRegistry() {
+        BlockRegistry blockRegistry = mBlockRegistry.get();
         if (blockRegistry == null) {
             mIsError = true;
         }

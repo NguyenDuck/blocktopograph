@@ -6,9 +6,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.map.Biome;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
@@ -17,8 +18,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
-
-import androidx.appcompat.app.AlertDialog;
 
 public class SelectionBasedContextFreeEditTask extends
         AsyncTask<EditTarget, ChunkBasedEditResult, EditResultCode> {
@@ -57,13 +56,15 @@ public class SelectionBasedContextFreeEditTask extends
 
         switch (mFunction) {
             case LAMPSHADE: {
-                SnrConfig cfg = new SnrConfig();
-                cfg.searchMode = 2;
-                cfg.placeMode = 1;
-                cfg.searchBlockMain = KnownBlock.B_50_0_TORCH;
-                cfg.placeBlockMain = KnownBlock.B_20_0_GLASS;
-                cfg.ignoreSubId = true;
-                return doSnr(cfg, editTargets);
+                // TODO: restore this functionality.
+//                SnrConfig cfg = new SnrConfig();
+//                cfg.searchMode = 2;
+//                cfg.placeMode = 1;
+//                cfg.searchBlockMain = KnownBlockRepr.B_50_0_TORCH;
+//                cfg.placeBlockMain = KnownBlockRepr.B_20_0_GLASS;
+//                cfg.ignoreSubId = true;
+//                return doSnr(cfg, editTargets);
+                return null;
             }
             case SNR: {
                 Serializable ser;

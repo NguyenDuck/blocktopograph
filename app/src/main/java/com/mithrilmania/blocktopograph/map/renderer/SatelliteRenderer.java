@@ -6,10 +6,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,14 +65,14 @@ public class SatelliteRenderer implements MapRenderer {
         float blockA, blockR, blockG, blockB;
 
 
-        KnownBlock block;
+        KnownBlockRepr block;
 
         y--;
         for (; y >= 0; y--) {
 
-            block = chunk.getKnownBlock(x, y, z, 0);
+            block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
 
-            if (block == KnownBlock.B_0_0_AIR) continue;//skip air blocks
+            if (block == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
 
             // no need to process block if it is fully transparent
             if (block.color == null || block.color.alpha == 0) continue;

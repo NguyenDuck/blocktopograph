@@ -130,6 +130,27 @@
                 android:layout_height="wrap_content"
                 fab:fab_label="Fix leveldb" />
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_menu_generate_all_blocks"
+                style="@style/MenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_label="Generate All Blocks" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_menu_analyze_all_blocks"
+                style="@style/MenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_label="Analyze All Blocks" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_menu_gen_code_all_blocks_state"
+                style="@style/MenuButtonsStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_label="Gen Code 4 All Blocks' State" />
+
         </com.github.clans.fab.FloatingActionMenu>
 
     </FrameLayout>

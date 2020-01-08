@@ -3,25 +3,20 @@ package com.mithrilmania.blocktopograph;
 import android.annotation.SuppressLint;
 import android.util.LruCache;
 
+import androidx.annotation.Nullable;
+
 import com.litl.leveldb.DB;
 import com.litl.leveldb.Iterator;
+import com.mithrilmania.blocktopograph.block.BlockRegistry;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
-import com.mithrilmania.blocktopograph.map.UnknownBlock;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * Wrapper around level.dat world spec en levelDB database.
@@ -39,7 +34,7 @@ public class WorldData {
 
     public WorldData(World world) {
         this.world = new WeakReference<>(world);
-        this.mBlockRegistry = new BlockRegistry();
+        this.mBlockRegistry = new BlockRegistry(2048);
     }
 
     static String bytesToHex(byte[] bytes, int start, int end) {
@@ -165,6 +160,13 @@ public class WorldData {
         db.delete(getChunkDataKey(x, z, type, dimension, subChunk, asSubChunk));
     }
 
+    public Chunk getChunk(int cX, int cZ, Dimension dimension, boolean createIfMissing, Version createOfVersion) {
+        Key key = new Key(cX, cZ, dimension);
+        key.createIfMissng = createIfMissing;
+        key.createOfVersion = createOfVersion;
+        return chunks.get(key);
+    }
+
     public Chunk getChunk(int cX, int cZ, Dimension dimension) {
         Key key = new Key(cX, cZ, dimension);
         return chunks.get(key);
@@ -172,8 +174,8 @@ public class WorldData {
 
     // Avoid using cache for stream like operations.
     // Caller shall lock cache before operation and invalidate cache afterwards.
-    public Chunk getChunkStreaming(int cx, int cz, Dimension dimension) {
-        return Chunk.create(this, cx, cz, dimension);
+    public Chunk getChunkStreaming(int cx, int cz, Dimension dimension, boolean createIfMissing, Version createOfVersion) {
+        return Chunk.create(this, cx, cz, dimension, createIfMissing, createOfVersion);
     }
 
     public void resetCache() {
@@ -223,14 +225,16 @@ public class WorldData {
         protected Chunk create(Key key) {
             WorldData worldData = this.worldData.get();
             if (worldData == null) return null;
-            return Chunk.create(worldData, key.x, key.z, key.dim);
+            return Chunk.create(worldData, key.x, key.z, key.dim, key.createIfMissng, key.createOfVersion);
         }
     }
 
     static class Key {
 
         public int x, z;
-        Dimension dim;
+        public Dimension dim;
+        public boolean createIfMissng;
+        public Version createOfVersion;
 
         Key(int x, int z, Dimension dim) {
             this.x = x;
@@ -276,52 +280,52 @@ public class WorldData {
         }
     }
 
-    public static class BlockRegistry {
-
-        private List<UnknownBlock> mUnknownBlocks;
-        private HashMap<String, UnknownBlock[]> mUnknownBlocksIndex;
-
-        BlockRegistry() {
-            mUnknownBlocks = new ArrayList<>(256);
-            mUnknownBlocksIndex = new HashMap<>(256);
-        }
-
-        @NotNull
-        public Block resolveBlock(@NonNull String name, int val) {
-
-            // Only "minecraft" namespace or no namespace allowed.
-            int dotPos = name.indexOf(':');
-            if (dotPos != -1) {
-                if (!name.substring(0, dotPos).equals("minecraft")) return KnownBlock.B_0_0_AIR;
-                name = name.substring(dotPos + 1);
-            }
-            Block block = KnownBlock.getBlockNew(name, val);
-            if (block != null) return block;
-
-            // Unknown block.
-            UnknownBlock[] unks = mUnknownBlocksIndex.get(name);
-            if (unks == null) {
-                unks = new UnknownBlock[16];
-                mUnknownBlocksIndex.put(name, unks);
-            }
-            if (val < 0 || val > 15) return KnownBlock.B_0_0_AIR;
-            UnknownBlock unk = unks[val];
-            if (unk == null) {
-                unk = new UnknownBlock(mUnknownBlocks.size() + (256 << 8) - 1, name, val);
-                unks[val] = unk;
-                mUnknownBlocks.add(unk);
-            }
-            return unk;
-        }
-
-        @Nullable
-        public Block getBlockByRuntimeId(int runtimeId) {
-            Block block = KnownBlock.getBlock(runtimeId);
-            if (block != null) return block;
-            int index = runtimeId - (256 << 8);
-            if (index < 0 || index >= mUnknownBlocks.size()) return null;
-            return mUnknownBlocks.get(runtimeId);
-        }
-    }
+//    public static class BlockRegistry {
+//
+//        private List<UnknownBlock> mUnknownBlocks;
+//        private HashMap<String, UnknownBlock[]> mUnknownBlocksIndex;
+//
+//        BlockRegistry() {
+//            mUnknownBlocks = new ArrayList<>(256);
+//            mUnknownBlocksIndex = new HashMap<>(256);
+//        }
+//
+//        @NotNull
+//        public Block resolveBlock(@NonNull String name, int val) {
+//
+//            // Only "minecraft" namespace or no namespace allowed.
+//            int dotPos = name.indexOf(':');
+//            if (dotPos != -1) {
+//                if (!name.substring(0, dotPos).equals("minecraft")) return KnownBlockRepr.B_0_0_AIR;
+//                name = name.substring(dotPos + 1);
+//            }
+//            Block block = KnownBlockRepr.getBlockNew(name, val);
+//            if (block != null) return block;
+//
+//            // Unknown block.
+//            UnknownBlock[] unks = mUnknownBlocksIndex.get(name);
+//            if (unks == null) {
+//                unks = new UnknownBlock[16];
+//                mUnknownBlocksIndex.put(name, unks);
+//            }
+//            if (val < 0 || val > 15) return KnownBlockRepr.B_0_0_AIR;
+//            UnknownBlock unk = unks[val];
+//            if (unk == null) {
+//                unk = new UnknownBlock(mUnknownBlocks.size() + (256 << 8) - 1, name, val);
+//                unks[val] = unk;
+//                mUnknownBlocks.add(unk);
+//            }
+//            return unk;
+//        }
+//
+//        @Nullable
+//        public Block getBlockByRuntimeId(int runtimeId) {
+//            Block block = KnownBlockRepr.getBlock(runtimeId);
+//            if (block != null) return block;
+//            int index = runtimeId - (256 << 8);
+//            if (index < 0 || index >= mUnknownBlocks.size()) return null;
+//            return mUnknownBlocks.get(runtimeId);
+//        }
+//    }
 
 }

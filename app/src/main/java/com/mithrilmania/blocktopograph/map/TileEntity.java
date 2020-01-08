@@ -2,31 +2,32 @@ package com.mithrilmania.blocktopograph.map;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
+
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-
 
 public enum TileEntity implements NamedBitmapProviderHandle, NamedBitmapProvider {
 
-    CHEST(0, "Chest", "Chest", KnownBlock.B_54_0_CHEST),
-    TRAPPED_CHEST(1, "Trapped Chest", "TrappedChest", KnownBlock.B_146_0_TRAPPED_CHEST),
-    ENDER_CHEST(2, "Ender Chest", "EnderChest", KnownBlock.B_130_0_ENDER_CHEST),
-    MOB_SPAWNER(3, "Mob Spawner", "MobSpawner", KnownBlock.B_52_0_MOB_SPAWNER),
-    END_PORTAL(4, "End Portal", "EndPortal", KnownBlock.B_119_0_END_PORTAL),
-    BEACON(5, "Beacon", "Beacon", KnownBlock.B_138_0_BEACON);
+    CHEST(0, "Chest", "Chest", KnownBlockRepr.B_54_0_CHEST),
+    TRAPPED_CHEST(1, "Trapped Chest", "TrappedChest", KnownBlockRepr.B_146_0_TRAPPED_CHEST),
+    ENDER_CHEST(2, "Ender Chest", "EnderChest", KnownBlockRepr.B_130_0_ENDER_CHEST),
+    MOB_SPAWNER(3, "Mob Spawner", "MobSpawner", KnownBlockRepr.B_52_0_MOB_SPAWNER),
+    END_PORTAL(4, "End Portal", "EndPortal", KnownBlockRepr.B_119_0_END_PORTAL),
+    BEACON(5, "Beacon", "Beacon", KnownBlockRepr.B_138_0_BEACON);
 
 
     public final int id;
     public final String displayName, dataName;
 
-    public final KnownBlock block;
+    public final KnownBlockRepr block;
 
-    TileEntity(int id, String displayName, String dataName, KnownBlock block) {
+    TileEntity(int id, String displayName, String dataName, KnownBlockRepr block) {
         this.id = id;
         this.displayName = displayName;
         this.dataName = dataName;

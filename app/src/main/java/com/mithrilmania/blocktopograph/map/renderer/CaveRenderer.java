@@ -6,10 +6,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 
 public class CaveRenderer implements MapRenderer {
@@ -18,7 +18,7 @@ public class CaveRenderer implements MapRenderer {
 
         boolean solid, intoSurface;
         int id, meta, cavyness, layers, offset;
-        KnownBlock block;
+        KnownBlockRepr block;
         int x, y, z, subChunk, color, i, j, tX, tY, r, g, b;
 
         for (z = 0, tY = pY; z < 16; z++, tY += pL) {
@@ -50,7 +50,7 @@ public class CaveRenderer implements MapRenderer {
                 subChunkLoop:
                 for (y = chunk.getHeightMapValue(x, z); y >= 0; y--) {
 
-                    block = chunk.getKnownBlock(x, y, z, 0);
+                    block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
 
                     switch (block.id) {
                         case 0:

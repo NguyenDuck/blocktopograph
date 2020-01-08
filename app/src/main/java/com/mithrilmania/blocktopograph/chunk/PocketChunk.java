@@ -3,9 +3,9 @@ package com.mithrilmania.blocktopograph.chunk;
 import android.graphics.Color;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.map.Block;
+import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.map.Dimension;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -160,19 +160,18 @@ public final class PocketChunk extends Chunk {
     @NotNull
     @Override
     public Block getBlock(int x, int y, int z, int layer) {
-        return getKnownBlock(x, y, z, layer);
+        return mWorldData.get().mBlockRegistry.createBlock(getKnownBlock(x, y, z, layer));
     }
 
     @NotNull
-    @Override
-    public KnownBlock getKnownBlock(int x, int y, int z, int layer) {
+    private KnownBlockRepr getKnownBlock(int x, int y, int z, int layer) {
         if (x >= 16 || y >= 128 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
-            return KnownBlock.B_0_0_AIR;
+            return KnownBlockRepr.B_0_0_AIR;
         int offset = getOffset(x, y, z);
         int id = mData.get(POS_BLOCK_IDS + offset) & 0xff;
         int data = mData.get(POS_META_DATA + (offset >>> 1));
         data = (offset & 1) == 1 ? ((data >>> 4) & 0xf) : (data & 0xf);
-        return KnownBlock.getBestBlock(id, data);
+        return KnownBlockRepr.getBestBlock(id, data);
     }
 
     @Override
@@ -201,7 +200,7 @@ public final class PocketChunk extends Chunk {
     @Override
     public int getHighestBlockYUnderAt(int x, int z, int y) {
         for (int yy = y; yy >= 0; yy--) {
-            if (getKnownBlock(x & 0xf, yy, z & 0xf, 0) != KnownBlock.B_0_0_AIR) return yy;
+            if (getKnownBlock(x & 0xf, yy, z & 0xf, 0) != KnownBlockRepr.B_0_0_AIR) return yy;
         }
         return -1;
     }
@@ -209,7 +208,7 @@ public final class PocketChunk extends Chunk {
     @Override
     public int getCaveYUnderAt(int x, int z, int y) {
         for (int yy = y; yy >= 0; yy--) {
-            if (getKnownBlock(x & 0xf, yy, z & 0xf, 0) == KnownBlock.B_0_0_AIR) return yy;
+            if (getKnownBlock(x & 0xf, yy, z & 0xf, 0) == KnownBlockRepr.B_0_0_AIR) return yy;
         }
         return -1;
     }

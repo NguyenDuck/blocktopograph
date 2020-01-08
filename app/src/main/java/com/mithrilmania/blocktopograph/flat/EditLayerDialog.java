@@ -7,19 +7,19 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.andreabaccega.formedittextvalidator.Validator;
 import com.andreabaccega.widget.FormEditText;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.databinding.DialogEditLayerBinding;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import java.io.Serializable;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 
 import static com.mithrilmania.blocktopograph.flat.EditFlatFragment.EXTRA_KEY_LIST_EXISTING_SUM;
 import static com.mithrilmania.blocktopograph.flat.EditFlatFragment.EXTRA_KEY_LIST_INDEX;
@@ -112,7 +112,7 @@ public final class EditLayerDialog extends AppCompatActivity {
             case REQUEST_CODE_PICK_BLOCK: {
                 if (resultCode != RESULT_OK) return;
                 assert data != null;
-                KnownBlock block = (KnownBlock) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
+                KnownBlockRepr block = (KnownBlockRepr) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
                 Layer layer = mBinding.getLayer();
                 layer.block = block;
                 mBinding.setLayer(layer);

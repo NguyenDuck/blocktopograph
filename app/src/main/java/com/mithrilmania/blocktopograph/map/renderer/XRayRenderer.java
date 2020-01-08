@@ -5,10 +5,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 
 public class XRayRenderer implements MapRenderer {
@@ -25,11 +25,11 @@ public class XRayRenderer implements MapRenderer {
         int rW = 16;
         int size2D = rW * (16);
         int index2D;
-        KnownBlock[] bestBlock = new KnownBlock[size2D];
+        KnownBlockRepr[] bestBlock = new KnownBlockRepr[size2D];
 
         int[] minValue = new int[size2D];
         int bValue;
-        KnownBlock block;
+        KnownBlockRepr block;
 
         int average;
         int r, g, b;
@@ -38,22 +38,22 @@ public class XRayRenderer implements MapRenderer {
             for (x = 0; x < 16; x++) {
 
                 for (y = 0; y < chunk.getHeightLimit(); y++) {
-                    block = chunk.getKnownBlock(x, y, z, 0);
+                    block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
 
                     index2D = (z * rW) + x;
                     if (block.id <= 1)
                         continue;
-                    else if (block == KnownBlock.B_56_0_DIAMOND_ORE) {
+                    else if (block == KnownBlockRepr.B_56_0_DIAMOND_ORE) {
                         bestBlock[index2D] = block;
                         break;
-                    } else if (block == KnownBlock.B_129_0_EMERALD_ORE) bValue = 8;
-                    else if (block == KnownBlock.B_153_0_QUARTZ_ORE) bValue = 7;
-                    else if (block == KnownBlock.B_14_0_GOLD_ORE) bValue = 6;
-                    else if (block == KnownBlock.B_15_0_IRON_ORE) bValue = 5;
-                    else if (block == KnownBlock.B_73_0_REDSTONE_ORE) bValue = 4;
-                    else if (block == KnownBlock.B_21_0_LAPIS_ORE) bValue = 3;
-                        //else if(block == KnownBlock.COAL_ORE) bValue = 2;
-                        //else if(b == KnownBlock.LAVA || b == KnownBlock.STATIONARY_LAVA) bValue = 1;
+                    } else if (block == KnownBlockRepr.B_129_0_EMERALD_ORE) bValue = 8;
+                    else if (block == KnownBlockRepr.B_153_0_QUARTZ_ORE) bValue = 7;
+                    else if (block == KnownBlockRepr.B_14_0_GOLD_ORE) bValue = 6;
+                    else if (block == KnownBlockRepr.B_15_0_IRON_ORE) bValue = 5;
+                    else if (block == KnownBlockRepr.B_73_0_REDSTONE_ORE) bValue = 4;
+                    else if (block == KnownBlockRepr.B_21_0_LAPIS_ORE) bValue = 3;
+                        //else if(block == KnownBlockRepr.COAL_ORE) bValue = 2;
+                        //else if(b == KnownBlockRepr.LAVA || b == KnownBlockRepr.STATIONARY_LAVA) bValue = 1;
                     else bValue = 0;
 
                     if (bValue > minValue[index2D]) {

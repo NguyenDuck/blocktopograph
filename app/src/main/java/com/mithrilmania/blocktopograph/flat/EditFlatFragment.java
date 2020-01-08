@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.databinding.FragLayersBinding;
 import com.mithrilmania.blocktopograph.databinding.ItemWorldLayerBinding;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.woxthebox.draglistview.DragItemAdapter;
 import com.woxthebox.draglistview.DragListView;
@@ -105,7 +105,7 @@ public final class EditFlatFragment extends Fragment {
             try {
                 Activity activity = thiz.get().getActivity();
                 if (activity == null) return null;
-                KnownBlock.loadBitmaps(activity.getAssets());
+                KnownBlockRepr.loadBitmaps(activity.getAssets());
             } catch (Exception e) {
                 Log.d(this, e);
             }
@@ -148,13 +148,13 @@ public final class EditFlatFragment extends Fragment {
         }
 
         void loadDefault() {
-            Layer layer = new Layer(KnownBlock.B_7_0_BEDROCK, 1);
+            Layer layer = new Layer(KnownBlockRepr.B_7_0_BEDROCK, 1);
             addItem(0, layer);
-            layer = new Layer(KnownBlock.B_3_0_DIRT, 29);
+            layer = new Layer(KnownBlockRepr.B_3_0_DIRT, 29);
             addItem(0, layer);
-            layer = new Layer(KnownBlock.B_2_0_GRASS, 1);
+            layer = new Layer(KnownBlockRepr.B_2_0_GRASS, 1);
             addItem(0, layer);
-            layer = new Layer(KnownBlock.B_31_2_TALLGRASS_GRASS, 1);
+            layer = new Layer(KnownBlockRepr.B_31_2_TALLGRASS_GRASS, 1);
             addItem(0, layer);
         }
 

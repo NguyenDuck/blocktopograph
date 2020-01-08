@@ -1,15 +1,15 @@
 package com.mithrilmania.blocktopograph.flat;
 
-import com.mithrilmania.blocktopograph.map.KnownBlock;
+import androidx.annotation.Nullable;
+
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 
 import java.io.Serializable;
-
-import androidx.annotation.Nullable;
 
 public final class Layer implements Serializable {
 
     private static long counter = 0;
-    public KnownBlock block;
+    public KnownBlockRepr block;
     public int amount;
     public long uid;
 
@@ -23,12 +23,12 @@ public final class Layer implements Serializable {
     }
 
     public Layer() {
-        block = KnownBlock.B_0_0_AIR;
+        block = KnownBlockRepr.B_0_0_AIR;
         amount = 1;
         genUid();
     }
 
-    Layer(KnownBlock block, int amount) {
+    Layer(KnownBlockRepr block, int amount) {
         this.block = block;
         this.amount = amount;
         genUid();

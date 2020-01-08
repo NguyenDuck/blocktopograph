@@ -1,4 +1,4 @@
-package com.mithrilmania.blocktopograph.map;
+package com.mithrilmania.blocktopograph.block;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -31,7 +31,7 @@ import java.util.Map;
  * <p>
  * --- Please attribute @mithrilmania for generating+updating this enum
  */
-public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider, Block {
+public enum KnownBlockRepr implements NamedBitmapProviderHandle, NamedBitmapProvider {
 
     /*
      * ==============================
@@ -3024,21 +3024,21 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
     B_4474_6_sea_pickle("sea_pickle", "", 4474, 6, "blocks/observer.png", 0xff10C38e, false),
     B_4475_7_sea_pickle("sea_pickle", "", 4475, 7, "blocks/observer.png", 0xff10C38e, false);
 
-    private static final Map<String, KnownBlock> byDataName = new HashMap<>();
-    private static final SparseArray<KnownBlock[]> blockMap;
+    private static final Map<String, KnownBlockRepr> byDataName = new HashMap<>();
+    private static final SparseArray<KnownBlockRepr[]> blockMap;
     private static final Map<String, Integer> nameService;
-    private static final Map<String, KnownBlock[]> resolver;
+    private static final Map<String, KnownBlockRepr[]> resolver;
 
     static {
         blockMap = new SparseArray<>();
         nameService = new HashMap<>(256);
         resolver = new HashMap<>(256);
-        KnownBlock[] subMap;
-        KnownBlock[] subMap2;
-        for (KnownBlock b : KnownBlock.values()) {
+        KnownBlockRepr[] subMap;
+        KnownBlockRepr[] subMap2;
+        for (KnownBlockRepr b : KnownBlockRepr.values()) {
             subMap = blockMap.get(b.id);
             if (subMap == null) {
-                subMap = new KnownBlock[16];
+                subMap = new KnownBlockRepr[16];
                 blockMap.put(b.id, subMap);
             }
             subMap[b.subId] = b;
@@ -3047,7 +3047,7 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
             nameService.put(b.str, b.id);
             subMap2 = resolver.get(b.str);
             if (subMap2 == null) {
-                subMap2 = new KnownBlock[16];
+                subMap2 = new KnownBlockRepr[16];
                 resolver.put(b.str, subMap2);
             }
             subMap2[b.subId] = b;
@@ -3061,7 +3061,7 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
     public final boolean hasBiomeShading;
     public Bitmap bitmap;
 
-    KnownBlock(String name, String subName, int id, int subId, String texPath, int color, boolean hasBiomeShading) {
+    KnownBlockRepr(String name, String subName, int id, int subId, String texPath, int color, boolean hasBiomeShading) {
         this.id = id;
         this.subId = subId;
         this.str = name;
@@ -3073,12 +3073,12 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
         this.identifier = "" + subName;
     }
 
-    public static KnownBlock getByDataName(String dataName) {
+    public static KnownBlockRepr getByDataName(String dataName) {
         return byDataName.get(dataName);
     }
 
     public static void loadBitmaps(AssetManager assetManager) throws IOException {
-        for (KnownBlock b : KnownBlock.values()) {
+        for (KnownBlockRepr b : KnownBlockRepr.values()) {
             if (b.bitmap == null && b.texPath != null) {
                 try {
                     b.bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeStream(assetManager.open(b.texPath)), 32, 32, false);
@@ -3086,18 +3086,18 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
                     //TODO file-paths were generated from block names; some do not actually exist...
                     //Log.w("File not found! "+b.texPath);
                 } catch (Exception e) {
-                    Log.d(KnownBlock.class, e);
+                    Log.d(KnownBlockRepr.class, e);
                 }
             }
         }
     }
 
     @NonNull
-    public static KnownBlock getBestBlock(int id, int meta) {
-        KnownBlock ret = getBlock(id, meta);
+    public static KnownBlockRepr getBestBlock(int id, int meta) {
+        KnownBlockRepr ret = getBlock(id, meta);
         if (ret != null) return ret;
         if (id >= 0) {
-            KnownBlock[] subMap = blockMap.get(id);
+            KnownBlockRepr[] subMap = blockMap.get(id);
             if (subMap != null) {
                 ret = subMap[meta];
                 if (ret == null) {
@@ -3106,45 +3106,47 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
                 }
             }
         }
-        return (ret == null) ? KnownBlock.B_0_0_AIR : ret;
+        return (ret == null) ? KnownBlockRepr.B_0_0_AIR : ret;
     }
 
     @Nullable
-    public static KnownBlock getBlock(int id, int meta) {
+    public static KnownBlockRepr getBlock(int id, int meta) {
         if (id < 0) return null;
-        KnownBlock[] subMap = blockMap.get(id);
+        KnownBlockRepr[] subMap = blockMap.get(id);
         if (subMap == null) return null;
         else return subMap[meta];
     }
 
-    public static KnownBlock getBlock(int runtimeId) {
+    public static KnownBlockRepr getBlock(int runtimeId) {
         int id = runtimeId >>> 8;
         int data = runtimeId & 0xf;
         return getBlock(id, data);
     }
 
-    public static int resolve(@NonNull String identifier) {
+    private static String removeDefaultPrefixFromIdentifier(@NonNull String identifier) {
         int dotPos = identifier.indexOf(':');
-        if (dotPos != -1) {
-            if (!identifier.substring(0, dotPos).equals("minecraft")) return 0;
-            identifier = identifier.substring(dotPos + 1);
-        }
-        Integer i = nameService.get(identifier);
+        if (dotPos != -1 && identifier.substring(0, dotPos).equals("minecraft"))
+            return identifier.substring(dotPos + 1);
+        return identifier;
+    }
+
+    public static int resolve(@NonNull String identifier) {
+        Integer i = nameService.get(removeDefaultPrefixFromIdentifier(identifier));
         if (i == null) return 0;
         return i;
     }
 
     @Nullable
-    public static Block getBlockNew(@NonNull String name, int val) {
-        KnownBlock[] subMap = resolver.get(name);
+    public static KnownBlockRepr getBlockNew(@NonNull String name, int val) {
+        KnownBlockRepr[] subMap = resolver.get(removeDefaultPrefixFromIdentifier(name));
         if (subMap == null) return null;
         if (val >= 0 && val <= 15) return subMap[val];
         return null;
     }
 
     @Nullable
-    public static Block guessBlockNew(@NonNull String name) {
-        KnownBlock[] subMap = resolver.get(name);
+    public static KnownBlockRepr guessBlockNew(@NonNull String name) {
+        KnownBlockRepr[] subMap = resolver.get(removeDefaultPrefixFromIdentifier(name));
         if (subMap == null) return null;
         for (int i = 0; i <= 15; i++)
             if (subMap[i] != null) return subMap[i];
@@ -3152,19 +3154,16 @@ public enum KnownBlock implements NamedBitmapProviderHandle, NamedBitmapProvider
     }
 
     @Contract(pure = true)
-    @Override
     public int getRuntimeId() {
         return (id << 8) | subId;
     }
 
     @Contract(pure = true)
-    @Override
     public String getName() {
         return str;
     }
 
     @Contract(pure = true)
-    @Override
     public int getVal() {
         return subId;
     }

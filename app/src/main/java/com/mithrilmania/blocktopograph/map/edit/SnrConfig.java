@@ -1,6 +1,6 @@
 package com.mithrilmania.blocktopograph.map.edit;
 
-import com.mithrilmania.blocktopograph.map.KnownBlock;
+import com.mithrilmania.blocktopograph.block.Block;
 
 import java.io.Serializable;
 
@@ -18,10 +18,10 @@ public class SnrConfig implements Serializable {
     public boolean ignoreSubId;
     public int searchMode;
     public int placeMode;
-    public KnownBlock searchBlockMain;
-    public KnownBlock searchBlockSub;
-    public KnownBlock placeBlockMain;
-    public KnownBlock placeBlockSub;
+    public Block searchBlockMain;
+    public Block searchBlockSub;
+    public Block placeBlockMain;
+    public Block placeBlockSub;
 
     //savedInstanceState.getInt(KEY_SEARCH_IN, 0)
     //savedInstanceState.getInt(KEY_PLACE_IN, 0)

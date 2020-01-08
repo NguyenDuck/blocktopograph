@@ -3,6 +3,7 @@ package com.mithrilmania.blocktopograph.map;
 import android.util.LongSparseArray;
 
 import com.mithrilmania.blocktopograph.Log;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 import com.mithrilmania.blocktopograph.map.marker.CustomNamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
@@ -197,7 +198,7 @@ public class MarkerManager {
 
     public static AbstractMarker markerFromData(String displayName, String iconName, int x, int y, int z, Dimension dimension) {
 
-        NamedBitmapProvider nbp = KnownBlock.getByDataName(iconName);
+        NamedBitmapProvider nbp = KnownBlockRepr.getByDataName(iconName);
         if (nbp == null || nbp.getBitmap() == null) nbp = Entity.getEntity(iconName);
         if (nbp == null || nbp.getBitmap() == null) nbp = TileEntity.getTileEntity(iconName);
         if (nbp == null || nbp.getBitmap() == null) nbp = CustomIcon.getCustomIcon(iconName);

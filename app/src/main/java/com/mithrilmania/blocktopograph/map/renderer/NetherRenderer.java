@@ -6,10 +6,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 
 
 public class NetherRenderer implements MapRenderer {
@@ -26,7 +26,7 @@ public class NetherRenderer implements MapRenderer {
         int layers;
         int caveceil, cavefloor, cavefloorW, cavefloorN;
         int x, y, z, color, tX, tY, r, g, b;
-        KnownBlock block;
+        KnownBlockRepr block;
         int id;
         int worth;
         float heightShading, lightShading, sliceShading, avgShading;
@@ -76,12 +76,12 @@ public class NetherRenderer implements MapRenderer {
 
                     for (y = caveceil; y >= cavefloor; y--) {
 
-                        block = chunk.getKnownBlock(x, y, z, 0);
+                        block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
 
-                        if (block == KnownBlock.B_0_0_AIR) continue;//skip air blocks
+                        if (block == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
 
                         //try the default meta value: 0
-                        //if (block == null) block = KnownBlock.getBlock(id, 0);
+                        //if (block == null) block = KnownBlockRepr.getBlock(id, 0);
 
                         // no need to process block if it is fully transparent
                         if (block.color.alpha == 0) continue;
@@ -128,7 +128,7 @@ public class NetherRenderer implements MapRenderer {
                 for (y = 0; y < chunk.getHeightLimit(); y++) {
 
                     //some x-ray for important stuff like portals
-                    switch (chunk.getKnownBlock(x, y, z, 0).id) {
+                    switch (chunk.getBlock(x, y, z, 0).getLegacyBlock().id) {
                         case 52://monster spawner
                             r = g = b = 255;
                             break;

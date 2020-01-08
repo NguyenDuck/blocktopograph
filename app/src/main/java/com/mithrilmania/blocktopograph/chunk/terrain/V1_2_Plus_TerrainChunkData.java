@@ -1,10 +1,10 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.map.Biome;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTInputStream;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.ShortTag;
@@ -131,7 +131,7 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
             int data = ((ShortTag) tag.getChildTagByKey("val")).getValue();
             palette.add(
 //                    BlockNameResolver.resolve(name)
-                    KnownBlock.resolve(name)
+                    KnownBlockRepr.resolve(name)
                             << 8 | data);
         }
 

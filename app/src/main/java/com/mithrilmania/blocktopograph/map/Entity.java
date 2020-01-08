@@ -4,12 +4,12 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import androidx.annotation.NonNull;
+
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
 
 import java.io.IOException;
-
-import androidx.annotation.NonNull;
 
 /*
 Entity enum for MCPE __ by @mithrilmania
@@ -89,7 +89,7 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
     PLAYER(63, "Player", new String[]{"Player"}, "player", 8),
     ITEM(64, "Dropped Item", new String[]{"ItemEntity"}, "item", -1),//do not render items
     PRIMED_TNT(65, "Primed TNT", new String[]{"PrimedTnt"}, "primed_tnt", 49),
-    FALLING_SAND(66, "Falling KnownBlock", new String[]{"FallingBlock"}, "falling_sand", 50),
+    FALLING_SAND(66, "Falling KnownBlockRepr", new String[]{"FallingBlock"}, "falling_sand", 50),
     ITEM_FRAME(67, "Item Frame", new String[]{"ItemFrame"}, "empty_item_frame", 66),//67 ; ItemFrame is not yet in the game
     THROWN_EXP_BOTTLE(68, "Bottle o' Enchanting", new String[]{"ThrownExpBottle", "ExperiencePotion"}, "ThrownExpBottle", 56),
     XP_ORB(69, "Experience Orb", new String[]{"XPOrb", "ExperienceOrb"}, "experience_orb", 59),
@@ -131,7 +131,7 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
 
     //id 900+ is ignored for functions like map_filtering, these are placeholders for when the game adds more expected features.
     MINECART_SPAWNER(900, "Minecart with Spawner", new String[]{"MinecartSpawner"}, "minecart_with_spawner", 71),//99 ; MinecartSpawner is not yet in the game
-    MINECART_COMMAND_BLOCK(901, "Minecart with Command KnownBlock", new String[]{"MinecartCommandBlock"}, "minecart_with_command_block", 78),//100 ; MinecartCommandBlock is not yet in the game
+    MINECART_COMMAND_BLOCK(901, "Minecart with Command KnownBlockRepr", new String[]{"MinecartCommandBlock"}, "minecart_with_command_block", 78),//100 ; MinecartCommandBlock is not yet in the game
     MINECART_FURNACE(902, "Powered Minecart", new String[]{"MinecartFurnace"}, "minecart_furnace", 36),//101 ; MinecartFurnace is not yet in the game
     FIREWORKS_ROCKET_ENTITY(903, "Firework Rocket", new String[]{"FireworksRocketEntity"}, "fireworks_rocket", 121),//95 ; FireworksRocketEntity is not in the game yet
     UNKNOWN(999, "Unknown", new String[]{"Unknown"}, "unknown", 144);

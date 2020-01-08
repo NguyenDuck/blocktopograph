@@ -3,11 +3,11 @@ package com.mithrilmania.blocktopograph.chunk;
 
 import android.util.SparseArray;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public enum Version {
 
@@ -16,7 +16,7 @@ public enum Version {
     OLD_LIMITED("v0.2.0", "classic mcpe, 16x16x16x16x18 world, level.dat; introduced in v0.2.0", 1, 128, 1),
     v0_9("v0.9.0", "infinite xz, zlib leveldb; introduced in v0.9.0", 2, 128, 1),
     V1_0("v1.0.0", "Stacked sub-chunks, 256 world-height, 16 high sub-chunks; introduced in alpha v1.0.0 (v0.17)", 3, 16, 16),
-    V1_1("v1.1.0", "KnownBlock-light is not stored anymore", 4, 16, 16),
+    V1_1("v1.1.0", "KnownBlockRepr-light is not stored anymore", 4, 16, 16),
     V1_2_PLUS("v1.2.0.13", "Global numeric id replaced with string id and per-chunk numeric id", 7, 16, 16);
 
     public static final int LATEST_SUPPORTED_VERSION = V1_2_PLUS.id;

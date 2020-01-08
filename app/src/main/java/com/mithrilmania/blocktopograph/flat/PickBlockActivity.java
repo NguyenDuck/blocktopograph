@@ -8,22 +8,22 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mithrilmania.blocktopograph.R;
-import com.mithrilmania.blocktopograph.databinding.DialogPickBlockBinding;
-import com.mithrilmania.blocktopograph.databinding.ItemPickBlockBinding;
-import com.mithrilmania.blocktopograph.map.KnownBlock;
-import com.mithrilmania.blocktopograph.util.UiUtil;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.databinding.DialogPickBlockBinding;
+import com.mithrilmania.blocktopograph.databinding.ItemPickBlockBinding;
+import com.mithrilmania.blocktopograph.util.UiUtil;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class PickBlockActivity extends AppCompatActivity {
 
@@ -88,12 +88,12 @@ public final class PickBlockActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             PickBlockActivity activity = thiz.get();
             if (activity == null) return null;
-            List<KnownBlock> list = activity.mAdapter.getListControl();
+            List<KnownBlockRepr> list = activity.mAdapter.getListControl();
 
             //Backup all candidates.
-            KnownBlock[] olds = null;
+            KnownBlockRepr[] olds = null;
             if (index1 >= 0) {
-                olds = new KnownBlock[index2 - index1 + 1];
+                olds = new KnownBlockRepr[index2 - index1 + 1];
                 for (int i = index1, limit = list.size(); i < olds.length && i < limit; i++) {
                     olds[i] = list.get(i);
                 }
@@ -109,13 +109,13 @@ public final class PickBlockActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 num = -1;
             }
-            for (KnownBlock b : KnownBlock.values())
+            for (KnownBlockRepr b : KnownBlockRepr.values())
                 if (b.id == num ||
                         (b.str != null && b.str.contains(text)) ||
                         (b.subName != null && b.subName.contains(text)))
                     list.add(b);
             int position = -1;
-            if (olds != null) for (KnownBlock b : olds) {
+            if (olds != null) for (KnownBlockRepr b : olds) {
                 int i = list.indexOf(b);
                 if (i != -1) {
                     position = i;
@@ -137,7 +137,7 @@ public final class PickBlockActivity extends AppCompatActivity {
 
     private class MeowAdapter extends RecyclerView.Adapter<MeowAdapter.MeowHolder> {
 
-        private final List<KnownBlock> mBlocks;
+        private final List<KnownBlockRepr> mBlocks;
 
         private MeowAdapter() {
             mBlocks = new ArrayList<>(4096);
@@ -154,7 +154,7 @@ public final class PickBlockActivity extends AppCompatActivity {
             root.setOnClickListener(v -> {
                 //UiUtil.toast(PickBlockActivity.this,""+i);
                 setResult(RESULT_OK, new Intent()
-                        .putExtra(EXTRA_KEY_BLOCK, holder.binding.getBlock()));//;(KnownBlock) v.getTag()));
+                        .putExtra(EXTRA_KEY_BLOCK, holder.binding.getBlock()));//;(KnownBlockRepr) v.getTag()));
                 finish();
             });
             return holder;
@@ -162,7 +162,7 @@ public final class PickBlockActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MeowHolder meowHolder, int i) {
-            KnownBlock block = mBlocks.get(i);
+            KnownBlockRepr block = mBlocks.get(i);
             ItemPickBlockBinding binding = meowHolder.binding;
             binding.setBlock(block);
             //binding.getRoot().setTag(block);
@@ -175,7 +175,7 @@ public final class PickBlockActivity extends AppCompatActivity {
             return mBlocks.size();
         }
 
-        List<KnownBlock> getListControl() {
+        List<KnownBlockRepr> getListControl() {
             return mBlocks;
         }
 
