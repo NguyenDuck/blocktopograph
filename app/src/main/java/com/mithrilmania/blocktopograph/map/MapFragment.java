@@ -299,7 +299,7 @@ public class MapFragment extends Fragment {
             if (mBinding.selectionBoard.hasSelection()) {
                 SelectionMenuFragment fragment = SelectionMenuFragment
                         .newInstance(mBinding.selectionBoard.getSelection(),
-                                this::doSelectionBasedEdit);
+                                world.getWorldData().mBlockRegistry, this::doSelectionBasedEdit);
                 trans.add(R.id.float_window_container, fragment);
                 mFloatingFragment = fragment;
                 setUpSelectionMenu();
@@ -318,7 +318,8 @@ public class MapFragment extends Fragment {
                 fragment = AdvancedLocatorFragment.create(world, this::frameTo);
             } else if (mFloatingFragment instanceof SelectionMenuFragment) {
                 fragment = SelectionMenuFragment
-                        .newInstance(mBinding.selectionBoard.getSelection(), this::doSelectionBasedEdit);
+                        .newInstance(mBinding.selectionBoard.getSelection(), world.getWorldData().mBlockRegistry,
+                                this::doSelectionBasedEdit);
             } else return;
             closeFloatPane();
             openFloatPane(fragment);
@@ -1003,7 +1004,7 @@ public class MapFragment extends Fragment {
         } else {
             mBinding.selectionBoard.beginSelection(worldX, worldZ);
             SelectionMenuFragment fragment = SelectionMenuFragment
-                    .newInstance(mBinding.selectionBoard.getSelection(), this::doSelectionBasedEdit);
+                    .newInstance(mBinding.selectionBoard.getSelection(), world.getWorldData().mBlockRegistry, this::doSelectionBasedEdit);
             openFloatPane(fragment);
             setUpSelectionMenu();
             Activity activity = getActivity();

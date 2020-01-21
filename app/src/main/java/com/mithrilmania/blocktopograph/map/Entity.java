@@ -121,7 +121,7 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
     AREA_EFFECT_CLOUD(95, "Area effect cloud", new String[]{"AreaEffectCloud"}, "area_effect_cloud", 144),
     MINECART_HOPPER(96, "Minecart with Hopper", new String[]{"MinecartHopper"}, "minecart_with_hopper", 70),
     MINECART_TNT(97, "Minecart with TNT", new String[]{"MinecartTNT"}, "minecart_with_tnt", 69),
-    MINECART_CHEST(98, "Storage Minecart", new String[]{"MinecartChest"}, "minecart_chest", 35),
+    MINECART_CHEST(98, "Storage Minecart", new String[]{"MinecartChest", "chestminecart"}, "minecart_chest", 35),
     LINGERING_POTION(101, "Lingering potion", new String[]{"LingeringPotion"}, "lingering_potion", 144),
     DROWNED(110, "Drowned", new String[]{"Drowned"}, "drowned", 133),
 
@@ -190,6 +190,12 @@ public enum Entity implements NamedBitmapProviderHandle, NamedBitmapProvider {
         }
         for (Entity e : Entity.values()) {
             if (identifier.equals(e.wikiName)) return e;
+        }
+        identifier = identifier.replace("_", "");
+        for (Entity e : Entity.values()) {
+            for (String dataName : e.dataNames)
+                if (dataName.toLowerCase().equals(identifier))
+                    return e;
         }
         return Entity.UNKNOWN;
     }

@@ -2,10 +2,12 @@ package com.mithrilmania.blocktopograph.map.renderer;
 
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -22,17 +24,15 @@ public class NetherRenderer implements MapRenderer {
         //Do you have to list all variables here in a 80s manner
         // regardless of many are only used within nested loop...
 
-        float shading, shadingSum, rf, gf, bf, af, a, blendR, blendG, blendB, sumRf, sumGf, sumBf;
+        float shading, shadingSum, a, blendR, blendG, blendB, sumRf, sumGf, sumBf;
         int layers;
         int caveceil, cavefloor, cavefloorW, cavefloorN;
-        int x, y, z, color, tX, tY, r, g, b;
-        KnownBlockRepr block;
-        int id;
         int worth;
+        int y;
         float heightShading, lightShading, sliceShading, avgShading;
 
-        for (z = 0, tY = pY; z < 16; z++, tY += pL) {
-            for (x = 0, tX = pX; x < 16; x++, tX += pW) {
+        for (int z = 0, tY = pY; z < 16; z++, tY += pL) {
+            for (int x = 0, tX = pX; x < 16; x++, tX += pW) {
 
                 worth = 0;
                 shadingSum = 0;
@@ -76,20 +76,22 @@ public class NetherRenderer implements MapRenderer {
 
                     for (y = caveceil; y >= cavefloor; y--) {
 
-                        block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
+                        Block block = chunk.getBlock(x, y, z, 0);
 
-                        if (block == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
+                        if (block.getLegacyBlock() == KnownBlockRepr.B_0_0_AIR)
+                            continue;//skip air blocks
 
                         //try the default meta value: 0
                         //if (block == null) block = KnownBlockRepr.getBlock(id, 0);
 
+                        int color = block.getColor();
                         // no need to process block if it is fully transparent
-                        if (block.color.alpha == 0) continue;
+                        if (Color.alpha(color) == 0) continue;
 
-                        rf = block.color.red / 255f;
-                        gf = block.color.green / 255f;
-                        bf = block.color.blue / 255f;
-                        af = block.color.alpha / 255f;
+                        float rf = Color.red(color) / 255f;
+                        float gf = Color.green(color) / 255f;
+                        float bf = Color.blue(color) / 255f;
+                        float af = Color.alpha(color) / 255f;
 
                         // alpha blend and multiply
                         blendR = a * af * rf * shading;
@@ -102,7 +104,7 @@ public class NetherRenderer implements MapRenderer {
                         a *= 1f - af;
 
                         // break when an opaque block is encountered
-                        if (block.color.alpha == 0xff) break;
+                        if (Color.alpha(color) == 0xff) break;
                     }
 
                     //start at the top of the next chunk! (current offset might differ)
@@ -116,9 +118,9 @@ public class NetherRenderer implements MapRenderer {
 
                 avgShading = shadingSum / layers;
                 // apply the shading
-                r = (int) (avgShading * sumRf / layers * 255f);
-                g = (int) (avgShading * sumGf / layers * 255f);
-                b = (int) (avgShading * sumBf / layers * 255f);
+                int r = (int) (avgShading * sumRf / layers * 255f);
+                int g = (int) (avgShading * sumGf / layers * 255f);
+                int b = (int) (avgShading * sumBf / layers * 255f);
 
 
                 r = r < 0 ? 0 : r > 255 ? 255 : r;
@@ -128,11 +130,11 @@ public class NetherRenderer implements MapRenderer {
                 for (y = 0; y < chunk.getHeightLimit(); y++) {
 
                     //some x-ray for important stuff like portals
-                    switch (chunk.getBlock(x, y, z, 0).getLegacyBlock().id) {
-                        case 52://monster spawner
+                    switch (chunk.getBlock(x, y, z, 0).getLegacyBlock()) {
+                        case B_52_0_MOB_SPAWNER://monster spawner
                             r = g = b = 255;
                             break;
-                        case 54://chest
+                        case B_54_0_CHEST://chest
                             if (worth < 90) {
                                 worth = 90;
                                 b = 170;
@@ -140,14 +142,14 @@ public class NetherRenderer implements MapRenderer {
                                 g = 40;
                             }
                             break;
-                        case 115://nether wart
+                        case B_115_0_NETHER_WART://nether wart
                             if (worth < 80) {
                                 worth = 80;
                                 r = b = 120;
                                 g = 170;
                             }
                             break;
-                        case 90://nether portal
+                        case B_90_0_PORTAL://nether portal
                             if (worth < 95) {
                                 worth = 95;
                                 r = 60;
@@ -158,9 +160,7 @@ public class NetherRenderer implements MapRenderer {
                     }
                 }
 
-                color = (r << 16) | (g << 8) | b | 0xff000000;
-
-                paint.setColor(color);
+                paint.setColor((r << 16) | (g << 8) | b | 0xff000000);
                 canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
             }
         }

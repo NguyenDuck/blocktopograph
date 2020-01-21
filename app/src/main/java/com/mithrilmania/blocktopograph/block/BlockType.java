@@ -1,6 +1,8 @@
 package com.mithrilmania.blocktopograph.block;
 
-public class BlockType {
+import java.io.Serializable;
+
+public class BlockType implements Serializable {
 
     private String name;
 

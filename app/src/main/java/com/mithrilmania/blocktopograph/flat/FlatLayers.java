@@ -41,7 +41,7 @@ public final class FlatLayers {
                 int data = jlayer.getInt(KEY_BLOCK_DATA);
                 int count = jlayer.getInt(KEY_COUNT);
                 KnownBlockRepr block = KnownBlockRepr.getBestBlock(id, data);
-                alayers[i] = new Layer(block, count);
+                //alayers[i] = new Layer(block, count);
             }
             layers.hasStructureOps = root.has(KEY_STRUCTURE_OPS);
             return layers;
@@ -96,8 +96,8 @@ public final class FlatLayers {
             JSONArray jlayers = new JSONArray();
             for (Layer layer : mLayers) {
                 JSONObject jlayer = new JSONObject();
-                jlayer.put(KEY_BLOCK_NAME, "minecraft:" + layer.block.str);
-                jlayer.put(KEY_BLOCK_DATA, layer.block.subId);
+                jlayer.put(KEY_BLOCK_NAME, layer.block.getIdentifier());
+                //jlayer.put(KEY_BLOCK_DATA, layer.block.subId);
                 jlayer.put(KEY_COUNT, layer.amount);
                 jlayers.put(jlayer);
             }

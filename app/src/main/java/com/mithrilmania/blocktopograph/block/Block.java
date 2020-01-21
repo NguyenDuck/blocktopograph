@@ -6,15 +6,20 @@ import androidx.annotation.Nullable;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Block {
+public class Block implements Serializable {
 
     @NonNull
     private BlockType blockType;
 
-    @Nullable
+    @NotNull
     private KnownBlockRepr legacyBlock;
+
+    private ListingBlock listingBlock;
 
     @NonNull
     private CompoundTag states;
@@ -25,13 +30,22 @@ public class Block {
         this.blockType = blockType;
         this.states = states;
         this.version = version;
-        legacyBlock = BlockWithStatesToLegacyBlockMapper.getBestRepr(this);
-        if (legacyBlock == null) legacyBlock = KnownBlockRepr.guessBlockNew(blockType.getName());
+        KnownBlockRepr legacyBlock = BlockWithStatesToLegacyBlockMapper.getBestRepr(this);
+        if (legacyBlock == null) {
+            for (ListingBlock lb : ListingBlock.values()) {
+                if (lb.getIdentifier() == blockType.getName()) {
+                    listingBlock = lb;
+                    break;
+                }
+            }
+            legacyBlock = KnownBlockRepr.guessBlockNew(blockType.getName());
+        }
+        this.legacyBlock = legacyBlock;
     }
 
     Block(@NonNull BlockType blockType, @NonNull KnownBlockRepr legacyBlock, int version) {
         this.blockType = blockType;
-        this.states = new CompoundTag("", new ArrayList<>());
+        this.states = new CompoundTag("states", new ArrayList<>());
         this.version = version;
         this.legacyBlock = legacyBlock;
     }
@@ -62,9 +76,15 @@ public class Block {
         return states.getChildTagByKey(key);
     }
 
-    @Nullable
+    @NotNull
     public KnownBlockRepr getLegacyBlock() {
         return legacyBlock;
+    }
+
+    public int getColor() {
+        if (listingBlock != null)
+            return listingBlock.getColor();
+        return legacyBlock.color;
     }
 
     @NonNull

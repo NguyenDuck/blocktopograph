@@ -23,19 +23,12 @@ import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.BlockRegistry;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
-import com.mithrilmania.blocktopograph.chunk.BedrockChunk;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.databinding.ActivityMainTestBinding;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTConstants;
-import com.mithrilmania.blocktopograph.nbt.tags.ByteTag;
-import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
-import com.mithrilmania.blocktopograph.nbt.tags.IntTag;
-import com.mithrilmania.blocktopograph.nbt.tags.ShortTag;
-import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
-import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.mithrilmania.blocktopograph.util.ConvertUtil;
 import com.mithrilmania.blocktopograph.util.IoUtil;
 import com.mithrilmania.blocktopograph.util.McUtil;
@@ -44,8 +37,6 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 public final class MainTestActivity extends AppCompatActivity {
@@ -236,125 +227,125 @@ public final class MainTestActivity extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     private void onClickAnaAllBlocks(View view) {
-        new ForegroundTask(this).execute(() -> {
-            WorldData worldData = mWorld.getWorldData();
-            int pos = 0, valids = 0, invalids = 0, offs = 0;
-            StringBuilder sb = new StringBuilder();
-            CompoundTag[] tags = null;
-            for (KnownBlockRepr block : KnownBlockRepr.values()) {
-                Chunk chunk = worldData.getChunk(pos / 16, 0, Dimension.OVERWORLD, true, Version.V1_2_PLUS);
-                int ind;
-                if (pos % 16 == 0) {
-                    tags = ((BedrockChunk) chunk).tempGetSubChunk().tempGetPalettes(3, 14, 5);
-                    ind = 0;
-                } else ind = 1;
-                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
-                sb.append(block.str).append(":").append(block.subId).append("->").append(name).append(":");
-                CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
-                sb.append("[");
-                ArrayList<Tag> value = states.getValue();
-                for (int i = 0; i < value.size(); i++) {
-                    Tag tag = value.get(i);
-                    sb.append(tag.getType()).append(":").append(tag.getName()).append("=");
-                    switch (tag.getType()) {
-                        case INT:
-                            sb.append(((IntTag) tag).getValue());
-                            break;
-                        case BYTE:
-                            sb.append(((ByteTag) tag).getValue());
-                            break;
-                        case SHORT:
-                            sb.append(((ShortTag) tag).getValue());
-                            break;
-                        case STRING:
-                            sb.append(((StringTag) tag).getValue());
-                            break;
-                    }
-                    if (i != value.size() - 1) sb.append(",");
-                }
-                sb.append("]\n");
-                pos += 8;
-                offs++;
-            }
-            worldData.resetCache();
-            worldData.closeDB();
-            IoUtil.writeTextFile(new File(McUtil.getBtgTestDir(Environment.getExternalStorageDirectory()), "blks.txt"), sb.toString());
-            return "meow";
-        });
+//        new ForegroundTask(this).execute(() -> {
+//            WorldData worldData = mWorld.getWorldData();
+//            int pos = 0, valids = 0, invalids = 0, offs = 0;
+//            StringBuilder sb = new StringBuilder();
+//            CompoundTag[] tags = null;
+//            for (KnownBlockRepr block : KnownBlockRepr.values()) {
+//                Chunk chunk = worldData.getChunk(pos / 16, 0, Dimension.OVERWORLD, true, Version.V1_2_PLUS);
+//                int ind;
+//                if (pos % 16 == 0) {
+//                    tags = ((BedrockChunk) chunk).tempGetSubChunk().tempGetPalettes(3, 14, 5);
+//                    ind = 0;
+//                } else ind = 1;
+//                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
+//                sb.append(block.str).append(":").append(block.subId).append("->").append(name).append(":");
+//                CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
+//                sb.append("[");
+//                ArrayList<Tag> value = states.getValue();
+//                for (int i = 0; i < value.size(); i++) {
+//                    Tag tag = value.get(i);
+//                    sb.append(tag.getType()).append(":").append(tag.getName()).append("=");
+//                    switch (tag.getType()) {
+//                        case INT:
+//                            sb.append(((IntTag) tag).getValue());
+//                            break;
+//                        case BYTE:
+//                            sb.append(((ByteTag) tag).getValue());
+//                            break;
+//                        case SHORT:
+//                            sb.append(((ShortTag) tag).getValue());
+//                            break;
+//                        case STRING:
+//                            sb.append(((StringTag) tag).getValue());
+//                            break;
+//                    }
+//                    if (i != value.size() - 1) sb.append(",");
+//                }
+//                sb.append("]\n");
+//                pos += 8;
+//                offs++;
+//            }
+//            worldData.resetCache();
+//            worldData.closeDB();
+//            IoUtil.writeTextFile(new File(McUtil.getBtgTestDir(Environment.getExternalStorageDirectory()), "blks.txt"), sb.toString());
+//            return "meow";
+//        });
     }
 
     @SuppressWarnings("unchecked")
     private void onClickGenCodeAllBlocksState(View view) {
-        new ForegroundTask(this).execute(() -> {
-            WorldData worldData = mWorld.getWorldData();
-            int pos = 0, valids = 0, invalids = 0;
-            StringBuilder sb = new StringBuilder();
-            CompoundTag[] tags = null;
-            for (KnownBlockRepr block : KnownBlockRepr.values()) {
-                Chunk chunk = worldData.getChunk(pos / 16, 0, Dimension.OVERWORLD, true, Version.V1_2_PLUS);
-                int ind;
-                if (pos % 16 == 0) {
-                    tags = ((BedrockChunk) chunk).tempGetSubChunk().tempGetPalettes(3, 14, 5);
-                    ind = 0;
-                } else ind = 1;
-                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
-                if (name.equals(block.str)) {
-                    CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
-                    sb.append("new BlockStateBuilder()");
-                    Object[] value = states.getValue().toArray();
-                    Arrays.sort(value, (o1, o2) -> {
-                        String n1 = ((Tag) o1).getName();
-                        String n2 = ((Tag) o2).getName();
-                        if (n1.contains("color"))
-                            return -1;
-                        if (n2.contains("color"))
-                            return 1;
-                        if (n1.contains("type"))
-                            return -1;
-                        if (n2.contains("type"))
-                            return 1;
-                        if (n1.contains("direction"))
-                            return -1;
-                        if (n2.contains("direction"))
-                            return 1;
-                        return 0;
-                    });
-                    for (int i = 0; i < value.length; i++) {
-                        Tag tag = (Tag) value[i];
-                        String tagName = tag.getName();
-                        switch (tag.getType()) {
-                            case INT:
-                                sb.append(".addInt(\"").append(tagName).append("\", ");
-                                sb.append(((IntTag) tag).getValue());
-                                break;
-                            case BYTE:
-                                sb.append(".addByte(\"").append(tagName).append("\", (byte)");
-                                sb.append(((ByteTag) tag).getValue());
-                                break;
-                            case SHORT:
-                                sb.append(".addShort(\"").append(tagName).append("\", (short)");
-                                sb.append(((ShortTag) tag).getValue());
-                                break;
-                            case STRING:
-                                sb.append(".addProperty(\"").append(tagName).append("\", \"");
-                                sb.append(((StringTag) tag).getValue()).append("\"");
-                                break;
-                        }
-                        sb.append(")");
-                    }
-                    sb.append(".build()\n");
-                    valids++;
-                } else {
-                    sb.append("new CompoundTag(\"\", new ArrayList())\n");
-                    invalids++;
-                }
-                pos += 8;
-            }
-            worldData.resetCache();
-            worldData.closeDB();
-            IoUtil.writeTextFile(new File(McUtil.getBtgTestDir(Environment.getExternalStorageDirectory()), "blkStateCodes.txt"), sb.toString());
-            return "meow valids: " + valids + ", invalids: " + invalids;
-        });
+//        new ForegroundTask(this).execute(() -> {
+//            WorldData worldData = mWorld.getWorldData();
+//            int pos = 0, valids = 0, invalids = 0;
+//            StringBuilder sb = new StringBuilder();
+//            CompoundTag[] tags = null;
+//            for (KnownBlockRepr block : KnownBlockRepr.values()) {
+//                Chunk chunk = worldData.getChunk(pos / 16, 0, Dimension.OVERWORLD, true, Version.V1_2_PLUS);
+//                int ind;
+//                if (pos % 16 == 0) {
+//                    tags = ((BedrockChunk) chunk).tempGetSubChunk().tempGetPalettes(3, 14, 5);
+//                    ind = 0;
+//                } else ind = 1;
+//                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
+//                if (name.equals(block.str)) {
+//                    CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
+//                    sb.append("new BlockStateBuilder()");
+//                    Object[] value = states.getValue().toArray();
+//                    Arrays.sort(value, (o1, o2) -> {
+//                        String n1 = ((Tag) o1).getName();
+//                        String n2 = ((Tag) o2).getName();
+//                        if (n1.contains("color"))
+//                            return -1;
+//                        if (n2.contains("color"))
+//                            return 1;
+//                        if (n1.contains("type"))
+//                            return -1;
+//                        if (n2.contains("type"))
+//                            return 1;
+//                        if (n1.contains("direction"))
+//                            return -1;
+//                        if (n2.contains("direction"))
+//                            return 1;
+//                        return 0;
+//                    });
+//                    for (int i = 0; i < value.length; i++) {
+//                        Tag tag = (Tag) value[i];
+//                        String tagName = tag.getName();
+//                        switch (tag.getType()) {
+//                            case INT:
+//                                sb.append(".addInt(\"").append(tagName).append("\", ");
+//                                sb.append(((IntTag) tag).getValue());
+//                                break;
+//                            case BYTE:
+//                                sb.append(".addByte(\"").append(tagName).append("\", (byte)");
+//                                sb.append(((ByteTag) tag).getValue());
+//                                break;
+//                            case SHORT:
+//                                sb.append(".addShort(\"").append(tagName).append("\", (short)");
+//                                sb.append(((ShortTag) tag).getValue());
+//                                break;
+//                            case STRING:
+//                                sb.append(".addProperty(\"").append(tagName).append("\", \"");
+//                                sb.append(((StringTag) tag).getValue()).append("\"");
+//                                break;
+//                        }
+//                        sb.append(")");
+//                    }
+//                    sb.append(".build()\n");
+//                    valids++;
+//                } else {
+//                    sb.append("new CompoundTag(\"\", new ArrayList())\n");
+//                    invalids++;
+//                }
+//                pos += 8;
+//            }
+//            worldData.resetCache();
+//            worldData.closeDB();
+//            IoUtil.writeTextFile(new File(McUtil.getBtgTestDir(Environment.getExternalStorageDirectory()), "blkStateCodes.txt"), sb.toString());
+//            return "meow valids: " + valids + ", invalids: " + invalids;
+//        });
     }
 
     private static class ForegroundTask extends AsyncTask<Callable<String>, Void, Void> {

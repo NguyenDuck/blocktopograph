@@ -12,8 +12,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.BlockRegistry;
 import com.mithrilmania.blocktopograph.databinding.FragSelMenuBinding;
 import com.mithrilmania.blocktopograph.map.FloatPaneFragment;
 import com.mithrilmania.blocktopograph.map.edit.ChBiomeFragment;
@@ -24,13 +32,6 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 public class SelectionMenuFragment extends FloatPaneFragment {
 
@@ -45,10 +46,13 @@ public class SelectionMenuFragment extends FloatPaneFragment {
 
     private EditFunctionEntry mEditFunctionEntry;
 
+    private BlockRegistry registry;
+
     public static SelectionMenuFragment newInstance(
-            @NotNull Rect initial, @NotNull EditFunctionEntry editFunctionEntry) {
+            @NotNull Rect initial, @NotNull BlockRegistry registry, @NotNull EditFunctionEntry editFunctionEntry) {
         SelectionMenuFragment fragment = new SelectionMenuFragment();
         fragment.mSelection.set(initial);
+        fragment.registry = registry;
         fragment.mEditFunctionEntry = editFunctionEntry;
         return fragment;
     }
@@ -124,7 +128,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
     }
 
     private void onChooseSnr(View view) {
-        SearchAndReplaceFragment fragment = SearchAndReplaceFragment.newInstance(mEditFunctionEntry);
+        SearchAndReplaceFragment fragment = SearchAndReplaceFragment.newInstance(registry, mEditFunctionEntry);
         FragmentManager fragmentManager = getMeowFragmentManager();
         fragment.show(fragmentManager, TAG_SNR);
         Log.logFirebaseEvent(view.getContext(), Log.CustomFirebaseEvent.SNR_OPEN);

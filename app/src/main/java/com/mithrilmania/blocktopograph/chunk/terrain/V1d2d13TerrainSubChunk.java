@@ -100,10 +100,11 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     private static BlockStorage.BlockRecord createNewBlockRecord(@NonNull Block block) {
         BlockStorage.BlockRecord blockRecord = new BlockStorage.BlockRecord();
         blockRecord.blockResolved = block;
-        StringTag nameTag = new StringTag(PALETTE_KEY_NAME, PREFIX_MINECRAFT + block.getBlockType());
+        StringTag nameTag = new StringTag(PALETTE_KEY_NAME, block.getBlockType());
         ArrayList<Tag> pitem = new ArrayList<>(2);
         pitem.add(nameTag);
         pitem.add(block.getStates());
+        pitem.add(new IntTag("version", block.getVersion()));
         blockRecord.tag = new CompoundTag("", pitem);
         return blockRecord;
     }
@@ -175,31 +176,31 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
             nos.writeTag(palette.get(j).tag);
     }
 
-    public CompoundTag[] tempGetPalettes(int baseX, int y, int z) {
-        return new CompoundTag[]{
-                tempGetPaletteItemOfPosition(baseX, y, z),
-                tempGetPaletteItemOfPosition(baseX + 8, y, z)
-        };
-    }
-
-    private CompoundTag tempGetPaletteItemOfPosition(int x, int y, int z) {
-        BlockStorage storage = mStorages[0];
-
-        //The codeOffset'th BlockState is wanted.
-        int codeOffset = getOffset(x, y, z);
-
-        //How much BlockStates can one int32 hold?
-        int intCapa = 32 / storage.blockCodeLenth;
-
-        //The int32 that holds the wanted BlockState.
-        int stick = storage.records.get(codeOffset / intCapa);
-
-        //Get the BlockState. It's also the index in palette array.
-        int ind = (stick >> (codeOffset % intCapa * storage.blockCodeLenth)) & msk[storage.blockCodeLenth - 1];
-
-        //Transform the local BlockState into global id<<8|data structure.
-        return storage.palette.get(ind).tag;
-    }
+//    public CompoundTag[] tempGetPalettes(int baseX, int y, int z) {
+//        return new CompoundTag[]{
+//                tempGetPaletteItemOfPosition(baseX, y, z),
+//                tempGetPaletteItemOfPosition(baseX + 8, y, z)
+//        };
+//    }
+//
+//    private CompoundTag tempGetPaletteItemOfPosition(int x, int y, int z) {
+//        BlockStorage storage = mStorages[0];
+//
+//        //The codeOffset'th BlockState is wanted.
+//        int codeOffset = getOffset(x, y, z);
+//
+//        //How much BlockStates can one int32 hold?
+//        int intCapa = 32 / storage.blockCodeLenth;
+//
+//        //The int32 that holds the wanted BlockState.
+//        int stick = storage.records.get(codeOffset / intCapa);
+//
+//        //Get the BlockState. It's also the index in palette array.
+//        int ind = (stick >> (codeOffset % intCapa * storage.blockCodeLenth)) & msk[storage.blockCodeLenth - 1];
+//
+//        //Transform the local BlockState into global id<<8|data structure.
+//        return storage.palette.get(ind).tag;
+//    }
 
     private void loadBlockStorage(@NotNull ByteBuffer raw, int which) throws IOException {
 

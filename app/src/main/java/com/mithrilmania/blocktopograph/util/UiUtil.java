@@ -2,6 +2,7 @@ package com.mithrilmania.blocktopograph.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.databinding.GeneralWaitBinding;
 import com.mithrilmania.blocktopograph.map.Biome;
 
@@ -46,9 +48,18 @@ public final class UiUtil {
         Drawable drawable = view.getBackground();
         if (!(drawable instanceof GradientDrawable)) return;
         GradientDrawable gradientDrawable = (GradientDrawable) drawable;
-        ColorWrapper color = block.color;
-        int res = (block.id == 0) ? 0 : ColorUtils.blendARGB(color.asARGB(), 0x7f7f7f7f, 0.5f);
+        int res = (block.id == 0) ? 0 : ColorUtils.blendARGB(block.color, 0x7f7f7f7f, 0.5f);
         gradientDrawable.setColor(res);
+    }
+
+    public static void blendBlockColor(@NotNull View view, ListingBlock block) {
+        Drawable drawable = view.getBackground();
+        if (!(drawable instanceof GradientDrawable)) return;
+        GradientDrawable gradientDrawable = (GradientDrawable) drawable;
+        int color = block.getColor();
+        if (color != Color.TRANSPARENT)
+            color = ColorUtils.blendARGB(color, 0x7f7f7f7f, 0.5f);
+        gradientDrawable.setColor(color);
     }
 
     public static void blendBlockColor(@NotNull View view, Biome biome) {

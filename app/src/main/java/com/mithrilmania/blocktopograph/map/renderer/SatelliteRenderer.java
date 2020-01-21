@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -15,37 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class SatelliteRenderer implements MapRenderer {
-
-    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, WorldData worldData) throws Version.VersionException {
-
-        Chunk dataW = worldData.getChunk(chunkX - 1, chunkZ, dimension);
-        Chunk dataN = worldData.getChunk(chunkX, chunkZ - 1, dimension);
-
-        boolean west = dataW != null && !dataW.isVoid(),
-                north = dataN != null && !dataN.isVoid();
-
-        int x, y, z, color, i, j, tX, tY;
-
-        for (z = 0, tY = pY; z < 16; z++, tY += pL) {
-            for (x = 0, tX = pX; x < 16; x++, tX += pW) {
-
-                y = chunk.getHeightMapValue(x, z);
-                if (y == 0) continue;
-
-                color = getColumnColour(chunk, x, y, z,
-                        (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge
-                                : chunk.getHeightMapValue(x - 1, z),//within chunk
-                        (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
-                                : chunk.getHeightMapValue(x, z - 1)//within chunk
-                );
-                paint.setColor(color);
-                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
-
-
-            }
-        }
-
-    }
 
     //calculate color of one column
     static int getColumnColour(@NotNull Chunk chunk, int x, int y, int z, int heightW, int heightN) throws Version.VersionException {
@@ -64,23 +34,24 @@ public class SatelliteRenderer implements MapRenderer {
 
         float blockA, blockR, blockG, blockB;
 
-
-        KnownBlockRepr block;
-
         y--;
         for (; y >= 0; y--) {
 
-            block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
+            Block block = chunk.getBlock(x, y, z, 0);
 
-            if (block == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
+            KnownBlockRepr legacyBlock = block.getLegacyBlock();
+
+            if (legacyBlock == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
+
+            int color = block.getColor();
 
             // no need to process block if it is fully transparent
-            if (block.color == null || block.color.alpha == 0) continue;
+            if (Color.alpha(color) == 0) continue;
 
-            blockR = block.color.red / 255f;
-            blockG = block.color.green / 255f;
-            blockB = block.color.blue / 255f;
-            blockA = block.color.alpha / 255f;
+            blockR = Color.red(color) / 255f;
+            blockG = Color.green(color) / 255f;
+            blockB = Color.blue(color) / 255f;
+            blockA = Color.alpha(color) / 255f;
 
             // alpha blend and multiply
             blendR = a * blockA * blockR;
@@ -88,7 +59,7 @@ public class SatelliteRenderer implements MapRenderer {
             blendB = a * blockA * blockB;
 
             //blend biome-colored blocks
-            if (block.hasBiomeShading) {
+            if (legacyBlock.hasBiomeShading) {
                 blendR *= biomeR;
                 blendG *= biomeG;
                 blendB *= biomeB;
@@ -100,7 +71,7 @@ public class SatelliteRenderer implements MapRenderer {
             a *= 1f - blockA;
 
             // break when an opaque block is encountered
-            if (block.color.alpha == 0xff) {
+            if (Color.alpha(color) == 0xff) {
                 break;
             }
         }
@@ -131,6 +102,35 @@ public class SatelliteRenderer implements MapRenderer {
                 ((((int) (r * 255f)) & 0xff) << 16) |
                 ((((int) (g * 255f)) & 0xff) << 8) |
                 (((int) (b * 255f)) & 0xff);
+    }
+
+    public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, WorldData worldData) throws Version.VersionException {
+
+        Chunk dataW = worldData.getChunk(chunkX - 1, chunkZ, dimension);
+        Chunk dataN = worldData.getChunk(chunkX, chunkZ - 1, dimension);
+
+        boolean west = dataW != null && !dataW.isVoid(),
+                north = dataN != null && !dataN.isVoid();
+
+        for (int z = 0, tY = pY; z < 16; z++, tY += pL) {
+            for (int x = 0, tX = pX; x < 16; x++, tX += pW) {
+
+                int y = chunk.getHeightMapValue(x, z);
+                if (y == 0) continue;
+
+                int color = getColumnColour(chunk, x, y, z,
+                        (x == 0) ? (west ? dataW.getHeightMapValue(dimension.chunkW - 1, z) : y)//chunk edge
+                                : chunk.getHeightMapValue(x - 1, z),//within chunk
+                        (z == 0) ? (north ? dataN.getHeightMapValue(x, dimension.chunkL - 1) : y)//chunk edge
+                                : chunk.getHeightMapValue(x, z - 1)//within chunk
+                );
+                paint.setColor(color);
+                canvas.drawRect(new Rect(tX, tY, tX + pW, tY + pL), paint);
+
+
+            }
+        }
+
     }
 
     // shading Amp, possible range: [0, 2] (or use negative for reverse shading)

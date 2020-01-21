@@ -20,7 +20,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.litl.leveldb.DB;
-import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.databinding.ActivityCreateWorldBinding;
 import com.mithrilmania.blocktopograph.flat.EditFlatFragment;
 import com.mithrilmania.blocktopograph.flat.FlatLayers;
@@ -217,10 +217,10 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 if (lsize != 4) mIsVanillaFlat = false;
                 else {
                     Layer ltest = layers.get(0);
-                    mIsVanillaFlat = ltest.block == KnownBlockRepr.B_31_2_TALLGRASS_GRASS && ltest.amount == 1
-                            && (ltest = layers.get(1)).block == KnownBlockRepr.B_2_0_GRASS && ltest.amount == 1
-                            && (ltest = layers.get(2)).block == KnownBlockRepr.B_3_0_DIRT && ltest.amount == 29
-                            && (ltest = layers.get(3)).block == KnownBlockRepr.B_7_0_BEDROCK && ltest.amount == 1;
+                    mIsVanillaFlat = ltest.block == ListingBlock.B_31_TALLGRASS && ltest.amount == 1
+                            && (ltest = layers.get(1)).block == ListingBlock.B_2_GRASS && ltest.amount == 1
+                            && (ltest = layers.get(2)).block == ListingBlock.B_3_DIRT && ltest.amount == 29
+                            && (ltest = layers.get(3)).block == ListingBlock.B_7_BEDROCK && ltest.amount == 1;
                 }
                 Layer[] alayers = new Layer[lsize < 3 ? 3 : lsize];
                 for (int i = 0; i < lsize; i++) {
@@ -310,11 +310,11 @@ public final class CreateWorldActivity extends AppCompatActivity {
                     }
                     for (int i = 0; i < lines; i++) {
                         Layer layer = layers.get(i);
-                        int maxlen = 11 - Integer.toString(layer.amount).length();
+                        int maxlen = 12 - Integer.toString(layer.amount).length();
                         String nam;
                         if (maxlen <= 0) nam = "";
                         else {
-                            String namo = layer.block.str;
+                            String namo = layer.block.getName();
                             if (namo.length() >= maxlen) nam = namo.substring(0, maxlen);
                             else nam = namo;
                         }

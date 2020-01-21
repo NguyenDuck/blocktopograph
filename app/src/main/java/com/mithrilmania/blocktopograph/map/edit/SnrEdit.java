@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 public class SnrEdit implements EditTarget.RandomAccessEdit {
 
     private SnrConfig config;
-    private Block b1;
-    private Block b2;
+    private SnrConfig.SearchConditionBlock b1;
+    private SnrConfig.SearchConditionBlock b2;
     private Block b3;
     private Block b4;
 
@@ -38,39 +38,21 @@ public class SnrEdit implements EditTarget.RandomAccessEdit {
         }
     }
 
-    private static boolean equalsIgnoreSubtype(Block b1, Block b2) {
-        return ((Object) b1.getBlockType()) == b2.getBlockType();
+    private boolean matches(Block got, SnrConfig.SearchConditionBlock expected) {
+        return got.getBlockType().equals(expected.identifier);
     }
 
     @Override
     public int edit(Chunk chunk, int x, int y, int z) {
         if (
-                (config.searchMode == 1 &&
-                        (config.ignoreSubId ?
-                                equalsIgnoreSubtype(chunk.getBlock(x, y, z, 1), b1)
-                                : (b1.equals(chunk.getBlock(x, y, z, 1)))
-                        )
-                ) || (config.searchMode == 2 &&
-                        (config.ignoreSubId ?
-                                equalsIgnoreSubtype(chunk.getBlock(x, y, z), b1)
-                                : (b1.equals(chunk.getBlock(x, y, z)))
-                        )
-                ) || (config.searchMode == 3 &&
-                        (config.ignoreSubId ?
-                                equalsIgnoreSubtype(chunk.getBlock(x, y, z), b1)
-                                        || equalsIgnoreSubtype(chunk.getBlock(x, y, z, 1), b1)
-                                : (
-                                (b1.equals(chunk.getBlock(x, y, z)))
-                                        || (b1.equals(chunk.getBlock(x, y, z, 1))))
-                        )
-                ) || (config.searchMode == 4 &&
-                        (config.ignoreSubId ?
-                                (equalsIgnoreSubtype(chunk.getBlock(x, y, z), b1)
-                                        && equalsIgnoreSubtype(chunk.getBlock(x, y, z, 1), b2))
-                                : (
-                                (b1.equals(chunk.getBlock(x, y, z)))
-                                        && (b2.equals(chunk.getBlock(x, y, z, 1))))
-                        )
+                (config.searchMode == 1 && matches(chunk.getBlock(x, y, z, 1), b1)
+                ) || (config.searchMode == 2 && matches(chunk.getBlock(x, y, z), b1)
+                ) || (config.searchMode == 3 && (
+                        matches(chunk.getBlock(x, y, z), b1)
+                                || matches(chunk.getBlock(x, y, z, 1), b1))
+                ) || (config.searchMode == 4 && (
+                        matches(chunk.getBlock(x, y, z), b1)
+                                && matches(chunk.getBlock(x, y, z, 1), b2))
                 )
         ) {
             switch (config.placeMode) {

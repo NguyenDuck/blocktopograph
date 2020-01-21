@@ -44,13 +44,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{(layer.block.subName==null) ? layer.block.str:layer.block.subName}"
+                    android:text="@{layer.block.name}"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{`minecraft:`+layer.block.str+`(`+layer.block.id+`):`+layer.block.subId}" />
+                    android:text="@{layer.block.identifier}" />
 
             </LinearLayout>
 

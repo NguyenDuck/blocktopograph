@@ -17,7 +17,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.jbvincey.nestedradiobutton.NestedRadioGroupManager;
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockRegistry;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.databinding.FragSerachAndReplaceBinding;
 import com.mithrilmania.blocktopograph.databinding.IncludeBlockBinding;
 import com.mithrilmania.blocktopograph.flat.PickBlockActivity;
@@ -44,10 +47,12 @@ public class SearchAndReplaceFragment extends DialogFragment {
     private FragSerachAndReplaceBinding mBinding;
     private SelectionMenuFragment.EditFunctionEntry mEntry;
     private ToolTipsManager mToolTipsManager;
+    private BlockRegistry registry;
 
-    public static SearchAndReplaceFragment newInstance(SelectionMenuFragment.EditFunctionEntry entry) {
+    public static SearchAndReplaceFragment newInstance(BlockRegistry registry, SelectionMenuFragment.EditFunctionEntry entry) {
         SearchAndReplaceFragment fragment = new SearchAndReplaceFragment();
         fragment.mEntry = entry;
+        fragment.registry = registry;
         return fragment;
     }
 
@@ -55,7 +60,6 @@ public class SearchAndReplaceFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_serach_and_replace, container, false);
-
         // Saved instance has highest priority to be recovered.
         Serializable ser;
         if (savedInstanceState != null && (ser = savedInstanceState.getSerializable(CONFIG)) instanceof SnrConfig) {
@@ -67,30 +71,30 @@ public class SearchAndReplaceFragment extends DialogFragment {
                 case 2:
                 case 3:
                     // TODO: restore serialization.
-                    //recoverBlock(mBinding.searchBlockAny, cfg.searchBlockMain);
+                    recoverBlock(mBinding.searchBlockAny, cfg.searchBlockMain);
                     break;
                 case 4:
-                    // recoverBlock(mBinding.searchBlockBg, cfg.searchBlockSub);
-                    //recoverBlock(mBinding.searchBlockFg, cfg.searchBlockMain);
+                    recoverBlock(mBinding.searchBlockBg, cfg.searchBlockSub);
+                    recoverBlock(mBinding.searchBlockFg, cfg.searchBlockMain);
                     break;
             }
             switch (cfg.placeMode) {
                 case 1:
                 case 2:
-                    //recoverBlock(mBinding.replaceBlockAny, cfg.placeBlockMain);
+                    recoverBlock(mBinding.replaceBlockAny, cfg.placeBlockMain);
                     break;
                 case 3:
-                    //recoverBlock(mBinding.replaceBlockBg, cfg.placeBlockSub);
-                    // recoverBlock(mBinding.replaceBlockFg, cfg.placeBlockMain);
+                    recoverBlock(mBinding.replaceBlockBg, cfg.placeBlockSub);
+                    recoverBlock(mBinding.replaceBlockFg, cfg.placeBlockMain);
             }
-            mBinding.cbIgsub.setChecked(cfg.ignoreSubId);
+            //mBinding.cbIgsub.setChecked(cfg.ignoreSubId);
         } else {
-            setBlockToItem(mBinding.searchBlockAny, KnownBlockRepr.B_2_0_GRASS);
-            setBlockToItem(mBinding.searchBlockBg, KnownBlockRepr.B_0_0_AIR);
-            setBlockToItem(mBinding.searchBlockFg, KnownBlockRepr.B_2_0_GRASS);
-            setBlockToItem(mBinding.replaceBlockAny, KnownBlockRepr.B_20_0_GLASS);
-            setBlockToItem(mBinding.replaceBlockFg, KnownBlockRepr.B_20_0_GLASS);
-            setBlockToItem(mBinding.replaceBlockBg, KnownBlockRepr.B_9_0_WATER);
+            setBlockToItem(mBinding.searchBlockAny, ListingBlock.B_2_GRASS);
+            setBlockToItem(mBinding.searchBlockBg, ListingBlock.B_0_AIR);
+            setBlockToItem(mBinding.searchBlockFg, ListingBlock.B_2_GRASS);
+            setBlockToItem(mBinding.replaceBlockAny, ListingBlock.B_20_GLASS);
+            setBlockToItem(mBinding.replaceBlockFg, ListingBlock.B_20_GLASS);
+            setBlockToItem(mBinding.replaceBlockBg, ListingBlock.B_9_WATER);
         }
 
         mBinding.searchIn.setOnCheckedChangeListener(this::onCheckedChanged);
@@ -168,13 +172,19 @@ public class SearchAndReplaceFragment extends DialogFragment {
     }
 
     private void recoverBlock(@NotNull IncludeBlockBinding item, @Nullable Serializable data) {
-        setBlockToItem(item, data instanceof KnownBlockRepr ? (KnownBlockRepr) data : KnownBlockRepr.B_0_0_AIR);
+        setBlockToItem(item, data instanceof ListingBlock ? (ListingBlock) data : ListingBlock.B_0_AIR);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         writeToBundle(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    @NonNull
+    private Block convertListingBlockToBlock(ListingBlock listingBlock) {
+        if (listingBlock == null) return registry.createBlock(KnownBlockRepr.B_0_0_AIR);
+        return registry.createBlock(listingBlock.getIdentifier());
     }
 
     private void writeToBundle(@NotNull Bundle bundle) {
@@ -185,24 +195,24 @@ public class SearchAndReplaceFragment extends DialogFragment {
             case 1:
             case 2:
             case 3:
-                // cfg.searchBlockMain = mBinding.searchBlockAny.getBlock();
+                cfg.searchBlockMain = new SnrConfig.SearchConditionBlock(mBinding.searchBlockAny.getBlock());
                 break;
             case 4:
-                // cfg.searchBlockMain = mBinding.searchBlockFg.getBlock();
-                //  cfg.searchBlockSub = mBinding.searchBlockBg.getBlock();
+                cfg.searchBlockMain = new SnrConfig.SearchConditionBlock(mBinding.searchBlockFg.getBlock());
+                cfg.searchBlockSub = new SnrConfig.SearchConditionBlock(mBinding.searchBlockBg.getBlock());
                 break;
         }
         switch (cfg.placeMode) {
             case 1:
             case 2:
-                //  cfg.placeBlockMain = mBinding.replaceBlockAny.getBlock();
+                cfg.placeBlockMain = convertListingBlockToBlock(mBinding.replaceBlockAny.getBlock());
                 break;
             case 3:
-                //  cfg.placeBlockMain = mBinding.replaceBlockFg.getBlock();
-                // cfg.placeBlockSub = mBinding.replaceBlockBg.getBlock();
+                cfg.placeBlockMain = convertListingBlockToBlock(mBinding.replaceBlockFg.getBlock());
+                cfg.placeBlockSub = convertListingBlockToBlock(mBinding.replaceBlockBg.getBlock());
                 break;
         }
-        cfg.ignoreSubId = mBinding.cbIgsub.isChecked();
+        cfg.ignoreSubId = true;// mBinding.cbIgsub.isChecked();
         bundle.putSerializable(CONFIG, cfg);
     }
 
@@ -223,7 +233,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK && data != null) {
-            KnownBlockRepr block = (KnownBlockRepr) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
+            ListingBlock block = (ListingBlock) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
             switch (requestCode - REQUEST_CODE) {
                 case 0:
                     setBlockToItem(mBinding.searchBlockAny, block);
@@ -249,8 +259,8 @@ public class SearchAndReplaceFragment extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void setBlockToItem(@NotNull IncludeBlockBinding item, @NotNull KnownBlockRepr block) {
-        item.icon.setImageBitmap(block.getBitmap());
+    private void setBlockToItem(@NotNull IncludeBlockBinding item, @NotNull ListingBlock block) {
+        item.icon.setImageBitmap(block.getIcon(getResources().getAssets()));
         UiUtil.blendBlockColor(item.getRoot(), block);
         item.setBlock(block);
     }

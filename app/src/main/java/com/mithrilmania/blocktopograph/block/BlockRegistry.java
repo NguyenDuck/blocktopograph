@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -36,6 +37,11 @@ public class BlockRegistry {
     @NonNull
     public Block createBlock(@NonNull String name, @NonNull CompoundTag states, int version) {
         return new Block(getBlockType(name), states, version);
+    }
+
+    @NonNull
+    public Block createBlock(@NonNull String name) {
+        return new Block(getBlockType(name), new CompoundTag("states", new ArrayList<>()), 3841);
     }
 
     @NonNull

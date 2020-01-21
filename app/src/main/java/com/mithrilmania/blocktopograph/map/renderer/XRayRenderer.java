@@ -1,6 +1,7 @@
 package com.mithrilmania.blocktopograph.map.renderer;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -19,8 +20,6 @@ public class XRayRenderer implements MapRenderer {
 
     public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, WorldData worldData) throws Version.VersionException {
 
-        int x, y, z, color, tX, tY;
-
         //render width in blocks
         int rW = 16;
         int size2D = rW * (16);
@@ -32,12 +31,11 @@ public class XRayRenderer implements MapRenderer {
         KnownBlockRepr block;
 
         int average;
-        int r, g, b;
 
-        for (z = 0; z < 16; z++) {
-            for (x = 0; x < 16; x++) {
+        for (int z = 0; z < 16; z++) {
+            for (int x = 0; x < 16; x++) {
 
-                for (y = 0; y < chunk.getHeightLimit(); y++) {
+                for (int y = 0; y < chunk.getHeightLimit(); y++) {
                     block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
 
                     index2D = (z * rW) + x;
@@ -70,16 +68,19 @@ public class XRayRenderer implements MapRenderer {
 //            return;
 //        }
 
-        for (z = 0, tY = pY; z < 16; z++, tY += pL) {
-            for (x = 0, tX = pX; x < 16; x++, tX += pW) {
+        for (int z = 0, tY = pY; z < 16; z++, tY += pL) {
+            for (int x = 0, tX = pX; x < 16; x++, tX += pW) {
                 block = bestBlock[(z * rW) + x];
+                int color;
                 if (block == null) {
                     color = 0xff000000;
                 } else {
 
-                    r = block.color.red;
-                    g = block.color.green;
-                    b = block.color.blue;
+                    color = block.color;
+
+                    int r = Color.red(color);
+                    int g = Color.green(color);
+                    int b = Color.blue(color);
                     average = (r + g + b) / 3;
 
                     //make the color better recognizable
