@@ -22,6 +22,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
@@ -45,9 +48,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 public class EditorFragment extends Fragment {
 
@@ -523,10 +523,12 @@ public class EditorFragment extends Fragment {
                                                                 Tag newTag = NBTConstants.NBTType.newInstance(newName, nbtType);
 
                                                                 //add tag to nbt
-                                                                content.add(newTag);
-                                                                tree.addNode(node, new TreeNode(new ChainTag(self, newTag)).setViewHolder(new NBTNodeHolder(nbt, activity)));
+                                                                if (newTag != null) {
+                                                                    content.add(newTag);
+                                                                    tree.addNode(node, new TreeNode(new ChainTag(self, newTag)).setViewHolder(new NBTNodeHolder(nbt, activity)));
 
-                                                                nbt.setModified();
+                                                                    nbt.setModified();
+                                                                }
 
                                                             }
                                                         });

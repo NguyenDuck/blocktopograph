@@ -51,15 +51,6 @@ public class Block implements Serializable {
     }
 
     @NonNull
-    public String getMinecraftBlockTypeNoPrefix() {
-        String name = blockType.getName();
-        int index = name.indexOf(':');
-        if (index != -1 && name.substring(0, index).equals("minecraft"))
-            name = name.substring(index + 1);
-        return name;
-    }
-
-    @NonNull
     public String getBlockType() {
         return blockType.getName();
     }

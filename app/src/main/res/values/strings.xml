@@ -465,4 +465,7 @@
     <string name="picer_preview_generating">Generating Preview...</string>
     <string name="map_locator_player_pos_unknown">Position unknown</string>
     <string name="map_dblclick_notice">Tap screen twice to open the drawer.</string>
+    <string name="some_thing_went_wrong">Something Went Wrong...</string>
+    <string name="unsatisfied_link_error_explain">Sorry, something went wrong so that you would not be able to use this app. In brief, a magic part of the app is missing. \\nHave you received the app (apk file) from some one else that has previously installed the app? Then the app was optimized for that person\'s device only, even though you have the same model of device it will not work. Try uninstall and reinstall from Google Play Store may solve it. You can also download full version of the app from GitHub or other sources. In this case you may also need to remove this version of the app. Sorry for the inconvenience but this is definitely caused by your bad habit of not downloading from the right place.\\nIf it\'s not the situation then we have no idea.</string>
+    <string name="close">Close</string>
 </resources>

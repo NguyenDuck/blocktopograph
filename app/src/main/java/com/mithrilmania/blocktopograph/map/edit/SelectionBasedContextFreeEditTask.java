@@ -9,6 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.BlockRegistry;
+import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
@@ -30,12 +33,18 @@ public class SelectionBasedContextFreeEditTask extends
 
     @NotNull
     private final WeakReference<MapFragment> mOwner;
+
+    @NotNull
+    private final BlockRegistry registry;
+
     private AlertDialog mWaitDialog;
 
     public SelectionBasedContextFreeEditTask(
-            @NotNull EditFunction func, @Nullable Bundle args, @NotNull MapFragment owner) {
+            @NotNull EditFunction func, @Nullable Bundle args, @NotNull MapFragment owner,
+            @NotNull BlockRegistry registry) {
         mFunction = func;
         mArgs = args;
+        this.registry = registry;
         mOwner = new WeakReference<>(owner);
     }
 
@@ -56,15 +65,13 @@ public class SelectionBasedContextFreeEditTask extends
 
         switch (mFunction) {
             case LAMPSHADE: {
-                // TODO: restore this functionality.
-//                SnrConfig cfg = new SnrConfig();
-//                cfg.searchMode = 2;
-//                cfg.placeMode = 1;
-//                cfg.searchBlockMain = KnownBlockRepr.B_50_0_TORCH;
-//                cfg.placeBlockMain = KnownBlockRepr.B_20_0_GLASS;
-//                cfg.ignoreSubId = true;
-//                return doSnr(cfg, editTargets);
-                return null;
+                SnrConfig cfg = new SnrConfig();
+                cfg.searchMode = 2;
+                cfg.placeMode = 1;
+                cfg.searchBlockMain = new SnrConfig.SearchConditionBlock(ListingBlock.B_50_TORCH);
+                cfg.placeBlockMain = registry.createBlock(KnownBlockRepr.B_20_0_GLASS);
+                cfg.ignoreSubId = true;
+                return doSnr(cfg, editTargets);
             }
             case SNR: {
                 Serializable ser;
@@ -82,7 +89,6 @@ public class SelectionBasedContextFreeEditTask extends
                 return doChBiome(serFrom instanceof Biome ? (Biome) serFrom : null, (Biome) serTo, editTargets);
             }
         }
-
         return null;
     }
 
@@ -123,7 +129,7 @@ public class SelectionBasedContextFreeEditTask extends
     }
 
     @Override
-    protected void onPostExecute(EditResultCode editResultCode) {
+    protected void onPostExecute(@Nullable EditResultCode editResultCode) {
         if (mWaitDialog != null) {
             mWaitDialog.dismiss();
         }
@@ -131,11 +137,14 @@ public class SelectionBasedContextFreeEditTask extends
         Activity activity;
         if (owner != null && (activity = owner.getActivity()) != null) {
             owner.world.setHaveBackgroundJob(false);
+            if (editResultCode == null)
+                return;
             switch (editResultCode) {
                 case SUCCESS:
                     Toast.makeText(activity, R.string.general_done, Toast.LENGTH_SHORT).show();
                     owner.refreshAfterEdit();
                     break;
+                case DB_ERROR:
                 default:
                     Toast.makeText(activity, R.string.general_failed, Toast.LENGTH_SHORT).show();
                     break;

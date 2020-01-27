@@ -395,4 +395,7 @@
     <string name="map_edit_func_picer">生成图片</string>
     <string name="picer_scale_approxim">大约%1$dx%2$d。</string>
     <string name="map_dblclick_notice">双击屏幕以打开抽屉。</string>
+    <string name="map_locator_player_pos_unknown">位置未知</string>
+    <string name="some_thing_went_wrong">出了点问题。。</string>
+    <string name="unsatisfied_link_error_explain">抱歉，出现了一些问题，所以您没法使用这个应用。简单来说，缺失了一个重要的组成部分。您是否从其他拥有此应用程序的人那里获得了安装包？如果是，那么该应用是针对Ta的设备优化的，即使您们的机型一样，也无法使用。请尝试卸载并从Play商店重新安装，或从GitHub等渠道下载完整版。可能需要先卸载。抱歉，但是这是由于错误的使用习惯导致的。</string>
 </resources>

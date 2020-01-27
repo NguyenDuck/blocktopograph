@@ -27,7 +27,6 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
@@ -262,8 +261,10 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
                         verTag == null ? 2 : ((IntTag) verTag).getValue());
             } else {
                 Tag valTag = tag.getChildTagByKey(PALETTE_KEY_VAL);
-                record.blockResolved = blockRegistry.createBlock(Objects.requireNonNull(KnownBlockRepr.getBlockNew(name,
-                        valTag instanceof ShortTag ? ((ShortTag) valTag).getValue() : 0)));
+                KnownBlockRepr repr = KnownBlockRepr.getBlockNew(name,
+                        valTag instanceof ShortTag ? ((ShortTag) valTag).getValue() : 0);
+                if (repr == null) repr = KnownBlockRepr.guessBlockNew(name);
+                record.blockResolved = blockRegistry.createBlock(repr);
             }
             storage.palette.add(record);
         }

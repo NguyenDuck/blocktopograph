@@ -9,6 +9,7 @@ import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -4786,14 +4787,14 @@ public class BlockWithStatesToLegacyBlockMapper {
 
     @Nullable
     public static KnownBlockRepr getBestRepr(@NonNull Block block) {
-        Pair<CompoundTag, KnownBlockRepr>[] list = mMapTypeToBlocks.get(block.getMinecraftBlockTypeNoPrefix());
-        if (list == null)
+        Pair<CompoundTag, KnownBlockRepr>[] list = mMapTypeToBlocks.get(block.getBlockType());
+        if (list == null || list.length <= 0)
+            // Already the best we can d for now.
             return null;
         String[] checks = new String[]{"color", "type", "direction"};
         ArrayList<Tag> tags = block.getStates().getValue();
         List<Pair<CompoundTag, KnownBlockRepr>> range = new ArrayList<>(list.length);
-        for (Pair<CompoundTag, KnownBlockRepr> pair : list)
-            range.add((pair));
+        range.addAll(Arrays.asList(list));
         for (String check : checks) {
             List<Pair<CompoundTag, KnownBlockRepr>> rangeNew = new ArrayList<>(range.size());
             for (Tag tag : tags) {

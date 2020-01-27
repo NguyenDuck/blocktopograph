@@ -240,13 +240,13 @@ public final class MainTestActivity extends AppCompatActivity {
 //                    ind = 0;
 //                } else ind = 1;
 //                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
-//                sb.append(block.str).append(":").append(block.subId).append("->").append(name).append(":");
+//                sb.append(block.identifier).append(":").append(block.subId).append("->").append(name).append(":");
 //                CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
 //                sb.append("[");
 //                ArrayList<Tag> value = states.getValue();
 //                for (int i = 0; i < value.size(); i++) {
 //                    Tag tag = value.get(i);
-//                    sb.append(tag.getType()).append(":").append(tag.getName()).append("=");
+//                    sb.append(tag.getType()).append(":").append(tag.getIdentifier()).append("=");
 //                    switch (tag.getType()) {
 //                        case INT:
 //                            sb.append(((IntTag) tag).getValue());
@@ -289,13 +289,13 @@ public final class MainTestActivity extends AppCompatActivity {
 //                    ind = 0;
 //                } else ind = 1;
 //                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
-//                if (name.equals(block.str)) {
+//                if (name.equals(block.identifier)) {
 //                    CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
 //                    sb.append("new BlockStateBuilder()");
 //                    Object[] value = states.getValue().toArray();
 //                    Arrays.sort(value, (o1, o2) -> {
-//                        String n1 = ((Tag) o1).getName();
-//                        String n2 = ((Tag) o2).getName();
+//                        String n1 = ((Tag) o1).getIdentifier();
+//                        String n2 = ((Tag) o2).getIdentifier();
 //                        if (n1.contains("color"))
 //                            return -1;
 //                        if (n2.contains("color"))
@@ -312,7 +312,7 @@ public final class MainTestActivity extends AppCompatActivity {
 //                    });
 //                    for (int i = 0; i < value.length; i++) {
 //                        Tag tag = (Tag) value[i];
-//                        String tagName = tag.getName();
+//                        String tagName = tag.getIdentifier();
 //                        switch (tag.getType()) {
 //                            case INT:
 //                                sb.append(".addInt(\"").append(tagName).append("\", ");

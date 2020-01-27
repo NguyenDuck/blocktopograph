@@ -758,7 +758,7 @@ public class MapFragment extends Fragment {
             case LAMPSHADE:
             case CHBIOME:
             case DCHUNK:
-                new SelectionBasedContextFreeEditTask(func, args, this).execute(
+                new SelectionBasedContextFreeEditTask(func, args, this, world.getWorldData().mBlockRegistry).execute(
                         new RectEditTarget(
                                 world.getWorldData(),
                                 mBinding.selectionBoard.getSelection(),
@@ -1017,8 +1017,15 @@ public class MapFragment extends Fragment {
     }
 
     private void onChooseEditEntitiesOrTileEntities(Dimension dim, int chunkXint, int chunkZint, View container, boolean isEntity) {
-        final Chunk chunk = world.getWorldData()
-                .getChunk(chunkXint, chunkZint, dim);
+        final Chunk chunk;
+        try {
+            chunk = world.getWorldData()
+                    .getChunk(chunkXint, chunkZint, dim);
+        } catch (Exception e) {
+            Log.d(this, e);
+            Toast.makeText(getContext(), R.string.error_could_not_open_world, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (!chunkDataNBT(chunk, isEntity)) {
             Snackbar.make(container, String.format(getString(R.string.failed_to_load_x),

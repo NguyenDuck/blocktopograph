@@ -46,7 +46,7 @@ public class BlockRegistry {
 
     @NonNull
     public Block createBlock(@NonNull KnownBlockRepr legacyBlock) {
-        return new Block(getBlockType(legacyBlock.str), legacyBlock, 1);
+        return new Block(getBlockType(legacyBlock.identifier), legacyBlock, 1);
     }
 
 }

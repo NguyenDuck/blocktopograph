@@ -70,7 +70,6 @@ public class SearchAndReplaceFragment extends DialogFragment {
                 case 1:
                 case 2:
                 case 3:
-                    // TODO: restore serialization.
                     recoverBlock(mBinding.searchBlockAny, cfg.searchBlockMain);
                     break;
                 case 4:

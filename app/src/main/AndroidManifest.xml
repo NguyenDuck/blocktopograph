@@ -92,6 +92,9 @@
             android:name=".BiomeSelectDialog"
             android:label="@string/biome_pick_title"
             android:theme="@style/AppTheme.Dialog" />
+        <activity
+            android:name=".UnsatisfiedLinkErrorActivity"
+            android:label="@string/some_thing_went_wrong" />
 
         <meta-data
             android:name="android.support.VERSION"

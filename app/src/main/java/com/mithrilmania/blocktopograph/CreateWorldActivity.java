@@ -77,6 +77,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
     }
 
     public void onClickPositiveButton(View view) {
+        //Toast.makeText(this, "fuck", Toast.LENGTH_SHORT).show();
         new CreateWorldTask(this).execute();
     }
 
@@ -189,7 +190,8 @@ public final class CreateWorldActivity extends AppCompatActivity {
                 int cnt = 0;
                 do {
                     wDir = new File(worldsDir, dirName + '_' + cnt);
-                } while (wDir.exists());
+                    cnt++;
+                } while (wDir.exists() && cnt < 1000);
             }
             if (!wDir.mkdir()) return false;
 
