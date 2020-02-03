@@ -190,22 +190,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/button_left"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1" />
+                    android:id="@+id/button_backup"
+                    style="?attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:padding="16dp"
+                    android:text="@string/backup_amp_restore"
+                    android:textAllCaps="false" />
 
-                <Button
-                    android:id="@+id/button_right"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <Button
+                        android:id="@+id/button_left"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/button_right"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

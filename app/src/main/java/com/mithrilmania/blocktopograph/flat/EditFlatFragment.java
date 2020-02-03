@@ -28,8 +28,6 @@ import com.woxthebox.draglistview.DragListView;
 import com.woxthebox.draglistview.swipe.ListSwipeHelper;
 import com.woxthebox.draglistview.swipe.ListSwipeItem;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -139,10 +137,10 @@ public final class EditFlatFragment extends Fragment {
 
     private class MeowAdapter extends DragItemAdapter<Layer, MeowAdapter.MeowHolder> implements ListSwipeHelper.OnSwipeListener {
 
-        @NotNull
+        @NonNull
         private AssetManager assMan;
 
-        MeowAdapter(@NotNull AssetManager assMan) {
+        MeowAdapter(@NonNull AssetManager assMan) {
             setItemList(new LinkedList<>());
             this.assMan = assMan;
         }

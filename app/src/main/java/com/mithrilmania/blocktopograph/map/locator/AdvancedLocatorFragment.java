@@ -7,15 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mithrilmania.blocktopograph.R;
-import com.mithrilmania.blocktopograph.World;
-import com.mithrilmania.blocktopograph.databinding.FragMapGotoBinding;
-import com.mithrilmania.blocktopograph.map.FloatPaneFragment;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.ref.WeakReference;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -23,6 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.World;
+import com.mithrilmania.blocktopograph.databinding.FragMapGotoBinding;
+import com.mithrilmania.blocktopograph.map.FloatPaneFragment;
+
+import java.lang.ref.WeakReference;
 
 public final class AdvancedLocatorFragment extends FloatPaneFragment {
 
@@ -38,7 +36,7 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
         return ret;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragMapGotoBinding binding = DataBindingUtil.inflate(inflater, R.layout.frag_map_goto, container, false);
@@ -142,7 +140,7 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
             }
         }
 
-        @NotNull
+        @NonNull
         private Fragment getAnyPlaceHolderFragment() {
             if (locatorPlayersFragment != null) return locatorPlayersFragment;
             if (locatorMarkersFragment != null) return locatorMarkersFragment;
@@ -151,7 +149,7 @@ public final class AdvancedLocatorFragment extends FloatPaneFragment {
         }
 
         @Override
-        @NotNull
+        @NonNull
         public Fragment getItem(int i) {
             AdvancedLocatorFragment owner = this.owner.get();
             if (owner == null) {

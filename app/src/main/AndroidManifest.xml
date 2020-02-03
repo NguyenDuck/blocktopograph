@@ -96,6 +96,12 @@
             android:name=".UnsatisfiedLinkErrorActivity"
             android:label="@string/some_thing_went_wrong" />
 
+        <activity android:name=".test.VisualizationActivity" />
+        <activity
+            android:name=".BackupActivity"
+            android:label="@string/backup_amp_restore"
+            android:theme="@style/AppTheme.Dialog" />
+
         <meta-data
             android:name="android.support.VERSION"
             android:value="28.0.0"

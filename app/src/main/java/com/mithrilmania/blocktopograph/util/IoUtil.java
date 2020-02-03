@@ -7,9 +7,13 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+
 import com.mithrilmania.blocktopograph.Log;
 
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,59 +21,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-
 public class IoUtil {
-
-    /**
-     * Returns the size of a folder (total of contents) in number of bytes.
-     * Returns 0 if it doesn't exist.
-     *
-     * @param f folder to get size of.
-     * @return size of folder f in bytes.
-     */
-    public static long getFolderSize(File f) {
-        long size = 0;
-        if (f.isDirectory()) {
-            for (File file : f.listFiles()) {
-                size += getFolderSize(file);
-            }
-        } else {
-            size = f.length();
-        }
-        return size;
-    }
-
-    /**
-     * Simple helper function to get the size of a folder or file in text format,
-     *
-     * @param f file to return size of
-     * @return size, formatted with a "B", "MB, "GB" or "TB", precise to 2 decimals.
-     */
-    public static String getFileSizeInText(File f) {
-        long size = getFolderSize(f);
-        if (size < 1024) return size + " B";
-        double v = size / 1024.0;
-        String suffix = "KB";
-        if (v > 1024.0) {
-            v /= 1024.0;
-            if (v > 1024.0) {
-                v /= 1024.0;
-                if (v > 1024.0) {
-                    v /= 1024.0;
-                    suffix = "TB";//very high end android device here
-                } else suffix = "GB";
-            } else suffix = "MB";
-        }
-
-        return String.format(Locale.ENGLISH, "%.2f %s", v, suffix);
-
-    }
 
     /**
      * Extract file from app asset to file system.
@@ -101,84 +55,6 @@ public class IoUtil {
         } catch (Exception ignored) {
         }
         return ret;
-    }
-
-    /**
-     * Write string to a text file.
-     *
-     * @param file    Destination file.
-     * @param content String to be written.
-     * @return Success or not.
-     */
-    static public boolean writeTextFile(File file, String content) {
-        FileOutputStream fos = null;
-        boolean res = true;
-        try {
-            fos = new FileOutputStream(file);
-        } catch (Exception e) {
-            Log.d(McUtil.class, e);
-            return false;
-        }
-        try {
-            byte[] bytes = content.getBytes(Charset.defaultCharset());
-            fos.write(bytes);
-        } catch (Exception e) {
-            Log.d(McUtil.class, e);
-            res = false;
-        } finally {
-            try {
-                fos.close();
-            } catch (Exception ignored) {
-            }
-        }
-        return res;
-    }
-
-    static public boolean writeBinaryFile(File file, byte[] content) {
-        FileOutputStream fos = null;
-        boolean res = true;
-        try {
-            fos = new FileOutputStream(file);
-        } catch (Exception e) {
-            Log.d(McUtil.class, e);
-            return false;
-        }
-        try {
-            fos.write(content);
-        } catch (Exception e) {
-            Log.d(McUtil.class, e);
-            res = false;
-        } finally {
-            try {
-                fos.close();
-            } catch (Exception ignored) {
-            }
-        }
-        return res;
-    }
-
-    /**
-     * Read text file into String.
-     *
-     * @param txtFile File to be read.
-     * @return Read content. Null if failed.
-     */
-    @Nullable
-    public static String readTextFile(@NonNull File txtFile) {
-        StringBuilder text = new StringBuilder();
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(txtFile));
-            String line;
-            while ((line = br.readLine()) != null) {
-                text.append(line).append('\n');
-            }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return text.toString();
     }
 
     /**
@@ -234,7 +110,8 @@ public class IoUtil {
      * @return The available name, or null if failed too many times.
      */
     @Nullable
-    public static File getFileWithFirstAvailableName(@NonNull File parent, @NonNull String lhalf,
+    public static File getFileWithFirstAvailableName(@NonNull File parent, @NonNull String
+            lhalf,
                                                      @NonNull String rhalf, @NonNull String prefix,
                                                      @NonNull String suffix) {
         StringBuilder sb = new StringBuilder();
@@ -250,6 +127,50 @@ public class IoUtil {
             target = new File(parent, sb.toString());
         } while (target.exists());
         return target;
+    }
+
+    public static boolean writeTextFile(@NonNull File file, @NonNull String name) {
+        try {
+            FileUtils.writeStringToFile(file, name);
+            return true;
+        } catch (IOException ignored) {
+            return false;
+        }
+    }
+
+    public static boolean writeBinaryFile(@NonNull File file, @NonNull byte[] data) {
+        try {
+            FileUtils.writeByteArrayToFile(file, data);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Simple helper function to get the size of a folder or file in text format,
+     *
+     * @param size size
+     * @return size, formatted with a "B", "MB, "GB" or "TB", precise to 2 decimals.
+     */
+    @NonNull
+    public static String getFileSizeInText(long size) {
+        if (size < 1024) return size + " B";
+        double v = size / 1024.0;
+        String suffix = "KB";
+        if (v > 1024.0) {
+            v /= 1024.0;
+            if (v > 1024.0) {
+                v /= 1024.0;
+                if (v > 1024.0) {
+                    v /= 1024.0;
+                    suffix = "TB";//very high end android device here
+                } else suffix = "GB";
+            } else suffix = "MB";
+        }
+
+        return String.format(Locale.ENGLISH, "%.2f %s", v, suffix);
+
     }
 
     public enum Errno {
@@ -282,8 +203,8 @@ public class IoUtil {
      * @return The file the bitmap was saved to, null if failed.
      */
     @Nullable
-    public static File saveBitmap(@NotNull Bitmap bmp, @NotNull Bitmap.CompressFormat format,
-                                  int quality, @NotNull File dir, @NotNull String baseName,
+    public static File saveBitmap(@NonNull Bitmap bmp, @NonNull Bitmap.CompressFormat format,
+                                  int quality, @NonNull File dir, @NonNull String baseName,
                                   boolean autoRename) {
         String extension;
         if (!dir.exists()) {
@@ -323,5 +244,8 @@ public class IoUtil {
             }
             return null;
         }
+    }
+
+    public static void rubbish() {
     }
 }

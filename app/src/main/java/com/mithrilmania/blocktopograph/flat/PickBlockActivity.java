@@ -22,8 +22,6 @@ import com.mithrilmania.blocktopograph.databinding.DialogPickBlockBinding;
 import com.mithrilmania.blocktopograph.databinding.ItemPickBlockBinding;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,10 +140,10 @@ public final class PickBlockActivity extends AppCompatActivity {
 
         private final List<ListingBlock> mBlocks;
 
-        @NotNull
+        @NonNull
         private AssetManager assMan;
 
-        private MeowAdapter(@NotNull AssetManager assMan) {
+        private MeowAdapter(@NonNull AssetManager assMan) {
             mBlocks = new ArrayList<>(512);
             this.assMan = assMan;
         }

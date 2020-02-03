@@ -71,8 +71,6 @@ import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
 import com.qozix.tileview.detail.DetailLevelManager;
 import com.qozix.tileview.markers.MarkerLayout;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -361,7 +359,7 @@ public class MapFragment extends Fragment {
      * @param fragment pane fragment to be attached.
      */
     @UiThread
-    private void openFloatPane(@NotNull FloatPaneFragment fragment) {
+    private void openFloatPane(@NonNull FloatPaneFragment fragment) {
         FragmentManager fm = getChildFragmentManager();
         fragment.setOnCloseButtonClickListener(this::closeFloatPane);
         FragmentTransaction trans = fm.beginTransaction();
@@ -391,7 +389,7 @@ public class MapFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //TODO handle savedInstance...
 
@@ -749,7 +747,7 @@ public class MapFragment extends Fragment {
         return newMarker;
     }
 
-    private void doSelectionBasedEdit(@NotNull EditFunction func, @Nullable Bundle args) {
+    private void doSelectionBasedEdit(@NonNull EditFunction func, @Nullable Bundle args) {
         WorldActivityInterface worldActivityInterface = worldProvider.get();
         FragmentActivity activity = getActivity();
         if (worldActivityInterface == null || activity == null) return;
@@ -826,6 +824,8 @@ public class MapFragment extends Fragment {
 
         Activity act = getActivity();
         if (act == null) return;
+
+        TileEntity.loadIcons(act.getAssets());
 
         for (AbstractMarker abstractMarker : proceduralMarkers) {
             if (abstractMarker.equals(marker)) {
@@ -922,7 +922,7 @@ public class MapFragment extends Fragment {
      *
      * @param event long press event.
      */
-    private void onLongPressed(@NotNull MotionEvent event) {
+    private void onLongPressed(@NonNull MotionEvent event) {
         Dimension dimension = worldProvider.get().getDimension();
 
         // 1 chunk per tile on scale 1.0

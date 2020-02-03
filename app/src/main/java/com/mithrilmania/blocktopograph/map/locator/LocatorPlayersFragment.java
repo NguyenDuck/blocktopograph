@@ -6,6 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
@@ -15,15 +21,7 @@ import com.mithrilmania.blocktopograph.databinding.ItemLocatorPlayerBinding;
 import com.mithrilmania.blocktopograph.map.Player;
 import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.ref.WeakReference;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public final class LocatorPlayersFragment extends LocatorPageFragment {
 
@@ -36,7 +34,7 @@ public final class LocatorPlayersFragment extends LocatorPageFragment {
         return ret;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="backups"
+            type="com.mithrilmania.blocktopograph.backup.WorldBackups" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_can_leave_empty" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickBackup"
+                android:text="@string/create_new_backup" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/caption_existing_backups" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <CheckBox
+                android:id="@+id/cb_auto_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/auto_del_backups" />
+
+            <CheckBox
+                android:id="@+id/cb_auto_backup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/auto_make_backups" />
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

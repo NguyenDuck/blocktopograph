@@ -44,8 +44,6 @@ import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1028,7 +1026,7 @@ public class EditorFragment extends Fragment {
 
         public Tag parent, self;
 
-        public ChainTag(Tag parent, @NotNull Tag self) {
+        public ChainTag(Tag parent, @NonNull Tag self) {
             this.parent = parent;
             this.self = self;
         }

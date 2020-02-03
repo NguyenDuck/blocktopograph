@@ -8,9 +8,6 @@ import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
@@ -42,7 +39,7 @@ public abstract class Chunk {
         }
     }
 
-    public static Chunk createEmpty(@NotNull WorldData worldData, int chunkX, int chunkZ, Dimension dimension,
+    public static Chunk createEmpty(@NonNull WorldData worldData, int chunkX, int chunkZ, Dimension dimension,
                                     Version createOfVersion) {
         Chunk chunk;
         switch (createOfVersion) {
@@ -62,7 +59,7 @@ public abstract class Chunk {
         return chunk;
     }
 
-    public static Chunk create(@NotNull WorldData worldData, int chunkX, int chunkZ, Dimension dimension,
+    public static Chunk create(@NonNull WorldData worldData, int chunkX, int chunkZ, Dimension dimension,
                                boolean createIfMissing, Version createOfVersion) {
         Version version;
         try {
@@ -100,12 +97,12 @@ public abstract class Chunk {
         return mWorldData.get();
     }
 
-    @Contract(pure = true)
+
     public final boolean isVoid() {
         return mIsVoid;
     }
 
-    @Contract(pure = true)
+
     public final boolean isError() {
         return mIsError;
     }
@@ -124,13 +121,13 @@ public abstract class Chunk {
 
     abstract public int getGrassColor(int x, int z);
 
-    @NotNull
+    @NonNull
     abstract public Block getBlock(int x, int y, int z);
 
-    @NotNull
+    @NonNull
     abstract public Block getBlock(int x, int y, int z, int layer);
 
-    abstract public void setBlock(int x, int y, int z, int layer, @NotNull Block block);
+    abstract public void setBlock(int x, int y, int z, int layer, @NonNull Block block);
 
     abstract public int getBlockLightValue(int x, int y, int z);
 
@@ -167,12 +164,12 @@ public abstract class Chunk {
         mIsError = true;
     }
 
-    @Contract(pure = true)
+
     public final NBTChunkData getEntity() {
         return mEntity;
     }
 
-    @Contract(pure = true)
+
     public final NBTChunkData getBlockEntity() {
         return mTileEntity;
     }

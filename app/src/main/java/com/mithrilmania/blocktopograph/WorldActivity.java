@@ -29,6 +29,7 @@ import com.mithrilmania.blocktopograph.chunk.NBTChunkData;
 import com.mithrilmania.blocktopograph.databinding.ActivityWorldBinding;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.map.MapFragment;
+import com.mithrilmania.blocktopograph.map.TileEntity;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 import com.mithrilmania.blocktopograph.map.renderer.MapType;
 import com.mithrilmania.blocktopograph.nbt.EditableNBT;
@@ -407,6 +408,7 @@ public class WorldActivity extends AppCompatActivity
                 break;
             case (R.id.nav_map_opt_filter_markers):
                 //toggle the grid
+                TileEntity.loadIcons(getAssets());
                 this.mapFragment.openMarkerFilter();
                 break;
             case (R.id.nav_map_opt_toggle_markers):

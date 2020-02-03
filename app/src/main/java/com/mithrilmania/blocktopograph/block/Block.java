@@ -6,8 +6,6 @@ import androidx.annotation.Nullable;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -16,7 +14,7 @@ public class Block implements Serializable {
     @NonNull
     private BlockType blockType;
 
-    @NotNull
+    @NonNull
     private KnownBlockRepr legacyBlock;
 
     private ListingBlock listingBlock;
@@ -33,7 +31,7 @@ public class Block implements Serializable {
         KnownBlockRepr legacyBlock = BlockWithStatesToLegacyBlockMapper.getBestRepr(this);
         if (legacyBlock == null) {
             for (ListingBlock lb : ListingBlock.values()) {
-                if (lb.getIdentifier() == blockType.getName()) {
+                if (lb.getIdentifier().equals(blockType.getName())) {
                     listingBlock = lb;
                     break;
                 }
@@ -67,7 +65,7 @@ public class Block implements Serializable {
         return states.getChildTagByKey(key);
     }
 
-    @NotNull
+    @NonNull
     public KnownBlockRepr getLegacyBlock() {
         return legacyBlock;
     }

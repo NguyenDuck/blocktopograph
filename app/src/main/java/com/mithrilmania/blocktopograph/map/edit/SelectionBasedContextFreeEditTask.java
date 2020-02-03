@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.mithrilmania.blocktopograph.R;
@@ -16,32 +18,29 @@ import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 public class SelectionBasedContextFreeEditTask extends
         AsyncTask<EditTarget, ChunkBasedEditResult, EditResultCode> {
 
-    @NotNull
+    @NonNull
     private final EditFunction mFunction;
 
     @Nullable
     private Bundle mArgs;
 
-    @NotNull
+    @NonNull
     private final WeakReference<MapFragment> mOwner;
 
-    @NotNull
+    @NonNull
     private final BlockRegistry registry;
 
     private AlertDialog mWaitDialog;
 
     public SelectionBasedContextFreeEditTask(
-            @NotNull EditFunction func, @Nullable Bundle args, @NotNull MapFragment owner,
-            @NotNull BlockRegistry registry) {
+            @NonNull EditFunction func, @Nullable Bundle args, @NonNull MapFragment owner,
+            @NonNull BlockRegistry registry) {
         mFunction = func;
         mArgs = args;
         this.registry = registry;
@@ -92,7 +91,7 @@ public class SelectionBasedContextFreeEditTask extends
         return null;
     }
 
-    private EditResultCode doSnr(SnrConfig cfg, @NotNull EditTarget... editTargets) {
+    private EditResultCode doSnr(SnrConfig cfg, @NonNull EditTarget... editTargets) {
         SnrEdit edit = new SnrEdit(cfg);
         for (EditTarget editTarget : editTargets) {
             editTarget.setMaxError(Integer.MAX_VALUE);
@@ -101,7 +100,7 @@ public class SelectionBasedContextFreeEditTask extends
         return EditResultCode.SUCCESS;
     }
 
-    private EditResultCode doDchunk(@NotNull EditTarget... editTargets) {
+    private EditResultCode doDchunk(@NonNull EditTarget... editTargets) {
         DchunkEdit edit = new DchunkEdit();
         for (EditTarget editTarget : editTargets) {
             editTarget.setMaxError(Integer.MAX_VALUE);
@@ -110,8 +109,8 @@ public class SelectionBasedContextFreeEditTask extends
         return EditResultCode.SUCCESS;
     }
 
-    private EditResultCode doChBiome(@Nullable Biome from, @NotNull Biome to,
-                                     @NotNull EditTarget... editTargets) {
+    private EditResultCode doChBiome(@Nullable Biome from, @NonNull Biome to,
+                                     @NonNull EditTarget... editTargets) {
         ChBiomeEdit edit = new ChBiomeEdit(from, to);
         for (EditTarget editTarget : editTargets) {
             editTarget.setMaxError(Integer.MAX_VALUE);

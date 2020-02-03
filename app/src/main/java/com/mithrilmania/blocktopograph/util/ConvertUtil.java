@@ -1,6 +1,6 @@
 package com.mithrilmania.blocktopograph.util;
 
-import org.jetbrains.annotations.NotNull;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -95,13 +95,13 @@ public class ConvertUtil {
         return ret;
     }
 
-    @NotNull
-    public static String getLegalFileName(@NotNull String text) {
+    @NonNull
+    public static String getLegalFileName(@NonNull String text) {
         return text.replaceAll("[\\\\/:*?\"<>|.]", "_");
     }
 
     @Nullable
-    public static String guessPictureMimeFromExtension(@NotNull String extension, boolean inLower) {
+    public static String guessPictureMimeFromExtension(@NonNull String extension, boolean inLower) {
         // assert extension.length()>0;
         if (extension.charAt(0) == '.') extension = extension.substring(1);
         if (!inLower) extension = extension.toLowerCase();

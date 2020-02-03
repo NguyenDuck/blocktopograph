@@ -12,8 +12,6 @@ import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProvider;
 import com.mithrilmania.blocktopograph.util.NamedBitmapProviderHandle;
 
-import org.jetbrains.annotations.Contract;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -1255,17 +1253,17 @@ public enum KnownBlockRepr implements NamedBitmapProviderHandle, NamedBitmapProv
         return B_0_0_AIR;
     }
 
-    @Contract(pure = true)
+
     public int getRuntimeId() {
         return (id << 8) | subId;
     }
 
-    @Contract(pure = true)
+
     public String getIdentifier() {
         return identifier;
     }
 
-    @Contract(pure = true)
+
     public int getVal() {
         return subId;
     }

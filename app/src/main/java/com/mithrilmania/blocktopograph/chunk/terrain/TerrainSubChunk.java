@@ -9,9 +9,6 @@ import com.mithrilmania.blocktopograph.block.BlockRegistry;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
@@ -24,12 +21,12 @@ public abstract class TerrainSubChunk {
     boolean mHasBlockLight;
     boolean mIsError;
 
-    protected TerrainSubChunk(@NotNull BlockRegistry blockRegistry) {
+    protected TerrainSubChunk(@NonNull BlockRegistry blockRegistry) {
         mBlockRegistry = new WeakReference<>(blockRegistry);
     }
 
     @Nullable
-    public static TerrainSubChunk create(@NonNull byte[] rawData, @NotNull BlockRegistry blockRegistry) {
+    public static TerrainSubChunk create(@NonNull byte[] rawData, @NonNull BlockRegistry blockRegistry) {
         TerrainSubChunk subChunk;
         ByteBuffer byteBuffer = ByteBuffer.wrap(rawData);
         switch (rawData[0]) {
@@ -53,7 +50,7 @@ public abstract class TerrainSubChunk {
     }
 
     @Nullable
-    public static TerrainSubChunk createEmpty(int preferredVersion, @NotNull BlockRegistry blockRegistry) {
+    public static TerrainSubChunk createEmpty(int preferredVersion, @NonNull BlockRegistry blockRegistry) {
         TerrainSubChunk subChunk;
         switch (preferredVersion) {
             case 0:
@@ -86,10 +83,10 @@ public abstract class TerrainSubChunk {
         return mBlockRegistry.get().createBlock(knownBlock);
     }
 
-    @NotNull
+    @NonNull
     abstract public Block getBlock(int x, int y, int z, int layer);
 
-    abstract public void setBlock(int x, int y, int z, int layer, @NotNull Block block);
+    abstract public void setBlock(int x, int y, int z, int layer, @NonNull Block block);
 
     abstract public int getBlockLightValue(int x, int y, int z);
 
@@ -99,12 +96,12 @@ public abstract class TerrainSubChunk {
         return (((x << 4) | z) << 4) | y;
     }
 
-    @Contract(pure = true)
+
     public final boolean hasBlockLight() {
         return mHasBlockLight;
     }
 
-    @Contract(pure = true)
+
     public final boolean isError() {
         return mIsError;
     }

@@ -41,8 +41,6 @@ import com.mithrilmania.blocktopograph.map.OpenLongPressMenuHandler;
 import com.mithrilmania.blocktopograph.util.ConvertUtil;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 
 public final class PicerFragment extends DialogFragment {
@@ -60,7 +58,7 @@ public final class PicerFragment extends DialogFragment {
     GenerateThread mOngoingThread;
     private OpenLongPressMenuHandler mOpenLongPressMenuHandler;
 
-    public static PicerFragment create(@NotNull World world, @NotNull Dimension dimension,
+    public static PicerFragment create(@NonNull World world, @NonNull Dimension dimension,
                                        @Nullable Rect range, @Nullable OpenLongPressMenuHandler openLongPressMenuHandler) {
         PicerFragment ret = new PicerFragment();
         ret.mWorld = world;
@@ -70,13 +68,13 @@ public final class PicerFragment extends DialogFragment {
         return ret;
     }
 
-    private static boolean rangeCheck(@NotNull Rect rect) {
+    private static boolean rangeCheck(@NonNull Rect rect) {
         int width = rect.right - rect.left;
         int height = rect.bottom - rect.top;
         return width <= MAX_LENGTH && height <= MAX_LENGTH && width * height <= MAX_AREA;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_picer,
@@ -117,7 +115,7 @@ public final class PicerFragment extends DialogFragment {
     }
 
     @Override
-    public void onDismiss(@NotNull DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (mOngoingTask != null) mOngoingTask.cancel(true);
         if (mOngoingThread != null) mOngoingThread.cancel();
@@ -212,7 +210,7 @@ public final class PicerFragment extends DialogFragment {
     }
 
     @UiThread
-    private void onClickFinalButton(@NotNull View view) {
+    private void onClickFinalButton(@NonNull View view) {
         switch (stage) {
             case 1:
                 onClickGenerate();
@@ -224,7 +222,7 @@ public final class PicerFragment extends DialogFragment {
     }
 
     @UiThread
-    void onAnalyzeDone(@NotNull Rect rect) {
+    void onAnalyzeDone(@NonNull Rect rect) {
 
         Activity activity = getActivity();
         if (activity == null) return;
@@ -298,7 +296,7 @@ public final class PicerFragment extends DialogFragment {
     }
 
     @UiThread
-    private void onClickSave(@NotNull View view) {
+    private void onClickSave(@NonNull View view) {
         Object o = view.getTag();
         if (!(o instanceof Bitmap)) return;
         Bitmap bmp = (Bitmap) o;

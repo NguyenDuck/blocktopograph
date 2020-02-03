@@ -2,11 +2,11 @@ package com.mithrilmania.blocktopograph.map;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.util.math.DimensionVector3;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class Player {
 
@@ -21,14 +21,14 @@ public class Player {
         this.dbName = dbName;
     }
 
-    @NotNull
-    @Contract(" -> new")
+    @NonNull
+
     public static Player localPlayer() {
         return new Player(true, LOCAL_PLAYER_NAME);
     }
 
-    @NotNull
-    @Contract("_ -> new")
+    @NonNull
+
     public static Player networkPlayer(String dbName) {
         return new Player(false, dbName);
     }

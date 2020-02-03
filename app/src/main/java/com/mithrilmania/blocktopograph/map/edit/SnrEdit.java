@@ -1,9 +1,10 @@
 package com.mithrilmania.blocktopograph.map.edit;
 
+import androidx.annotation.NonNull;
+
 import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 
-import org.jetbrains.annotations.NotNull;
 
 public class SnrEdit implements EditTarget.RandomAccessEdit {
 
@@ -13,7 +14,7 @@ public class SnrEdit implements EditTarget.RandomAccessEdit {
     private Block b3;
     private Block b4;
 
-    SnrEdit(@NotNull SnrConfig cfg) {
+    SnrEdit(@NonNull SnrConfig cfg) {
         config = cfg;
         switch (cfg.searchMode) {
             case 1:

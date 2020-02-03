@@ -10,6 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
+
 import com.mithrilmania.blocktopograph.BiomeSelectDialog;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.databinding.FragChBiomeBinding;
@@ -17,16 +24,7 @@ import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.selection.SelectionMenuFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
-
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -45,12 +43,12 @@ public final class ChBiomeFragment extends DialogFragment {
         return fragment;
     }
 
-    private void onChangeForCheckedChanged(@NotNull RadioGroup group, @IdRes int checkedId) {
+    private void onChangeForCheckedChanged(@NonNull RadioGroup group, @IdRes int checkedId) {
         mBinding.biomeView.getRoot().setVisibility(
                 checkedId == R.id.biome_for_specific ? View.VISIBLE : View.GONE);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.frag_ch_biome, container, false);

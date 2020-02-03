@@ -5,22 +5,21 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.map.edit.RectEditTarget;
 import com.mithrilmania.blocktopograph.map.renderer.MapRenderer;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
 
 class GenerateThread extends Thread {
 
@@ -65,7 +64,7 @@ class GenerateThread extends Thread {
                         new ThreadPoolExecutor.CallerRunsPolicy());
 
         ThreadLocal<Paint> paintSub = new ThreadLocal<Paint>() {
-            @NotNull
+            @NonNull
             @Override
             protected Paint initialValue() {
                 return new Paint();

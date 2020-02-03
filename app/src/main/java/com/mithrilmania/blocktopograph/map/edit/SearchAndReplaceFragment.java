@@ -29,8 +29,6 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.tomergoldst.tooltips.ToolTip;
 import com.tomergoldst.tooltips.ToolTipsManager;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 
 import static android.app.Activity.RESULT_OK;
@@ -115,7 +113,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
         return root;
     }
 
-    private void onClickHelpMain(@NotNull View view) {
+    private void onClickHelpMain(@NonNull View view) {
         if (mToolTipsManager.findAndDismiss(view)) return;
         ToolTip.Builder builder = new ToolTip.Builder(
                 view.getContext(), view, mBinding.frameMain,
@@ -170,7 +168,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
         }
     }
 
-    private void recoverBlock(@NotNull IncludeBlockBinding item, @Nullable Serializable data) {
+    private void recoverBlock(@NonNull IncludeBlockBinding item, @Nullable Serializable data) {
         setBlockToItem(item, data instanceof ListingBlock ? (ListingBlock) data : ListingBlock.B_0_AIR);
     }
 
@@ -186,7 +184,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
         return registry.createBlock(listingBlock.getIdentifier());
     }
 
-    private void writeToBundle(@NotNull Bundle bundle) {
+    private void writeToBundle(@NonNull Bundle bundle) {
         SnrConfig cfg = new SnrConfig();
         cfg.searchMode = getSearchInCode();
         cfg.placeMode = getPlaceInCode();
@@ -215,7 +213,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
         bundle.putSerializable(CONFIG, cfg);
     }
 
-    private void onBlockItemClick(@NotNull View view) {
+    private void onBlockItemClick(@NonNull View view) {
         int req = REQUEST_CODE;
         int id = view.getId();
         for (int i = 0; i < REQ_OFFSET_IDS.length; i++) {
@@ -258,7 +256,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void setBlockToItem(@NotNull IncludeBlockBinding item, @NotNull ListingBlock block) {
+    private void setBlockToItem(@NonNull IncludeBlockBinding item, @NonNull ListingBlock block) {
         item.icon.setImageBitmap(block.getIcon(getResources().getAssets()));
         UiUtil.blendBlockColor(item.getRoot(), block);
         item.setBlock(block);
@@ -280,7 +278,7 @@ public class SearchAndReplaceFragment extends DialogFragment {
                 .create();
     }
 
-    private void onCheckedChanged(@NotNull NestedRadioGroupManager group, @IdRes int checkedId) {
+    private void onCheckedChanged(@NonNull NestedRadioGroupManager group, @IdRes int checkedId) {
         switch (checkedId) {
             case R.id.rb_search_both:
                 mBinding.frameSearchTwo.setVisibility(View.VISIBLE);

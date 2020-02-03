@@ -3,28 +3,29 @@ package com.mithrilmania.blocktopograph.map.edit;
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class RectEditTarget extends EditTarget {
 
-    @NotNull
+    @NonNull
     private final Rect mArea;
 
     private final int yLowest;
 
     private final int yHighest;
 
-    @NotNull
+    @NonNull
     private final Dimension dimension;
 
-    public RectEditTarget(@NotNull WorldData worldData, @NotNull Rect area, @NotNull Dimension dimension) {
+    public RectEditTarget(@NonNull WorldData worldData, @NonNull Rect area, @NonNull Dimension dimension) {
         super(true, worldData);
         mArea = new Rect(area);
         mArea.right--;
@@ -105,10 +106,9 @@ public class RectEditTarget extends EditTarget {
                                 }
                             } else {
 
-                                int h = yHighest;//supportHightMap ?
                                 //Math.min(yHighest, chunk.getHeightMapValue(innerX, innerZ) - 1)
                                 //: yHighest;
-                                for (int y = yLowest; y <= h; y++) {
+                                for (int y = yLowest; y <= yHighest; y++) {
                                     int result = randomAccessEdit.edit(chunk, innerX, y, innerZ);
                                     if (result != 0) {
                                         if (exceptionCount < 5 || exceptionCount > mMaxError) {

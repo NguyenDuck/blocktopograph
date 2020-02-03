@@ -17,8 +17,6 @@ import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.mithrilmania.blocktopograph.util.LittleEndianOutputStream;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,14 +42,14 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     // There could be multiple BlockStorage let's read the first two.
     private volatile BlockStorage[] mStorages;
 
-    V1d2d13TerrainSubChunk(@NotNull BlockRegistry blockRegistry) {
+    V1d2d13TerrainSubChunk(@NonNull BlockRegistry blockRegistry) {
         super(blockRegistry);
         mStorages = new BlockStorage[2];
         mIsDualStorageSupported = false;
         createEmptyBlockStorage(0);
     }
 
-    V1d2d13TerrainSubChunk(@NotNull ByteBuffer raw, @NotNull BlockRegistry blockRegistry) {
+    V1d2d13TerrainSubChunk(@NonNull ByteBuffer raw, @NonNull BlockRegistry blockRegistry) {
         super(blockRegistry);
 
         raw.order(ByteOrder.LITTLE_ENDIAN);
@@ -109,7 +107,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     }
 
     private boolean setBlockIfSpace(
-            int x, int y, int z, @NotNull BlockStorage storage, @NotNull Block block) {
+            int x, int y, int z, @NonNull BlockStorage storage, @NonNull Block block) {
         int code = -1;
 
         // If in palette.
@@ -153,7 +151,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         return true;
     }
 
-    private void writeStorage(@NotNull BlockStorage storage, @NotNull LittleEndianOutputStream stream) throws IOException {
+    private void writeStorage(@NonNull BlockStorage storage, @NonNull LittleEndianOutputStream stream) throws IOException {
 
         // Code length.
         stream.write(storage.blockCodeLenth << 1);
@@ -201,7 +199,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 //        return storage.palette.get(ind).tag;
 //    }
 
-    private void loadBlockStorage(@NotNull ByteBuffer raw, int which) throws IOException {
+    private void loadBlockStorage(@NonNull ByteBuffer raw, int which) throws IOException {
 
         BlockStorage storage = new BlockStorage();
         mStorages[which] = storage;
@@ -273,7 +271,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         raw.position(raw.position() + nis.getReadCount());
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Block getBlock(int x, int y, int z, int layer) {
 
@@ -299,7 +297,7 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     }
 
     @Override
-    public void setBlock(int x, int y, int z, int layer, @NotNull Block block) {
+    public void setBlock(int x, int y, int z, int layer, @NonNull Block block) {
 
         // Has error or not supported.
         if (mIsError || (layer > 0 && !mIsDualStorageSupported)) return;

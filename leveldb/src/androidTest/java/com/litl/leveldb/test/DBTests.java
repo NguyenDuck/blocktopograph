@@ -1,15 +1,15 @@
 package com.litl.leveldb.test;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-
 import android.test.AndroidTestCase;
 
 import com.litl.leveldb.DB;
 import com.litl.leveldb.Iterator;
 import com.litl.leveldb.WriteBatch;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class DBTests extends AndroidTestCase {
     private File mPath;
@@ -43,11 +43,11 @@ public class DBTests extends AndroidTestCase {
         mDb.put(bytes("bye"), bytes("moon"));
 
         byte[] val = mDb.get(bytes("hello"));
-        assertNotNull(val);
+        assertNonNull(val);
         assertTrue(Arrays.equals(val, bytes("world")));
 
         val = mDb.get(bytes("bye"));
-        assertNotNull(val);
+        assertNonNull(val);
         assertTrue(Arrays.equals(val, bytes("moon")));
 
         val = mDb.get(bytes("boo"));
@@ -60,7 +60,7 @@ public class DBTests extends AndroidTestCase {
         // Search for "hello"
         bb.position(4).limit(bb.position() + 5);
         val = mDb.get(bb);
-        assertNotNull(val);
+        assertNonNull(val);
         assertTrue(Arrays.equals(val, bytes("world")));
 
         // Search for "boo"

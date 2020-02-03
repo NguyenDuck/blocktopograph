@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import androidx.annotation.NonNull;
+
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
@@ -12,13 +14,11 @@ import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
-import org.jetbrains.annotations.NotNull;
-
 
 public class SatelliteRenderer implements MapRenderer {
 
     //calculate color of one column
-    static int getColumnColour(@NotNull Chunk chunk, int x, int y, int z, int heightW, int heightN) throws Version.VersionException {
+    static int getColumnColour(@NonNull Chunk chunk, int x, int y, int z, int heightW, int heightN) throws Version.VersionException {
         float a = 1f;
         float r = 0f;
         float g = 0f;

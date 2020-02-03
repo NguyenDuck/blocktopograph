@@ -6,8 +6,6 @@ import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public enum Version {
 
@@ -94,8 +92,8 @@ public enum Version {
         }
     }
 
-    @NotNull
-    @Contract(pure = true)
+    @NonNull
+
     @Override
     public String toString() {
         return "[MCPE version \"" + displayName + "\" (version-code: " + id + ")]";
@@ -103,7 +101,7 @@ public enum Version {
 
     public static class VersionException extends Exception {
 
-        VersionException(String msg, @NotNull Version version) {
+        VersionException(String msg, @NonNull Version version) {
             super(msg + " " + version.toString());
         }
     }

@@ -2,6 +2,7 @@ package com.mithrilmania.blocktopograph.chunk;
 
 import android.graphics.Color;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.mithrilmania.blocktopograph.WorldData;
@@ -12,8 +13,6 @@ import com.mithrilmania.blocktopograph.chunk.terrain.V1d2d13TerrainSubChunk;
 import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.util.Noise;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -47,7 +46,8 @@ public final class BedrockChunk extends Chunk {
     private void load2dData(boolean createIfMissing) {
         if (data2D == null) {
             try {
-                byte[] rawData = mWorldData.get().getChunkData(mChunkX, mChunkZ, ChunkTag.DATA_2D, mDimension, (byte) 0, false);
+                byte[] rawData = mWorldData.get().getChunkData(
+                        mChunkX, mChunkZ, ChunkTag.DATA_2D, mDimension, (byte) 0, false);
                 if (rawData == null) {
                     if (createIfMissing) {
                         this.data2D = ByteBuffer.allocate(0x300);
@@ -170,13 +170,13 @@ public final class BedrockChunk extends Chunk {
         return Color.rgb(r, g, b);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Block getBlock(int x, int y, int z) {
         return getBlock(x, y, z, 0);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Block getBlock(int x, int y, int z, int layer) {
         if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
@@ -188,7 +188,7 @@ public final class BedrockChunk extends Chunk {
     }
 
     @Override
-    public void setBlock(int x, int y, int z, int layer, @NotNull Block block) {
+    public void setBlock(int x, int y, int z, int layer, @NonNull Block block) {
         if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
             return;
         int which = y >> 4;
@@ -198,25 +198,23 @@ public final class BedrockChunk extends Chunk {
         mDirtyList[which] = true;
         KnownBlockRepr repr = block.getLegacyBlock();
 
-        if (repr != null) {
-            // Height increased.
-            if (repr != KnownBlockRepr.B_0_0_AIR && getHeightMapValue(x, z) < y) {
-                mIs2dDirty = true;
-                setHeightMapValue(x, z, (short) (y + 1));
-                // Roof removed.
-            } else if (repr == KnownBlockRepr.B_0_0_AIR && getHeightMapValue(x, z) == y) {
-                mIs2dDirty = true;
-                int height = 0;
-                for (int h = y - 1; h >= 0; h--) {
-                    Block blockAtHeight = getBlock(x, h, z);
-                    KnownBlockRepr reprAtHeight = blockAtHeight.getLegacyBlock();
-                    if (reprAtHeight != null && reprAtHeight != KnownBlockRepr.B_0_0_AIR) {
-                        height = h + 1;
-                        break;
-                    }
+        // Height increased.
+        if (repr != KnownBlockRepr.B_0_0_AIR && getHeightMapValue(x, z) < y) {
+            mIs2dDirty = true;
+            setHeightMapValue(x, z, (short) (y + 1));
+            // Roof removed.
+        } else if (repr == KnownBlockRepr.B_0_0_AIR && getHeightMapValue(x, z) == y) {
+            mIs2dDirty = true;
+            int height = 0;
+            for (int h = y - 1; h >= 0; h--) {
+                Block blockAtHeight = getBlock(x, h, z);
+                KnownBlockRepr reprAtHeight = blockAtHeight.getLegacyBlock();
+                if (reprAtHeight != KnownBlockRepr.B_0_0_AIR) {
+                    height = h + 1;
+                    break;
                 }
-                setHeightMapValue(x, z, (short) height);
             }
+            setHeightMapValue(x, z, (short) height);
         }
     }
 
@@ -249,7 +247,7 @@ public final class BedrockChunk extends Chunk {
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
                 Block block = subChunk.getBlock(x, innerY, z, 0);
                 KnownBlockRepr repr = block.getLegacyBlock();
-                if (repr != null && repr != KnownBlockRepr.B_0_0_AIR)
+                if (repr != KnownBlockRepr.B_0_0_AIR)
                     return (which << 4) | innerY;
             }
         }

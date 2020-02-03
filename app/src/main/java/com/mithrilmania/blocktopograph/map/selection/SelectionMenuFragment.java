@@ -29,8 +29,6 @@ import com.mithrilmania.blocktopograph.map.edit.EditFunction;
 import com.mithrilmania.blocktopograph.map.edit.SearchAndReplaceFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.ref.WeakReference;
 
 public class SelectionMenuFragment extends FloatPaneFragment {
@@ -38,7 +36,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
     public static final String TAG_SNR = "Snr";
     public static final String TAG_CHBIOME = "Chbiome";
 
-    @NotNull
+    @NonNull
     private final Rect mSelection = new Rect();
     private FragSelMenuBinding mBinding;
     @Nullable
@@ -49,7 +47,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
     private BlockRegistry registry;
 
     public static SelectionMenuFragment newInstance(
-            @NotNull Rect initial, @NotNull BlockRegistry registry, @NotNull EditFunctionEntry editFunctionEntry) {
+            @NonNull Rect initial, @NonNull BlockRegistry registry, @NonNull EditFunctionEntry editFunctionEntry) {
         SelectionMenuFragment fragment = new SelectionMenuFragment();
         fragment.mSelection.set(initial);
         fragment.registry = registry;
@@ -57,7 +55,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         return fragment;
     }
 
-    private static boolean isSelectionChunkAligned(@NotNull Rect selection) {
+    private static boolean isSelectionChunkAligned(@NonNull Rect selection) {
         return (selection.left & 0xf) == 0 && (selection.right & 0xf) == 0
                 && (selection.top & 0xf) == 0 && (selection.bottom & 0xf) == 0;
     }
@@ -115,7 +113,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         }
     }
 
-    private void onChooseLampshade(@NotNull View view) {
+    private void onChooseLampshade(@NonNull View view) {
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(view.getContext(), R.style.AppTheme))
                 .setView(R.layout.dialog_lampshade)
                 .setTitle(R.string.map_edit_func_lampshade)
@@ -161,7 +159,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
         mEditFunctionEntry.invokeEditFunction(EditFunction.PICER, null);
     }
 
-    @NotNull
+    @NonNull
     private FragmentManager getMeowFragmentManager() {
         FragmentActivity activity = getActivity();
         FragmentManager fragmentManager = null;
@@ -189,7 +187,7 @@ public class SelectionMenuFragment extends FloatPaneFragment {
     }
 
     public interface EditFunctionEntry {
-        void invokeEditFunction(@NotNull EditFunction func, @Nullable Bundle args);
+        void invokeEditFunction(@NonNull EditFunction func, @Nullable Bundle args);
     }
 
     private class MeowWatcher implements TextWatcher {

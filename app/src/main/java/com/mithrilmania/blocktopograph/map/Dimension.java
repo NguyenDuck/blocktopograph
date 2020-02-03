@@ -6,8 +6,6 @@ import androidx.annotation.StringRes;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.map.renderer.MapType;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +33,7 @@ public enum Dimension {
     }
 
     @StringRes
-    @Contract(pure = true)
+
     public int getName() {
         switch (this) {
             case OVERWORLD:

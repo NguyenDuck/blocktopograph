@@ -1,20 +1,21 @@
 package com.mithrilmania.blocktopograph.map.edit;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.map.Biome;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ChBiomeEdit implements EditTarget.RandomAccessEdit {
 
     @Nullable
     private Biome mFrom;
 
-    @NotNull
+    @NonNull
     private Biome mTo;
 
-    ChBiomeEdit(@Nullable Biome fromBiome, @NotNull Biome toBiome) {
+    ChBiomeEdit(@Nullable Biome fromBiome, @NonNull Biome toBiome) {
         mFrom = fromBiome;
         mTo = toBiome;
     }

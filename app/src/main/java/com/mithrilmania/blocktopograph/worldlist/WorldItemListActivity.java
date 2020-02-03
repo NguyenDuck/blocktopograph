@@ -21,22 +21,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.mithrilmania.blocktopograph.CreateWorldActivity;
-import com.mithrilmania.blocktopograph.Log;
-import com.mithrilmania.blocktopograph.R;
-import com.mithrilmania.blocktopograph.World;
-import com.mithrilmania.blocktopograph.util.IoUtil;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -44,6 +28,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.mithrilmania.blocktopograph.CreateWorldActivity;
+import com.mithrilmania.blocktopograph.Log;
+import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.World;
+import com.mithrilmania.blocktopograph.backup.WorldBackups;
+import com.mithrilmania.blocktopograph.util.IoUtil;
+
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class WorldItemListActivity extends AppCompatActivity {
 
@@ -286,7 +288,7 @@ public class WorldItemListActivity extends AppCompatActivity {
                         } else {
 
                             try {
-                                World world = new World(worldFolder, null);
+                                World world = new World(worldFolder, null, WorldItemListActivity.this);
 
                                 if (mTwoPane) {
                                     Bundle arguments = new Bundle();
@@ -437,16 +439,14 @@ public class WorldItemListActivity extends AppCompatActivity {
 
             for (int i = 0, saveFoldersSize = saveFolders.size(); i < saveFoldersSize; i++) {
                 File dir = saveFolders.get(i);
-                File[] files = dir.listFiles(new FileFilter() {
-                    @Override
-                    public boolean accept(File file) {
-                        if (!file.isDirectory()) return false;
-                        return new File(file, "level.dat").exists();
-                    }
+                File[] files = dir.listFiles(file -> {
+                    if (!file.isDirectory()) return false;
+                    return (new File(file, "level.dat").exists()
+                            || new File(file, WorldBackups.BTG_BACKUPS).exists());
                 });
                 if (files != null) for (File f : files) {
                     try {
-                        mWorlds.add(new World(f, marks.get(i)));
+                        mWorlds.add(new World(f, marks.get(i), WorldItemListActivity.this));
                     } catch (World.WorldLoadException e) {
                         Log.d(this, e);
                     }
@@ -496,7 +496,7 @@ public class WorldItemListActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             holder.mWorld = mWorlds.get(position);
             holder.mWorldNameView.setText(holder.mWorld.getWorldDisplayName());
-            holder.mWorldSize.setText(IoUtil.getFileSizeInText(holder.mWorld.worldFolder));
+            holder.mWorldSize.setText(IoUtil.getFileSizeInText(FileUtils.sizeOf(holder.mWorld.worldFolder)));
             holder.mWorldGamemode.setText(WorldListUtil.getWorldGamemodeText(WorldItemListActivity.this, holder.mWorld));
             holder.mWorldLastPlayed.setText(WorldListUtil.getLastPlayedText(WorldItemListActivity.this, holder.mWorld));
             holder.mWorldPath.setText(holder.mWorld.worldFolder.getName());

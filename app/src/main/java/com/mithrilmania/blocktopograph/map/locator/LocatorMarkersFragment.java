@@ -7,6 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
@@ -14,16 +20,8 @@ import com.mithrilmania.blocktopograph.databinding.FragLocatorPlayersBinding;
 import com.mithrilmania.blocktopograph.databinding.ItemLocatorMarkerBinding;
 import com.mithrilmania.blocktopograph.map.marker.AbstractMarker;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.ref.WeakReference;
 import java.util.Collection;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public final class LocatorMarkersFragment extends LocatorPageFragment {
 
@@ -36,7 +34,7 @@ public final class LocatorMarkersFragment extends LocatorPageFragment {
         return ret;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = DataBindingUtil.inflate(
@@ -47,13 +45,13 @@ public final class LocatorMarkersFragment extends LocatorPageFragment {
 
     private static class MarkersAdapter extends RecyclerView.Adapter<MarkersAdapter.MeowHolder> {
 
-        @NotNull
+        @NonNull
         private final WeakReference<LocatorPageFragment> owner;
 
-        @NotNull
+        @NonNull
         private final AbstractMarker[] markers;
 
-        MarkersAdapter(@NotNull WeakReference<LocatorPageFragment> owner, @NotNull AbstractMarker[] markers) {
+        MarkersAdapter(@NonNull WeakReference<LocatorPageFragment> owner, @NonNull AbstractMarker[] markers) {
             this.owner = owner;
             this.markers = markers;
         }

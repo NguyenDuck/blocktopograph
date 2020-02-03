@@ -44,8 +44,6 @@ import com.mithrilmania.blocktopograph.util.UiUtil;
 import com.tomergoldst.tooltips.ToolTip;
 import com.tomergoldst.tooltips.ToolTipsManager;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +93,7 @@ public final class CreateWorldActivity extends AppCompatActivity {
         startActivityForResult(new Intent(this, BiomeSelectDialog.class), REQUEST_CODE_PICK_BIOME);
     }
 
-    private void setBiomeToView(@NotNull Biome biome) {
+    private void setBiomeToView(@NonNull Biome biome) {
         UiUtil.blendBlockColor(mBinding.biomeView.root, biome);
         mBinding.biomeView.setBiome(biome);
     }

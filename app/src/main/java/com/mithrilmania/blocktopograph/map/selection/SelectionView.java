@@ -14,19 +14,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.map.MCTileProvider;
 import com.mithrilmania.blocktopograph.map.MapTileView;
 import com.mithrilmania.blocktopograph.util.ConvertUtil;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
-import org.jetbrains.annotations.Contract;
-
 import java.lang.ref.WeakReference;
-
-import androidx.annotation.IdRes;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 public class SelectionView extends FrameLayout {
 
@@ -529,7 +527,7 @@ public class SelectionView extends FrameLayout {
         return mHasSelection;
     }
 
-    @Contract(pure = true)
+
     public Rect getSelection() {
         return new Rect(mSelectionRect);
     }

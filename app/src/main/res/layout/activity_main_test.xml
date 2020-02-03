@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 fab:fab_label="Fix leveldb" />
 
-            <com.github.clans.fab.FloatingActionButton
+            <!--com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_menu_generate_all_blocks"
                 style="@style/MenuButtonsStyle"
                 android:layout_width="wrap_content"
@@ -149,7 +149,7 @@
                 style="@style/MenuButtonsStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_label="Gen Code 4 All Blocks' State" />
+                fab:fab_label="Gen Code 4 All Blocks' State" /-->
 
         </com.github.clans.fab.FloatingActionMenu>
 

@@ -1,7 +1,11 @@
 package com.mithrilmania.blocktopograph;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.SparseIntArray;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.litl.leveldb.Iterator;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
@@ -23,9 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class World implements Serializable {
 
@@ -55,7 +56,7 @@ public class World implements Serializable {
 
     private boolean mHaveBackgroundJob;
 
-    public World(File worldFolder, String mark) throws WorldLoadException {
+    public World(File worldFolder, String mark, @NonNull Context context) throws WorldLoadException {
 
         if (!worldFolder.exists())
             throw new WorldLoadException("Error: '" + worldFolder.getPath() + "' does not exist!");
@@ -66,14 +67,13 @@ public class World implements Serializable {
 
         // check for a custom world name
         File levelNameTxt = new File(this.worldFolder, "levelname.txt");
+        this.levelFile = new File(this.worldFolder, "level.dat");
         if (levelNameTxt.exists())
             worldName = IoUtil.readTextFileFirstLine(levelNameTxt);// new way of naming worlds
-        else worldName = this.worldFolder.getName();// legacy way of naming worlds
+        else if (levelFile.exists())
+            worldName = this.worldFolder.getName();// legacy way of naming worlds
+        else worldName = context.getString(R.string.world_name_broken);
 
-
-        this.levelFile = new File(this.worldFolder, "level.dat");
-        if (!levelFile.exists())
-            throw new WorldLoadException("Error: Level-file: '" + levelFile.getPath() + "' does not exist!");
 
     }
 
@@ -91,7 +91,6 @@ public class World implements Serializable {
         if (worldName == null) return null;
         //return worldname, without special color codes
         // (character prefixed by the section-sign character)
-        // Short quick regex, shouldn't affect performance too much
         return worldName.replaceAll("\u00A7.", "");
     }
 

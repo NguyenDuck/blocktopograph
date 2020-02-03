@@ -3,15 +3,14 @@ package com.mithrilmania.blocktopograph;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import androidx.annotation.NonNull;
 import io.fabric.sdk.android.Fabric;
 
 public class Log {
@@ -36,12 +35,12 @@ public class Log {
         return clazz.getSimpleName() + ": " + msg;
     }
 
-    public static void enableFirebaseAnalytics(@NotNull Context context) {
+    public static void enableFirebaseAnalytics(@NonNull Context context) {
         getFirebaseAnalytics(context).setAnalyticsCollectionEnabled(true);
         mIsFirebaseAnalyticsEnabled = true;
     }
 
-    public static void enableCrashlytics(@NotNull Context context) {
+    public static void enableCrashlytics(@NonNull Context context) {
         if (!BuildConfig.DEBUG) {
             Fabric.with(context, new Crashlytics());
             mIsCrashlyticsEnabled = true;

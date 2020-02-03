@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.litl.leveldb.DB;
+import com.litl.leveldb.Iterator;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
@@ -35,14 +37,81 @@ import com.mithrilmania.blocktopograph.util.McUtil;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public final class MainTestActivity extends AppCompatActivity {
 
     private ActivityMainTestBinding mBinding;
     private World mWorld;
+
+    /**
+     * https://stackoverflow.com/a/25659067/9399618
+     *
+     * @param data    123
+     * @param pattern 123
+     * @return 123
+     */
+    public static boolean arrContains(byte[] data, byte[] pattern, int[] failure) {
+
+        int j = 0;
+
+        for (byte datum : data) {
+            while (j > 0 && pattern[j] != datum) {
+                j = failure[j - 1];
+            }
+            if (pattern[j] == datum) {
+                j++;
+            }
+            if (j == pattern.length) {
+                return true;//i - pattern.length + 1;
+            }
+        }
+        return false;//-1;
+    }
+
+    /**
+     * Computes the failure function using a boot-strapping process,
+     * where the pattern is matched against itself.
+     */
+    private static int[] computeFailure(byte[] pattern) {
+        int[] failure = new int[pattern.length];
+
+        int j = 0;
+        for (int i = 1; i < pattern.length; i++) {
+            while (j > 0 && pattern[j] != pattern[i]) {
+                j = failure[j - 1];
+            }
+            if (pattern[j] == pattern[i]) {
+                j++;
+            }
+            failure[i] = j;
+        }
+
+        return failure;
+    }
+
+    private byte[] getDbKey() {
+        byte[] key;
+        String text = mBinding.searchBar.getText().toString();
+        switch (mBinding.rgForm.getCheckedRadioButtonId()) {
+            case R.id.rb_form_text:
+                key = text.getBytes(NBTConstants.CHARSET);
+                break;
+            case R.id.rb_form_hex: {
+                key = ConvertUtil.hexStringToBytes(text);
+                break;
+            }
+            default:
+                key = null;
+        }
+        return key;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,37 +144,23 @@ public final class MainTestActivity extends AppCompatActivity {
         File file = Environment.getExternalStorageDirectory();
         file = McUtil.getBtgTestDir(file);
         mBinding.fabMenuFixLdb.setOnClickListener(this::onClickFixLdb);
-        mBinding.fabMenuGenerateAllBlocks.setOnClickListener(this::onClickGenAllBlocks);
-        mBinding.fabMenuAnalyzeAllBlocks.setOnClickListener(this::onClickAnaAllBlocks);
-        mBinding.fabMenuGenCodeAllBlocksState.setOnClickListener(this::onClickGenCodeAllBlocksState);
+        //mBinding.fabMenuGenerateAllBlocks.setOnClickListener(this::onClickGenAllBlocks);
+        //mBinding.fabMenuAnalyzeAllBlocks.setOnClickListener(this::onClickAnaAllBlocks);
+        //mBinding.fabMenuGenCodeAllBlocksState.setOnClickListener(this::onClickGenCodeAllBlocksState);
         mBinding.setPath(file.getPath());
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(World.ARG_WORLD_SERIALIZED, mWorld);
     }
 
-    private byte[] getDbKey() {
-        byte[] key;
-        String text = mBinding.searchBar.getText().toString();
-        switch (mBinding.rgForm.getCheckedRadioButtonId()) {
-            case R.id.rb_form_text:
-                key = text.getBytes(NBTConstants.CHARSET);
-                break;
-            case R.id.rb_form_hex: {
-                key = ConvertUtil.hexStringToBytes(text);
-                break;
-            }
-            default:
-                key = null;
-        }
-        return key;
+    private byte[] readItem() {
+        return readItem(getDbKey());
     }
 
-    private byte[] readItem() {
-        byte[] key = getDbKey();
+    private byte[] readItem(byte[] key) {
         byte[] ret;
         WorldData wdata = mWorld.getWorldData();
         try {
@@ -125,9 +180,74 @@ public final class MainTestActivity extends AppCompatActivity {
     }
 
     public void onClickSearch(View view) {
+        byte[] pattern = getDbKey();
+        WorldData wdata = mWorld.getWorldData();
+        try {
+            wdata.openDB();
+            List<String> keys = new ArrayList<>();
+            List<Boolean> keyTypeText = new ArrayList<>();
+            List<byte[]> originalKeys = new ArrayList<>();
+            Iterator iter = wdata.db.iterator();
+            int[] failure = computeFailure(pattern);
+            for (iter.seekToFirst(); iter.isValid(); iter.next()) {
+                byte[] key = iter.getKey();
+                if (arrContains(key, pattern, failure)) {
+                    String str = null;
+                    boolean isText = false;
+                    if (mBinding.rgForm.getCheckedRadioButtonId() == R.id.rb_form_text) {
+                        try {
+                            str = new String(key, NBTConstants.CHARSET);
+                            isText = true;
+                        } catch (Exception ignored) {
+                        }
+                    }
+                    if (str == null)
+                        str = ConvertUtil.bytesToHexStr(key);
+                    keys.add(str);
+                    originalKeys.add(key);
+                    keyTypeText.add(isText);
+                }
+            }
+            iter.close();
+            wdata.closeDB();
+            String[] keyArr = new String[keys.size()];
+            keys.toArray(keyArr);
+            AlertDialog dia = new AlertDialog.Builder(this).setItems(keyArr, (di, i) -> {
+                mBinding.searchBar.setText(keyArr[i]);
+                if (keyTypeText.get(i))
+                    mBinding.rbFormText.setChecked(true);
+                else
+                    mBinding.rbFormHex.setChecked(true);
+                showData(readItem(originalKeys.get(i)));
+            }).create();
+            dia.show();
+        } catch (Exception e) {
+            Log.d(this, e);
+            printStackTraceInDialog(e);
+        }
+        try {
+            wdata.closeDB();
+        } catch (WorldData.WorldDBException e) {
+            Log.d(this, e);
+        }
+    }
+
+    private void showData(byte[] data) {
+        new AlertDialog.Builder(this)
+                .setMessage(ConvertUtil.bytesToHexStr(data))
+                .show();
+    }
+
+    private void printStackTraceInDialog(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        pw.close();
+        new AlertDialog.Builder(this).setMessage(sw.toString()).create().show();
     }
 
     public void onClickOpen(View view) {
+        showData(readItem());
     }
 
     public void onClickExport(View view) {
