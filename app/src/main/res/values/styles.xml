@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">?android:attr/textColor</item>
         <item name="android:buttonStyle">@style/AppButtonStyle</item>
+        <item name="imageButtonStyle">@style/AppImageButtonStyle</item>
         <item name="buttonBarButtonStyle">@style/AppBarButtonStyle</item>
     </style>
 
@@ -32,14 +33,12 @@
     </style>
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <!-- Customize your theme here. -->
-        <!--item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item-->
         <item name="android:windowCloseOnTouchOutside">false</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
+
+    <style name="AppTheme.FlexDialog" parent="AppTheme" />
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -77,6 +76,13 @@
     <style name="AppButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/sel_wid_mcbtn_bg</item>
         <item name="android:textColor">#fff</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="AppImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/sel_wid_mcbtn_bg</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:layout_margin">5dp</item>
     </style>
 
     <style name="AppBarButtonStyle" parent="Widget.AppCompat.Button.Borderless">

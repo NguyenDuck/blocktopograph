@@ -164,10 +164,10 @@ public class MapFragment extends Fragment {
         FragmentActivity activity = getActivity();
         if (activity == null) return;
 
-        Toast toast = new Toast(activity);
-        toast.setView(getLayoutInflater().inflate(R.layout.toast_warn, (ViewGroup) activity.getWindow().getDecorView(), false));
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.show();
+//        Toast toast = new Toast(activity);
+//        toast.setView(getLayoutInflater().inflate(R.layout.toast_warn, (ViewGroup) activity.getWindow().getDecorView(), false));
+//        toast.setDuration(Toast.LENGTH_LONG);
+//        toast.show();
     }
 
     public void closeChunks() {

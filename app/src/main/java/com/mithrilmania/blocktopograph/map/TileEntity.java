@@ -23,6 +23,9 @@ public enum TileEntity implements NamedBitmapProviderHandle, NamedBitmapProvider
     BEACON(5, "Beacon", "Beacon", ListingBlock.B_138_BEACON);
 
 
+    private static final Map<String, TileEntity> tileEntityMap;
+    private static final Map<Integer, TileEntity> tileEntityByID;
+
     public final int id;
     public final String displayName, dataName;
 
@@ -65,9 +68,6 @@ public enum TileEntity implements NamedBitmapProviderHandle, NamedBitmapProvider
     public String getBitmapDataName() {
         return this.dataName;
     }
-
-    private static final Map<String, TileEntity> tileEntityMap;
-    private static final Map<Integer, TileEntity> tileEntityByID;
 
     @Override
     public Bitmap getBitmap() {

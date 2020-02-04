@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.FlexDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:buttonStyle">@style/AppButtonStyle</item>
+        <item name="imageButtonStyle">@style/AppImageButtonStyle</item>
+        <item name="buttonBarButtonStyle">@style/AppBarButtonStyle</item>
+    </style>
+
+</resources>

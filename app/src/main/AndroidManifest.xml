@@ -72,7 +72,11 @@
         <activity
             android:name=".CreateWorldActivity"
             android:label="@string/create_world_title"
-            android:theme="@style/AppTheme.Dialog" />
+            android:theme="@style/AppTheme.FlexDialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mithrilmania.blocktopograph.worldlist.WorldItemListActivity" />
+        </activity>
 
         <activity
             android:name=".flat.EditLayerDialog"
@@ -100,7 +104,11 @@
         <activity
             android:name=".BackupActivity"
             android:label="@string/backup_amp_restore"
-            android:theme="@style/AppTheme.Dialog" />
+            android:theme="@style/AppTheme.FlexDialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mithrilmania.blocktopograph.WorldActivity" />
+        </activity>
 
         <meta-data
             android:name="android.support.VERSION"

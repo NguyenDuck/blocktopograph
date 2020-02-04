@@ -19,23 +19,19 @@ public class SatelliteRenderer implements MapRenderer {
 
     //calculate color of one column
     static int getColumnColour(@NonNull Chunk chunk, int x, int y, int z, int heightW, int heightN) throws Version.VersionException {
-        float a = 1f;
-        float r = 0f;
-        float g = 0f;
-        float b = 0f;
+        float alphaRemain = 1f;
+        float finalR = 0f;
+        float finalG = 0f;
+        float finalB = 0f;
 
         // extract colour components as normalized doubles, from ARGB format
-        int colint = chunk.getGrassColor(x, z);
-        float biomeR = (float) Color.red(colint) / 255f;
-        float biomeG = (float) Color.green(colint) / 255f;
-        float biomeB = (float) Color.blue(colint) / 255f;
-
-        float blendR, blendG, blendB;
-
-        float blockA, blockR, blockG, blockB;
+        int grassColor = chunk.getGrassColor(x, z);
+        float biomeR = (float) Color.red(grassColor) / 255f;
+        float biomeG = (float) Color.green(grassColor) / 255f;
+        float biomeB = (float) Color.blue(grassColor) / 255f;
 
         y--;
-        for (; y >= 0; y--) {
+        for (; y >= 0 && alphaRemain >= .1f; y--) {
 
             Block block = chunk.getBlock(x, y, z, 0);
 
@@ -48,15 +44,12 @@ public class SatelliteRenderer implements MapRenderer {
             // no need to process block if it is fully transparent
             if (Color.alpha(color) == 0) continue;
 
-            blockR = Color.red(color) / 255f;
-            blockG = Color.green(color) / 255f;
-            blockB = Color.blue(color) / 255f;
-            blockA = Color.alpha(color) / 255f;
+            float blendA = Color.alpha(color) / 255f;
 
             // alpha blend and multiply
-            blendR = a * blockA * blockR;
-            blendG = a * blockA * blockG;
-            blendB = a * blockA * blockB;
+            float blendR = alphaRemain * blendA * (Color.red(color) / 255f);
+            float blendG = alphaRemain * blendA * (Color.green(color) / 255f);
+            float blendB = alphaRemain * blendA * (Color.blue(color) / 255f);
 
             //blend biome-colored blocks
             if (legacyBlock.hasBiomeShading) {
@@ -65,15 +58,10 @@ public class SatelliteRenderer implements MapRenderer {
                 blendB *= biomeB;
             }
 
-            r += blendR;
-            g += blendG;
-            b += blendB;
-            a *= 1f - blockA;
-
-            // break when an opaque block is encountered
-            if (Color.alpha(color) == 0xff) {
-                break;
-            }
+            finalR += blendR;
+            finalG += blendG;
+            finalB += blendB;
+            alphaRemain *= 1f - blendA;
         }
 
         //height shading (based on slopes in terrain; height diff)
@@ -92,16 +80,16 @@ public class SatelliteRenderer implements MapRenderer {
         //shading *= Math.max(Math.min(y / 40f, 1f), 0.2f);//shade ravines & caves, minimum *0.2 to keep some color
 
         // apply the shading
-        r = Math.min(Math.max(0f, r * shading), 1f);
-        g = Math.min(Math.max(0f, g * shading), 1f);
-        b = Math.min(Math.max(0f, b * shading), 1f);
+        finalR = Math.min(Math.max(0f, finalR * shading), 1f);
+        finalG = Math.min(Math.max(0f, finalG * shading), 1f);
+        finalB = Math.min(Math.max(0f, finalB * shading), 1f);
 
 
         // now we have our final RGB values as floats, convert to a packed ARGB pixel.
         return 0xff000000 |
-                ((((int) (r * 255f)) & 0xff) << 16) |
-                ((((int) (g * 255f)) & 0xff) << 8) |
-                (((int) (b * 255f)) & 0xff);
+                ((((int) (finalR * 255f)) & 0xff) << 16) |
+                ((((int) (finalG * 255f)) & 0xff) << 8) |
+                (((int) (finalB * 255f)) & 0xff);
     }
 
     public void renderToBitmap(Chunk chunk, Canvas canvas, Dimension dimension, int chunkX, int chunkZ, int pX, int pY, int pW, int pL, Paint paint, WorldData worldData) throws Version.VersionException {

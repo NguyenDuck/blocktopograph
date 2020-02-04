@@ -1,7 +1,5 @@
 package com.mithrilmania.blocktopograph.chunk;
 
-import android.graphics.Color;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -12,6 +10,7 @@ import com.mithrilmania.blocktopograph.chunk.terrain.TerrainSubChunk;
 import com.mithrilmania.blocktopograph.chunk.terrain.V1d2d13TerrainSubChunk;
 import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.Dimension;
+import com.mithrilmania.blocktopograph.util.ColorUtil;
 import com.mithrilmania.blocktopograph.util.Noise;
 
 import java.io.IOException;
@@ -146,28 +145,31 @@ public final class BedrockChunk extends Chunk {
         mIs2dDirty = true;
     }
 
-    private int getNoise(int base, int x, int z) {
+    private int getNoise(int x, int z) {
         // noise values are between -1 and 1
         // 0.0001 is added to the coordinates because integer values result in 0
+        double xval = (mChunkX << 4) | x;
+        double zval = (mChunkZ << 4) | z;
         double oct1 = Noise.noise(
-                ((double) (mChunkX * 16 + x) / 100.0) + 0.0001,
-                ((double) (mChunkZ * 16 + z) / 100.0) + 0.0001);
+                (xval / 100.0) % 256 + 0.0001,
+                (zval / 100.0) % 256 + 0.0001);
         double oct2 = Noise.noise(
-                ((double) (mChunkX * 16 + x) / 20.0) + 0.0001,
-                ((double) (mChunkZ * 16 + z) / 20.0) + 0.0001);
+                (xval / 20.0) % 256 + 0.0001,
+                (zval / 20.0) % 256 + 0.0001);
         double oct3 = Noise.noise(
-                ((double) (mChunkX * 16 + x) / 3.0) + 0.0001,
-                ((double) (mChunkZ * 16 + z) / 3.0) + 0.0001);
-        return (int) (base + 60 + (40 * oct1) + (14 * oct2) + (6 * oct3));
+                (xval / 3.0) % 256 + 0.0001,
+                (zval / 3.0) % 256 + 0.0001);
+        return (int) (60 + (40 * oct1) + (14 * oct2) + (6 * oct3));
     }
 
     @Override
     public int getGrassColor(int x, int z) {
         Biome biome = Biome.getBiome(getBiome(x, z) & 0xff);
-        int r = getNoise(30 + (biome.color.red / 5), x, z);
-        int g = getNoise(120 + (biome.color.green / 5), x, z);
-        int b = getNoise(30 + (biome.color.blue / 5), x, z);
-        return Color.rgb(r, g, b);
+        int noise = getNoise(x, z);
+        int r = 30 + (biome.color.red / 5) + noise;
+        int g = 110 + (biome.color.green / 5) + noise;
+        int b = 30 + (biome.color.blue / 5) + noise;
+        return ColorUtil.truncateRgb(r, g, b);
     }
 
     @NonNull

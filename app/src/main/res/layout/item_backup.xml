@@ -39,15 +39,14 @@
 
         <Button
             android:id="@+id/button_restore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_width="82dp"
+            android:layout_height="48dp"
             android:text="@string/restore" />
 
         <ImageButton
             android:id="@+id/button_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="82dp"
+            android:layout_height="48dp"
             android:contentDescription="@string/general_delete"
             android:src="@android:drawable/ic_menu_delete" />
 

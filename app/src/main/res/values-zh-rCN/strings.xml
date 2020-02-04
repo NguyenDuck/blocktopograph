@@ -398,4 +398,24 @@
     <string name="map_locator_player_pos_unknown">位置未知</string>
     <string name="some_thing_went_wrong">出了点问题。。</string>
     <string name="unsatisfied_link_error_explain">抱歉，出现了一些问题，所以您没法使用这个应用。简单来说，缺失了一个重要的组成部分。您是否从其他拥有此应用程序的人那里获得了安装包？如果是，那么该应用是针对Ta的设备优化的，即使您们的机型一样，也无法使用。请尝试卸载并从Play商店重新安装，或从GitHub等渠道下载完整版。可能需要先卸载。抱歉，但是这是由于错误的使用习惯导致的。</string>
+    <string name="auto_backup_caption">自动备份中...</string>
+    <string name="auto_backup_name">[自动]</string>
+    <string name="auto_del_backups">自动删除超过3天前的备份（不多于3个时将不删除）</string>
+    <string name="auto_make_backups">每次打开世界时，自动备份</string>
+    <string name="backup_amp_restore">备份与恢复</string>
+    <string name="backup_delete_caption">删除备份</string>
+    <string name="backup_delete_warn">您正在删除备份！请确保选择了确实要删除的那一个。</string>
+    <string name="backup_readme">这是这个游戏世界的备份文件夹，由Blocktopograph软件创建和管理。</string>
+    <string name="caption_existing_backups">已有的备份</string>
+    <string name="close">关闭</string>
+    <string name="create_new_backup">创建新备份</string>
+    <string name="enable_auto_backup_note">每次您打开这个世界，Blocktopograph将自动创建备份。取决于世界的大小，这可能花费额外的时间，并占用存储空间。</string>
+    <string name="enable_auto_backup_title">启用自动备份</string>
+    <string name="general_cancelled">已取消。</string>
+    <string name="general_delete">删除</string>
+    <string name="hint_can_leave_empty">可以留空</string>
+    <string name="restore">恢复</string>
+    <string name="restore_caption">恢复先前的备份文件</string>
+    <string name="restore_warn">这将撤销所有在该备份创建以后进行的更改！您确定吗？注意不要丢失进度。</string>
+    <string name="world_name_broken">损坏的世界</string>
 </resources>
