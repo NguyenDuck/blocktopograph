@@ -25,6 +25,8 @@ public class Log {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
+    private static PrintWriter mFileLogger;
+
     private static boolean mIsFirebaseAnalyticsEnabled = false;
     private static boolean mIsCrashlyticsEnabled = false;
 

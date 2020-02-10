@@ -197,7 +197,6 @@
                     style="?attr/buttonBarButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="start"
                     android:padding="16dp"
                     android:text="@string/backup_amp_restore"

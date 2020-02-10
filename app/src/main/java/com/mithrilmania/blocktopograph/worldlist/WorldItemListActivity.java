@@ -41,7 +41,6 @@ import com.mithrilmania.blocktopograph.util.IoUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -71,9 +70,16 @@ public class WorldItemListActivity extends AppCompatActivity {
      */
     public static boolean verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        boolean hasPermission = true;
+        for (String permission : PERMISSIONS_STORAGE) {
+            int state = ActivityCompat.checkSelfPermission(activity, permission);
+            if (state != PackageManager.PERMISSION_GRANTED) {
+                hasPermission = false;
+                break;
+            }
+        }
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
+        if (!hasPermission) {
             // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
                     activity,
@@ -176,14 +182,19 @@ public class WorldItemListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private boolean checkPermissions(@NonNull int[] grantResults) {
+        for (int result : grantResults)
+            if (result != PackageManager.PERMISSION_GRANTED) return false;
+        return true;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length == PERMISSIONS_STORAGE.length && checkPermissions(grantResults)) {
 
                     // permission was granted, yay!
                     this.worldItemAdapter.enable();
@@ -422,20 +433,19 @@ public class WorldItemListActivity extends AppCompatActivity {
             saveFolders.add(new File(sd, "games/com.mojang/minecraftWorlds"));
             marks.add(null);
 
-            File[] datas = new File(sd, "Android/data").listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File file, String s) {
-                    return s.startsWith("com.netease");
-                }
-            });
-
-            if (datas != null) for (File f : datas) {
-                File ff = new File(f, "files/minecraftWorlds");
-                if (ff.exists()) {
-                    saveFolders.add(ff);
-                    marks.add(getString(R.string.world_mark_neteas));
-                }
-            }
+            //noinspection ResultOfMethodCallIgnored
+            new File(sd, "Android/data").listFiles(
+                    file -> {
+                        if (file.getName().startsWith("com.netease")) {
+                            File worldsFolder = new File(file, "files/minecraftWorlds");
+                            if (worldsFolder.exists()) {
+                                saveFolders.add(worldsFolder);
+                                marks.add(getString(R.string.world_mark_neteas));
+                            }
+                        }
+                        return false;
+                    }
+            );
 
             for (int i = 0, saveFoldersSize = saveFolders.size(); i < saveFoldersSize; i++) {
                 File dir = saveFolders.get(i);

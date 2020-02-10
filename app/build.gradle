@@ -7,8 +7,8 @@ android {
         applicationId 'rbq2012.blocktopograph'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1090004
-        versionName "1.9.2-1"
+        versionCode 1090005
+        versionName "1.9.3"
         vectorDrawables.useSupportLibrary = true
     }
     dataBinding {
@@ -21,7 +21,7 @@ android {
 
         debug {
             minifyEnabled false
-            multiDexEnabled true
+            //multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             ext.alwaysUpdateBuildId = false
         }
@@ -54,7 +54,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //implementation 'com.github.MikeOrtiz:TouchImageView:2.1.1'
@@ -64,7 +64,7 @@ dependencies {
     implementation 'net.lingala.zip4j:zip4j:2.3.1'
     implementation 'commons-io:commons-io:2.4'
     implementation 'org.apache.commons:commons-lang3:3.9'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
