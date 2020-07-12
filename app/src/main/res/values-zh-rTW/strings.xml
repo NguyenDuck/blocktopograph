@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="TypographyEllipsis">
+    <string name="brand_sub">由Proto Lambda製作</string>
+    <string name="title_worlditem_list">請選擇一個地圖</string>
+    <string name="title_worlditem_detail">地圖</string>
+    <string name="title_activity_world">地圖</string>
+    <string name="navigation_drawer_open">打開導航欄</string>
+    <string name="navigation_drawer_close">關閉導航欄</string>
+    <string name="action_settings">設定</string>
+    <string name="action_about">關於</string>
+    <string name="action_help">幫助</string>
+    <string name="action_changelog">更新內容</string>
+    <string name="no_sdcard_access">"無法打開地圖，沒有存儲的讀寫許可權！
+        請嘗試重啟應用並接受對讀/寫許可權的請求，或者在應用設置/手機管家中開啟本應用的存儲許可權。"</string>
+    <string name="no_custom_markers_title">沒有自定義標記！</string>
+    <string name="no_custom_markers">還沒有自定義標記！
+        你可以在地圖上你想要的地方長按來創建一個標記，
+            然後點擊「創建自定義標記」。
+        然後選擇一個標記圖標和一個Y坐標。
+        最後在地圖上檢查一下你有沒有成功創建它！</string>
+    <string name="app_help">查看本應用的文檔（長期未更新）：
+        <a href="http://blocktopograph.protolambda.com/help">
+            blocktopograph.protolambda.com/help
+        </a>.</string>
+    <string name="world_seed_prefix">地圖種子碼：</string>
+    <string name="app_about">
+        本應用由<b>Proto Lambda</b>（應其要求，已移除鏈接）原創，
+        <a href="https://github.com/MithrilMania">@MithrilMania</a>、
+        <a href="https://github.com/flagmaggot">@flagmaggot</a>、
+        <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>、
+        <a href="https://github.com/MiemieMethod">@MiemieMethod</a>、
+        <a href="https://github.com/LordJunior">Manuel</a>和其他人參與更新和維護。
+        感謝百度貼吧minecraftpe吧的朋友們提供反饋。
+        可以在Google Play、Github的項目release頁面（PC版網頁）下載或百度貼吧搜索。
+        有賬號的可以點一下Star~
+        <i>歡迎在Github查看源代碼，並參與更新維護（包括增強翻譯）：</i>
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
+        使用前請備份你的重要存檔，以免發生意外。一點小問題都可能導致Minecraft無法載入整個存檔→_→
+        本應用支持MCPE 0.14至1.9（當前）的存檔格式，更舊或者更新的版本【可能】不完全兼容，但不妨一試。
+        原作者網站：<a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>
+        <i>免責聲明</i>
+        <b>此應用程序與Minecraft、Mojang AB或Microsoft無關。</b>
+        這不是一個官方的而是一個飯制的APP。
+        Minecraft是Mojang的一個商標。
+        請注意：
+            • 【這不是一個官方的MINECRAFT產品。並未經MOJANG批准並且與其無關。】
+            • 【該APP「按原樣」提供，不提供任何形式的保證。】
+        <i>使用的庫</i>
+        • <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> 
+        • <a href="https://github.com/mithrilmania/TileView">
+                    Tileview，mithrilmania的版本庫分支</a> 
+        • <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> 
+            with <a href="https://github.com/mithrilmania/android-leveldb">
+                    android-leveldb，mithrilmania的版本庫分支</a> 
+        
+    </string>
+    <string name="app_changelog" formatted="false">
+        版本: <xliff:g example="0.0.1" id="version">%1$s</xliff:g>
+        <![CDATA[<br/><br/>
+        2018之前的更新記錄可以到:
+        <a href="http://blocktopograph.protolambda.com/changelog">
+            blocktopograph.protolambda.com/changelog
+        </a>查看。]]>
+    </string>
+    <string name="create_marker_info">
+        標記圖標：
+        • default_marker（默認標記）、blue_marker（藍標記）、green_marker（綠標記）、red_marker（紅標記）
+        • 實體的數據名（大小寫敏感）
+        • 方塊的數據名（大小寫敏感）
+    </string>
+    <string name="reloaded_world_list">已刷新地圖列表</string>
+    <string name="could_not_find_worlds">找不到任何地圖！</string>
+    <string name="no_read_write_access">無法讀/寫地圖</string>
+    <string name="storage_path_here">輸入文件路徑……</string>
+    <string name="open_world_custom_path">從自定義路徑打開地圖</string>
+    <string name="open">打開</string>
+    <string name="report_path_and_previous_search" formatted="false">
+        您使用的路徑：<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/worldName" id="file_path">%1$s</xliff:g>
+        
+        已在<xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/" id="file_path">%2$s</xliff:g>
+        路徑中搜索包含Minecraft地圖的文件夾。
+    </string>
+    <string name="no_file_folder_found_at_path">在您輸入的路徑中沒有找到文件或者文件夾！</string>
+    <string name="worldpath_is_not_directory">
+        文件路徑（可以以「/level.dat」結尾）不是文件夾！
+    </string>
+    <string name="no_level_dat_found">沒找到level.dat文件</string>
+    <string name="error_opening_world">打開地圖時發生錯誤</string>
+    <string name="ask_close_world">您想關閉該地圖嗎？</string>
+    <string name="leveldb_key_here">輸入levelDB中的鍵……</string>
+    <string name="open_nbt_from_db">從資料庫中打開NBT</string>
+    <string name="invalid_keyname">無效的鍵名</string>
+    <string name="cannot_find_db_entry_with_name">無法在資料庫中找到具有該名字的記錄！</string>
+    <string name="failed_to_read_x_from_db" formatted="false">
+        不能從該地圖的資料庫中讀取<xliff:g example="very_long_DB_key" id="some_db_key">%1$s</xliff:g>"。
+    </string>
+    <string name="no_multiplayer_data_found">未找到聯機玩家的數據</string>
+    <string name="select_player">選擇玩家</string>
+    <string name="open_nbt">打開NBT</string>
+    <string name="failed_read_player_from_db_with_key_x">無法從資料庫中打開玩家的記錄。鍵：
+        <xliff:g example="player_123456790" id="player_db_key">%1$s</xliff:g></string>
+    <string name="error_cannot_open_world_close_and_try_again">
+        當前的Minecraft地圖無法打開。
+        如果你已在Minecraft打開該地圖，可以嘗試從Minecraft退出，然後重啟本應用。
+    </string>
+    <string name="confirm_close_world">您真要關閉該地圖嗎？</string>
+    <string name="confirm_close_nbt_editor">您真要關閉該NBT編輯器嗎？</string>
+    <string name="teleport_local_player">傳送單機玩家</string>
+    <string name="create_custom_marker">創建自定義標記</string>
+    <string name="remove_custom_marker">移除標記</string>
+    <string name="open_chunk_entity_nbt">打開該區塊中實體的NBT</string>
+    <string name="open_chunk_tile_entity_nbt">打開該區塊中方塊實體的NBT</string>
+    <string name="entity_chunk_data">該區塊的實體數據</string>
+    <string name="tile_entity_chunk_data">該區塊的方塊實體數據</string>
+    <string name="nbt_chunk_data">該區塊的NBT</string>
+    <string name="marker_info" formatted="false">
+        <xliff:g example="My awesome marker" id="marker_displayname">%1$s</xliff:g>
+        (<xliff:g example="123" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123" id="z_coordinate">%4$d</xliff:g>)
+    </string>
+    <string name="teleported_player_to_xyz_dim">
+        已傳送玩家到(<xliff:g example="123.4" id="x_coordinate">%1$.1f</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%3$.1f</xliff:g>)
+    </string>
+    <string name="failed_teleporting_player">傳送玩家失敗</string>
+    <string name="failed_to_find_or_edit_local_player_data">找不到或者無法編輯本地玩家數據</string>
+    <string name="default_custom_marker_name">我的自定義標記</string>
+    <string name="marker_invalid_name">無效的標記名！</string>
+    <string name="invalid_icon_name">無效的圖標名！</string>
+    <string name="invalid_x_coordinate">無效的X坐標！</string>
+    <string name="invalid_y_coordinate">無效的Y坐標！</string>
+    <string name="invalid_z_coordinate">無效的Z坐標！</string>
+    <string name="failed_to_create_marker">錯誤：創建標記失敗</string>
+    <string name="failed_to_load_x" formatted="false">
+        載入<xliff:g example="some data" id="some_data">%1$s</xliff:g>失敗
+    </string>
+    <string name="nbt_editor">NBT編輯器</string>
+    <string name="data_does_not_exist_for_chunk_ask_if_create">
+        該區塊尚未具有該類型的數據。
+        它首先需要存在，您要創建它嗎？</string>
+    <string name="creating_and_saving_chunk_NBT_data">正在創建和保存該區塊的新NBT數據……</string>
+    <string name="created_and_saved_chunk_NBT_data">已創建和保存該區塊的新NBT數據！</string>
+    <string name="failed_to_create_or_save_chunk_NBT_data">錯誤：創建或保存該區塊的新NBT數據失敗</string>
+    <string name="error_could_not_open_world_details_lost_track_world">錯誤：無法打開地圖詳情；地圖信息丟失</string>
+    <string name="error_could_not_open_world">錯誤：無法打開地圖</string>
+    <string name="no_level_data_available">沒有有效的存檔數據</string>
+    <string name="worldlist_detail_world_name">地圖名字：</string>
+    <string name="worldlist_detail_world_size">地圖大小：</string>
+    <string name="worldlist_detail_gamemode">遊戲模式：</string>
+    <string name="worldlist_detail_last_played">上次遊玩：</string>
+    <string name="worldlist_detail_world_seed">地圖種子碼：</string>
+    <string name="worldlist_detail_file_path">文件路徑：</string>
+    <string name="loading_world">載入地圖中……</string>
+    <string name="x_is_invalid">
+        「<xliff:g example="something" id="something_invalid">%1$s</xliff:g>」無效
+    </string>
+    <string name="edit_cancel">取消</string>
+    <string name="edit_copy">複製</string>
+    <string name="edit_paste_overwrite">粘貼（覆蓋該標籤）</string>
+    <string name="edit_paste_sub_tag">粘貼（作為該標籤的子標籤）</string>
+    <string name="edit_delete">刪除</string>
+    <string name="edit_rename">重命名</string>
+    <string name="edit_add_sub_tag">添加子標籤</string>
+    <string name="edit_root_add">添加新NBT標籤</string>
+    <string name="edit_root_paste_sub_tag">作為子標籤粘貼</string>
+    <string name="edit_root_remove_all">移除所有NBT標籤</string>
+    <string name="cannot_edit_root_NBT_tag">不能修改根NBT標籤。</string>
+    <string name="root_NBT_options">根NBT標籤選項</string>
+    <string name="hint_tag_name_here">輸入標籤名字……</string>
+    <string name="create_nbt_tag">創建NBT標籤</string>
+    <string name="create">創建</string>
+    <string name="clipboard_is_empty">剪貼板為空……</string>
+    <string name="confirm_delete_all_nbt_tags">真的要刪除所有的NBT標籤嗎？</string>
+    <string name="delete_loud">" 刪！除！"</string>
+    <string name="failed_to_do_NBT_change">錯誤：修改NBT失敗</string>
+    <string name="nbt_tag_options">NBT標籤選項</string>
+    <string name="clipboard_key_exists_in_compound">錯誤：剪貼板中的鍵已經在該Compound中存在！</string>
+    <string name="error_cannot_overwrite_tag_unknow_parent_type">錯誤：無法覆蓋標籤：未知的父標籤類型</string>
+    <string name="error_cannot_overwrite_in_empty_parent">錯誤：無法在空的父標籤里覆蓋NBT</string>
+    <string name="error_cannot_paste_as_sub_unknown_parent_type">錯誤：無法作為子標籤粘貼：未知的父標籤類型</string>
+    <string name="error_cannot_remove_from_empty_list">錯誤：不能從空列表移除NBT</string>
+    <string name="rename_nbt_tag">重命名NBT標籤</string>
+    <string name="rename">重命名</string>
+    <string name="error_parent_already_contains_child_with_same_key">錯誤：父標籤已經包含該鍵</string>
+    <string name="error_key_already_exists_in_compound">錯誤：該Compound中已存在該鍵</string>
+    <string name="sub_tags_only_add_compound_list">錯誤：只能在Compound或List中添加子標籤</string>
+    <string name="no_data_changed_nothing_to_save">沒有數據更改，無需保存</string>
+    <string name="confirm_nbt_editor_changes">您真的要保存您的更改嗎？</string>
+    <string name="go_to_a_marker_list">前往標記位置</string>
+    <string name="failed_find_player">找不到玩家</string>
+    <string name="failed_find_spawn">找不到出生點</string>
+    <string name="player">玩家位置</string>
+    <string name="spawn">出生點</string>
+    <string name="something_at_xyz_dim_float" formatted="false">
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>
+        (<xliff:g example="123.4" id="x_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%3$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%4$.1f</xliff:g>)</string>
+    <string name="something_at_xyz_dim_int" formatted="false">
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>
+        (<xliff:g example="123.4" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%4$d</xliff:g>).
+    </string>
+    <string name="no_map_available">沒有有效的地圖</string>
+    <string name="searching_for_players">尋找玩家中……</string>
+    <string name="failed_to_retrieve_player_data">檢索玩家數據失敗</string>
+    <string name="go_to_player">前往玩家位置</string>
+    <string name="go_to_local_player">前往單機玩家位置</string>
+    <string name="go_to_other_player">前往其他玩家位置</string>
+    <string name="go_loud">前往！</string>
+    <string name="go_to_coordinate">前往坐標</string>
+    <string name="teleported_player_to_xyz_dimension">已傳送玩家到：</string>
+    <string name="marker_is_not_removable">這個標記不可被移除！</string>
+    <string name="sub_chunk">區段</string>
+    <string name="choose_subchunk">選擇一個區段（0至15）：</string>
+    <string name="filter_markers">篩選標記</string>
+    <string name="show_map">顯示地圖</string>
+    <string name="select_world">選擇地圖</string>
+    <string name="singleplayer_nbt">單機玩家NBT</string>
+    <string name="multiplayer_nbt">聯機玩家NBT</string>
+    <string name="world_nbt">地圖NBT</string>
+    <string name="overworld">主世界</string>
+    <string name="satellite">俯瞰</string>
+    <string name="cave">洞穴</string>
+    <string name="slime_chunks">史萊姆區塊</string>
+    <string name="heightmap">高度圖</string>
+    <string name="biomes">生態系</string>
+    <string name="foliage_color">植被顏色</string>
+    <string name="x_ray">透視</string>
+    <string name="light">光照強度</string>
+    <string name="nether">地獄</string>
+    <string name="map">地圖</string>
+    <string name="the_end">終末之界</string>
+    <string name="map_options">地圖選項</string>
+    <string name="toggle_grid">網格開關</string>
+    <string name="toggle_markers">標記開關</string>
+    <string name="advanced_options">高級選項</string>
+    <string name="biomedata_nbt">BiomeData NBT</string>
+    <string name="overworld_nbt">Overworld NBT</string>
+    <string name="villages_nbt">Villages NBT</string>
+    <string name="portals_nbt">Portals NBT</string>
+    <string name="dimension0_nbt">dimension0 NBT</string>
+    <string name="dimension1_nbt">dimension1 NBT</string>
+    <string name="dimension2_nbt">dimension2 NBT</string>
+    <string name="autonomousentities_nbt">AutonomousEntities NBT</string>
+    <string name="open_nbt_by_name">按名稱打開NBT</string>
+    <string name="gamemode_survival">生存</string>
+    <string name="gamemode_creative">創造</string>
+    <string name="gamemode_adventure">冒險</string>
+    <string name="postion_2D_floats_with_chunkpos">
+    (<xliff:g example="123.45" id="x_coordinate">%1$.1f</xliff:g>,
+    <xliff:g example="-123.987" id="z_coordinate">%2$.1f</xliff:g>)
+    區塊(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
+    <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)
+    </string>
+    <string name="action_teleport">傳送！</string>
+    <string name="go_to_spawn">前往出生點</string>
+    <string name="world_mark_neteas">[網易]</string>
+    <string name="err_noworld_1">沒找到地圖。</string>
+    <string name="err_noworld_2">
+        注意，新版的Minecraft默認將地圖放到它的私有存儲區。
+        因此，所有外部工具不能接入這些地圖。
+        您需要設置Minecraft使用「外部」的存儲方式，方法是：
+        Minecraft→設置→檔案→文件存儲位置，將選項又「應用程序」改為「外部」。
+        然後，新創建的地圖將能被Blocktopograph接入。您可以上網查詢如何將之前的存檔移動到外部。
+    </string>
+    <string name="create_world_title">創建平坦地圖</string>
+    <string name="create_world_name">名字：</string>
+    <string name="create_world_default_name">我的地圖</string>
+    <string name="create_world_version_aqua">1.2.13至今</string>
+    <string name="create_world_version">版本：</string>
+    <string name="create_world_layers">層：</string>
+    <string name="error_general">未知錯誤。</string>
+    <string name="general_please_wait">請等待...</string>
+    <string name="edit_layer_amount">數量：</string>
+    <string name="edit_layer_amount_constrait">所有層的數量總和應該至少是0而至多是127。</string>
+    <string name="edit_flat_add_layer_title">添加一層...</string>
+    <string name="edit_flat_edit_layer_title">編輯</string>
+    <string name="pick_block_title">選取方塊</string>
+    <string name="edit_flat_help">
+        "1. 拖拽方塊圖標可以排序。"
+        "2. 點擊任一條目可以編輯。"
+        "3. 點擊「添加」按鈕可以新增一層。"
+        "4. 左劃刪除。"
+    </string>
+    <string name="edit_flat_atleast">至少要有一層。</string>
+    <string name="general_done">好了~</string>
+    <string name="general_failed">失敗。</string>
+    <string name="create_need_restart">創建以後，地圖會在重啟Minecraft後顯示在列表裡。</string>
+    <string name="title_test_page">測試頁</string>
+    <string name="create_world_book_title">喵~</string>
+    <string name="create_world_book_page_0"><!--
+        -->"§c歡迎~ 喵嗚~"<!--
+        -->"§r該地圖由"<!--
+        -->"§3Blocktopograph"<!--
+        -->"§r生成。"<!--
+        -->"§1從Play商店/Github"<!--
+        -->"§1/貼吧/mineBBS獲取，"<!--
+        -->"§5創建你的自定義地圖。"<!--
+        -->""<!--
+        -->"§r生成於"<!--
+        -->"§d%1$s"<!--
+    --></string>
+    <string name="create_world_book_recipe_header">地圖配料表：</string>
+    <string name="create_world_book_recipe_many">"  §r..以及更多"</string>
+    <string name="create_world_extra_file_name">由Blocktopograph.txt</string>
+    <string name="create_world_extra_file_text"><!--
+        -->"歡迎~ 喵嗚~"<!--
+        -->"該地圖由Blocktopograph創建，"<!--
+        -->"一款Minecraft的編輯和地圖查看工具。"<!--
+        -->"從Play商店/Github/貼吧/mineBBS獲取，並創建你的自定義地圖。"<!--
+    --></string>
+    <string name="locator_page_player">玩家</string>
+    <string name="player_position_desc">在%4$s的(%1$d, %2$d, %3$d)</string>
+    <string name="gps_advanced_locator">高級查找...</string>
+    <string name="locator_page_marker">標記</string>
+    <string name="locator_page_coor">坐標</string>
+    <string name="gps_picer">截取地圖全圖</string>
+    <string name="picer_title">生成圖片</string>
+    <string name="picer_dowhat">這會生成地圖的完整圖片，並崩潰。</string>
+    <string name="picer_ask_wrong_chunks">(沒用)</string>
+    <string name="picer_ask_old_chunks">(沒用)</string>
+    <string name="general_ignore">忽略</string>
+    <string name="picer_button_cancel">取消並返回</string>
+    <string name="picer_failed_old">版本太舊，無法讀取。</string>
+    <string name="picer_failed_nodata">沒找到地形。</string>
+    <string name="picer_progress_analyzing">正在分析</string>
+    <string name="picer_progress_generating">正在生成</string>
+    <string name="picer_preview">預覽;</string>
+    <string name="picer_save">保存</string>
+    <string name="picer_save_text">圖片會保存到你的「下載」目錄。</string>
+    <string name="picer_saved">已保存。</string>
+    <string name="general_share">分享</string>
+    <string name="picer_share_title">分享</string>
+    <string name="picer_preview_generating">生成預覽...</string>
+    <string name="picer_scale_title">放大倍數：</string>
+    <string name="picer_warn_not_scalable">每個方塊會是1像素大小。如果你選擇小一點的區域，就能夠放大圖片。</string>
+    <string name="picer_btn_generate">生成</string>
+    <string name="func_begin_selection">開始框選</string>
+    <string name="func_cancel_selection">取消選區</string>
+    <string name="map_sel_panel_title">選區選項</string>
+    <string name="map_sel_menu_sel">選區調整</string>
+    <string name="map_sel_from_seg_1">從 [</string>
+    <string name="map_sel_from_seg_2">，</string>
+    <string name="map_sel_from_seg_3">]</string>
+    <string name="map_sel_to">到[ %1$d, %2$d ]（含起點、終點）</string>
+    <string name="map_sel_range_seg_1">範圍</string>
+    <string name="map_sel_range_seg_2">x</string>
+    <string name="map_sel_menu_apply">好的</string>
+    <string name="map_sel_error_size_one">寬度和高度至少該是1。</string>
+    <string name="map_sel_menu_op">操作</string>
+    <string name="map_edit_func_lampshade">為火把裝燈罩</string>
+    <string name="map_edit_lampshade_note">這會給範圍內的火把加上玻璃燈罩。適用於Minecraft基岩版1.4.x或更高版本的地圖。建議您在Blocktopograph進行編輯前，備份您的地圖。</string>
+    <string name="map_edit_snr_find_in">查找在</string>
+    <string name="map_edit_snr_bg">背景</string>
+    <string name="map_edit_snr_fg">前景</string>
+    <string name="map_edit_snr_or">任何</string>
+    <string name="map_edit_snr_both">全部</string>
+    <string name="map_edit_snr_find_for">查找方塊</string>
+    <string name="map_edit_snr_fg_slot">前景層：</string>
+    <string name="map_edit_snr_bg_slot">背景層：</string>
+    <string name="map_edit_snr_place_in">然後放置在</string>
+    <string name="map_edit_snr_and_long">前景和背景</string>
+    <string name="map_edit_func_snr">查找&替換</string>
+    <string name="map_edit_snr_ignore_subtype">忽略子類型</string>
+    <string name="map_edit_snr_help_background">簡單的查找替換可以無視背景層。從Minecraft BE 1.4.x開始，背景層被用於存儲與其他方塊共存的水，不過其實可以放任何方塊。作為高級地圖作者，您可以利用這個特性。</string>
+    <string name="map_sel_warn_backup">使用前先備份，請！（震聲）</string>
+    <string name="create_world_biome_id">生物群系：</string>
+    <string name="create_world_biome_hint">數字ID，默認21（叢林）</string>
+    <string name="map_edit_func_dchunk">刪除區塊</string>
+    <string name="map_edit_dchunk_explain">這會【刪除】您選擇區域所涉及的區塊。Minecraft稍後能重新生成這片區域，但是您在當中的進度會丟失。除非你知道你在做什麼以及為什麼這麼做，請不要繼續。</string>
+    <string name="map_edit_dchunk_posbtn_with_auto_adjust">自動調整並繼續</string>
+    <string name="open_up_warning_1">這東西很危險，用之前請先備份！</string>
+    <string name="map_edit_dchunk_warn_not_aligned">您選擇的區域沒有對齊到區塊邊界。Blocktopograph可以自動調整。實際刪除的區域會比您選擇的稍大。準確說，每個方向上會多出0~15方塊。這是因為區域必須按整個區塊刪除，才能被重新生成。如果不喜歡自動調整，您可以取消並手動調節。</string>
+    <string name="map_smart_notice_too_many_markers">標記過多！</string>
+    <string name="map_smart_notice_too_many_markers_message">屏幕上有太多標記，比如怪物。您可以在滑動抽屜頁點擊「標記開關」來關閉，或者設置過濾選項。</string>
+    <string name="map_uioption_open_drawer">打開抽屜</string>
+    <string name="general_got_it">哦</string>
+    <string name="picer_failed_corrupt">這個地圖沒法被Blocktopograph理解，可能版本過舊或者過新。</string>
+    <string name="biome_pick_title">選擇生態群系</string>
+    <string name="map_edit_func_chbiome">更改生態群系</string>
+    <string name="map_edit_chbiome_for">對於</string>
+    <string name="map_edit_chbiome_all">全部</string>
+    <string name="map_edit_chbiome_for_specific">特定的群系</string>
+    <string name="map_edit_chbiome_to">改為</string>
+    <string name="map_notice_try_selection">你可以長按地圖，選擇「開始框選」然後嘗試編輯。</string>
+    <string name="map_picer_world_too_large">地圖太大</string>
+    <string name="map_picer_use_selection_instead">太♂大了。你可以:(1) 在電腦上使用同類工具；(2) 或者框選一部分區域然後從選區選項里選擇截圖。</string>
+    <string name="map_picer_scale_guide">你可以放大圖片。每個方塊至少1像素。</string>
+    <string name="map_picer_selection_too_large">選區太大</string>
+    <string name="map_picer_selection_too_large_detail">你選擇的區域太♂大了。寬度和高度都應該在%1$d方塊以內，同時面積在%2$d方塊²以內。</string>
+    <string name="map_edit_func_picer">生成圖片</string>
+    <string name="picer_scale_approxim">大約%1$dx%2$d。</string>
+    <string name="map_dblclick_notice">雙擊屏幕以打開抽屜。</string>
+    <string name="map_locator_player_pos_unknown">位置未知</string>
+    <string name="some_thing_went_wrong">出了點問題。。</string>
+    <string name="unsatisfied_link_error_explain">抱歉，出現了一些問題，所以您沒法使用這個應用。簡單來說，缺失了一個重要的組成部分。您是否從其他擁有此應用程序的人那裡獲得了安裝包？如果是，那麼該應用是針對Ta的設備優化的，即使您們的機型一樣，也無法使用。請嘗試卸載並從Play商店重新安裝，或從GitHub等渠道下載完整版。可能需要先卸載。抱歉，但是這是由於錯誤的使用習慣導致的。</string>
+    <string name="auto_backup_caption">自動備份中...</string>
+    <string name="auto_backup_name">[自動]</string>
+    <string name="auto_del_backups">自動刪除超過3天前的備份（不多於3個時將不刪除）</string>
+    <string name="auto_make_backups">每次打開地圖時，自動備份</string>
+    <string name="backup_amp_restore">備份與恢復</string>
+    <string name="backup_delete_caption">刪除備份</string>
+    <string name="backup_delete_warn">您正在刪除備份！請確保選擇了確實要刪除的那一個。</string>
+    <string name="backup_readme">這是這個遊戲地圖的備份文件夾，由Blocktopograph軟體創建和管理。</string>
+    <string name="caption_existing_backups">已有的備份</string>
+    <string name="close">關閉</string>
+    <string name="create_new_backup">創建新備份</string>
+    <string name="enable_auto_backup_note">每次您打開這個地圖，Blocktopograph將自動創建備份。取決於地圖的大小，這可能花費額外的時間，並佔用存儲空間。</string>
+    <string name="enable_auto_backup_title">啟用自動備份</string>
+    <string name="general_cancelled">已取消。</string>
+    <string name="general_delete">刪除</string>
+    <string name="hint_can_leave_empty">可以留空</string>
+    <string name="restore">恢復</string>
+    <string name="restore_caption">恢復先前的備份文件</string>
+    <string name="restore_warn">這將撤銷所有在該備份創建以後進行的更改！您確定嗎？注意不要丟失進度。</string>
+    <string name="world_name_broken">損壞的地圖</string>
+</resources>
