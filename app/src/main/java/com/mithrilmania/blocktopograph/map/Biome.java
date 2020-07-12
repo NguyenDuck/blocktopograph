@@ -4,6 +4,8 @@ import android.util.SparseArray;
 
 import com.mithrilmania.blocktopograph.util.ColorWrapper;
 
+import org.jetbrains.annotations.Contract;
+
 
 /*
 Biome enum for MCPE -- by @mithrilmania
@@ -146,7 +148,7 @@ public enum Biome {
         return biomeMap.get(id);
     }
 
-
+    @Contract(pure = true)
     public String getName() {
         return name;
     }
