@@ -83,6 +83,10 @@
                     android:icon="@drawable/ic_action_map_b"
                     android:title="@string/map" />
                 <item
+                    android:id="@+id/nav_nether_biome"
+                    android:icon="@drawable/ic_bubble_chart"
+                    android:title="@string/biomes" />
+                <item
                     android:id="@+id/nav_nether_xray"
                     android:icon="@drawable/ic_visibility"
                     android:title="@string/x_ray" />
