@@ -5,6 +5,7 @@ import android.util.SparseArray;
 import com.mithrilmania.blocktopograph.util.ColorWrapper;
 
 
+
 /*
 Biome enum for MCPE -- by @mithrilmania
 
@@ -111,6 +112,17 @@ public enum Biome {
     MESA_PLATEAU_M(167, "Mesa Plateau M", ColorWrapper.fromRGB(255, 220, 184)),
     BAMBOO_JUNGLE(168, "Bamboo Jungle", ColorWrapper.fromRGB(255, 220, 184)),
     BAMBOO_JUNGLE_HILLS(169, "Bamboo Jungle Hills", ColorWrapper.fromRGB(255, 220, 184));
+    
+    //Nether biome in 1.16.0 nether update.
+    NETHER_WASTES(8, "Nether Wastes", ColorWrapper.fromRGB(132, 65, 65));
+    
+    SOUL_SAND_VALLEY(170, "Soul Sand Valley", ColorWrapper.fromRGB(66, 113, 114));
+    
+    CRIMSON_FOREST(171, "Crimson Forest", ColorWrapper.fromRGB(141, 30, 40));
+    
+    WARPED_FOREST(172, "Warped Forest", ColorWrapper.fromRGB(22, 126, 134));
+    
+    BASALT_DELTAS(173, "Basalt Deltas", ColorWrapper.fromRGB(75, 69, 71));
 
     private static final SparseArray<Biome> biomeMap;
 

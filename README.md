@@ -1,10 +1,12 @@
 # Blocktopograph
 
+![author](https://github.com/Templarian/MaterialDesign/blob/master/icons/svg/account.svg)
+
 By *Proto Lambda*\(Link removed, as he asked to\), [@MithrilMania](https://github.com/MithrilMania),
 [@flagmaggot](https://github.com/flagmaggot) and many other community contributors, including translation.  
 This fork is the only one supporting MCPE 1.13+ for now.
 
-## Help improve translation
+## ![translate](https://github.com/Templarian/MaterialDesign/blob/master/icons/svg/web.svg) Help improve translation
 [Click here](https://github.com/oO0oO0oO0o0o00/blocktopograph/blob/master/translation.md).
 
 ## Update paused
@@ -13,13 +15,15 @@ As title.
 Translations and pull requests **will still be processed**, but we encourage you to
 take over this project and develope on your own.
 
-## Download
+## ![download](https://github.com/Templarian/MaterialDesign/blob/master/icons/svg/download.svg)Download
 [>>> Download on Google Play <<<](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)  
+[![Google Play](http://ws3.sinaimg.cn/large/006Zo3DUgy1g65u2a2fndj30hy06yjrh.jpg)](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)
+
 And release page of the repository provides debug version of the app.  
 <img src="arts/scr02.png" alt="screenshot" width="320"/>
 <img src="arts/scr03.png" alt="screenshot" width="320"/>
 
-## Build
+## ![build](https://github.com/Templarian/MaterialDesign/blob/master/icons/svg/camera-front-variant.svg)Build
 
 Clone project in Android Studio: `File -> New -> Project from Version Control -> Git`  
 Install missing SDK components. Android Studio would give you the auto-fix options.  

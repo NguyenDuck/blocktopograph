@@ -42,6 +42,9 @@ public enum MapType implements DetailLevelManager.LevelType {
     NETHER_XRAY(new XRayRenderer()),
 
     NETHER_BLOCK_LIGHT(new BlockLightRenderer()),
+    
+    //add in 1.16.0
+    NETHER_BIOME(new BiomeRenderer());
 
     END_SATELLITE(new SatelliteRenderer()),
 

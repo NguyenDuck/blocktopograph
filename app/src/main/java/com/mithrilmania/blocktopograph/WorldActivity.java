@@ -391,6 +391,9 @@ public class WorldActivity extends AppCompatActivity
             case (R.id.nav_nether_block_light):
                 changeMapType(MapType.NETHER_BLOCK_LIGHT, Dimension.NETHER);
                 break;
+            case (R.id.nav_nether_biome):
+                changeMapType(MapType.NETHER_BIOME, Dimension.NETHER);
+                break;
             case (R.id.nav_end_satellite):
                 changeMapType(MapType.END_SATELLITE, Dimension.END);
                 break;
