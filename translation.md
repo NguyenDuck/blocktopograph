@@ -44,7 +44,7 @@ which is a translation file of your language.
 If any translation should be improved,
 you can either :
 
-* Download the file and edit offline
+* Download the file and edit offline.
 * Or fork the repository if you've worked on Github before and know how to.
 
 ## Create new translation
@@ -57,7 +57,7 @@ If you didn't find your language folder then :
 ## Submission
 
 1. If you've downloaded and edited offline, mail it to barcodephantomAToutlook.com, replace "AT" with "@".
-2. Otherwise reate a pull request.
+2. Otherwise create a pull request.
 
 Note that :
 
