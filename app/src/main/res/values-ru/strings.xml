@@ -1,0 +1,490 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name" translatable="false">Blocktopograph</string>
+
+    <string name="brand_sub">Приложение, созданное сообществом</string>
+
+    <string name="title_worlditem_list">Выберите мир</string>
+    <string name="title_worlditem_detail">Мир</string>
+    <string name="title_activity_world">Мир</string>
+
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
+
+    <string name="action_settings">Настройки</string>
+    <string name="action_about">О (Около)</string>
+    <string name="action_help">Помощь</string>
+    <string name="action_changelog">Журнал изменений</string>
+
+    <string name="no_sdcard_access">Невозможно открыть миры, нет доступа для чтения/записи в хранилище!
+        Попробуйте перезапустить приложение и принять запрос разрешения на чтение/запись.</string>
+
+    <string name="no_custom_markers_title">Нет пользовательских маркеров! (Никаких пользовательских маркеров!)</string>
+    <string name="no_custom_markers">Пользовательских маркеров пока нет! \n
+        Вы можете создать его, долго держа то место на карте, где вы хотите маркер,
+             затем нажмите \ "Создать пользовательский маркер \".
+        Затем выберите значок маркера и её координаты.
+        А затем проверьте, можете ли вы найти его здесь!</string>
+
+    <string name="app_about">
+        Это приложение создан <b>Protol Lambda</b> (ссылка удалена по его просьбе),
+         пополняемая
+        <a href="https://github.com/MithrilMania">@MithrilMania</a>,
+        <a href="https://github.com/flagmaggot">@flagmaggot</a>,
+        <a href="https://github.com/oO0oO0oO0o0o00">@MeowCat</a>,
+        <a href="https://github.com/MiemieMethod">@MiemieMethod</a>,
+        <a href="https://github.com/LordJunior">Manuel</a>,
+        ScrapperBox25, Tcbdxh и многие другие.\n\n
+        Доступно в Google Play.\n\n
+        Текущий активный репозиторий github:
+        <a href="https://github.com/oO0oO0oO0o0o00/blocktopograph">github.com/oO0oO0oO0o0o00/blocktopograph</a>
+        Не стесняйтесь звездить или вилять, помогать с проектом или просто добавлять свою собственную языковую поддержку.
+        <b>Ваш вклад на github приветствуется!</b>
+        Более подробную информацию (включая дорожную карту, список изменений и справочную информацию) можно найти по адресу:
+        <a href="http://blocktopograph.protolambda.com">blocktopograph.protolambda.com</a>. \n
+        \n
+        Пожалуйста, сделайте резервную копию всех ваших любимых миров MCPE на случай повреждения данных!\n
+        ПРИМЕЧАНИЕ: Minecraft может не загрузить весь мир из-за одного поврежденного фрагмента NBT!\n
+        \n
+            Это приложение создано и протестировано для MCPE 1.9.x (бета), 1.8.x, 1.7.x, 1.6.x, 1.5.x, 1.4.x, 1.2.x, 1.1.x, 1.0.x, 0.16.x, 0.15.x, и 0.14.x\n
+            Старые версии MCPE не поддерживаются.\n
+        \n
+        \n
+        <i>Отказ от ответственности</i>\n
+        <b>Это приложение не связано с Minecraft, Mojang AB или Microsoft.</b>\n
+        Это не официальное приложение, а созданное фанатами.\n
+        Minecraft является товарным знаком Mojang AB.\n
+        Пожалуйста, обратите внимание:\n
+            &#8226; НЕ ОФИЦИАЛЬНЫЙ ПРОДУКТ MINECRAFT. НЕ УТВЕРЖДЕНО ИЛИ НЕ СВЯЗАНО С MOJANG.\n
+            &#8226; ПРИЛОЖЕНИЕ ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\", БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ.\n
+        \n
+        \n
+        <i>Используемые библиотеки</i>\n
+        &#8226; <a href="https://github.com/Clans/FloatingActionButton">FloatingActionButton</a> \n
+        &#8226; <a href="https://github.com/mithrilmania/TileView">
+                    Tileview, fork by mithrilmania</a> \n
+        &#8226; <a href="https://github.com/Mojang/leveldb-mcpe">leveldb-mcpe</a> \n
+            с <a href="https://github.com/mithrilmania/android-leveldb">
+                    android-leveldb, fork by mithrilmania</a> \n
+        \n
+        <i>Исходный код на GitHub:</i>\n
+        <a href="https://github.com/mithrilmania/blocktopograph">github.com/mithrilmania/blocktopograph</a> \n
+        \n
+    </string>
+
+    <string name="app_help">Документацию к приложению можно найти (возможно, устаревшую):
+        <a href="http://blocktopograph.protolambda.com/help">
+            blocktopograph.protolambda.com/help
+        </a>.
+    </string>
+
+    <string name="app_changelog" formatted="false">
+        Версия: <xliff:g example="0.0.1" id="версия">%1$s</xliff:g>
+        <![CDATA[<br/><br/>
+        Полный список изменений можно найти по адресу (устарело):
+        <a href="http://blocktopograph.protolambda.com/changelog">
+            blocktopograph.protolambda.com/changelog
+        </a>]]>
+    </string>
+
+
+    <string name="world_seed_prefix">Сид мира</string>
+
+    <string name="map_water_mark" translatable="false">Blocktopograph</string>
+
+    <string name="create_marker_info">
+        Значки маркеров:\n
+        &#8226; default_marker (стандартный маркер), blue_marker (голубй маркер), green_marker (зелёный маркер), red_marker(красный маркер). \n
+        &#8226; Имена данных сущностей (с учетом регистра) \n
+        &#8226; Имена данных блока (с учетом регистра) \n
+    </string>
+
+    <!-- New as of *The Translation Update* -->
+    <string name="reloaded_world_list">Перезагруженный список миров.</string>
+    <string name="could_not_find_worlds">Не удалось найти ни одного мира!</string>
+    <string name="no_read_write_access">Нет доступа для чтения/записи к мирам.</string>
+    <string name="storage_path_here">Путь к хранилищу здесь…</string>
+    <string name="open_world_custom_path">Открыть мир с пользовательским путём</string>
+    <string name="open">Открыть</string>
+    <string name="report_path_and_previous_search" formatted="false">
+        Ваш путь: <xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/worldName" id="file_path">%1$s</xliff:g>\n
+        \n
+        Мир уже искали в папках <xliff:g example="/storage/emulated/0/games/com.mojang/minecraftWorlds/" id="file_path">%2$s</xliff:g></string>
+    <string name="no_file_folder_found_at_path">По пути не найдено ни одного файла/папки!</string>
+    <string name="worldpath_is_not_directory">
+        Этот путь (необязательно с суффиксом /level.dat) не является каталогом!</string>
+    <string name="no_level_dat_found">Файл level.dat не найден!</string>
+    <string name="error_opening_world">Произошла ошибка при открытии мира.</string>
+    <string name="ask_close_world">Вы хотите закрыть этот мир?</string>
+    <string name="leveldb_key_here">Здесь ключ levelDB…</string>
+    <string name="open_nbt_from_db">Открыть NBT из DB</string>
+    <string name="invalid_keyname">Неверное имя ключа.</string>
+    <string name="cannot_find_db_entry_with_name">Не удается найти запись в БД (наверно БД - база данных) с таким именем!</string>
+    <string name="failed_to_read_x_from_db" formatted="false">
+        Не удалось прочитать \"<xliff:g example="very_long_DB_key" id="some_db_key">%1$s</xliff:g>\"
+            из базы данных мира.</string>
+    <string name="no_multiplayer_data_found">Данных по многопользовательской игре не найдено.</string>
+    <string name="select_player">Выбрать игрока</string>
+    <string name="open_nbt">Открыть NBT</string>
+    <string name="failed_read_player_from_db_with_key_x">Не удалось открыть запись игрока в DB. ключ:
+        <xliff:g example="player_123456790" id="player_db_key">%1$s</xliff:g></string>
+    <string name="error_cannot_open_world_close_and_try_again">
+        Текущий мир Minecraft не удалось открыть.
+        Попробуйте перезапустить это приложение и закрыть мир в MCPE, если он был открыт.</string>
+    <string name="confirm_close_world">Вы хотите закрыть этот мир?</string>
+    <string name="confirm_close_nbt_editor">Вы действительно хотите закрыть этот редактор NBT?</string>
+    <string name="teleport_local_player">Телепортировать местного игрока</string>
+    <string name="create_custom_marker">Создать пользовательский маркер</string>
+    <string name="remove_custom_marker">Удалить маркер</string>
+    <string name="open_chunk_entity_nbt">Открыть NBT фрагмент сущности</string>
+    <string name="open_chunk_tile_entity_nbt">Открыть NBT фрагмент плиты-сущности</string>
+    <string name="entity_chunk_data">Данные фрагмента сущности</string>
+    <string name="tile_entity_chunk_data">Данные фрагмента плиты-сущности</string>
+    <string name="nbt_chunk_data">Данные NBT фрагмента</string>
+    <string name="marker_info" formatted="false">
+        <xliff:g example="My awesome marker" id="marker_displayname">%1$s</xliff:g>
+        (<xliff:g example="123" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123" id="z_coordinate">%4$d</xliff:g>)</string>
+    <string name="teleported_player_to_xyz_dim" formatted="false">Телепортировал игрока в
+        (<xliff:g example="123.4" id="x_coordinate">%1$.1f</xliff:g>,
+        <xliff:g example="42.1" id="y_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%3$.1f</xliff:g>)</string>
+    <string name="failed_teleporting_player">Не удалось телепортировать игрока.</string>
+    <string name="failed_to_find_or_edit_local_player_data">
+        Не удалось найти/отредактировать данные локального игрока.</string>
+    <string name="default_custom_marker_name">Мой пользовательский маркер</string>
+    <string name="marker_invalid_name">Неверное название маркера!</string>
+    <string name="invalid_icon_name">Неверное название значка!</string>
+    <string name="invalid_x_coordinate">Неверная X координата маркера!</string>
+    <string name="invalid_y_coordinate">Неверная Y координата маркера!</string>
+    <string name="invalid_z_coordinate">Неверная Z координата маркера!</string>
+    <string name="failed_to_create_marker">Ошибка: не удалось создать маркер.</string>
+    <string name="failed_to_load_x" formatted="false">
+       Ошибка загрузки <xliff:g example="some data" id="some_data">%1$s</xliff:g>.
+    </string>
+    <string name="nbt_editor">Редактор NBT</string>
+    <string name="data_does_not_exist_for_chunk_ask_if_create">
+        Этот тип данных ещё не существует для этого фрагмента.
+        Сначала он должен существовать, вы хотите его создать?</string>
+    <string name="creating_and_saving_chunk_NBT_data">
+        Создание и сохранение новых данных чанка NBT…</string>
+    <string name="created_and_saved_chunk_NBT_data">
+        Созданы и сохранены новые данные чанка NBT!</string>
+    <string name="failed_to_create_or_save_chunk_NBT_data">
+        Ошибка: не удалось создать / сохранить новые данные чанка NBT.</string>
+    <string name="full_date_format" translatable="false">дд/ММ/гггг чч:мм
+а</string>
+    <string name="error_could_not_open_world_details_lost_track_world">
+        Ошибка: не удалось открыть сведения о мире; потерял след мира.</string>
+    <string name="error_could_not_open_world">Ошибка: не удалось открыть мир.</string>
+
+    <string name="no_level_data_available">данные об уровне отсутствуют</string>
+    <string name="worldlist_detail_world_name">Имя мира:</string>
+    <string name="worldlist_detail_world_size">Размер мира:</string>
+    <string name="worldlist_detail_gamemode">Режим игры:</string>
+    <string name="worldlist_detail_last_played">Последняя игра:</string>
+    <string name="worldlist_detail_world_seed">Сид мира:</string>
+    <string name="worldlist_detail_file_path">Путь к файлу:</string>
+
+    <string name="loading_world">Загрузка мира…</string>
+    <string name="x_is_invalid" formatted="false">
+        \"<xliff:g example="something" id="something_invalid">%1$s</xliff:g>\" является недействительным!</string>
+    <string name="edit_cancel">Отмена</string>
+    <string name="edit_copy">Копировать</string>
+    <string name="edit_paste_overwrite">Вставить (перезаписать)</string>
+    <string name="edit_paste_sub_tag">Вставить (как подтег)</string>
+    <string name="edit_delete">Удалить</string>
+    <string name="edit_rename">Переименовать</string>
+    <string name="edit_add_sub_tag">Добавить подтег</string>
+    <string name="edit_root_add">Добавить NBT тег</string>
+    <string name="edit_root_paste_sub_tag">Вставить как подтег</string>
+    <string name="edit_root_remove_all">Удалить все NBT теги</string>
+    <string name="cannot_edit_root_NBT_tag">Не удается изменить корневой NBT тег.</string>
+    <string name="root_NBT_options">Параметры корневого NBT</string>
+    <string name="hint_tag_name_here">Имя тега здесь…</string>
+    <string name="create_nbt_tag">Создать NBT тег</string>
+    <string name="create">Создать</string>
+    <string name="clipboard_is_empty">Буфер обмена пуст!</string>
+    <string name="confirm_delete_all_nbt_tags">Вы действительно хотите удалить все NBT теги?</string>
+    <string name="delete_loud">УДАЛИТЬ!</string>
+    <string name="failed_to_do_NBT_change">Ошибка: не удалось изменить NBT.</string>
+    <string name="nbt_tag_options">Параметры NBT тегов</string>
+    <string name="clipboard_key_exists_in_compound">
+        Ошибка: ключ буфера обмена уже существует в составной части!</string>
+    <string name="error_cannot_overwrite_tag_unknow_parent_type">
+        Ошибка: не удается перезаписать тег: неизвестный родительский тип NBT.</string>
+    <string name="error_cannot_overwrite_in_empty_parent">
+        Ошибка: не удается перезаписать NBT в пустом родительском теге.</string>
+    <string name="error_cannot_paste_as_sub_unknown_parent_type">
+        Ошибка: не удается перезаписать NBT в пустом родительском теге.</string>
+    <string name="error_cannot_remove_from_empty_list">
+        Ошибка: не удается удалить NBT из пустого списка.</string>
+    <string name="rename_nbt_tag">Переименовать NBT тег</string>
+    <string name="rename">Переименовать</string>
+    <string name="error_parent_already_contains_child_with_same_key">
+        Ошибка: родительский NBT-тег уже содержит этот ключ!</string>
+    <string name="error_key_already_exists_in_compound">
+        Ошибка: этот ключ уже существует в соединении!</string>
+    <string name="sub_tags_only_add_compound_list">
+        Ошибка: подтеги можно добавлять только в составные теги и теги списка.</string>
+    <string name="no_data_changed_nothing_to_save">
+        Данные не изменились, нечего сохранять.</string>
+    <string name="confirm_nbt_editor_changes">
+        Вы действительно хотите сохранить изменения?</string>
+    <string name="failed_find_player">Не удалось найти игрока.</string>
+    <string name="failed_find_spawn">Не удалось найти респаун.</string>
+    <string name="go_to_a_marker_list">Перейти к маркеру:</string>
+    <string name="go_to_local_player">Перейти к локальному игроку</string>
+    <string name="go_to_other_player">Перейти к другому игроку</string>
+    <string name="player">Игрок</string>
+    <string name="spawn">Спаун</string>
+    <string name="something_at_xyz_dim_float" formatted="false">
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g>
+        (<xliff:g example="123.45" id="x_coordinate">%2$.1f</xliff:g>,
+        <xliff:g example="42.122333" id="y_coordinate">%3$.1f</xliff:g>,
+        <xliff:g example="-123.987" id="z_coordinate">%4$.1f</xliff:g>)</string>
+    <string name="something_at_xyz_dim_int" formatted="false">
+        <xliff:g example="Steve" id="something_name">%1$s</xliff:g> at,
+        (<xliff:g example="123.45" id="x_coordinate">%2$d</xliff:g>,
+        <xliff:g example="42.122333" id="y_coordinate">%3$d</xliff:g>,
+        <xliff:g example="-123.987" id="z_coordinate">%4$d</xliff:g>)</string>
+    <string name="no_map_available">Карта недоступна.</string>
+    <string name="searching_for_players">Поиск маркеров…</string>
+    <string name="failed_to_retrieve_player_data">Не удалось получить данные игрока.</string>
+    <string name="go_to_player">Перейти к игроку</string>
+    <string name="go_loud">Вперед!</string>
+    <string name="go_to_coordinate">Перейти к координатам</string>
+    <string name="teleported_player_to_xyz_dimension">Телепортировал игрока в: </string>
+    <string name="marker_is_not_removable">Этот маркер не предназначен для удаления!</string>
+    <string name="sub_chunk">Подфрагмент</string>
+    <string name="choose_subchunk">Выберите подфрагмент (0…):</string>
+    <string name="filter_markers">Фильтровать маркеры</string>
+    <string name="show_map">Показать карту</string>
+    <string name="select_world">Выбрать мир</string>
+    <string name="singleplayer_nbt">Однопользовательский NBT</string>
+    <string name="multiplayer_nbt">Нногопользовательский NBT</string>
+    <string name="world_nbt">NBT мира</string>
+    <string name="overworld">Надземный мир</string>
+    <string name="satellite">Спутник</string>
+    <string name="cave">Пещера</string>
+    <string name="slime_chunks">Слайм-чанк</string>
+    <string name="heightmap">Карта высот</string>
+    <string name="biomes">Биомы</string>
+    <string name="foliage_color">Цвет листвы</string>
+    <string name="x_ray">X-Ray (Рентген)</string>
+    <string name="light">Свет</string>
+    <string name="nether">Нижний мир</string>
+    <string name="map">Карта</string>
+    <string name="the_end">Край</string>
+    <string name="map_options">Параметры карты</string>
+    <string name="toggle_grid">Переключить сетку</string>
+    <string name="toggle_markers">Переключить маркеры / мобы</string>
+    <string name="advanced_options">Расширенные опции (их нельзя переводить)</string>
+    <!-- all these NBT options should not be translated;
+      these correspond with the internal data names within the save file -->
+    <string name="biomedata_nbt">BiomeData NBT</string>
+    <string name="overworld_nbt">Overworld NBT</string>
+    <string name="villages_nbt">Villages NBT</string>
+    <string name="portals_nbt">Portals NBT</string>
+    <string name="dimension0_nbt">dimension0 NBT</string>
+    <string name="dimension1_nbt">dimension1 NBT</string>
+    <string name="dimension2_nbt">dimension2 NBT</string>
+    <string name="autonomousentities_nbt">AutonomousEntities NBT</string>
+    <!-- End of NBT options -->
+    <string name="open_nbt_by_name">Открыть NBT по имени</string>
+
+    <string name="gamemode_survival">Выживание</string>
+    <string name="gamemode_creative">Творческий</string>
+    <string name="gamemode_adventure">Приключение</string>
+    <string name="postion_2D_floats_with_chunkpos">
+        (<xliff:g example="123.4" id="x_coordinate">%1$.1f</xliff:g>,
+        <xliff:g example="-123.9" id="z_coordinate">%2$.1f</xliff:g>)
+        Чанк(<xliff:g example="123" id="x_chunk">%3$d</xliff:g>,
+        <xliff:g example="-42" id="z_chunk">%4$d</xliff:g>)</string>
+    <string name="action_teleport">Телепорт!</string>
+    <string name="go_to_spawn">Иди на возрождение</string>
+    <string name="err_noworld_1">Миров не найдено.</string>
+    <string name="err_noworld_2">
+        Обратите внимание, что более новая версия Minecraft по умолчанию помещает ваши миры в свои личные данные.
+        По этой причине все инструменты не смогут получить доступ к мирам.
+       Вам нужно будет настроить Minecraft на использование \"внешнего\" хранилища, перейдя в Minecraft.-&gt;
+        Настройки-&gt;Профиль-&gt;Расположение хранилища файлов, и измените параметр с
+        \"Приложение\" на \"Внешнее\".
+      После этого вновь созданные миры будут доступны для Blocktopograph, в то время как
+         существующие миры не могут быть открыты. Возможно, вам захочется погуглить о том,как переместить предыдущие миры во внешние.
+    </string>
+    <string name="world_mark_neteas">[NetEase]</string>
+    <string name="create_world_title">Создать плоский мир</string>
+    <string name="create_world_name">Имя:</string>
+    <string name="create_world_default_name">Мой Мир</string>
+    <string name="create_world_version_aqua">1.2.13~последняя</string>
+    <string name="create_world_version">Версия:</string>
+    <string name="create_world_layers">Слои:</string>
+    <string name="error_general">Неизвестная ошибка.</string>
+    <string name="general_please_wait">Пожалуйста, подождите...</string>
+    <string name="edit_layer_amount">Количество:</string>
+    <string name="edit_layer_amount_constrait">Сумма из всех слоев должна быть не менее 0 и не более 127.</string>
+    <string name="edit_flat_add_layer_title">Добавить слой...</string>
+    <string name="edit_flat_edit_layer_title">редактировать</string>
+    <string name="pick_block_title">Выберите блок</string>
+    <string name="edit_flat_help">
+        "1. Перетащите значок блока для сортировки.\n"
+        "2. Нажмите любой элемент для редактирования.\n"
+        "3. Нажмите кнопку \"Добавить\", чтобы добавить слой.\n"
+        "4. Проведите пальцем влево, чтобы удалить."
+        "."
+    </string>
+    <string name="edit_flat_atleast">Должен быть хотя бы один слой.</string>
+    <string name="general_done">Готово.</string>
+    <string name="general_failed">Не удалось.</string>
+    <string name="create_need_restart">После создания, мир появится в Minecraft, после перезапуска игры.</string>
+    <string name="title_test_page">Тестовая страница</string>
+    <string name="create_world_book_title">Мяу~</string>
+    <string name="create_world_book_page_0"><!--
+        -->"\n§cДобро пожаловать~ мяу~"<!--
+        -->"\n§rСоздано"<!--
+        -->"\n§3Blocktopograph"<!--
+        -->"\n"<!--
+        -->"\n§1Получить из Play Store"<!--
+        -->"\n§5и создайте свой"<!--
+        -->"\n§5собственный индивидуальный мир!"<!--
+        -->"\n"<!--
+        -->"\n§rМир создан в"<!--
+        -->"\n§d%1$s"<!--
+    --></string>
+    <string name="create_world_book_recipe_header">Рецепт мира:\n</string>
+    <string name="create_world_book_recipe_format" translatable="false">§r%1$dx §b%2$s\n</string>
+    <string name="create_world_book_recipe_many">"  §r..И многое другое"</string>
+    <string name="create_world_extra_file_name">"by_Blocktopograph.txt"</string>
+    <string name="create_world_extra_file_text"><!--
+        -->"Welcome~ Мяу~"<!--
+        -->"\nМир был создан Blocktopograph-ом,"<!--
+        -->"\nредактором миров Minecraft и просмотровщиком ландшафта."<!--
+        -->"\nПолучите из Play Store и создайте свой собственный мир!"<!--
+    --></string>
+    <string name="locator_page_player">Игроки</string>
+    <string name="player_position_desc">В (%1$d, %2$d, %3$d) из %4$s</string>
+    <string name="gps_advanced_locator">Расширенный локатор...</string>
+    <string name="locator_page_marker">Маркеры</string>
+    <string name="locator_page_coor">Координаты</string>
+    <string name="gps_picer">Получить полную картину\в мире</string>
+    <string name="picer_title">Сделать фотографию</string>
+    <string name="picer_dowhat">Это создаст картину мира и может привести к сбою.</string>
+    <string name="picer_ask_wrong_chunks">Есть повреждённые или неподдерживаемые данные, пропустить или отменить?</string>
+    <string name="picer_ask_old_chunks">В мире есть данные из старой версии Майнкрафт. Возможно, вы захотите отменить сейчас и открыть мир в новой версии Minecraft, чтобы данные обновлялись автоматически. Вы также можете игнорировать эти данные.</string>
+    <string name="general_ignore">Игнорировать</string>
+    <string name="picer_button_cancel"><![CDATA[Отмена и Возврат]]></string>
+    <string name="picer_failed_corrupt">Blocktopograph не может понять ваш мир, возможно, ваша версия игры слишком старая или слишком новая.</string>
+    <string name="picer_failed_old">Этот мир слишком старой версии Minecraft, поэтому не может быть прочитан.</string>
+    <string name="picer_failed_nodata">Рельеф не найден.</string>
+    <string name="picer_progress_analyzing">Анализируя</string>
+    <string name="picer_progress_generating">Содание</string>
+    <string name="picer_preview">Предварительный просмотр:</string>
+    <string name="picer_save">Сохранить</string>
+    <string name="picer_save_text">Картинка будет сохранена в папке Загрузки (Download).</string>
+    <string name="picer_saved">Картинка сохранена.</string>
+    <string name="general_share">Поделиться</string>
+    <string name="picer_share_title">Поделиться с</string>
+    <string name="picer_scale_title">Выберите масштаб:</string>
+    <string name="picer_warn_not_scalable">Каждый блок будет размером в один пиксель. Если вы выберете меньшую область, то сможете масштабировать картинку больше.</string>
+    <string name="picer_btn_generate">Создавать</string>
+    <string name="func_begin_selection">Начать выбор</string>
+    <string name="func_cancel_selection">Отменить выбор</string>
+    <string name="map_sel_panel_title">Варианты выбора</string>
+    <string name="map_sel_menu_sel">Выбор</string>
+    <string name="map_sel_from_seg_1">Из [</string>
+    <string name="map_sel_from_seg_2">,</string>
+    <string name="map_sel_from_seg_3">]</string>
+    <string name="map_sel_to">К [ %1$d, %2$d ] (в том числе от и до)</string>
+    <string name="map_sel_range_seg_1">Диапазон</string>
+    <string name="map_sel_range_seg_2">x</string>
+    <string name="map_sel_menu_apply">Применять</string>
+    <string name="map_sel_error_size_one">Ширина и высота должны быть не менее 1.</string>
+    <string name="map_sel_menu_op">Операции</string>
+    <string name="map_edit_func_lampshade">Абажуры факелов</string>
+    <string name="map_edit_lampshade_note">Это добавило бы стеклянные плафоны к факелам в выбранной области. Поддерживаются миры Minecraft Bedrock 1.4.x и выше. Мы советуем вам сделать резервную копию вашего мира перед любыми изменениями в Blocktopograph.</string>
+    <string name="map_edit_snr_find_in">Найти в</string>
+    <string name="map_edit_snr_bg">Задний план</string>
+    <string name="map_edit_snr_fg">Передний план</string>
+    <string name="map_edit_snr_or">Либо</string>
+    <string name="map_edit_snr_both">Оба</string>
+    <string name="map_edit_snr_find_for">Найти для</string>
+    <string name="map_edit_snr_fg_slot">Слот переднего плана:</string>
+    <string name="map_edit_snr_bg_slot">Фоновый слот:</string>
+    <string name="map_edit_snr_place_in">Затем поместите в</string>
+    <string name="map_edit_snr_and_long">Передний план и фон</string>
+    <string name="map_edit_func_snr">Находить &amp; Заменить</string>
+    <string name="map_edit_snr_ignore_subtype">Игнорировать подтипы</string>
+    <string name="map_edit_snr_help_background">Простой поиск и замену можно выполнить без учета фонового слота. Начиная с Minecraft BE 1.4.x, фоновые слоты используются для хранения воды, сосуществующей с другими блоками, однако их можно использовать для размещения любого блока. Опытные составители карт могут действительно эффективно использовать эту функцию.</string>
+    <string name="map_sel_warn_backup">ВСЕГДА СОЗДАВАЙТЕ РЕЗЕРВНУЮ КОПИЮ ПЕРЕД ПРОДОЛЖЕНИЕМ!</string>
+    <string name="create_world_biome_id">Биом:</string>
+    <string name="create_world_biome_hint">Числовой идентификатор биома, по умолчанию 21</string>
+    <string name="picer_scale_approxim">Примерно %1$dx%2$d.</string>
+    <string name="map_edit_func_dchunk">Удалить чанк</string>
+    <string name="map_edit_dchunk_explain">Это УДАЛЯЕТ все чанки, задействованные в выбранной области. Позже Minecraft может снова создать эту область, но ваш прогресс в ней будет потерян. Если вы не знаете, что такое \"чанк\" в Minecraft, и не понимаете последствий, вы не должны продолжать. Не просто следите за случайными онлайн-статьями.</string>
+    <string name="map_edit_dchunk_warn_not_aligned">Выбранная область не была выровнена по границе фрагмента. Не волнуйтесь, Blocktopograph может подстроиться под вас. Фактическая удаленная область будет немного больше, чем выделенная область. Если быть точным, это будет на 0-15 блоков больше с каждой стороны. Это потому, что область может быть повторно сгенерирована только в том случае, если она была удалена вместе с содержащимися в ней фрагментами. Если вам не нравится автоматическая регулировка, вы можете отменить и изменить выбор самостоятельно.</string>
+    <string name="map_edit_dchunk_posbtn_with_auto_adjust">Продолжить автонастройку</string>
+    <string name="open_up_warning_1">Приложение опасно, \nперед редактированием сделайте резервную копию!</string>
+    <string name="map_smart_notice_too_many_markers">Слишком много маркеров!</string>
+    <string name="map_smart_notice_too_many_markers_message">На экране слишком много маркеров, например мобы. Вы можете отключить их, нажав \"переключить маркеры\" на панели слайдов, или установить фильтр маркеров.</string>
+    <string name="map_uioption_open_drawer">Открыть ящик</string>
+    <string name="general_got_it">Понятно</string>
+    <string name="privacy_promo_title" translatable="false">Политика конфиденциальности</string>
+    <string name="privacy_promo_text" translatable="false"><!--
+        -->Привет, друг,\n\n<!--
+        -->Для лучшего опыта при использовании нашего Сервиса я могу потребовать, чтобы вы предоставили нам <!--
+        -->определённую информацию, включая, помимо прочего, общую информацию о ваших открытых <!--
+        -->Мирах Майнкрафт, включая версии, сиды; и собранная статистика, связанная с устройством/ОС <!--
+        -->от Firebase автоматически, что технически может быть (косвенно) идентифицируемым лично.\n\n<!--
+        -->Ссылка на политику конфиденциальности сторонних поставщиков услуг, используемых приложением:\n<!--
+        --><a href="https://www.google.com/policies/privacy/">Google Play Services</a>\n<!--
+        --><a href="https://firebase.google.com/policies/analytics">Firebase Analytics</a>\n<!--
+        --><a href="http://try.crashlytics.com/terms/privacy-policy.pdf">Crashlytics</a>\n\n<!--
+        -->Все собранные данные будут обрабатываться только на защищённых услугах, предоставляемых <!--
+        -->публично доверенные провайдеры в сети.\n\n<!--
+        -->Доступна полная политика конфиденциальности <!--
+        -->в <a href="https://sites.google.com/view/rbq2012-blocktopograph-privacy"><!--
+        -->Политика конфиденциальности Blocktopograph</a><!--
+     --></string>
+    <string name="privacy_promo_accept_btn" translatable="false">Accept></string>
+    <string name="privacy_promo_reject_btn" translatable="false">Выйти</string>
+    <string name="biome_pick_title">Выберите биом</string>
+    <string name="map_edit_func_chbiome">Изменить биом</string>
+    <string name="map_edit_chbiome_for">Для</string>
+    <string name="map_edit_chbiome_all">Все</string>
+    <string name="map_edit_chbiome_for_specific">Конкретный биом</string>
+    <string name="map_edit_chbiome_to">Изменить на</string>
+    <string name="map_notice_try_selection">Вы можете долго щелкнуть по карте, выбрать \"Начать выбор\" и попробовать отредактировать.</string>
+    <string name="map_picer_world_too_large">Мир слишком велик</string>
+    <string name="map_picer_use_selection_instead">Мир слишком велик. Вы также можете:\n(1) Используйте аналогичный инструмент на ПК;\n(2) Или начните выделение части мира и выберите \"Создать картинку\" из меню выбора.</string>
+    <string name="map_picer_scale_guide">You can scale the picture larger. One pixel per block at least.</string>
+    <string name="map_picer_selection_too_large">Слишком большой выбор</string>
+    <string name="map_picer_selection_too_large_detail">Выбранная вами область слишком велика. Ширина и высота должны быть в пределах %1$d блоки, и область должна быть в пределах %2$d блоках².</string>
+    <string name="map_edit_func_picer">Создать картинку</string>
+    <string name="picer_preview_generating">Создание предварительного просмотра ...</string>
+    <string name="map_locator_player_pos_unknown">Позиция неизвестна</string>
+    <string name="map_dblclick_notice">Дважды коснитесь экрана, чтобы открыть ящик.</string>
+    <string name="some_thing_went_wrong">Что-то пошло не так...</string>
+    <string name="unsatisfied_link_error_explain">Извините, что-то пошло не так, так что вы не сможете использовать это приложение. Короче говоря, волшебная часть приложения отсутствует. \\nВы получили приложение (файл apk) от кого-то, кто ранее установил приложение? Затем приложение было оптимизировано только для устройства этого человека, даже если у вас та же модель устройства, оно не будет работать. Попробуйте удалить и переустановить из Google Play Store, чтобы решить эту проблему. Вы также можете загрузить полную версию приложения с GitHub или других источников. В этом случае вам также может потребоваться удалить эту версию приложения. Приносим извинения за неудобства, но это определённо вызвано вашей дурной привычкой загружать файлы не из нужного места.\\nЕсли это не так, то мы понятия не имеем.</string>
+    <string name="close">Закрыть</string>
+    <string name="backup_amp_restore"><![CDATA[Восстановления резервной копии]]></string>
+    <string name="create_new_backup">Создать новую резервную копию</string>
+    <string name="caption_existing_backups">Существующие резервные копии</string>
+    <string name="auto_del_backups">Автоматически удалять резервные копии старше 3 дней (не удалять, если существует не более 3 резервных копий)</string>
+    <string name="auto_make_backups">Автоматически делать резервные копии при открытии мира</string>
+    <string name="backup_readme"><![CDATA[Это папка резервного копирования для этого мира, созданная и управляемая Blocktopograph, редактором мира Minecraft для Android и средством просмотра карт. Пожалуйста, не изменяйте файлы напрямую, иначе вы не сможете восстановить эти резервные копии с помощью Blocktopograph.]]></string>
+    <string name="enable_auto_backup_note">Каждый раз, когда вы открываете мир, Blocktopograph будет делать новую резервную копию. Это может занять некоторое время и вызвать дополнительное использование хранилища.</string>
+    <string name="enable_auto_backup_title">Включить автозагрузку</string>
+    <string name="hint_can_leave_empty">Вы можете оставить это пустым</string>
+    <string name="general_cancelled">Отменено.</string>
+    <string name="restore">Восстановить</string>
+    <string name="restore_caption">Восстановление предыдущей резервной копии</string>
+    <string name="restore_warn">Это отменит все изменения в мире до создания резервной копии! Ты уверен? Будьте осторожны, это может разрушить вашу работу!</string>
+    <string name="general_delete">Удалить</string>
+    <string name="backup_delete_caption">Удаление резервной копии</string>
+    <string name="backup_delete_warn">Вы удаляете резервную копию. Убедитесь, что вы выбрали правильный вариант.</string>
+    <string name="auto_backup_caption">Выполняется автоматическое резервное копирование...</string>
+    <string name="auto_backup_name">[Авто]</string>
+    <string name="world_name_broken">Сломанный Мир</string>
+</resources>
