@@ -364,7 +364,7 @@
     <string name="map_edit_snr_bg_slot">背景層：</string>
     <string name="map_edit_snr_place_in">然後放置在</string>
     <string name="map_edit_snr_and_long">前景和背景</string>
-    <string name="map_edit_func_snr">查找&替換</string>
+    <string name="map_edit_func_snr">查找&amp;替換</string>
     <string name="map_edit_snr_ignore_subtype">忽略子類型</string>
     <string name="map_edit_snr_help_background">簡單的查找替換可以無視背景層。從Minecraft BE 1.4.x開始，背景層被用於存儲與其他方塊共存的水，不過其實可以放任何方塊。作為高級地圖作者，您可以利用這個特性。</string>
     <string name="map_sel_warn_backup">使用前先備份，請！（震聲）</string>

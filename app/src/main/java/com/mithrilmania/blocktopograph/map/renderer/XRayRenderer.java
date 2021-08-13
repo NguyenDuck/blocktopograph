@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -24,39 +26,38 @@ public class XRayRenderer implements MapRenderer {
         int rW = 16;
         int size2D = rW * (16);
         int index2D;
-        KnownBlockRepr[] bestBlock = new KnownBlockRepr[size2D];
+        var bestBlock = new BlockTemplate[size2D];
 
         int[] minValue = new int[size2D];
         int bValue;
-        KnownBlockRepr block;
 
         int average;
+        BlockTemplate blockTemplate;
 
         for (int z = 0; z < 16; z++) {
             for (int x = 0; x < 16; x++) {
 
                 for (int y = 0; y < chunk.getHeightLimit(); y++) {
-                    block = chunk.getBlock(x, y, z, 0).getLegacyBlock();
-
+                    blockTemplate = chunk.getBlockTemplate(x, y, z, 0);
+                    var blockName = blockTemplate.getBlock().getName();
                     index2D = (z * rW) + x;
-                    if (block.id <= 1)
-                        continue;
-                    else if (block == KnownBlockRepr.B_56_0_DIAMOND_ORE) {
-                        bestBlock[index2D] = block;
+                    if (BlockTemplates.getAirTemplate().equals(blockTemplate)) continue;
+                    else if ("minecraft:diamond_ore".equals(blockName)) {
+                        bestBlock[index2D] = blockTemplate;
                         break;
-                    } else if (block == KnownBlockRepr.B_129_0_EMERALD_ORE) bValue = 8;
-                    else if (block == KnownBlockRepr.B_153_0_QUARTZ_ORE) bValue = 7;
-                    else if (block == KnownBlockRepr.B_14_0_GOLD_ORE) bValue = 6;
-                    else if (block == KnownBlockRepr.B_15_0_IRON_ORE) bValue = 5;
-                    else if (block == KnownBlockRepr.B_73_0_REDSTONE_ORE) bValue = 4;
-                    else if (block == KnownBlockRepr.B_21_0_LAPIS_ORE) bValue = 3;
-                        //else if(block == KnownBlockRepr.COAL_ORE) bValue = 2;
+                    } else if ("minecraft:emerald_ore".equals(blockName)) bValue = 8;
+                    else if ("minecraft:quartz_ore".equals(blockName)) bValue = 7;
+                    else if ("minecraft:gold_ore".equals(blockName)) bValue = 6;
+                    else if ("minecraft:iron_ore".equals(blockName)) bValue = 5;
+                    else if ("minecraft:redstone_ore".equals(blockName)) bValue = 4;
+                    else if ("minecraft:lapis_ore".equals(blockName)) bValue = 3;
+                        //else if(oldBlock == KnownBlockRepr.COAL_ORE) bValue = 2;
                         //else if(b == KnownBlockRepr.LAVA || b == KnownBlockRepr.STATIONARY_LAVA) bValue = 1;
                     else bValue = 0;
 
                     if (bValue > minValue[index2D]) {
                         minValue[index2D] = bValue;
-                        bestBlock[index2D] = block;
+                        bestBlock[index2D] = blockTemplate;
                     }
                 }
             }
@@ -70,13 +71,13 @@ public class XRayRenderer implements MapRenderer {
 
         for (int z = 0, tY = pY; z < 16; z++, tY += pL) {
             for (int x = 0, tX = pX; x < 16; x++, tX += pW) {
-                block = bestBlock[(z * rW) + x];
+                blockTemplate = bestBlock[(z * rW) + x];
                 int color;
-                if (block == null) {
+                if (blockTemplate == null) {
                     color = 0xff000000;
                 } else {
 
-                    color = block.color;
+                    color = blockTemplate.getColor();
 
                     int r = Color.red(color);
                     int g = Color.green(color);

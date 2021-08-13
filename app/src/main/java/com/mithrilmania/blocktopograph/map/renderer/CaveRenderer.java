@@ -7,7 +7,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
 import com.mithrilmania.blocktopograph.map.Dimension;
@@ -43,67 +44,54 @@ public class CaveRenderer implements MapRenderer {
 
                 int r = 0, g = 0, b = 0;
 
-                subChunkLoop:
                 for (int y = chunk.getHeightMapValue(x, z); y >= 0; y--) {
 
-                    Block block = chunk.getBlock(x, y, z, 0);
+                    var blockTemplate = chunk.getBlockTemplate(x, y, z, 0);
 
-                    switch (block.getLegacyBlock()) {
-                        case B_0_0_AIR:
-                            //count the number of times it goes from solid to air
-                            if (solid) layers++;
-
-                            //count the air blocks underground,
-                            // but avoid trees by skipping the first layer
-                            if (intoSurface) cavyness++;
-                            break;
-                        case B_66_0_RAIL://rail
+                    //wooden plank
+                    //stone bricks
+                    //moss cobblestone
+                    if (BlockTemplates.getAirTemplate().equals(blockTemplate)) {
+                        //count the number of times it goes from solid to air
+                        if (solid) layers++;
+                        //count the air blocks underground,
+                        // but avoid trees by skipping the first layer
+                        if (intoSurface) cavyness++;
+                    } else {
+                        var blockName = blockTemplate.getBlock().getName();
+                        if ("minecraft:rail".equals(blockName)) {//rail
                             if (b < 150) {
                                 b = 150;
                                 r = g = 50;
                             }
-                            break;
-                        case B_5_0_PLANKS_OAK://wooden plank
-                        case B_5_1_PLANKS_SPRUCE:
-                        case B_5_2_PLANKS_BIRCH:
-                        case B_5_3_PLANKS_JUNGLE:
-                        case B_5_4_PLANKS_ACACIA:
-                        case B_5_5_PLANKS_BIG_OAK:
+                        } else if ("minecraft:planks".equals(blockName)) {
                             if (b < 100) {
                                 b = 100;
                                 r = g = 100;
                             }
-                            break;
-                        case B_52_0_MOB_SPAWNER://monster spawner
+                        } else if ("minecraft:mob_spawner".equals(blockName)) {//monster spawner
                             r = g = b = 255;
-                            break subChunkLoop;
-                        case B_54_0_CHEST://chest
+                            break;
+                        } else if ("minecraft:chest".equals(blockName)) {//chest
                             if (b < 170) {
                                 b = 170;
                                 r = 240;
                                 g = 40;
                             }
-                            break;
-                        case B_98_0_STONEBRICK_DEFAULT://stone bricks
-                        case B_98_1_STONEBRICK_MOSSY:
-                        case B_98_2_STONEBRICK_CRACKED:
-                        case B_98_3_STONEBRICK_CHISELED:
-                        case B_98_4_STONEBRICK_SMOOTH:
+                        } else if ("minecraft:stonebrick".equals(blockName)) {
                             if (b < 145) {
                                 b = 145;
                                 r = g = 120;
                             }
-                            break;
-                        case B_48_0_MOSSY_COBBLESTONE://moss cobblestone
-                        case B_4_0_COBBLESTONE://cobblestone
+                        } else if ("minecraft:mossy_cobblestone".equals(blockName) || "minecraft:cobblestone".equals(blockName)) {//cobblestone
                             if (b < 140) {
                                 b = 140;
                                 r = g = 100;
                             }
-                            break;
+                        }
                     }
                     r += chunk.getBlockLightValue(x, y, z);
-                    solid = Color.alpha(block.getColor()) == 0xff;
+                    solid = Color.alpha(blockTemplate.getColor()) == 0xff;
                     intoSurface |= solid && (y < 60 || layers > 0);
                 }
 
@@ -114,8 +102,8 @@ public class CaveRenderer implements MapRenderer {
                 } else r *= r;
 
 
-                r = r < 0 ? 0 : r > 255 ? 255 : r;
-                g = g < 0 ? 0 : g > 255 ? 255 : g;
+                r = r < 0 ? 0 : Math.min(r, 255);
+                g = g < 0 ? 0 : Math.min(g, 255);
                 //b = b < 0 ? 0 : b > 255 ? 255 : b;
 
 

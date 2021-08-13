@@ -22,8 +22,8 @@ import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
 import com.mithrilmania.blocktopograph.World;
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.block.Block;
-import com.mithrilmania.blocktopograph.block.BlockRegistry;
+import com.mithrilmania.blocktopograph.block.OldBlock;
+import com.mithrilmania.blocktopograph.block.OldBlockRegistry;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
@@ -296,13 +296,13 @@ public final class MainTestActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressWarnings("unchecked")
+    /*@SuppressWarnings("unchecked")
     private void onClickGenAllBlocks(View view) {
         new ForegroundTask(this).execute(() -> {
             WorldData worldData = mWorld.getWorldData();
-            BlockRegistry registry = worldData.mBlockRegistry;
+            OldBlockRegistry registry = worldData.mOldBlockRegistry;
             int pos = 0;
-            for (KnownBlockRepr block : KnownBlockRepr.values()) {
+            for (KnownBlockRepr oldBlock : KnownBlockRepr.values()) {
                 if (pos % 16 == 0)
                     worldData.removeChunkData(pos / 16, 0, ChunkTag.TERRAIN, Dimension.OVERWORLD, (byte) 0, true);
                 String pot = "------------X------------" +
@@ -313,7 +313,7 @@ public final class MainTestActivity extends AppCompatActivity {
                 for (int y = 0; y < 3; y++)
                     for (int x = 0; x < 5; x++)
                         for (int z = 0; z < 5; z++) {
-                            Block blk;
+                            OldBlock blk;
                             switch (pot.charAt(i)) {
                                 case 'X':
                                     blk = registry.createBlock(KnownBlockRepr.B_42_0_IRON_BLOCK);
@@ -322,7 +322,7 @@ public final class MainTestActivity extends AppCompatActivity {
                                     blk = registry.createBlock(KnownBlockRepr.B_3_0_DIRT);
                                     break;
                                 case '?':
-                                    blk = registry.createBlock(block);
+                                    blk = registry.createBlock(oldBlock);
                                     break;
                                 default:
                                     blk = null;
@@ -343,7 +343,7 @@ public final class MainTestActivity extends AppCompatActivity {
             worldData.closeDB();
             return "meow";
         });
-    }
+    }*/
 
     @SuppressWarnings("unchecked")
     private void onClickAnaAllBlocks(View view) {
@@ -352,7 +352,7 @@ public final class MainTestActivity extends AppCompatActivity {
 //            int pos = 0, valids = 0, invalids = 0, offs = 0;
 //            StringBuilder sb = new StringBuilder();
 //            CompoundTag[] tags = null;
-//            for (KnownBlockRepr block : KnownBlockRepr.values()) {
+//            for (KnownBlockRepr oldBlock : KnownBlockRepr.values()) {
 //                Chunk chunk = worldData.getChunk(pos / 16, 0, Dimension.OVERWORLD, true, Version.V1_2_PLUS);
 //                int ind;
 //                if (pos % 16 == 0) {
@@ -360,7 +360,7 @@ public final class MainTestActivity extends AppCompatActivity {
 //                    ind = 0;
 //                } else ind = 1;
 //                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
-//                sb.append(block.identifier).append(":").append(block.subId).append("->").append(name).append(":");
+//                sb.append(oldBlock.identifier).append(":").append(oldBlock.subId).append("->").append(name).append(":");
 //                CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
 //                sb.append("[");
 //                ArrayList<Tag> value = states.getValue();
@@ -401,7 +401,7 @@ public final class MainTestActivity extends AppCompatActivity {
 //            int pos = 0, valids = 0, invalids = 0;
 //            StringBuilder sb = new StringBuilder();
 //            CompoundTag[] tags = null;
-//            for (KnownBlockRepr block : KnownBlockRepr.values()) {
+//            for (KnownBlockRepr oldBlock : KnownBlockRepr.values()) {
 //                Chunk chunk = worldData.getChunk(pos / 16, 0, Dimension.OVERWORLD, true, Version.V1_2_PLUS);
 //                int ind;
 //                if (pos % 16 == 0) {
@@ -409,7 +409,7 @@ public final class MainTestActivity extends AppCompatActivity {
 //                    ind = 0;
 //                } else ind = 1;
 //                String name = ((StringTag) tags[ind].getChildTagByKey("name")).getValue().substring(10);
-//                if (name.equals(block.identifier)) {
+//                if (name.equals(oldBlock.identifier)) {
 //                    CompoundTag states = ((CompoundTag) tags[ind].getChildTagByKey("states"));
 //                    sb.append("new BlockStateBuilder()");
 //                    Object[] value = states.getValue().toArray();

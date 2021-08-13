@@ -1,20 +1,28 @@
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Streams;
+import com.mithrilmania.blocktopograph.BuildConfig;
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
-import com.mithrilmania.blocktopograph.block.BlockRegistry;
-import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
+import com.mithrilmania.blocktopograph.block.BlockType;
+import com.mithrilmania.blocktopograph.block.blockproperty.BlockProperty;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTInputStream;
 import com.mithrilmania.blocktopograph.nbt.convert.NBTOutputStream;
+import com.mithrilmania.blocktopograph.nbt.tags.ByteTag;
 import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
 import com.mithrilmania.blocktopograph.nbt.tags.IntTag;
-import com.mithrilmania.blocktopograph.nbt.tags.ShortTag;
 import com.mithrilmania.blocktopograph.nbt.tags.StringTag;
-import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 import com.mithrilmania.blocktopograph.util.LittleEndianOutputStream;
 
 import java.io.ByteArrayInputStream;
@@ -24,33 +32,32 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
-    private static final String PALETTE_KEY_NAME = "name";
-    private static final String PALETTE_KEY_VAL = "val";
-    private static final String PREFIX_MINECRAFT = "minecraft:";
     private boolean mIsDualStorageSupported;
 
-    // Masks used to extract BlockState bits of a certain block out of a int32, and vice-versa.
+    // Masks used to extract BlockState bits of a certain oldBlock out of a int32, and vice-versa.
     private static final int[] msk = {0b1, 0b11, 0b111, 0b1111, 0b11111, 0b111111, 0b1111111,
             0b11111111,
             0b111111111, 0b1111111111, 0b11111111111,
             0b111111111111,
             0b1111111111111, 0b11111111111111, 0b11111111111111};
     // There could be multiple BlockStorage let's read the first two.
-    private volatile BlockStorage[] mStorages;
+    private final BlockStorage[] mStorages;
 
-    V1d2d13TerrainSubChunk(@NonNull BlockRegistry blockRegistry) {
-        super(blockRegistry);
+    V1d2d13TerrainSubChunk() {
         mStorages = new BlockStorage[2];
-        mIsDualStorageSupported = false;
+        mIsDualStorageSupported = true;
         createEmptyBlockStorage(0);
     }
 
-    V1d2d13TerrainSubChunk(@NonNull ByteBuffer raw, @NonNull BlockRegistry blockRegistry) {
-        super(blockRegistry);
+    V1d2d13TerrainSubChunk(@NonNull ByteBuffer raw) {
 
         raw.order(ByteOrder.LITTLE_ENDIAN);
         mStorages = new BlockStorage[2];
@@ -62,9 +69,11 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
                 mIsDualStorageSupported = false;
                 raw.position(1);
                 try {
-                    loadBlockStorage(raw, 0);
+                    mStorages[0] = BlockStorage.loadAndMoveForward(raw);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    if (BuildConfig.DEBUG) {
+                        Log.d(this, e);
+                    }
                     mIsError = true;
                 }
                 break;
@@ -78,10 +87,12 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
                     return;
                 }
                 try {
-                    loadBlockStorage(raw, 0);
-                    if (count > 1) loadBlockStorage(raw, 1);
+                    mStorages[0] = BlockStorage.loadAndMoveForward(raw);
+                    if (count > 1) mStorages[1] = BlockStorage.loadAndMoveForward(raw);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    if (BuildConfig.DEBUG) {
+                        Log.d(this, e);
+                    }
                     mIsError = true;
                 }
                 break;
@@ -94,252 +105,41 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     }
 
     @NonNull
-    private static BlockStorage.BlockRecord createNewBlockRecord(@NonNull Block block) {
-        BlockStorage.BlockRecord blockRecord = new BlockStorage.BlockRecord();
-        blockRecord.blockResolved = block;
-        StringTag nameTag = new StringTag(PALETTE_KEY_NAME, block.getBlockType());
-        ArrayList<Tag> pitem = new ArrayList<>(2);
-        pitem.add(nameTag);
-        pitem.add(block.getStates());
-        pitem.add(new IntTag("version", block.getVersion()));
-        blockRecord.tag = new CompoundTag("", pitem);
-        return blockRecord;
-    }
-
-    private boolean setBlockIfSpace(
-            int x, int y, int z, @NonNull BlockStorage storage, @NonNull Block block) {
-        int code = -1;
-
-        // If in palette.
-        List<BlockStorage.BlockRecord> palette = storage.palette;
-        for (int localId = 0, paletteSize = palette.size(); localId < paletteSize; localId++) {
-            Block blockInPalette = palette.get(localId).blockResolved;
-            if (block.equals(blockInPalette)) {
-                code = localId;
-                break;
-            }
-        }
-
-        // Or not.
-        if (code < 0) {
-            // Reached size limit.
-            int max = 1 << storage.blockCodeLenth;
-            int size = palette.size();
-            if (size >= max) return false;
-
-            BlockRegistry blockRegistry = getBlockRegistry();
-            if (blockRegistry == null) return true;
-
-            palette.add(createNewBlockRecord(block));
-            code = size;
-        }
-
-        // The codeOffset'th BlockState is wanted.
-        int codeOffset = getOffset(x, y, z);
-
-        // How much BlockStates can one int32 hold?
-        int intCapa = 32 / storage.blockCodeLenth;
-
-        // The int32 that holds the wanted BlockState.
-        int whichInt = codeOffset / intCapa;
-        int stick = storage.records.get(whichInt);
-        int shift = codeOffset % intCapa * storage.blockCodeLenth;
-        stick &= ~(msk[storage.blockCodeLenth - 1] << shift);
-        stick |= code << shift;
-        storage.records.put(whichInt, stick);
-
-        return true;
-    }
-
-    private void writeStorage(@NonNull BlockStorage storage, @NonNull LittleEndianOutputStream stream) throws IOException {
-
-        // Code length.
-        stream.write(storage.blockCodeLenth << 1);
-
-        // Int32s.
-        stream.write(storage.raw);
-
-        // Palette size.
-        List<BlockStorage.BlockRecord> palette = storage.palette;
-        int size = palette.size();
-        stream.writeInt(size);
-
-        // Palettes.
-        NBTOutputStream nos = new NBTOutputStream(stream, false, true);
-
-        BlockRegistry blockRegistry = getBlockRegistry();
-        if (blockRegistry == null) return;
-        for (int j = 0; j < size; j++)
-            nos.writeTag(palette.get(j).tag);
-    }
-
-//    public CompoundTag[] tempGetPalettes(int baseX, int y, int z) {
-//        return new CompoundTag[]{
-//                tempGetPaletteItemOfPosition(baseX, y, z),
-//                tempGetPaletteItemOfPosition(baseX + 8, y, z)
-//        };
-//    }
-//
-//    private CompoundTag tempGetPaletteItemOfPosition(int x, int y, int z) {
-//        BlockStorage storage = mStorages[0];
-//
-//        //The codeOffset'th BlockState is wanted.
-//        int codeOffset = getOffset(x, y, z);
-//
-//        //How much BlockStates can one int32 hold?
-//        int intCapa = 32 / storage.blockCodeLenth;
-//
-//        //The int32 that holds the wanted BlockState.
-//        int stick = storage.records.get(codeOffset / intCapa);
-//
-//        //Get the BlockState. It's also the index in palette array.
-//        int ind = (stick >> (codeOffset % intCapa * storage.blockCodeLenth)) & msk[storage.blockCodeLenth - 1];
-//
-//        //Transform the local BlockState into global id<<8|data structure.
-//        return storage.palette.get(ind).tag;
-//    }
-
-    private void loadBlockStorage(@NonNull ByteBuffer raw, int which) throws IOException {
-
-        BlockStorage storage = new BlockStorage();
-        mStorages[which] = storage;
-
-        //Read BlockState length.
-        //this byte = (length << 2) | serializedType.
-        storage.blockCodeLenth = (raw.get() & 0xff) >> 1;
-
-        if (storage.blockCodeLenth > 16) throw new IOException("mBlockLength > 16");
-
-        //We use this much of bytes to store BlockStates.
-        int bufsize = (4095 / (32 / storage.blockCodeLenth) + 1) << 2;
-        byte[] arr = new byte[bufsize];
-        ByteBuffer byteBuffer = ByteBuffer.wrap(arr);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        storage.records = byteBuffer.asIntBuffer();
-        storage.raw = arr;
-
-        //No convenient way copy these stuff.
-        byteBuffer.put(raw.array(), raw.position(), bufsize);
-        raw.position(raw.position() + bufsize);
-
-        //Palette items count.
-        int psize = raw.getInt();
-
-//        if(psize>(1<<mMainBlockCodeLenth)){
-//            throw new IOException("psize > most possible bound");
-//        }
-
-        //Construct the palette. Each item is a piece of nbt data.
-        storage.palette = new ArrayList<>(16);
-
-        //NBT reader requires a stream.
-        ByteArrayInputStream bais = new ByteArrayInputStream(raw.array());
-
-        // Skip for byte array would not fail.
-        //noinspection ResultOfMethodCallIgnored
-        bais.skip(raw.position());
-
-        //Wrap it.
-        NBTInputStream nis = new NBTInputStream(bais, false);
-        BlockRegistry blockRegistry = getBlockRegistry();
-        if (blockRegistry == null) return;
-        for (int i = 0; i < psize; i++) {
-
-            //Read a piece of nbt data, represented by a root CompoundTag.
-            CompoundTag tag = (CompoundTag) nis.readTag();
-            BlockStorage.BlockRecord record = new BlockStorage.BlockRecord();
-            record.tag = tag;
-
-            //Read `name` and `val` then resolve the `name` into numeric id.
-            String name = ((StringTag) tag.getChildTagByKey(PALETTE_KEY_NAME)).getValue();
-            Tag statesTag = tag.getChildTagByKey("states");
-            if (statesTag != null) {
-                Tag verTag = tag.getChildTagByKey("version");
-                record.blockResolved = blockRegistry.createBlock(name, (CompoundTag) statesTag,
-                        verTag == null ? 2 : ((IntTag) verTag).getValue());
-            } else {
-                Tag valTag = tag.getChildTagByKey(PALETTE_KEY_VAL);
-                KnownBlockRepr repr = KnownBlockRepr.getBlockNew(name,
-                        valTag instanceof ShortTag ? ((ShortTag) valTag).getValue() : 0);
-                if (repr == null) repr = KnownBlockRepr.guessBlockNew(name);
-                record.blockResolved = blockRegistry.createBlock(repr);
-            }
-            storage.palette.add(record);
-        }
-
-        //If one day we need to read more BlockStorage's, this line helps.
-        raw.position(raw.position() + nis.getReadCount());
+    @Override
+    public BlockTemplate getBlockTemplate(int x, int y, int z, int layer) {
+        if (mIsError) return BlockTemplates.getAirTemplate();
+        BlockStorage storage = mStorages[layer];
+        if (storage == null) return BlockTemplates.getAirTemplate();
+        return storage.getBlock(x, y, z).second;
     }
 
     @NonNull
     @Override
     public Block getBlock(int x, int y, int z, int layer) {
-
-        if (mIsError) return getAir();
-
+        if (mIsError) throw new RuntimeException();
         BlockStorage storage = mStorages[layer];
-        if (storage == null) return getAir();
-
-        //The codeOffset'th BlockState is wanted.
-        int codeOffset = getOffset(x, y, z);
-
-        //How much BlockStates can one int32 hold?
-        int intCapa = 32 / storage.blockCodeLenth;
-
-        //The int32 that holds the wanted BlockState.
-        int stick = storage.records.get(codeOffset / intCapa);
-
-        //Get the BlockState. It's also the index in palette array.
-        int ind = (stick >> (codeOffset % intCapa * storage.blockCodeLenth)) & msk[storage.blockCodeLenth - 1];
-
-        //Transform the local BlockState into global id<<8|data structure.
-        return storage.palette.get(ind).blockResolved;
+        if (storage == null) return BlockTemplates.getAirTemplate().getBlock();
+        return storage.getBlock(x, y, z).first;
     }
 
     @Override
     public void setBlock(int x, int y, int z, int layer, @NonNull Block block) {
 
         // Has error or not supported.
-        if (mIsError || (layer > 0 && !mIsDualStorageSupported)) return;
+        if (mIsError || (layer > 0 && !mIsDualStorageSupported)) throw new RuntimeException();
 
         BlockStorage storage = mStorages[layer];
         // Main storage won't be null unless error.
-        if (storage == null) storage = createEmptyBlockStorage(1);
+        if (storage == null) storage = createEmptyBlockStorage(layer);
 
         // If space is enough.
-        if (setBlockIfSpace(x, y, z, storage, block)) return;
+        if (storage.setBlockIfSpace(x, y, z, block)) return;
 
         // Or we have to extend the whole storage.
-        BlockStorage newStorage = new BlockStorage();
-        newStorage.blockCodeLenth = storage.blockCodeLenth + 1;
-        newStorage.palette = new ArrayList<>(storage.palette);
-        int capa_new = 32 / newStorage.blockCodeLenth;
-        int capa_old = 32 / storage.blockCodeLenth;
-        int stick = 4095 / capa_new + 1;
-        byte[] newRecs = new byte[stick << 2];
-        ByteBuffer newBb = ByteBuffer.wrap(newRecs);
-        newBb.order(ByteOrder.LITTLE_ENDIAN);
-        newStorage.records = newBb.asIntBuffer();
-        newStorage.raw = newRecs;
+        storage = BlockStorage.extend(storage);
 
-        for (int i = 0, hold = 0, hnew = 0, mold = 0, mnew = 0; i < 4096; i++) {
-            int idold =
-                    (storage.records.get(hold) >> (mold * storage.blockCodeLenth)) & msk[storage.blockCodeLenth - 1];
-            idold <<= mnew * newStorage.blockCodeLenth;
-            newStorage.records.put(hnew, newStorage.records.get(hnew) | idold);
-            mold++;
-            mnew++;
-            if (mold == capa_old) {
-                mold = 0;
-                hold++;
-            }
-            if (mnew == capa_new) {
-                mnew = 0;
-                hnew++;
-            }
-        }
-        mStorages[layer] = newStorage;
-        setBlockIfSpace(x, y, z, newStorage, block);
+        mStorages[layer] = storage;
+        storage.setBlockIfSpace(x, y, z, block);
     }
 
     @Override
@@ -353,21 +153,8 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
     }
 
     private BlockStorage createEmptyBlockStorage(int which) {
-
-        BlockStorage storage = new BlockStorage();
+        BlockStorage storage = BlockStorage.createNew();
         mStorages[which] = storage;
-
-        byte[] arr = new byte[512];
-        ByteBuffer bbuff = ByteBuffer.wrap(arr);
-        bbuff.order(ByteOrder.LITTLE_ENDIAN);
-        storage.records = bbuff.asIntBuffer();
-        storage.raw = arr;
-
-        storage.palette = new ArrayList<>(4);
-        storage.palette.add(createNewBlockRecord(getAir()));
-
-        storage.blockCodeLenth = 1;
-
         return storage;
     }
 
@@ -384,11 +171,11 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
         if (mIsDualStorageSupported) {
             leos.write(8);
             leos.write(storageCount);
-            writeStorage(mStorages[0], leos);
-            if (storageCount == 2) writeStorage(mStorages[1], leos);
+            mStorages[0].write(leos);
+            if (storageCount == 2) mStorages[1].write(leos);
         } else {
             leos.write(1);
-            writeStorage(mStorages[0], leos);
+            mStorages[0].write(leos);
         }
         leos.flush();
 
@@ -399,19 +186,241 @@ public final class V1d2d13TerrainSubChunk extends TerrainSubChunk {
 
     private static class BlockStorage {
 
-        byte[] raw;
+        public static final String PALETTE_KEY_ROOT = "";
+        public static final String PALETTE_KEY_NAME = "name";
+        public static final String PALETTE_KEY_STATES = "states";
+        public static final String PALETTE_KEY_VERSION = "version";
 
-        IntBuffer records;
+        private final byte[] raw;
 
-        List<BlockRecord> palette;
+        // records is a view into raw
+        private final IntBuffer records;
 
-        int blockCodeLenth;
+        private final List<Block> palette;
 
-        static class BlockRecord {
+        private final List<BlockTemplate> renderPalette;
 
-            CompoundTag tag;
-            Block blockResolved;
+        private final int blockCodeLenth;
 
+        private BlockStorage() {
+            raw = new byte[512];
+            ByteBuffer bbuff = ByteBuffer.wrap(raw);
+            bbuff.order(ByteOrder.LITTLE_ENDIAN);
+            records = bbuff.asIntBuffer();
+
+            palette = new ArrayList<>(4);
+            renderPalette = new ArrayList<>(4);
+            var airTemplate = BlockTemplates.getAirTemplate();
+            renderPalette.add(airTemplate);
+            palette.add(airTemplate.getBlock());
+
+            blockCodeLenth = 1;
+        }
+
+        // stateful! wrapping with static creation method
+        private BlockStorage(@NonNull ByteBuffer buffer) throws IOException {
+
+            //Read BlockState length.
+            //this byte = (length << 2) | serializedType.
+            blockCodeLenth = (buffer.get() & 0xff) >> 1;
+
+            if (blockCodeLenth > 16) throw new IOException("mBlockLength > 16");
+
+            //We use this much of bytes to store BlockStates.
+            int bufsize = (4095 / (32 / blockCodeLenth) + 1) << 2;
+            byte[] arr = new byte[bufsize];
+            ByteBuffer byteBuffer = ByteBuffer.wrap(arr);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            records = byteBuffer.asIntBuffer();
+            raw = arr;
+
+            //No convenient way copy these stuff.
+            byteBuffer.put(buffer.array(), buffer.position(), bufsize);
+            buffer.position(buffer.position() + bufsize);
+
+            //Palette items count.
+            int psize = buffer.getInt();
+
+//        if(psize>(1<<mMainBlockCodeLenth)){
+//            throw new IOException("psize > most possible bound");
+//        }
+
+            //Construct the palette. Each item is a piece of nbt data.
+            palette = new ArrayList<>(16);
+            renderPalette = new ArrayList<>(16);
+
+            //NBT reader requires a stream.
+            var bais = new ByteArrayInputStream(buffer.array());
+
+            // Skip for byte array would not fail.
+            //noinspection ResultOfMethodCallIgnored
+            bais.skip(buffer.position());
+
+            //Wrap it.
+            var nis = new NBTInputStream(bais, false);
+            for (int i = 0; i < psize; i++)
+                //Read a piece of nbt data, represented by a root CompoundTag.
+                addToPalette(deserializeBlock((CompoundTag) nis.readTag()));
+
+            //If one day we need to read more BlockStorage's, this line helps.
+            buffer.position(buffer.position() + nis.getReadCount());
+        }
+
+        private BlockStorage(@NonNull BlockStorage old) {
+            blockCodeLenth = old.blockCodeLenth + 1;
+            palette = new ArrayList<>(old.palette);
+            renderPalette = new ArrayList<>(old.renderPalette);
+            int capa_new = 32 / blockCodeLenth;
+            int capa_old = 32 / old.blockCodeLenth;
+            int stick = 4095 / capa_new + 1;
+            byte[] newRecs = new byte[stick << 2];
+            ByteBuffer newBb = ByteBuffer.wrap(newRecs);
+            newBb.order(ByteOrder.LITTLE_ENDIAN);
+            records = newBb.asIntBuffer();
+            raw = newRecs;
+            for (int i = 0, hold = 0, hnew = 0, mold = 0, mnew = 0; i < 4096; i++) {
+                int idold =
+                        (old.records.get(hold) >> (mold * old.blockCodeLenth)) & msk[old.blockCodeLenth - 1];
+                idold <<= mnew * blockCodeLenth;
+                records.put(hnew, records.get(hnew) | idold);
+                mold++;
+                mnew++;
+                if (mold == capa_old) {
+                    mold = 0;
+                    hold++;
+                }
+                if (mnew == capa_new) {
+                    mnew = 0;
+                    hnew++;
+                }
+            }
+        }
+
+        public static BlockStorage createNew() {
+            return new BlockStorage();
+        }
+
+        public static BlockStorage loadAndMoveForward(@NonNull ByteBuffer buffer) throws IOException {
+            return new BlockStorage(buffer);
+        }
+
+        public static BlockStorage extend(@NonNull BlockStorage storage) {
+            return new BlockStorage(storage);
+        }
+
+        private void addToPalette(Block block) {
+            palette.add(block);
+            renderPalette.add(BlockTemplates.getBest(block));
+        }
+
+        public boolean setBlockIfSpace(
+                int x, int y, int z, @NonNull Block block) {
+            int code = -1;
+
+            // If in palette.
+            for (int localId = 0, paletteSize = palette.size(); localId < paletteSize; localId++) {
+                Block blockInPalette = palette.get(localId);
+                if (block.equals(blockInPalette)) {
+                    code = localId;
+                    break;
+                }
+            }
+
+            // Or not.
+            if (code < 0) {
+                // Reached size limit.
+                int max = 1 << blockCodeLenth;
+                int size = palette.size();
+                if (size >= max) return false;
+
+                addToPalette(block);
+                code = size;
+            }
+
+            // The codeOffset'th BlockState is wanted.
+            int codeOffset = getOffset(x, y, z);
+
+            // How much BlockStates can one int32 hold?
+            int intCapa = 32 / blockCodeLenth;
+
+            // The int32 that holds the wanted BlockState.
+            int whichInt = codeOffset / intCapa;
+            int stick = records.get(whichInt);
+            int shift = codeOffset % intCapa * blockCodeLenth;
+            stick &= ~(msk[blockCodeLenth - 1] << shift);
+            stick |= code << shift;
+            records.put(whichInt, stick);
+
+            return true;
+        }
+
+        public Pair<Block, BlockTemplate> getBlock(int x, int y, int z) {
+
+            //The codeOffset'th BlockState is wanted.
+            int codeOffset = getOffset(x, y, z);
+
+            //How much BlockStates can one int32 hold?
+            int intCapa = 32 / blockCodeLenth;
+
+            //The int32 that holds the wanted BlockState.
+            int stick = records.get(codeOffset / intCapa);
+
+            //Get the BlockState. It's also the index in palette array.
+            int ind = (stick >> (codeOffset % intCapa * blockCodeLenth)) & msk[blockCodeLenth - 1];
+
+            //Transform the local BlockState into global id<<8|data structure.
+            return new Pair<>(palette.get(ind), renderPalette.get(ind));
+        }
+
+        private void write(@NonNull LittleEndianOutputStream stream) throws IOException {
+
+            // Code length.
+            stream.write(blockCodeLenth << 1);
+
+            // Int32s.
+            stream.write(raw);
+
+            // Palette size.
+            int size = palette.size();
+            stream.writeInt(size);
+
+            // Palettes.
+            NBTOutputStream nos = new NBTOutputStream(stream, false, true);
+
+            for (int j = 0; j < size; j++)
+                nos.writeTag(serializeBlock(palette.get(j)));
+        }
+
+        private static CompoundTag serializeBlock(@NonNull Block block) {
+            return new CompoundTag(PALETTE_KEY_ROOT, Lists.newArrayList(
+                    new StringTag(PALETTE_KEY_NAME, block.getName()),
+                    new CompoundTag(PALETTE_KEY_STATES, new ArrayList<>(Streams.concat(Streams.zip(
+                            Arrays.stream(block.getType().getKnownProperties()).map(BlockProperty::getName),
+                            Arrays.stream(block.getKnownProperties()), Maps::immutableEntry).filter(Objects::nonNull),
+                            block.getCustomProperties().entrySet().stream()).map(
+                            (entry) -> {
+                                var name = entry.getKey();
+                                var val = entry.getValue();
+                                if (val instanceof Byte) return new ByteTag(name, (Byte) val);
+                                else if (val instanceof Integer)
+                                    return new IntTag(name, (Integer) val);
+                                else if (val instanceof String)
+                                    return new StringTag(name, (String) val);
+                                else
+                                    throw new RuntimeException("block state with unsupported type");
+                            }).collect(Collectors.toList()))),
+                    new IntTag(PALETTE_KEY_VERSION, 2012)
+            ));
+        }
+
+        private static Block deserializeBlock(@NonNull CompoundTag tag) {
+            var name = ((StringTag) tag.getChildTagByKey(PALETTE_KEY_NAME)).getValue();
+            var blockType = BlockType.get(name);
+            var builder = (blockType == null ? new Block.Builder(name) : new Block.Builder(blockType));
+            for (var state : ((CompoundTag) tag.getChildTagByKey(PALETTE_KEY_STATES)).getValue())
+                builder.setProperty(state);
+            Log.d(BlockStorage.class, "fuckfuckversion" + tag.getChildTagByKey(PALETTE_KEY_VERSION).getValue());
+            return builder.build();
         }
 
     }

@@ -3,91 +3,106 @@ package com.mithrilmania.blocktopograph.block;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.mithrilmania.blocktopograph.nbt.tags.CompoundTag;
+import com.mithrilmania.blocktopograph.block.blockproperty.BlockProperty;
 import com.mithrilmania.blocktopograph.nbt.tags.Tag;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Block implements Serializable {
 
-    @NonNull
-    private BlockType blockType;
+    private final String name;
 
-    @NonNull
-    private KnownBlockRepr legacyBlock;
+    private final BlockType type;
 
-    private ListingBlock listingBlock;
+    private final Object[] knownProperties;
 
-    @NonNull
-    private CompoundTag states;
+    private final Map<String, Object> customProperties;
 
-    private int version;
+    Block(String name, Map<String, Object> customProperties) {
+        this.name = name;
+        this.type = null;
+        this.knownProperties = null;
+        this.customProperties = customProperties;
+    }
 
-    Block(@NonNull BlockType blockType, @NonNull CompoundTag states, int version) {
-        this.blockType = blockType;
-        this.states = states;
-        this.version = version;
-        KnownBlockRepr legacyBlock = BlockWithStatesToLegacyBlockMapper.getBestRepr(this);
-        if (legacyBlock == null) {
-            for (ListingBlock lb : ListingBlock.values()) {
-                if (lb.getIdentifier().equals(blockType.getName())) {
-                    listingBlock = lb;
-                    break;
-                }
+    Block(BlockType type, Object[] knownProperties, Map<String, Object> customProperties) {
+        this.name = type.getName();
+        this.type = type;
+        this.knownProperties = knownProperties;
+        this.customProperties = customProperties;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BlockType getType() {
+        return type;
+    }
+
+    public Object getProperty(String name) {
+        int index = getKnownPropertyIndex(name, type);
+        if (index >= 0) return knownProperties[index];
+        else return customProperties.get(name);
+    }
+
+    public Object[] getKnownProperties() {
+        return knownProperties;
+    }
+
+    public Map<String, Object> getCustomProperties() {
+        return customProperties;
+    }
+
+    private static int getKnownPropertyIndex(@NonNull String name, @Nullable BlockType type) {
+        if (type != null) {
+            BlockProperty[] properties = type.getKnownProperties();
+            for (int i = 0, propertiesLength = properties.length; i < propertiesLength; i++) {
+                BlockProperty prop = properties[i];
+                if (name.equals(prop.getName())) return i;
             }
-            legacyBlock = KnownBlockRepr.guessBlockNew(blockType.getName());
         }
-        this.legacyBlock = legacyBlock;
+        return -1;
     }
 
-    Block(@NonNull BlockType blockType, @NonNull KnownBlockRepr legacyBlock, int version) {
-        this.blockType = blockType;
-        this.states = new CompoundTag("states", new ArrayList<>());
-        this.version = version;
-        this.legacyBlock = legacyBlock;
-    }
+    public static class Builder {
 
-    @NonNull
-    public String getBlockType() {
-        return blockType.getName();
-    }
+        private final String name;
 
-    public int getVersion() {
-        return version;
-    }
+        private final BlockType type;
 
-    public boolean isOfSameType(Block block) {
-        return blockType == block.blockType;
-    }
+        private final Object[] knownProperties;
 
-    public Tag getState(String key) {
-        return states.getChildTagByKey(key);
-    }
+        private final Map<String, Object> customProperties = new HashMap<>();
 
-    @NonNull
-    public KnownBlockRepr getLegacyBlock() {
-        return legacyBlock;
-    }
+        public Builder(@NonNull String name) {
+            this.name = name;
+            this.type = null;
+            this.knownProperties = null;
+        }
 
-    public int getColor() {
-        if (listingBlock != null)
-            return listingBlock.getColor();
-        return legacyBlock.color;
-    }
+        public Builder(@NonNull BlockType type) {
+            this.name = null;
+            this.type = type;
+            this.knownProperties = new Object[type.getKnownProperties().length];
+        }
 
-    @NonNull
-    public CompoundTag getStates() {
-        return states;
-    }
+        public Builder setProperty(@NonNull String name, Object val) {
+            int index = getKnownPropertyIndex(name, type);
+            if (index >= 0) knownProperties[index] = val;
+            else customProperties.put(name, val);
+            return this;
+        }
 
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        if (!(obj instanceof Block)) return false;
-        Block another = (Block) obj;
-        // Ref compare.
-        if (blockType != another.blockType) return false;
-        return states.equals(another.states);
-    }
+        public Builder setProperty(@NonNull Tag<?> tag) {
+            return setProperty(tag.getName(), tag.getValue());
+        }
 
+        public Block build() {
+            if (type == null) return new Block(name, customProperties);
+            return new Block(type, knownProperties, customProperties);
+        }
+    }
 }

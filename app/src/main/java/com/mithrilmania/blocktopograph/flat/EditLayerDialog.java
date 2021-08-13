@@ -15,6 +15,7 @@ import com.andreabaccega.formedittextvalidator.Validator;
 import com.andreabaccega.widget.FormEditText;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
 import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.databinding.DialogEditLayerBinding;
 import com.mithrilmania.blocktopograph.util.UiUtil;
@@ -79,7 +80,7 @@ public final class EditLayerDialog extends AppCompatActivity {
         });
         amountBar.addValidator(new AmountValidator(getString(R.string.edit_layer_amount_constrait)));
 
-        mBinding.icon.setImageBitmap(layer.block.getIcon(getAssets()));
+        mBinding.icon.setImageBitmap(layer.block.getIcon().getIcon(this));
         UiUtil.blendBlockColor(mBinding.frame, layer.block);
     }
 
@@ -112,11 +113,11 @@ public final class EditLayerDialog extends AppCompatActivity {
             case REQUEST_CODE_PICK_BLOCK: {
                 if (resultCode != RESULT_OK) return;
                 assert data != null;
-                ListingBlock block = (ListingBlock) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
+                BlockTemplate block = (BlockTemplate) data.getSerializableExtra(PickBlockActivity.EXTRA_KEY_BLOCK);
                 Layer layer = mBinding.getLayer();
                 layer.block = block;
                 mBinding.setLayer(layer);
-                mBinding.icon.setImageBitmap(layer.block.getIcon(getAssets()));
+                mBinding.icon.setImageBitmap(layer.block.getIcon().getIcon(this));
                 UiUtil.blendBlockColor(mBinding.frame, block);
                 //mBinding.notifyChange();
                 return;

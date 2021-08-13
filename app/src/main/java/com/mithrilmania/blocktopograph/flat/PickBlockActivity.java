@@ -1,7 +1,6 @@
 package com.mithrilmania.blocktopograph.flat;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,14 +15,17 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.common.collect.Streams;
 import com.mithrilmania.blocktopograph.R;
-import com.mithrilmania.blocktopograph.block.ListingBlock;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
 import com.mithrilmania.blocktopograph.databinding.DialogPickBlockBinding;
 import com.mithrilmania.blocktopograph.databinding.ItemPickBlockBinding;
 import com.mithrilmania.blocktopograph.util.UiUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public final class PickBlockActivity extends AppCompatActivity {
@@ -41,7 +43,7 @@ public final class PickBlockActivity extends AppCompatActivity {
         RecyclerView list = mBinding.list;
         mListManager = new LinearLayoutManager(this);
         list.setLayoutManager(mListManager);
-        mAdapter = new MeowAdapter(getAssets());
+        mAdapter = new MeowAdapter();
         list.setAdapter(mAdapter);
         setResult(RESULT_CANCELED);
 
@@ -89,12 +91,12 @@ public final class PickBlockActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             PickBlockActivity activity = thiz.get();
             if (activity == null) return null;
-            List<ListingBlock> list = activity.mAdapter.getListControl();
+            List<BlockTemplate> list = activity.mAdapter.getListControl();
 
             //Backup all candidates.
-            ListingBlock[] olds = null;
+            BlockTemplate[] olds = null;
             if (index1 >= 0) {
-                olds = new ListingBlock[index2 - index1 + 1];
+                olds = new BlockTemplate[index2 - index1 + 1];
                 for (int i = index1, limit = list.size(); i < olds.length && i < limit; i++) {
                     olds[i] = list.get(i);
                 }
@@ -110,13 +112,14 @@ public final class PickBlockActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 num = -1;
             }
-            for (ListingBlock b : ListingBlock.values())
-                if (b.getLegacy_id() == num ||
-                        (b.getIdentifier().contains(text)) ||
-                        (b.getName().contains(text)))
+            for (Iterator<BlockTemplate> it = BlockTemplates.getAll().iterator(); it.hasNext(); ) {
+                BlockTemplate b = it.next();
+                if (
+                        (b.getBlock().getName().contains(text)))
                     list.add(b);
+            }
             int position = -1;
-            if (olds != null) for (ListingBlock b : olds) {
+            if (olds != null) for (BlockTemplate b : olds) {
                 int i = list.indexOf(b);
                 if (i != -1) {
                     position = i;
@@ -138,14 +141,10 @@ public final class PickBlockActivity extends AppCompatActivity {
 
     private class MeowAdapter extends RecyclerView.Adapter<MeowAdapter.MeowHolder> {
 
-        private final List<ListingBlock> mBlocks;
+        private final List<BlockTemplate> mBlocks;
 
-        @NonNull
-        private AssetManager assMan;
-
-        private MeowAdapter(@NonNull AssetManager assMan) {
+        private MeowAdapter() {
             mBlocks = new ArrayList<>(512);
-            this.assMan = assMan;
         }
 
         @NonNull
@@ -159,7 +158,7 @@ public final class PickBlockActivity extends AppCompatActivity {
             root.setOnClickListener(v -> {
                 //UiUtil.toast(PickBlockActivity.this,""+i);
                 setResult(RESULT_OK, new Intent()
-                        .putExtra(EXTRA_KEY_BLOCK, holder.binding.getBlock()));//;(KnownBlockRepr) v.getTag()));
+                        .putExtra(EXTRA_KEY_BLOCK, holder.binding.getOldBlock()));//;(KnownBlockRepr) v.getTag()));
                 finish();
             });
             return holder;
@@ -167,12 +166,12 @@ public final class PickBlockActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MeowHolder meowHolder, int i) {
-            ListingBlock block = mBlocks.get(i);
+            BlockTemplate oldBlock = mBlocks.get(i);
             ItemPickBlockBinding binding = meowHolder.binding;
-            binding.setBlock(block);
-            //binding.getRoot().setTag(block);
-            binding.icon.setImageBitmap(block.getIcon(assMan));
-            UiUtil.blendBlockColor(binding.getRoot(), block);
+            binding.setOldBlock(oldBlock);
+            //binding.getRoot().setTag(oldBlock);
+            binding.icon.setImageBitmap(oldBlock.getIcon().getIcon(PickBlockActivity.this));
+            UiUtil.blendBlockColor(binding.getRoot(), oldBlock);
         }
 
         @Override
@@ -180,7 +179,7 @@ public final class PickBlockActivity extends AppCompatActivity {
             return mBlocks.size();
         }
 
-        List<ListingBlock> getListControl() {
+        List<BlockTemplate> getListControl() {
             return mBlocks;
         }
 

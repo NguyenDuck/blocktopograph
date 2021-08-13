@@ -2,6 +2,8 @@ package com.mithrilmania.blocktopograph.flat;
 
 import androidx.annotation.Nullable;
 
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
 import com.mithrilmania.blocktopograph.block.ListingBlock;
 
 import java.io.Serializable;
@@ -9,7 +11,7 @@ import java.io.Serializable;
 public final class Layer implements Serializable {
 
     private static long counter = 0;
-    public ListingBlock block;
+    public BlockTemplate block;
     public int amount;
     public long uid;
 
@@ -23,12 +25,12 @@ public final class Layer implements Serializable {
     }
 
     public Layer() {
-        block = ListingBlock.B_0_AIR;
+        block = BlockTemplates.getOfType("minecraft:air")[0];
         amount = 1;
         genUid();
     }
 
-    Layer(ListingBlock block, int amount) {
+    Layer(BlockTemplate block, int amount) {
         this.block = block;
         this.amount = amount;
         genUid();

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
 import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.databinding.FragLayersBinding;
 import com.mithrilmania.blocktopograph.databinding.ItemWorldLayerBinding;
@@ -153,13 +154,13 @@ public final class EditFlatFragment extends Fragment {
         }
 
         void loadDefault() {
-            Layer layer = new Layer(ListingBlock.B_7_BEDROCK, 1);
+            Layer layer = new Layer(BlockTemplates.getOfType("minecraft:bedrock")[0], 1);
             addItem(0, layer);
-            layer = new Layer(ListingBlock.B_3_DIRT, 29);
+            layer = new Layer(BlockTemplates.getOfType("minecraft:dirt")[0], 29);
             addItem(0, layer);
-            layer = new Layer(ListingBlock.B_2_GRASS, 1);
+            layer = new Layer(BlockTemplates.getOfType("minecraft:grass")[0], 1);
             addItem(0, layer);
-            layer = new Layer(ListingBlock.B_31_TALLGRASS, 1);
+            layer = new Layer(BlockTemplates.getOfType("minecraft:tallgrass")[0],1);
             addItem(0, layer);
         }
 
@@ -205,7 +206,7 @@ public final class EditFlatFragment extends Fragment {
             super.onBindViewHolder(holder, position);
             Layer layer = mItemList.get(position);
             holder.binding.setLayer(layer);
-            holder.binding.icon.setImageBitmap(layer.block.getIcon(assMan));
+            holder.binding.icon.setImageBitmap(layer.block.getIcon().getIcon(getContext()));
         }
 
         @Override
@@ -216,7 +217,7 @@ public final class EditFlatFragment extends Fragment {
         private MeowHolder getHolderFromTag(@NonNull ListSwipeItem view) {
             Object tag = view.getTag();
             if (!(tag instanceof WeakReference)) return null;
-            WeakReference ref = (WeakReference) tag;
+            WeakReference<?> ref = (WeakReference<?>) tag;
             Object mho = ref.get();
             return (MeowHolder) mho;
         }

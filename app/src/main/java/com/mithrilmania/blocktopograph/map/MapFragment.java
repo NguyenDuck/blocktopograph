@@ -297,7 +297,7 @@ public class MapFragment extends Fragment {
             if (mBinding.selectionBoard.hasSelection()) {
                 SelectionMenuFragment fragment = SelectionMenuFragment
                         .newInstance(mBinding.selectionBoard.getSelection(),
-                                world.getWorldData().mBlockRegistry, this::doSelectionBasedEdit);
+                                world.getWorldData().mOldBlockRegistry, this::doSelectionBasedEdit);
                 trans.add(R.id.float_window_container, fragment);
                 mFloatingFragment = fragment;
                 setUpSelectionMenu();
@@ -316,7 +316,7 @@ public class MapFragment extends Fragment {
                 fragment = AdvancedLocatorFragment.create(world, this::frameTo);
             } else if (mFloatingFragment instanceof SelectionMenuFragment) {
                 fragment = SelectionMenuFragment
-                        .newInstance(mBinding.selectionBoard.getSelection(), world.getWorldData().mBlockRegistry,
+                        .newInstance(mBinding.selectionBoard.getSelection(), world.getWorldData().mOldBlockRegistry,
                                 this::doSelectionBasedEdit);
             } else return;
             closeFloatPane();
@@ -756,7 +756,7 @@ public class MapFragment extends Fragment {
             case LAMPSHADE:
             case CHBIOME:
             case DCHUNK:
-                new SelectionBasedContextFreeEditTask(func, args, this, world.getWorldData().mBlockRegistry).execute(
+                new SelectionBasedContextFreeEditTask(func, args, this, world.getWorldData().mOldBlockRegistry).execute(
                         new RectEditTarget(
                                 world.getWorldData(),
                                 mBinding.selectionBoard.getSelection(),
@@ -791,7 +791,7 @@ public class MapFragment extends Fragment {
         MapTileView tileView = mBinding.tileView;
         float scale = tileView.getScale();
 
-        //scale the amount of pixels, less pixels per block if zoomed out
+        //scale the amount of pixels, less pixels per oldBlock if zoomed out
         double pixelsPerBlockW = pixelsPerBlockW_unscaled * scale;
         double pixelsPerBlockL = pixelsPerBlockL_unscaled * scale;
 
@@ -1004,7 +1004,7 @@ public class MapFragment extends Fragment {
         } else {
             mBinding.selectionBoard.beginSelection(worldX, worldZ);
             SelectionMenuFragment fragment = SelectionMenuFragment
-                    .newInstance(mBinding.selectionBoard.getSelection(), world.getWorldData().mBlockRegistry, this::doSelectionBasedEdit);
+                    .newInstance(mBinding.selectionBoard.getSelection(), world.getWorldData().mOldBlockRegistry, this::doSelectionBasedEdit);
             openFloatPane(fragment);
             setUpSelectionMenu();
             Activity activity = getActivity();
@@ -1219,7 +1219,7 @@ public class MapFragment extends Fragment {
      * Opens the chunk data nbt editor.
      *
      * @param chunk  the chunk to edit
-     * @param entity if it is entity data (True) or block-entity data (False)
+     * @param entity if it is entity data (True) or oldBlock-entity data (False)
      * @return false when the chunk data could not be loaded.
      */
     private boolean chunkDataNBT(Chunk chunk, boolean entity) {

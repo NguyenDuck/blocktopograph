@@ -1,3 +1,4 @@
+/*
 package com.mithrilmania.blocktopograph.chunk;
 
 import android.graphics.Color;
@@ -5,7 +6,7 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
@@ -153,14 +154,14 @@ public final class PocketChunk extends Chunk {
 
     @NonNull
     @Override
-    public Block getBlock(int x, int y, int z) {
+    public OldBlock getBlock(int x, int y, int z) {
         return getBlock(x, y, z, 0);
     }
 
     @NonNull
     @Override
-    public Block getBlock(int x, int y, int z, int layer) {
-        return mWorldData.get().mBlockRegistry.createBlock(getKnownBlock(x, y, z, layer));
+    public OldBlock getBlock(int x, int y, int z, int layer) {
+        return mWorldData.get().mOldBlockRegistry.createBlock(getKnownBlock(x, y, z, layer));
     }
 
     @NonNull
@@ -175,7 +176,7 @@ public final class PocketChunk extends Chunk {
     }
 
     @Override
-    public void setBlock(int x, int y, int z, int layer, @NonNull Block block) {
+    public void setBlock(int x, int y, int z, int layer, @NonNull OldBlock oldBlock) {
         //TODO implement setBlock for pocket chunk
     }
 
@@ -219,3 +220,4 @@ public final class PocketChunk extends Chunk {
         if (mIsError || mIsVoid) return;
     }
 }
+*/

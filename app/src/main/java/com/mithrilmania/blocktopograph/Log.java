@@ -5,13 +5,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import io.fabric.sdk.android.Fabric;
 
 public class Log {
 
@@ -25,15 +23,13 @@ public class Log {
 
     private static FirebaseAnalytics mFirebaseAnalytics;
 
-    private static PrintWriter mFileLogger;
+//    private static PrintWriter mFileLogger;
 
     private static boolean mIsFirebaseAnalyticsEnabled = false;
     private static boolean mIsCrashlyticsEnabled = false;
 
-    private static String concat(@NonNull Object caller, @NonNull String msg) {
-        Class clazz;
-        if (caller instanceof Class) clazz = (Class) caller;
-        else clazz = caller.getClass();
+    private static String prependClassName(@NonNull Object caller, @NonNull String msg) {
+        Class<?> clazz = caller instanceof Class ? (Class<?>) caller : caller.getClass();
         return clazz.getSimpleName() + ": " + msg;
     }
 
@@ -42,45 +38,38 @@ public class Log {
         mIsFirebaseAnalyticsEnabled = true;
     }
 
-    public static void enableCrashlytics(@NonNull Context context) {
+    public static void enableCrashlytics() {
         if (!BuildConfig.DEBUG) {
-            Fabric.with(context, new Crashlytics());
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
             mIsCrashlyticsEnabled = true;
         }
     }
 
     public static void d(@NonNull Object caller, @NonNull String msg) {
-        android.util.Log.d(LOG_TAG, concat(caller, msg));
+        android.util.Log.d(LOG_TAG, prependClassName(caller, msg));
     }
 
     public static void d(@NonNull Object caller, @NonNull Throwable throwable) {
         StringWriter sw = new StringWriter(4096);
         PrintWriter pw = new PrintWriter(sw);
         throwable.printStackTrace(pw);
-        android.util.Log.e(LOG_TAG, concat(caller, sw.toString()));
+        android.util.Log.e(LOG_TAG, prependClassName(caller, sw.toString()));
+        pw.close();
     }
 
     public static void e(@NonNull Object caller, @NonNull String msg) {
+        d(caller, msg);
         if (mIsCrashlyticsEnabled)
-            Crashlytics.log(android.util.Log.DEBUG, LOG_TAG, concat(caller, msg));
+            FirebaseCrashlytics.getInstance().log(prependClassName(caller, msg));
     }
 
     public static void e(@NonNull Object caller, @NonNull Throwable throwable) {
-        StringWriter sw = new StringWriter(4096);
-        PrintWriter pw = new PrintWriter(sw);
-        throwable.printStackTrace(pw);
-        android.util.Log.e(LOG_TAG, concat(caller, sw.toString()));
-        if (mIsCrashlyticsEnabled) Crashlytics.logException(throwable);
+        d(caller, throwable);
+        if (mIsCrashlyticsEnabled) FirebaseCrashlytics.getInstance().recordException(throwable);
     }
 
     private synchronized static FirebaseAnalytics getFirebaseAnalytics(@NonNull Context context) {
-        if (mFirebaseAnalytics == null) {
-            mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
-
-            //don't measure the test devices in analytics ...Meow but why?
-            //How would a single test device influences data from all over the world...
-            //mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
-        }
+        if (mFirebaseAnalytics == null) mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         return mFirebaseAnalytics;
     }
 

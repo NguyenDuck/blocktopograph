@@ -1,10 +1,11 @@
+/*
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import androidx.annotation.NonNull;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.block.Block;
-import com.mithrilmania.blocktopograph.block.BlockRegistry;
+import com.mithrilmania.blocktopograph.block.OldBlock;
+import com.mithrilmania.blocktopograph.block.OldBlockRegistry;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
@@ -20,9 +21,9 @@ public final class PreV1d2d13TerrainSubChunk extends TerrainSubChunk {
 
     private ByteBuffer mData;
 
-    PreV1d2d13TerrainSubChunk(@NonNull ByteBuffer raw, @NonNull BlockRegistry blockRegistry) {
+    PreV1d2d13TerrainSubChunk(@NonNull ByteBuffer raw, @NonNull OldBlockRegistry oldBlockRegistry) {
 
-        super(blockRegistry);
+        super(oldBlockRegistry);
 
         int size = raw.capacity();
         if (size < POS_SKY_LIGHT || size > TERRAIN_MAX_LENGTH) {
@@ -38,7 +39,7 @@ public final class PreV1d2d13TerrainSubChunk extends TerrainSubChunk {
 
     @NonNull
     @Override
-    public Block getBlock(int x, int y, int z, int layer) {
+    public OldBlock getBlock(int x, int y, int z, int layer) {
         if (mIsError) return getAir();
         int offset = getOffset(x, y, z);
         int id = mData.get(POS_BLOCK_IDS + offset) & 0xff;
@@ -48,7 +49,7 @@ public final class PreV1d2d13TerrainSubChunk extends TerrainSubChunk {
     }
 
     @Override
-    public void setBlock(int x, int y, int z, int layer, @NonNull Block block) {
+    public void setBlock(int x, int y, int z, int layer, @NonNull OldBlock oldBlock) {
         // TODO implement setBlock for pre v1.2.13 subChunk.
     }
 
@@ -73,3 +74,4 @@ public final class PreV1d2d13TerrainSubChunk extends TerrainSubChunk {
         // TODO implement save for pre v1.2.13 subChunk.
     }
 }
+*/

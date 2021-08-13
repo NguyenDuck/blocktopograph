@@ -5,43 +5,42 @@ import androidx.annotation.Nullable;
 
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
-import com.mithrilmania.blocktopograph.block.BlockRegistry;
-import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 
 public abstract class TerrainSubChunk {
 
-    private final WeakReference<BlockRegistry> mBlockRegistry;
+//    private final WeakReference<OldBlockRegistry> mBlockRegistry;
 
     boolean mHasSkyLight;
     boolean mHasBlockLight;
     boolean mIsError;
 
-    protected TerrainSubChunk(@NonNull BlockRegistry blockRegistry) {
-        mBlockRegistry = new WeakReference<>(blockRegistry);
+    protected TerrainSubChunk() {
+//        mBlockRegistry = new WeakReference<>(oldBlockRegistry);
     }
 
     @Nullable
-    public static TerrainSubChunk create(@NonNull byte[] rawData, @NonNull BlockRegistry blockRegistry) {
+    public static TerrainSubChunk create(@NonNull byte[] rawData) {
         TerrainSubChunk subChunk;
         ByteBuffer byteBuffer = ByteBuffer.wrap(rawData);
         switch (rawData[0]) {
-            case 0:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-                subChunk = new PreV1d2d13TerrainSubChunk(byteBuffer, blockRegistry);
-                break;
+//            case 0:
+//            case 2:
+//            case 3:
+//            case 4:
+//            case 5:
+//            case 6:
+//            case 7:
+//                subChunk = new PreV1d2d13TerrainSubChunk(byteBuffer, oldBlockRegistry);
+//                break;
             case 1:
             case 8:
-                subChunk = new V1d2d13TerrainSubChunk(byteBuffer, blockRegistry);
+                subChunk = new V1d2d13TerrainSubChunk(byteBuffer);
                 break;
             default:
                 subChunk = null;
@@ -50,7 +49,7 @@ public abstract class TerrainSubChunk {
     }
 
     @Nullable
-    public static TerrainSubChunk createEmpty(int preferredVersion, @NonNull BlockRegistry blockRegistry) {
+    public static TerrainSubChunk createEmpty(int preferredVersion) {
         TerrainSubChunk subChunk;
         switch (preferredVersion) {
             case 0:
@@ -64,7 +63,7 @@ public abstract class TerrainSubChunk {
                 break;
             case 1:
             case 8:
-                subChunk = new V1d2d13TerrainSubChunk(blockRegistry);
+                subChunk = new V1d2d13TerrainSubChunk();
                 break;
             default:
                 subChunk = null;
@@ -72,16 +71,14 @@ public abstract class TerrainSubChunk {
         return subChunk;
     }
 
-    @NonNull
-    protected Block getAir() {
-        return wrapKnownBlock(KnownBlockRepr.B_0_0_AIR);
-    }
+//    @NonNull
+//    protected OldBlock wrapKnownBlock(KnownBlockRepr knownBlock) {
+//        // TODO: This would be not efficiency for old saves, add corresponding oldBlock to known blocks.
+//        return mBlockRegistry.get().createBlock(knownBlock);
+//    }
 
     @NonNull
-    protected Block wrapKnownBlock(KnownBlockRepr knownBlock) {
-        // TODO: This would be not efficiency for old saves, add corresponding block to known blocks.
-        return mBlockRegistry.get().createBlock(knownBlock);
-    }
+    abstract public BlockTemplate getBlockTemplate(int x, int y, int z, int layer);
 
     @NonNull
     abstract public Block getBlock(int x, int y, int z, int layer);
@@ -106,14 +103,14 @@ public abstract class TerrainSubChunk {
         return mIsError;
     }
 
-    @Nullable
-    protected BlockRegistry getBlockRegistry() {
-        BlockRegistry blockRegistry = mBlockRegistry.get();
-        if (blockRegistry == null) {
-            mIsError = true;
-        }
-        return blockRegistry;
-    }
+//    @Nullable
+//    protected OldBlockRegistry getBlockRegistry() {
+//        OldBlockRegistry oldBlockRegistry = mBlockRegistry.get();
+//        if (oldBlockRegistry == null) {
+//            mIsError = true;
+//        }
+//        return oldBlockRegistry;
+//    }
 
     abstract public void save(WorldData worldData, int chunkX, int chunkZ, Dimension dimension, int which) throws WorldData.WorldDBException, IOException;
 

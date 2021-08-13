@@ -20,6 +20,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.mithrilmania.blocktopograph.R;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.databinding.GeneralWaitBinding;
@@ -69,6 +70,16 @@ public final class UiUtil {
     }
 
     public static void blendBlockColor(@NonNull View view, ListingBlock block) {
+        Drawable drawable = view.getBackground();
+        if (!(drawable instanceof GradientDrawable)) return;
+        GradientDrawable gradientDrawable = (GradientDrawable) drawable;
+        int color = block.getColor();
+        if (color != Color.TRANSPARENT)
+            color = ColorUtils.blendARGB(color, 0x7f7f7f7f, 0.5f);
+        gradientDrawable.setColor(color);
+    }
+
+    public static void blendBlockColor(@NonNull View view, BlockTemplate block) {
         Drawable drawable = view.getBackground();
         if (!(drawable instanceof GradientDrawable)) return;
         GradientDrawable gradientDrawable = (GradientDrawable) drawable;

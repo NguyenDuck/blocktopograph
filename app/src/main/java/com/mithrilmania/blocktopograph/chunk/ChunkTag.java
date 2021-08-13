@@ -16,7 +16,8 @@ public enum ChunkTag {
     BLOCK_EXTRA_DATA((byte) 0x34),//TODO untested, 32768 bytes, used for top-snow.
     BIOME_STATE((byte) 0x35),//TODO untested
     GENERATOR_STAGE((byte) 0x36),
-    VERSION((byte) 0x76);
+    VERSION_PRE16((byte) 0x76),
+    VERSION((byte) 0x2c);;
 
 
     public final byte dataID;

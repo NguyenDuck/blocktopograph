@@ -93,7 +93,7 @@ public class WorldItemListActivity extends AppCompatActivity {
     private void showFeedbackRequestDialogIfNeeded() {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         if (prefs.getInt(PREF_KEY_ACCEPT_DATA_USAGE, 0) == 1) {
-            Log.enableCrashlytics(this);
+            Log.enableCrashlytics();
             Log.enableFirebaseAnalytics(this);
             return;
         }
@@ -113,8 +113,8 @@ public class WorldItemListActivity extends AppCompatActivity {
     }
 
     private void onAcceptedRequestDialog(DialogInterface dialogInterface, int i) {
-        Log.enableCrashlytics(this);
         Log.enableFirebaseAnalytics(this);
+        Log.enableCrashlytics();
         getPreferences(MODE_PRIVATE).edit().putInt(PREF_KEY_ACCEPT_DATA_USAGE, 1).apply();
     }
 

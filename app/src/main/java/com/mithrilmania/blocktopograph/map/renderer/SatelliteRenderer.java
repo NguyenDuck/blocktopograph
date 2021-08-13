@@ -8,7 +8,8 @@ import android.graphics.Rect;
 import androidx.annotation.NonNull;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -33,13 +34,11 @@ public class SatelliteRenderer implements MapRenderer {
         y--;
         for (; y >= 0 && alphaRemain >= .1f; y--) {
 
-            Block block = chunk.getBlock(x, y, z, 0);
+            var blockTemplate = chunk.getBlockTemplate(x, y, z, 0);
 
-            KnownBlockRepr legacyBlock = block.getLegacyBlock();
+            if (BlockTemplates.getAirTemplate().equals(blockTemplate)) continue;//skip air blocks
 
-            if (legacyBlock == KnownBlockRepr.B_0_0_AIR) continue;//skip air blocks
-
-            int color = block.getColor();
+            int color = blockTemplate.getColor();
 
             // no need to process block if it is fully transparent
             if (Color.alpha(color) == 0) continue;
@@ -52,7 +51,7 @@ public class SatelliteRenderer implements MapRenderer {
             float blendB = alphaRemain * blendA * (Color.blue(color) / 255f);
 
             //blend biome-colored blocks
-            if (legacyBlock.hasBiomeShading) {
+            if (blockTemplate.isHasBiomeShading()) {
                 blendR *= biomeR;
                 blendG *= biomeG;
                 blendB *= biomeB;

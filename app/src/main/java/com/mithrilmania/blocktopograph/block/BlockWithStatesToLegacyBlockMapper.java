@@ -4786,13 +4786,13 @@ public class BlockWithStatesToLegacyBlockMapper {
     }
 
     @Nullable
-    public static KnownBlockRepr getBestRepr(@NonNull Block block) {
-        Pair<CompoundTag, KnownBlockRepr>[] list = mMapTypeToBlocks.get(block.getBlockType());
+    public static KnownBlockRepr getBestRepr(@NonNull OldBlock oldBlock) {
+        Pair<CompoundTag, KnownBlockRepr>[] list = mMapTypeToBlocks.get(oldBlock.getBlockType());
         if (list == null || list.length <= 0)
             // Already the best we can d for now.
             return null;
         String[] checks = new String[]{"color", "type", "direction"};
-        ArrayList<Tag> tags = block.getStates().getValue();
+        ArrayList<Tag> tags = oldBlock.getStates().getValue();
         List<Pair<CompoundTag, KnownBlockRepr>> range = new ArrayList<>(list.length);
         range.addAll(Arrays.asList(list));
         for (String check : checks) {

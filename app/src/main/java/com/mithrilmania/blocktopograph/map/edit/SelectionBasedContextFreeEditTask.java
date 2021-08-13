@@ -11,9 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.mithrilmania.blocktopograph.R;
-import com.mithrilmania.blocktopograph.block.BlockRegistry;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
+import com.mithrilmania.blocktopograph.block.OldBlockRegistry;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
-import com.mithrilmania.blocktopograph.block.ListingBlock;
 import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.MapFragment;
 import com.mithrilmania.blocktopograph.util.UiUtil;
@@ -34,13 +34,13 @@ public class SelectionBasedContextFreeEditTask extends
     private final WeakReference<MapFragment> mOwner;
 
     @NonNull
-    private final BlockRegistry registry;
+    private final OldBlockRegistry registry;
 
     private AlertDialog mWaitDialog;
 
     public SelectionBasedContextFreeEditTask(
             @NonNull EditFunction func, @Nullable Bundle args, @NonNull MapFragment owner,
-            @NonNull BlockRegistry registry) {
+            @NonNull OldBlockRegistry registry) {
         mFunction = func;
         mArgs = args;
         this.registry = registry;
@@ -67,8 +67,8 @@ public class SelectionBasedContextFreeEditTask extends
                 SnrConfig cfg = new SnrConfig();
                 cfg.searchMode = 2;
                 cfg.placeMode = 1;
-                cfg.searchBlockMain = new SnrConfig.SearchConditionBlock(ListingBlock.B_50_TORCH);
-                cfg.placeBlockMain = registry.createBlock(KnownBlockRepr.B_20_0_GLASS);
+                cfg.searchBlockMain = new SnrConfig.SearchConditionBlock(BlockTemplates.getOfType("minecraft:torch")[0].getBlock(), true, true);
+                cfg.placeOldBlockMain = BlockTemplates.getOfType("minecraft:glass")[0].getBlock();
                 cfg.ignoreSubId = true;
                 return doSnr(cfg, editTargets);
             }

@@ -96,7 +96,7 @@ public final class FlatLayers {
             JSONArray jlayers = new JSONArray();
             for (Layer layer : mLayers) {
                 JSONObject jlayer = new JSONObject();
-                jlayer.put(KEY_BLOCK_NAME, layer.block.getIdentifier());
+                jlayer.put(KEY_BLOCK_NAME, layer.block.getBlock().getName());
                 //jlayer.put(KEY_BLOCK_DATA, layer.block.subId);
                 jlayer.put(KEY_COUNT, layer.amount);
                 jlayers.put(jlayer);

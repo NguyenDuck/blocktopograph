@@ -1,9 +1,15 @@
 package com.mithrilmania.blocktopograph.map.edit;
 
+import android.util.Pair;
+
+import androidx.annotation.NonNull;
+
+import com.google.common.collect.Streams;
 import com.mithrilmania.blocktopograph.block.Block;
-import com.mithrilmania.blocktopograph.block.ListingBlock;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class SnrConfig implements Serializable {
 
@@ -21,8 +27,8 @@ public class SnrConfig implements Serializable {
     public int placeMode;
     public SearchConditionBlock searchBlockMain;
     public SearchConditionBlock searchBlockSub;
-    public Block placeBlockMain;
-    public Block placeBlockSub;
+    public Block placeOldBlockMain;
+    public Block placeOldBlockSub;
 
     //savedInstanceState.getInt(KEY_SEARCH_IN, 0)
     //savedInstanceState.getInt(KEY_PLACE_IN, 0)
@@ -44,10 +50,32 @@ public class SnrConfig implements Serializable {
 //        bundle.putSerializable(KEY_PLACE_FG, mBinding.replaceBlockFg.getBlock());
 
     public static class SearchConditionBlock implements Serializable {
-        public String identifier;
+        private final Block examplar;
+        private final boolean matchNameOnly;
+        private final boolean allowExtraStates;
 
-        public SearchConditionBlock(ListingBlock block) {
-            identifier = block.getIdentifier();
+        public SearchConditionBlock(@NonNull Block block, boolean matchNameOnly, boolean allowExtraStates) {
+            this.examplar = block;
+            this.matchNameOnly = matchNameOnly;
+            this.allowExtraStates = allowExtraStates;
+        }
+
+        public boolean matches(Block block) {
+            if (!examplar.getName().equals(block.getName())) return false;
+            var examplarKnownProperties = examplar.getKnownProperties();
+            if (examplarKnownProperties != null && Streams.zip(Arrays.stream(examplarKnownProperties),
+                    Arrays.stream(block.getKnownProperties()), Pair::new)
+                    .anyMatch(pair -> pair.first != null && !Objects.equals(pair.first, pair.second))) {
+                return false;
+            }
+            var examplarCustomProperties = examplar.getCustomProperties();
+            var blockCustomProperties = block.getCustomProperties();
+            if (!allowExtraStates && blockCustomProperties.size() > examplarCustomProperties.size())
+                return false;
+            for (var pair : examplarCustomProperties.entrySet())
+                if (!Objects.equals(pair.getValue(), blockCustomProperties.get(pair.getKey())))
+                    return false;
+            return true;
         }
     }
 }

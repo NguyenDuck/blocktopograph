@@ -1,3 +1,4 @@
+/*
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import com.mithrilmania.blocktopograph.WorldData;
@@ -36,7 +37,7 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
     public static final int POS_BIOME_DATA = POS_HEIGHTMAP + area + area;
     public static final int DATA2D_LENGTH = POS_BIOME_DATA + area;
 
-    //Masks used to extract BlockState bits of a certain block out of a int32, and vice-versa.
+    //Masks used to extract BlockState bits of a certain oldBlock out of a int32, and vice-versa.
     private static final int[] msk = {0b1, 0b11, 0b111, 0b1111, 0b11111, 0b111111, 0b1111111,
             0b11111111,
             0b111111111, 0b1111111111, 0b11111111111,
@@ -232,7 +233,7 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
 
     @Override
     public byte getBlockLightValue(int x, int y, int z) {
-        //block light is not stored anymore
+        //oldBlock light is not stored anymore
         return 0;
     }
 
@@ -241,9 +242,11 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
         return false;
     }
 
-    /**
-     * Sets a block type, and also set the corresponding dirty table entry and set the saving flag.
-     */
+    */
+/**
+     * Sets a oldBlock type, and also set the corresponding dirty table entry and set the saving flag.
+     *//*
+
     @Override
     public void setBlockTypeId(int x, int y, int z, int type) {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
@@ -298,3 +301,4 @@ public class V1_2_Plus_TerrainChunkData extends TerrainChunkData {
         return ((h & 0xff) << 8) | ((h >> 8) & 0xff);//little endian to big endian
     }
 }
+*/

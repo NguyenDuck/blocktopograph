@@ -55,7 +55,7 @@ public class SelectionView extends FrameLayout {
      *
      * <p>
      * If the drag distance of a given moment cannot move the selection
-     * at least 1 block's wide, we accumulate the distance to have a larger
+     * at least 1 oldBlock's wide, we accumulate the distance to have a larger
      * chance to move on the next round.
      * </p>
      */
@@ -328,7 +328,7 @@ public class SelectionView extends FrameLayout {
 
             //Log.d(this, "" + distOnScreen + "," + mDragCurrentPos + "," + mDragBeginPosCorr);
 
-            // If a previous round failed to move at least 1 block's wide,
+            // If a previous round failed to move at least 1 oldBlock's wide,
             // it would accumulate the distance till in a future round we could move.
             float movement = distOnScreen * amp + mDragAccumulation;
 
@@ -337,7 +337,7 @@ public class SelectionView extends FrameLayout {
             float pxPerBlx = scale * MCTileProvider.TILESIZE / 16;
             int distanceInBlocks = Math.round(movement / pxPerBlx);
 
-            // If it's less than a block we couldn't move, let the accumulation grow.
+            // If it's less than a oldBlock we couldn't move, let the accumulation grow.
             if (distanceInBlocks == 0) {//&& Math.abs(movement) >= 0.00001f) {
                 mDragAccumulation = movement;
                 break flow;
@@ -545,7 +545,7 @@ public class SelectionView extends FrameLayout {
 
         float scale = tileView.getScale();
 
-        // Pixels per block.
+        // Pixels per oldBlock.
         float pxPerBlx = scale * MCTileProvider.TILESIZE / 16;
 
         // This would translate coordinate related to view, e.g. getScrollX() result,

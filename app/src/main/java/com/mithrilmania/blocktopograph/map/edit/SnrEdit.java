@@ -3,12 +3,13 @@ package com.mithrilmania.blocktopograph.map.edit;
 import androidx.annotation.NonNull;
 
 import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 
 
 public class SnrEdit implements EditTarget.RandomAccessEdit {
 
-    private SnrConfig config;
+    private final SnrConfig config;
     private SnrConfig.SearchConditionBlock b1;
     private SnrConfig.SearchConditionBlock b2;
     private Block b3;
@@ -30,30 +31,26 @@ public class SnrEdit implements EditTarget.RandomAccessEdit {
         switch (cfg.placeMode) {
             case 1:
             case 2:
-                b3 = cfg.placeBlockMain;
+                b3 = cfg.placeOldBlockMain;
                 break;
             case 3:
-                b3 = cfg.placeBlockMain;
-                b4 = cfg.placeBlockSub;
+                b3 = cfg.placeOldBlockMain;
+                b4 = cfg.placeOldBlockSub;
                 break;
         }
-    }
-
-    private boolean matches(Block got, SnrConfig.SearchConditionBlock expected) {
-        return got.getBlockType().equals(expected.identifier);
     }
 
     @Override
     public int edit(Chunk chunk, int x, int y, int z) {
         if (
-                (config.searchMode == 1 && matches(chunk.getBlock(x, y, z, 1), b1)
-                ) || (config.searchMode == 2 && matches(chunk.getBlock(x, y, z), b1)
+                (config.searchMode == 1 && b1.matches(chunk.getBlock(x, y, z, 1))
+                ) || (config.searchMode == 2 && b1.matches(chunk.getBlock(x, y, z))
                 ) || (config.searchMode == 3 && (
-                        matches(chunk.getBlock(x, y, z), b1)
-                                || matches(chunk.getBlock(x, y, z, 1), b1))
+                        b1.matches(chunk.getBlock(x, y, z))
+                                || b1.matches(chunk.getBlock(x, y, z, 1)))
                 ) || (config.searchMode == 4 && (
-                        matches(chunk.getBlock(x, y, z), b1)
-                                && matches(chunk.getBlock(x, y, z, 1), b2))
+                        b1.matches(chunk.getBlock(x, y, z))
+                                && b2.matches(chunk.getBlock(x, y, z, 1)))
                 )
         ) {
             switch (config.placeMode) {

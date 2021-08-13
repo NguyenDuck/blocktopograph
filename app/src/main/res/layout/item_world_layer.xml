@@ -63,13 +63,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{layer.block.name}"
+                    android:text="@{layer.block.block.name}"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{layer.block.identifier+` x`+layer.amount}" />
+                    android:text="@{layer.block.block.name+` x`+layer.amount}" />
 
             </LinearLayout>
 

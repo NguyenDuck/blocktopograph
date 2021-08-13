@@ -1,3 +1,4 @@
+/*
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import com.mithrilmania.blocktopograph.WorldData;
@@ -163,9 +164,11 @@ public class V0_9_TerrainChunkData extends TerrainChunkData {
         return true;
     }
 
-    /**
+    */
+/**
      * Sets a block type, and also set the corresponding dirty table entry and set the saving flag.
-     */
+     *//*
+
     @Override
     public void setBlockTypeId(int x, int y, int z, int type) {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
@@ -223,3 +226,4 @@ public class V0_9_TerrainChunkData extends TerrainChunkData {
     }
 
 }
+*/

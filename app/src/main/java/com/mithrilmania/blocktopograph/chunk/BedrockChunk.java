@@ -3,11 +3,15 @@ package com.mithrilmania.blocktopograph.chunk;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mithrilmania.blocktopograph.BuildConfig;
+import com.mithrilmania.blocktopograph.Log;
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.terrain.TerrainSubChunk;
-import com.mithrilmania.blocktopograph.chunk.terrain.V1d2d13TerrainSubChunk;
 import com.mithrilmania.blocktopograph.map.Biome;
 import com.mithrilmania.blocktopograph.map.Dimension;
 import com.mithrilmania.blocktopograph.util.ColorUtil;
@@ -49,7 +53,7 @@ public final class BedrockChunk extends Chunk {
                         mChunkX, mChunkZ, ChunkTag.DATA_2D, mDimension, (byte) 0, false);
                 if (rawData == null) {
                     if (createIfMissing) {
-                        this.data2D = ByteBuffer.allocate(0x300);
+                        this.data2D = ByteBuffer.allocate(DATA2D_LENGTH);
                     } else {
                         mIsError = true;
                         mIsVoid = true;
@@ -58,14 +62,13 @@ public final class BedrockChunk extends Chunk {
                 }
                 this.data2D = ByteBuffer.wrap(rawData);
             } catch (Exception e) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(this, e);
+                }
                 mIsError = true;
                 mIsVoid = true;
             }
         }
-    }
-
-    public V1d2d13TerrainSubChunk tempGetSubChunk() {
-        return (V1d2d13TerrainSubChunk) getSubChunk(0, false);
     }
 
     @Nullable
@@ -83,14 +86,16 @@ public final class BedrockChunk extends Chunk {
                     return null;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                if (BuildConfig.DEBUG) {
+                    Log.d(this, e);
+                }
                 mErrorList[which] = true;
                 mVoidList[which] = true;
                 return null;
             }
             ret = raw == null ?
-                    TerrainSubChunk.createEmpty(8, worldData.mBlockRegistry) :
-                    TerrainSubChunk.create(raw, worldData.mBlockRegistry);
+                    TerrainSubChunk.createEmpty(8) :
+                    TerrainSubChunk.create(raw);
             if (ret == null || ret.isError()) {
                 mVoidList[which] = true;
                 mErrorList[which] = true;
@@ -174,18 +179,23 @@ public final class BedrockChunk extends Chunk {
 
     @NonNull
     @Override
-    public Block getBlock(int x, int y, int z) {
-        return getBlock(x, y, z, 0);
+    public BlockTemplate getBlockTemplate(int x, int y, int z, int layer) {
+        if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
+            return BlockTemplates.getAirTemplate();
+        TerrainSubChunk subChunk = getSubChunk(y >> 4, false);
+        if (subChunk == null)
+            return BlockTemplates.getAirTemplate();
+        return subChunk.getBlockTemplate(x, y & 0xf, z, layer);
     }
 
     @NonNull
     @Override
     public Block getBlock(int x, int y, int z, int layer) {
         if (x >= 16 || y >= 256 || z >= 16 || x < 0 || y < 0 || z < 0 || mIsVoid)
-            return getAir();
+            throw new IllegalArgumentException();
         TerrainSubChunk subChunk = getSubChunk(y >> 4, false);
         if (subChunk == null)
-            return getAir();
+            return BlockTemplates.getAirTemplate().getBlock();
         return subChunk.getBlock(x, y & 0xf, z, layer);
     }
 
@@ -198,20 +208,17 @@ public final class BedrockChunk extends Chunk {
         if (subChunk == null) return;
         subChunk.setBlock(x, y & 0xf, z, layer, block);
         mDirtyList[which] = true;
-        KnownBlockRepr repr = block.getLegacyBlock();
-
+        BlockTemplate template = BlockTemplates.getBest(block);
         // Height increased.
-        if (repr != KnownBlockRepr.B_0_0_AIR && getHeightMapValue(x, z) < y) {
+        if (template != BlockTemplates.getAirTemplate() && getHeightMapValue(x, z) < y) {
             mIs2dDirty = true;
             setHeightMapValue(x, z, (short) (y + 1));
             // Roof removed.
-        } else if (repr == KnownBlockRepr.B_0_0_AIR && getHeightMapValue(x, z) == y) {
+        } else if (template == BlockTemplates.getAirTemplate() && getHeightMapValue(x, z) == y) {
             mIs2dDirty = true;
             int height = 0;
             for (int h = y - 1; h >= 0; h--) {
-                Block blockAtHeight = getBlock(x, h, z);
-                KnownBlockRepr reprAtHeight = blockAtHeight.getLegacyBlock();
-                if (reprAtHeight != KnownBlockRepr.B_0_0_AIR) {
+                if (getBlockTemplate(x, h, z) != BlockTemplates.getAirTemplate()) {
                     height = h + 1;
                     break;
                 }
@@ -247,9 +254,7 @@ public final class BedrockChunk extends Chunk {
             subChunk = getSubChunk(which, false);
             if (subChunk == null) continue;
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
-                Block block = subChunk.getBlock(x, innerY, z, 0);
-                KnownBlockRepr repr = block.getLegacyBlock();
-                if (repr != KnownBlockRepr.B_0_0_AIR)
+                if (subChunk.getBlockTemplate(x, innerY, z, 0) != BlockTemplates.getAirTemplate())
                     return (which << 4) | innerY;
             }
         }
@@ -265,8 +270,7 @@ public final class BedrockChunk extends Chunk {
             subChunk = getSubChunk(which, false);
             if (subChunk == null) continue;
             for (int innerY = (which == (y >> 4)) ? y & 0xf : 15; innerY >= 0; innerY--) {
-                Block block = subChunk.getBlock(x, innerY, z, 0);
-                if (block.getLegacyBlock() == KnownBlockRepr.B_0_0_AIR)
+                if (subChunk.getBlockTemplate(x, innerY, z, 0) == BlockTemplates.getAirTemplate())
                     return (which << 4) | innerY;
             }
         }

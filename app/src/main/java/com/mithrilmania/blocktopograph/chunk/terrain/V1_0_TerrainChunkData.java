@@ -1,3 +1,4 @@
+/*
 package com.mithrilmania.blocktopograph.chunk.terrain;
 
 import com.mithrilmania.blocktopograph.WorldData;
@@ -183,9 +184,11 @@ public class V1_0_TerrainChunkData extends TerrainChunkData {
         return true;
     }
 
-    /**
+    */
+/**
      * Sets a block type, and also set the corresponding dirty table entry and set the saving flag.
-     */
+     *//*
+
     @Override
     public void setBlockTypeId(int x, int y, int z, int type) {
         if (x >= chunkW || y >= chunkH || z >= chunkL || x < 0 || y < 0 || z < 0) {
@@ -218,10 +221,12 @@ public class V1_0_TerrainChunkData extends TerrainChunkData {
         return data2D.get(POS_BIOME_DATA + get2Di(x, z));
     }
 
-    /*
+    */
+/*
         MCPE 1.0 stopped embedding foliage color data in the chunk data,
          so now we fake the colors by combining biome colors with Perlin noise
-     */
+     *//*
+
 
     @Override
     public byte getGrassR(int x, int z) {
@@ -254,3 +259,4 @@ public class V1_0_TerrainChunkData extends TerrainChunkData {
         return ((h & 0xff) << 8) | ((h >> 8) & 0xff);//little endian to big endian
     }
 }
+*/

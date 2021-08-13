@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 
 import com.mithrilmania.blocktopograph.WorldData;
 import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.map.Dimension;
 
 
@@ -50,18 +53,19 @@ public final class VoidChunk extends Chunk {
 
     @NonNull
     @Override
-    public Block getBlock(int x, int y, int z) {
-        return getBlock(x, y, z, 0);
+    public BlockTemplate getBlockTemplate(int x, int y, int z, int layer) {
+        return BlockTemplates.getAirTemplate();
     }
 
     @NonNull
     @Override
     public Block getBlock(int x, int y, int z, int layer) {
-        return getAir();
+        throw new RuntimeException();
     }
 
     @Override
     public void setBlock(int x, int y, int z, int layer, @NonNull Block block) {
+        throw new RuntimeException();
     }
 
     @Override

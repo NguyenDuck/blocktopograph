@@ -7,7 +7,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.mithrilmania.blocktopograph.WorldData;
-import com.mithrilmania.blocktopograph.block.Block;
+import com.mithrilmania.blocktopograph.block.BlockTemplate;
+import com.mithrilmania.blocktopograph.block.BlockTemplates;
+import com.mithrilmania.blocktopograph.block.OldBlock;
 import com.mithrilmania.blocktopograph.block.KnownBlockRepr;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -76,16 +78,16 @@ public class NetherRenderer implements MapRenderer {
 
                     for (y = caveceil; y >= cavefloor; y--) {
 
-                        Block block = chunk.getBlock(x, y, z, 0);
+                        var blockTemplate = chunk.getBlockTemplate(x, y, z, 0);
 
-                        if (block.getLegacyBlock() == KnownBlockRepr.B_0_0_AIR)
+                        if (BlockTemplates.getAirTemplate().equals(blockTemplate))
                             continue;//skip air blocks
 
                         //try the default meta value: 0
-                        //if (block == null) block = KnownBlockRepr.getBlock(id, 0);
+                        //if (oldBlock == null) oldBlock = KnownBlockRepr.getBlock(id, 0);
 
-                        int color = block.getColor();
-                        // no need to process block if it is fully transparent
+                        int color = blockTemplate.getColor();
+                        // no need to process oldBlock if it is fully transparent
                         if (Color.alpha(color) == 0) continue;
 
                         float rf = Color.red(color) / 255f;
@@ -103,7 +105,7 @@ public class NetherRenderer implements MapRenderer {
                         sumBf += blendB;
                         a *= 1f - af;
 
-                        // break when an opaque block is encountered
+                        // break when an opaque oldBlock is encountered
                         if (Color.alpha(color) == 0xff) break;
                     }
 
@@ -123,40 +125,37 @@ public class NetherRenderer implements MapRenderer {
                 int b = (int) (avgShading * sumBf / layers * 255f);
 
 
-                r = r < 0 ? 0 : r > 255 ? 255 : r;
-                g = g < 0 ? 0 : g > 255 ? 255 : g;
-                b = b < 0 ? 0 : b > 255 ? 255 : b;
+                r = r < 0 ? 0 : Math.min(r, 255);
+                g = g < 0 ? 0 : Math.min(g, 255);
+                b = b < 0 ? 0 : Math.min(b, 255);
 
                 for (y = 0; y < chunk.getHeightLimit(); y++) {
 
                     //some x-ray for important stuff like portals
-                    switch (chunk.getBlock(x, y, z, 0).getLegacyBlock()) {
-                        case B_52_0_MOB_SPAWNER://monster spawner
-                            r = g = b = 255;
-                            break;
-                        case B_54_0_CHEST://chest
-                            if (worth < 90) {
-                                worth = 90;
-                                b = 170;
-                                r = 240;
-                                g = 40;
-                            }
-                            break;
-                        case B_115_0_NETHER_WART://nether wart
-                            if (worth < 80) {
-                                worth = 80;
-                                r = b = 120;
-                                g = 170;
-                            }
-                            break;
-                        case B_90_0_PORTAL://nether portal
-                            if (worth < 95) {
-                                worth = 95;
-                                r = 60;
-                                g = 0;
-                                b = 170;
-                            }
-                            break;
+                    BlockTemplate blockTemplate = chunk.getBlockTemplate(x, y, z, 0);
+                    var blockName = blockTemplate.getBlock().getName();
+                    if ("minecraft:mob_spawner".equals(blockName)) {//monster spawner
+                        r = g = b = 255;
+                    } else if ("minecraft:chest".equals(blockName)) {//chest
+                        if (worth < 90) {
+                            worth = 90;
+                            b = 170;
+                            r = 240;
+                            g = 40;
+                        }
+                    } else if ("minecraft:nether_wart".equals(blockName)) {//nether wart
+                        if (worth < 80) {
+                            worth = 80;
+                            r = b = 120;
+                            g = 170;
+                        }
+                    } else if ("minecraft:portal".equals(blockName)) {//nether portal
+                        if (worth < 95) {
+                            worth = 95;
+                            r = 60;
+                            g = 0;
+                            b = 170;
+                        }
                     }
                 }
 

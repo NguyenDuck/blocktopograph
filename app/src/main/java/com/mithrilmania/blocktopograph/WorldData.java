@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.litl.leveldb.DB;
 import com.litl.leveldb.Iterator;
-import com.mithrilmania.blocktopograph.block.BlockRegistry;
+import com.mithrilmania.blocktopograph.block.OldBlockRegistry;
 import com.mithrilmania.blocktopograph.chunk.Chunk;
 import com.mithrilmania.blocktopograph.chunk.ChunkTag;
 import com.mithrilmania.blocktopograph.chunk.Version;
@@ -17,6 +17,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Wrapper around level.dat world spec en levelDB database.
@@ -30,11 +31,11 @@ public class WorldData {
 
     private WeakReference<World> world;
     private LruCache<Key, Chunk> chunks = new ChunkCache(this, 256);
-    public final BlockRegistry mBlockRegistry;
+    public final OldBlockRegistry mOldBlockRegistry;
 
     public WorldData(World world) {
         this.world = new WeakReference<>(world);
-        this.mBlockRegistry = new BlockRegistry(2048);
+        this.mOldBlockRegistry = new OldBlockRegistry(2048);
     }
 
     static String bytesToHex(byte[] bytes, int start, int end) {
@@ -146,6 +147,10 @@ public class WorldData {
         return db.get(chunkKey);
     }
 
+    public byte[] getChunkData(int x, int z, ChunkTag type, Dimension dimension) throws WorldDBException, WorldDBLoadException {
+        return getChunkData(x, z, type, dimension, (byte) 0, false);
+    }
+
     public void writeChunkData(int x, int z, ChunkTag type, Dimension dimension, byte subChunk, boolean asSubChunk, byte[] chunkData) throws WorldDBException {
         //ensure that the db is opened
         this.openDB();
@@ -158,6 +163,20 @@ public class WorldData {
         this.openDB();
 
         db.delete(getChunkDataKey(x, z, type, dimension, subChunk, asSubChunk));
+    }
+
+    public void removeFullChunk(int x, int z, Dimension dimension) {
+        var iterator = db.iterator();
+        int count = 0;
+        var compareKey = getChunkDataKey(x, z, ChunkTag.DATA_2D, dimension, (byte) 0, false);
+        int baseKeyLength = dimension == Dimension.OVERWORLD ? 8 : 12;
+        for (iterator.seekToFirst(); iterator.isValid() && count < 800; iterator.next(), count++) {
+            byte[] key = iterator.getKey();
+            if (key.length > baseKeyLength && key.length <= baseKeyLength + 3 &&
+                    IntStream.range(0, baseKeyLength).allMatch(i -> key[i] == compareKey[i]))
+                db.delete(key);
+        }
+        iterator.close();
     }
 
     public Chunk getChunk(int cX, int cZ, Dimension dimension, boolean createIfMissing, Version createOfVersion) {
