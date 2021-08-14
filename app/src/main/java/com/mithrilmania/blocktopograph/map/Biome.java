@@ -21,7 +21,7 @@ public enum Biome {
     TAIGA(5, "Taiga", ColorWrapper.fromRGB(9, 102, 91)),
     SWAMPLAND(6, "Swampland", ColorWrapper.fromRGB(4, 200, 139)),
     RIVER(7, "River", ColorWrapper.fromRGB(1, 1, 255)),
-    HELL(8, "Hell", ColorWrapper.fromRGB(255, 0, 1)),
+    //ID8: line 117
     SKY(9, "Sky", ColorWrapper.fromRGB(130, 129, 254)),
     FROZEN_OCEAN(10, "Frozen Ocean", ColorWrapper.fromRGB(142, 141, 161)),
     FROZEN_RIVER(11, "Frozen River", ColorWrapper.fromRGB(159, 163, 255)),
@@ -115,13 +115,9 @@ public enum Biome {
     
     //Nether biome in 1.16.0 nether update.
     NETHER_WASTES(8, "Nether Wastes", ColorWrapper.fromRGB(132, 65, 65)),
-
     SOUL_SAND_VALLEY(170, "Soul Sand Valley", ColorWrapper.fromRGB(66, 113, 114)),
-    
     CRIMSON_FOREST(171, "Crimson Forest", ColorWrapper.fromRGB(141, 30, 40)),
-    
     WARPED_FOREST(172, "Warped Forest", ColorWrapper.fromRGB(22, 126, 134)),
-    
     BASALT_DELTAS(173, "Basalt Deltas", ColorWrapper.fromRGB(75, 69, 71));
 
     private static final SparseArray<Biome> biomeMap;
