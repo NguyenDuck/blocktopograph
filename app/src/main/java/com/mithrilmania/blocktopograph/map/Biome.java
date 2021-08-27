@@ -21,7 +21,7 @@ public enum Biome {
     TAIGA(5, "Taiga", ColorWrapper.fromRGB(9, 102, 91)),
     SWAMPLAND(6, "Swampland", ColorWrapper.fromRGB(4, 200, 139)),
     RIVER(7, "River", ColorWrapper.fromRGB(1, 1, 255)),
-    //ID8: line 117
+    //HELL(8, "Hell", ColorWrapper.fromRGB(255, 0, 1)),
     SKY(9, "Sky", ColorWrapper.fromRGB(130, 129, 254)),
     FROZEN_OCEAN(10, "Frozen Ocean", ColorWrapper.fromRGB(142, 141, 161)),
     FROZEN_RIVER(11, "Frozen River", ColorWrapper.fromRGB(159, 163, 255)),
