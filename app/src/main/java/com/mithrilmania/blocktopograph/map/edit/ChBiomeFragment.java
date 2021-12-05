@@ -113,7 +113,7 @@ public final class ChBiomeFragment extends DialogFragment {
                 mBinding.changeFor.getCheckedRadioButtonId() == R.id.biome_for_all ?
                         null : mBinding.biomeView.getBiome());
         Biome biomeTo = mBinding.biomeReplace.getBiome();
-        bundle.putSerializable(KEY_TO, biomeTo == null ? Biome.THE_VOID : biomeTo);
+        bundle.putSerializable(KEY_TO, biomeTo == null ? Biome.PLAINS : biomeTo);
         mEntry.invokeEditFunction(EditFunction.CHBIOME, bundle);
     }
 }
