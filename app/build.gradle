@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'com.guardsquare.proguard'
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
@@ -13,6 +13,7 @@ android {
         versionName "1.9.5"
         vectorDrawables.useSupportLibrary = true
     }
+
     dataBinding {
         enabled true
     }
