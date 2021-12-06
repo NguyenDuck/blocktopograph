@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'com.guardsquare.proguard'
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
@@ -13,6 +13,7 @@ android {
         versionName "1.9.5"
         vectorDrawables.useSupportLibrary = true
     }
+
     dataBinding {
         enabled true
     }
@@ -77,8 +78,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //implementation 'com.github.MikeOrtiz:TouchImageView:2.1.1'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'com.github.florent37:expansionpanel:1.2.2'
-    implementation 'com.jbvincey:nestedradiobutton:1.0'
+    implementation 'com.github.florent37:expansionpanel:1.2.4'
+    implementation 'com.github.jbvincey:nestedradiobutton:1.1'
     implementation 'net.lingala.zip4j:zip4j:2.9.0'
     // do NOT accidentally "up"-grade to the 2003 version
     //noinspection GradleDependency
