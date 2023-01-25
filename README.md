@@ -6,14 +6,10 @@ By *Proto Lambda*\(Link removed, as he asked to\), [@MithrilMania](https://githu
 [@flagmaggot](https://github.com/flagmaggot) and many other community contributors, including translation.  
 This fork is the only one supporting MCPE 1.13+ for now.
 
-## ![translate](https://github.com/Templarian/MaterialDesign/blob/master/svg/web.svg) Help improve translation
-[Click here](https://github.com/oO0oO0oO0o0o00/blocktopograph/blob/master/translation.md).
+## Redirection
+Update is currently paused due to several difficulties (including sections below). The current active fork is now https://github.com/NguyenDuck/blocktopograph
 
-## Update paused
-As title.
-
-Translations and pull requests **will still be processed**, but we encourage you to
-take over this project and develope on your own.
+Translations and pull requests are encouraged to be made to the active forks instead of this one.
 
 ## ![download](https://github.com/Templarian/MaterialDesign/blob/master/svg/download.svg)Download
 [>>> Download on Google Play <<<](https://play.google.com/store/apps/details?id=rbq2012.blocktopograph)  
