@@ -27,6 +27,7 @@ android {
             path "src/main/cpp/Android.mk"
         }
     }
+    namespace 'com.litl.leveldb'
 
 }
 
