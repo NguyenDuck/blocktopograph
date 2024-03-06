@@ -1,114 +1,118 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">?android:attr/textColor</item>
-        <item name="android:buttonStyle">@style/AppButtonStyle</item>
-        <item name="imageButtonStyle">@style/AppImageButtonStyle</item>
-        <item name="buttonBarButtonStyle">@style/AppBarButtonStyle</item>
-    </style>
+	<style name="Dialog.StoragePermission" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+		<item name="android:textColor">@color/colorPrimary</item>
+	</style>
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:textColor">?android:attr/textColor</item>
+		<item name="android:buttonStyle">@style/AppButtonStyle</item>
+		<item name="imageButtonStyle">@style/AppImageButtonStyle</item>
+		<item name="buttonBarButtonStyle">@style/AppBarButtonStyle</item>
+	</style>
 
-    <style name="AppTheme.Floating" parent="AppTheme">
-        <!-- Customize your theme here. -->
-        <item name="android:textColor">@android:color/white</item>
-        <item name="colorAccent">@android:color/white</item>
-        <item name="colorControlNormal">#bbbbbb</item>
-        <item name="textColorAlertDialogListItem">@android:color/white</item>
-        <item name="editTextStyle">@style/AppTheme.Floating.EditTextStyle</item>
-        <item name="colorControlHighlight">@color/colorAccent</item>
-    </style>
+	<style name="AppTheme.Floating" parent="AppTheme">
+		<!-- Customize your theme here. -->
+		<item name="android:textColor">@android:color/white</item>
+		<item name="colorAccent">@android:color/white</item>
+		<item name="colorControlNormal">#bbbbbb</item>
+		<item name="textColorAlertDialogListItem">@android:color/white</item>
+		<item name="editTextStyle">@style/AppTheme.Floating.EditTextStyle</item>
+		<item name="colorControlHighlight">@color/colorAccent</item>
+	</style>
 
-    <style name="AppTheme.Floating.EditTextStyle" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
+	<style name="AppTheme.Floating.EditTextStyle" parent="Widget.AppCompat.EditText">
+		<item name="android:textColor">@android:color/white</item>
+	</style>
 
-    <style name="AppTheme.Floating.SmallTextButtonStyle" parent="Widget.AppCompat.TextView">
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-        <item name="android:padding">6dp</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
+	<style name="AppTheme.Floating.SmallTextButtonStyle" parent="Widget.AppCompat.TextView">
+		<item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+		<item name="android:padding">6dp</item>
+		<item name="android:textColor">@android:color/white</item>
+	</style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowCloseOnTouchOutside">false</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
-    </style>
+	<style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+		<item name="android:windowCloseOnTouchOutside">false</item>
+		<item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+		<item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+	</style>
 
-    <style name="AppTheme.FlexDialog" parent="AppTheme"/>
+	<style name="AppTheme.FlexDialog" parent="AppTheme"/>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+	<style name="AppTheme.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
 
-    <style name="World" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">?android:attr/textColor</item>
-    </style>
+	<style name="World" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:textColor">?android:attr/textColor</item>
+	</style>
 
-    <style name="AppTheme.FullScreen" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
+	<style name="AppTheme.FullScreen" parent="@style/Theme.AppCompat.NoActionBar">
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowActionBar">false</item>
+		<item name="android:windowFullscreen">true</item>
+		<item name="android:windowContentOverlay">@null</item>
+	</style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="TreeNodeStyleCustomRoot">
-        <item name="android:paddingLeft">20dp</item>
-        <!-- ensures that the keyboard does not overlap with the last (bottom) elements -->
-        <item name="android:paddingBottom">400dp</item>
-    </style>
+	<style name="TreeNodeStyleCustomRoot">
+		<item name="android:paddingLeft">20dp</item>
+		<!-- ensures that the keyboard does not overlap with the last (bottom) elements -->
+		<item name="android:paddingBottom">400dp</item>
+	</style>
 
-    <style name="TreeNodeStyleCustom">
-        <item name="android:paddingLeft">20dp</item>
-    </style>
+	<style name="TreeNodeStyleCustom">
+		<item name="android:paddingLeft">20dp</item>
+	</style>
 
-    <style name="AppButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/sel_wid_mcbtn_bg</item>
-        <item name="android:textColor">#fff</item>
-        <item name="android:layout_margin">5dp</item>
-    </style>
+	<style name="AppButtonStyle" parent="Widget.AppCompat.Button">
+		<item name="android:background">@drawable/sel_wid_mcbtn_bg</item>
+		<item name="android:textColor">#fff</item>
+		<item name="android:layout_margin">5dp</item>
+	</style>
 
-    <style name="AppImageButtonStyle" parent="Widget.AppCompat.ImageButton">
-        <item name="android:background">@drawable/sel_wid_mcbtn_bg</item>
-        <item name="android:textColor">#fff</item>
-        <item name="android:layout_margin">5dp</item>
-    </style>
+	<style name="AppImageButtonStyle" parent="Widget.AppCompat.ImageButton">
+		<item name="android:background">@drawable/sel_wid_mcbtn_bg</item>
+		<item name="android:textColor">#fff</item>
+		<item name="android:layout_margin">5dp</item>
+	</style>
 
-    <style name="AppBarButtonStyle" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
+	<style name="AppBarButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+		<item name="android:textColor">@color/colorAccent</item>
+	</style>
 
-    <style name="MenuButtonsStyle">
-        <item name="fab_size">mini</item>
-        <item name="fab_showAnimation">@anim/jump_from_down</item>
-        <item name="fab_hideAnimation">@anim/jump_to_down</item>
-        <item name="fab_shadowColor">#444</item>
-        <item name="fab_colorNormal">@color/colorAccent</item>
-        <item name="fab_colorPressed">@color/colorAccentDark</item>
-        <item name="fab_colorRipple">#fff</item>
-    </style>
+	<style name="MenuButtonsStyle">
+		<item name="fab_size">mini</item>
+		<item name="fab_showAnimation">@anim/jump_from_down</item>
+		<item name="fab_hideAnimation">@anim/jump_to_down</item>
+		<item name="fab_shadowColor">#444</item>
+		<item name="fab_colorNormal">@color/colorAccent</item>
+		<item name="fab_colorPressed">@color/colorAccentDark</item>
+		<item name="fab_colorRipple">#fff</item>
+	</style>
 
-    <style name="WaterMarkTextStyle">
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:textColor">#ffffffff</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:shadowColor">#000000</item>
-        <item name="android:shadowDx">1</item>
-        <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">1</item>
-    </style>
+	<style name="WaterMarkTextStyle">
+		<item name="android:paddingLeft">4dp</item>
+		<item name="android:paddingBottom">4dp</item>
+		<item name="android:textColor">#ffffffff</item>
+		<item name="android:textSize">12sp</item>
+		<item name="android:shadowColor">#000000</item>
+		<item name="android:shadowDx">1</item>
+		<item name="android:shadowDy">1</item>
+		<item name="android:shadowRadius">1</item>
+	</style>
+
 	<style name="Widget.AppTheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
 		<item name="android:background">@color/black_overlay</item>
 	</style>
