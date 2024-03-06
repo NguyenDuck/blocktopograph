@@ -1,102 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.mithrilmania.blocktopograph">
+          xmlns:tools="http://schemas.android.com/tools">
 
+	<uses-sdk tools:overrideLibrary="com.jbvincey.nestedradiobutton"/>
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <uses-sdk tools:overrideLibrary="com.jbvincey.nestedradiobutton" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <application
-        android:name=".WrappedApp"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:requestLegacyExternalStorage="true"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
+	<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+	                 android:minSdkVersion="29"
+	                 tools:ignore="ScopedStorage"/>
 
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
+	<application
+			android:allowBackup="true"
+			android:icon="@mipmap/ic_launcher"
+			android:label="@string/app_name"
+			android:requestLegacyExternalStorage="true"
+			android:theme="@style/AppTheme">
+		<activity
+				android:name=".MainActivity"
+				android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
-        <meta-data
-            android:name="firebase_analytics_collection_enabled"
-            android:value="false" />
-
-        <activity
-            android:name=".worldlist.WorldItemListActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!-- World Detail -->
-        <activity
-            android:name=".worldlist.WorldItemDetailActivity"
-            android:label="@string/title_worlditem_detail"
-            android:parentActivityName=".worldlist.WorldItemListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!-- World -->
-        <activity
-            android:name=".WorldActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_world"
-            android:parentActivityName=".worldlist.WorldItemListActivity"
-            android:theme="@style/World" />
-
-        <activity
-            android:name=".CreateWorldActivity"
-            android:label="@string/create_world_title"
-            android:parentActivityName=".worldlist.WorldItemListActivity"
-            android:theme="@style/AppTheme.FlexDialog" />
-
-        <activity
-            android:name=".flat.EditLayerDialog"
-            android:theme="@style/AppTheme.Dialog" />
-
-        <activity
-            android:name=".flat.PickBlockActivity"
-            android:label="@string/pick_block_title"
-            android:theme="@style/AppTheme.Dialog" />
-
-        <activity
-            android:name=".test.MainTestActivity"
-            android:label="@string/title_test_page"
-            android:parentActivityName=".worldlist.WorldItemListActivity" />
-
-        <activity
-            android:name=".BiomeSelectDialog"
-            android:label="@string/biome_pick_title"
-            android:theme="@style/AppTheme.Dialog" />
-        <activity
-            android:name=".UnsatisfiedLinkErrorActivity"
-            android:label="@string/some_thing_went_wrong" />
-
-        <activity android:name=".test.VisualizationActivity" />
-        <activity
-            android:name=".BackupActivity"
-            android:label="@string/backup_amp_restore"
-            android:theme="@style/AppTheme.FlexDialog">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mithrilmania.blocktopograph.WorldActivity" />
-        </activity>
-
-        <meta-data
-            android:name="android.support.VERSION"
-            android:value="28.0.0"
-            tools:node="replace" />
-
-    </application>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+	</application>
 
 </manifest>

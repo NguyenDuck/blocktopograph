@@ -5,7 +5,7 @@
 
 ## Technical Support
 
-* Android SDK Version ( *Processing* )
+* Android SDK Version
 
 |    Minium     |       Target       |
 |:-------------:|:------------------:|

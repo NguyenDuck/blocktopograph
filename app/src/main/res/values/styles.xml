@@ -38,7 +38,7 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
-    <style name="AppTheme.FlexDialog" parent="AppTheme" />
+    <style name="AppTheme.FlexDialog" parent="AppTheme"/>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -59,9 +59,9 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="TreeNodeStyleCustomRoot">
         <item name="android:paddingLeft">20dp</item>
@@ -109,5 +109,13 @@
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
     </style>
+	<style name="Widget.AppTheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+		<item name="android:background">@color/black_overlay</item>
+	</style>
+
+	<style name="Widget.AppTheme.ButtonBar.Fullscreen" parent="">
+		<item name="android:background">@color/black_overlay</item>
+		<item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+	</style>
 
 </resources>
