@@ -17,6 +17,10 @@
 |:-------:|:--------------:|
 |  1.20+  |  *Processing*  |
 
+## Demo (Android 13)
+
+![Demo](./assets/Screenshot_20240307_215155.png)
+
 ## Build
 
 Clone project in Android Studio: `File -> New -> Project from Version Control -> Git`

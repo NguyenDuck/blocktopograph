@@ -3,5 +3,14 @@
 	<string name="app_name" translatable="false">Blocktopograph</string>
 	<string name="storage_permission_title">Storage Permission</string>
 	<string name="storage_permission_description">We need your permission to access the com.mojang.minecraftpe folder and we DO NOT USE your data for other purposes!\n\nPlease grant permission in the next window (once)</string>
+	<string name="world_image">World Image</string>
+	<string name="world_item_name">World Name With 30 Characters!</string>
+	<string name="world_size">103.782 MB</string>
+	<string name="world_last_play">06/03/24</string>
+	<string name="world_expermental_mode">Experimental</string>
+	<string name="gamemode_survival">Survival</string>
+	<string name="gamemode_creative">Creative</string>
+	<string name="gamemode_adventure">Adventure</string>
+	<string name="gamemode_spectator">Spectator</string>
 
 </resources>

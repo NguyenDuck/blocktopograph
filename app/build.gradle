@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar', '*.so', '*.aar'], dir: 'libs')
+    implementation 'org.jetbrains:annotations:24.0.0'
     testImplementation 'junit:junit:4.13.2'
     implementation project(':leveldb')
     implementation project(':tileview')
