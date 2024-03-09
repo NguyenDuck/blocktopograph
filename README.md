@@ -19,7 +19,7 @@
 
 ## Demo (Android 13)
 
-![Demo](./assets/Screenshot_20240307_215155.png)
+![Demo](./assets/Screenshot_20240309_154205.png)
 
 ## Build
 
