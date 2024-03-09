@@ -11,7 +11,7 @@ public class StringTag implements Tag {
     private final String value;
 
     public StringTag(String name, String value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -36,6 +36,6 @@ public class StringTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "\"" : ("\"" + name + "\": \"") + value + "\"";
+        return (name.isEmpty() ? "\"" : ("\"" + name + "\": \"")) + value.replace("\n", "\\n") + "\"";
     }
 }

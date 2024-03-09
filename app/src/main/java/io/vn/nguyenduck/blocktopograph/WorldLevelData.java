@@ -6,15 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
 import io.vn.nguyenduck.blocktopograph.nbt.NbtInputStream;
 import io.vn.nguyenduck.blocktopograph.nbt.Type;
+import io.vn.nguyenduck.blocktopograph.nbt.tag.Tag;
 
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static io.vn.nguyenduck.blocktopograph.Constants.*;
 import static io.vn.nguyenduck.blocktopograph.DocumentUtils.*;
 import static io.vn.nguyenduck.blocktopograph.Logger.LOGGER;
 import static io.vn.nguyenduck.blocktopograph.nbt.Type.*;
+import static java.lang.Math.log10;
+import static java.lang.Math.pow;
 
 public class WorldLevelData {
 
@@ -41,9 +45,9 @@ public class WorldLevelData {
     private void setupWorldSize() {
         worldSizeRaw = calculateFolderSize(root);
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
-        int digitGroups = (int) (Math.log10(worldSizeRaw) / Math.log10(1024));
+        int digitGroups = (int) (log10(worldSizeRaw) / log10(1024));
         worldSizeFormated = new DecimalFormat("#,##0.#")
-                .format(worldSizeRaw / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+                .format(worldSizeRaw / pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
     public long calculateFolderSize(DocumentFile folder) {
@@ -82,7 +86,10 @@ public class WorldLevelData {
             dataIS.skip(8);
 
             NbtInputStream data = new NbtInputStream(dataIS);
-            dataBundle = NbtUtils.toBundle(data.readTag());
+            Tag t = data.readTag();
+            LOGGER.info(t.toString());
+            dataBundle = NbtUtils.toBundle(t);
+//            LOGGER.info(Arrays.toString(dataBundle.keySet().toArray()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

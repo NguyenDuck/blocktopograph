@@ -11,7 +11,7 @@ public class LongTag implements Tag {
     private final Long value;
 
     public LongTag(String name, Long value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -36,6 +36,6 @@ public class LongTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "" : ("\"" + name + "\": ") + value;
+        return (name.isEmpty() ? "" : ("\"" + name + "\": ")) + value;
     }
 }

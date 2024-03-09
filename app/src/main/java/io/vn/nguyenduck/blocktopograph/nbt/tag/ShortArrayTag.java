@@ -13,7 +13,7 @@ public class ShortArrayTag implements Tag {
     private final Short[] value;
 
     public ShortArrayTag(String name, Short[] value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 

@@ -12,7 +12,7 @@ public class FloatTag implements Tag {
     private final Float value;
 
     public FloatTag(String name, Float value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -37,6 +37,6 @@ public class FloatTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "" : ("\"" + name + "\": ") + value;
+        return (name.isEmpty() ? "" : ("\"" + name + "\": ")) + value;
     }
 }

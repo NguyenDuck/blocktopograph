@@ -15,7 +15,7 @@ public class CompoundTag implements Tag {
     private final ArrayList<Tag> value;
 
     public CompoundTag(String name, ArrayList<Tag> value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -40,10 +40,13 @@ public class CompoundTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        Stream<String> s = value.stream().flatMap(v -> Stream.of(v.toString()));
-        boolean isGreaterThan100 = (s.toString().length() + (s.count() - 1) * 2) > 100;
+        ArrayList<String> a = new ArrayList<>();
+        for (Tag t : value) a.add(t.toString());
+        boolean isGreaterThan100 = (String.valueOf(a).length() + (a.size() - 1) * 2) > 100;
         StringJoiner valueString = new StringJoiner(isGreaterThan100 ? ",\n" : ", ");
-        s.forEach(valueString::add);
-        return name.isEmpty() ? "{" : ("\"" + name + "\": {") + (isGreaterThan100 ? "\n" : "") + valueString + "}";
+        a.forEach(valueString::add);
+        return (name.isEmpty() ? "{" : ("\"" + name + "\": {")) +
+                ((isGreaterThan100 ? "\n" : "") + valueString).replace("\n", "\n\t") +
+                (isGreaterThan100 ? "\n}" : "}");
     }
 }

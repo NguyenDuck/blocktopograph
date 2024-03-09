@@ -3,11 +3,14 @@ package io.vn.nguyenduck.blocktopograph.nbt.tag;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.vn.nguyenduck.blocktopograph.nbt.Type;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
 
+import static io.vn.nguyenduck.blocktopograph.Logger.LOGGER;
 import static io.vn.nguyenduck.blocktopograph.nbt.Type.LIST;
 
 public class ListTag implements Tag {
@@ -16,7 +19,7 @@ public class ListTag implements Tag {
     private final Type childNbtType;
 
     public ListTag(String name, ArrayList<Tag> value, Type childNbtType) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
         this.childNbtType = childNbtType;
     }
@@ -47,10 +50,13 @@ public class ListTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        Stream<String> s = value.stream().flatMap(v -> Stream.of(v.toString()));
-        boolean isGreaterThan100 = (s.toString().length() + (s.count() - 1) * 2) > 100;
+        ArrayList<String> a = new ArrayList<>();
+        for (Tag t : value) a.add(t.toString());
+        boolean isGreaterThan100 = (String.valueOf(a).length() + (a.size() - 1) * 2) > 100;
         StringJoiner valueString = new StringJoiner(isGreaterThan100 ? ",\n" : ", ");
-        s.forEach(valueString::add);
-        return name.isEmpty() ? "[" : ("\"" + name + "\": [") + (isGreaterThan100 ? "\n" : "") + valueString + "]";
+        a.forEach(valueString::add);
+        return (name.isEmpty() ? "[" : ("\"" + name + "\": [")) +
+                ((isGreaterThan100 ? "\n" : "") + valueString).replace("\n", "\n\t") +
+                (isGreaterThan100 ? "\n]" : "]");
     }
 }

@@ -59,22 +59,29 @@ public class WorldListAdapter extends RecyclerView.Adapter<WorldListAdapter.Worl
     public void onBindViewHolder(@NonNull WorldItem viewHolder, int i) {
         WorldLevelData data = worldLevelData.get(i);
         Bundle bundle = data.dataBundle;
-        LOGGER.info(bundle.toString());
+//        LOGGER.info(bundle.toString());
 
         String worldName = data.rawWorldName;
 
-        viewHolder.name.setText(worldName.length() > 20 ? worldName.substring(0, 20) + "..." : worldName);
-        viewHolder.experimental.setVisibility(bundle.getBundle("experiments") == null ? View.GONE : View.VISIBLE);
+        viewHolder.name.setText(worldName);
         viewHolder.gamemode.setText(translateGamemode(bundle.getInt("GameType")));
         viewHolder.size.setText(data.worldSizeFormated);
         viewHolder.last_play.setText(
                 DateFormat.getDateFormat(viewHolder.view.getContext())
                         .format(bundle.getLong("LastPlayed") * 1000));
 
+        if (bundle.containsKey("experiments")) {
+            Bundle experiments = bundle.getBundle("experiments");
+            if (experiments != null) {
+                viewHolder.experimental.setVisibility(experiments.getBoolean("experiments_ever_used")
+                        ? View.VISIBLE : View.GONE);
+            }
+        }
+
         if (data.worldIconUri != null) {
             viewHolder.icon.setImageURI(data.worldIconUri);
         } else {
-            if (bundle.getBundle("experiments") == null) {
+            if (viewHolder.experimental.getVisibility() == View.GONE) {
                 viewHolder.icon.setImageResource(R.drawable.world_demo_screen_big);
             } else {
                 viewHolder.icon.setImageResource(R.drawable.world_demo_screen_big_grayscale);

@@ -11,7 +11,7 @@ public class IntTag implements Tag {
     private final Integer value;
 
     public IntTag(String name, Integer value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -36,6 +36,6 @@ public class IntTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "" : ("\"" + name + "\": ") + value;
+        return (name.isEmpty() ? "" : ("\"" + name + "\": ")) + value;
     }
 }

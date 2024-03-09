@@ -13,7 +13,7 @@ public class ByteArrayTag implements Tag {
     private final Byte[] value;
 
     public ByteArrayTag(String name, Byte[] value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 

@@ -11,7 +11,7 @@ public class ShortTag implements Tag {
     private final Short value;
 
     public ShortTag(String name, Short value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -36,6 +36,6 @@ public class ShortTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "" : ("\"" + name + "\": ") + value;
+        return (name.isEmpty() ? "" : ("\"" + name + "\": ")) + value;
     }
 }

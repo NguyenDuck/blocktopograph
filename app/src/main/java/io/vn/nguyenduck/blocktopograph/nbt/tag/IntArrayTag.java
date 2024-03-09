@@ -13,7 +13,7 @@ public class IntArrayTag implements Tag {
     private final Integer[] value;
 
     public IntArrayTag(String name, Integer[] value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -38,6 +38,6 @@ public class IntArrayTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "" : ("\"" + name + "\": ") + Arrays.toString(value);
+        return (name.isEmpty() ? "" : ("\"" + name + "\": ")) + Arrays.toString(value);
     }
 }

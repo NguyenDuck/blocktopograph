@@ -11,7 +11,7 @@ public class DoubleTag implements Tag {
     private final Double value;
 
     public DoubleTag(String name, Double value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -36,6 +36,6 @@ public class DoubleTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "" : ("\"" + name + "\": ") + value;
+        return (name.isEmpty() ? "" : ("\"" + name + "\": ")) + value;
     }
 }

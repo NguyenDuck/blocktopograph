@@ -23,7 +23,7 @@
 		android:fontFamily="@font/minecraft_seven"
 		android:layout_marginBottom="2dp"
 		android:id="@+id/world_item_name"
-		android:maxLines="1"
+		android:singleLine="true"
 		tools:text="@string/world_item_name"/>
 
 	<LinearLayout

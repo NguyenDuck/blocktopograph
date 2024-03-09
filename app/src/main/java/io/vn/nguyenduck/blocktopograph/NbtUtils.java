@@ -2,10 +2,7 @@ package io.vn.nguyenduck.blocktopograph;
 
 import android.os.Bundle;
 import io.vn.nguyenduck.blocktopograph.nbt.Type;
-import io.vn.nguyenduck.blocktopograph.nbt.tag.CompoundTag;
-import io.vn.nguyenduck.blocktopograph.nbt.tag.IntTag;
-import io.vn.nguyenduck.blocktopograph.nbt.tag.ListTag;
-import io.vn.nguyenduck.blocktopograph.nbt.tag.Tag;
+import io.vn.nguyenduck.blocktopograph.nbt.tag.*;
 
 import java.util.ArrayList;
 
@@ -27,11 +24,46 @@ public class NbtUtils {
             case LIST: {
                 Type childType = ((ListTag) tag).getChildNbtType();
                 switch (childType) {
+                    case BYTE: {
+                        ArrayList<Tag> a = ((ListTag) tag).getValue();
+                        byte[] a2 = new byte[a.size()];
+                        for (int i = 0; i < a.size(); i++) a2[i] = ((ByteTag) a.get(i)).getValue();
+                        b.putByteArray(name, a2);
+                    }
+                    break;
+                    case SHORT: {
+                        ArrayList<Tag> a = ((ListTag) tag).getValue();
+                        short[] a2 = new short[a.size()];
+                        for (int i = 0; i < a.size(); i++) a2[i] = ((ShortTag) a.get(i)).getValue();
+                        b.putShortArray(name, a2);
+                    }
+                    break;
                     case INT: {
                         ArrayList<Tag> a = ((ListTag) tag).getValue();
                         int[] a2 = new int[a.size()];
                         for (int i = 0; i < a.size(); i++) a2[i] = ((IntTag) a.get(i)).getValue();
                         b.putIntArray(name, a2);
+                    }
+                    break;
+                    case LONG: {
+                        ArrayList<Tag> a = ((ListTag) tag).getValue();
+                        long[] a2 = new long[a.size()];
+                        for (int i = 0; i < a.size(); i++) a2[i] = ((LongTag) a.get(i)).getValue();
+                        b.putLongArray(name, a2);
+                    }
+                    break;
+                    case FLOAT: {
+                        ArrayList<Tag> a = ((ListTag) tag).getValue();
+                        float[] a2 = new float[a.size()];
+                        for (int i = 0; i < a.size(); i++) a2[i] = ((FloatTag) a.get(i)).getValue();
+                        b.putFloatArray(name, a2);
+                    }
+                    break;
+                    case DOUBLE: {
+                        ArrayList<Tag> a = ((ListTag) tag).getValue();
+                        double[] a2 = new double[a.size()];
+                        for (int i = 0; i < a.size(); i++) a2[i] = ((DoubleTag) a.get(i)).getValue();
+                        b.putDoubleArray(name, a2);
                     }
                     break;
                 }

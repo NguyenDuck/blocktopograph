@@ -11,7 +11,7 @@ public class ByteTag implements Tag {
     private final Byte value;
 
     public ByteTag(String name, Byte value) {
-        this.name = name;
+        this.name = name != null ? name : "";
         this.value = value;
     }
 
@@ -36,6 +36,6 @@ public class ByteTag implements Tag {
     @NonNull
     @Override
     public String toString() {
-        return name.isEmpty() ? "" : ("\"" + name + "\": ") + (value == 1);
+        return (name.isEmpty() ? "" : ("\"" + name + "\": ")) + (value == 1);
     }
 }
