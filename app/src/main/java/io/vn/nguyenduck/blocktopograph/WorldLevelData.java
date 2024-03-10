@@ -50,7 +50,7 @@ public class WorldLevelData {
                 .format(worldSizeRaw / pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
-    public long calculateFolderSize(DocumentFile folder) {
+    private long calculateFolderSize(DocumentFile folder) {
         long totalSize = 0;
         if (folder.isDirectory()) {
             for (DocumentFile file : folder.listFiles()) {
@@ -66,7 +66,7 @@ public class WorldLevelData {
 
     private void readRawWorldName() {
         try {
-            DocumentFile doc = DocumentUtils.getFileFromPath(root, new String[]{WORLD_LEVELNAME_FILE});
+            DocumentFile doc = DocumentUtils.getFileFromPath(root, WORLD_LEVELNAME_FILE);
             if (doc == null) return;
             InputStream is = contentResolver.openInputStream(doc.getUri());
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -79,7 +79,7 @@ public class WorldLevelData {
 
     private void readAllTags() {
         try {
-            DocumentFile doc = DocumentUtils.getFileFromPath(root, new String[]{WORLD_LEVEL_DATA_FILE});
+            DocumentFile doc = DocumentUtils.getFileFromPath(root, WORLD_LEVEL_DATA_FILE);
             if (doc == null) return;
             InputStream is = contentResolver.openInputStream(doc.getUri());
             DataInputStream dataIS = new DataInputStream(is);
@@ -87,9 +87,8 @@ public class WorldLevelData {
 
             NbtInputStream data = new NbtInputStream(dataIS);
             Tag t = data.readTag();
-            LOGGER.info(t.toString());
+//            LOGGER.info(t.toString());
             dataBundle = NbtUtils.toBundle(t);
-//            LOGGER.info(Arrays.toString(dataBundle.keySet().toArray()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

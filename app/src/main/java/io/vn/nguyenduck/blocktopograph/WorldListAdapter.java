@@ -2,7 +2,6 @@ package io.vn.nguyenduck.blocktopograph;
 
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.Consumer;
-import java.util.logging.Logger;
 
-import static io.vn.nguyenduck.blocktopograph.Constants.*;
-import static io.vn.nguyenduck.blocktopograph.Logger.LOGGER;
+import static io.vn.nguyenduck.blocktopograph.Constants.COM_MOJANG_FOLDER;
+import static io.vn.nguyenduck.blocktopograph.Constants.WORLDS_FOLDER;
 import static io.vn.nguyenduck.blocktopograph.TranslationUtils.translateGamemode;
 
 public class WorldListAdapter extends RecyclerView.Adapter<WorldListAdapter.WorldItem> {
@@ -59,7 +56,6 @@ public class WorldListAdapter extends RecyclerView.Adapter<WorldListAdapter.Worl
     public void onBindViewHolder(@NonNull WorldItem viewHolder, int i) {
         WorldLevelData data = worldLevelData.get(i);
         Bundle bundle = data.dataBundle;
-//        LOGGER.info(bundle.toString());
 
         String worldName = data.rawWorldName;
 
@@ -81,11 +77,11 @@ public class WorldListAdapter extends RecyclerView.Adapter<WorldListAdapter.Worl
         if (data.worldIconUri != null) {
             viewHolder.icon.setImageURI(data.worldIconUri);
         } else {
-            if (viewHolder.experimental.getVisibility() == View.GONE) {
-                viewHolder.icon.setImageResource(R.drawable.world_demo_screen_big);
-            } else {
-                viewHolder.icon.setImageResource(R.drawable.world_demo_screen_big_grayscale);
-            }
+            viewHolder.icon.setImageResource(
+                    viewHolder.experimental.getVisibility() == View.GONE ?
+                            R.drawable.world_demo_screen_big :
+                            R.drawable.world_demo_screen_big_grayscale
+            );
         }
     }
 
@@ -95,16 +91,20 @@ public class WorldListAdapter extends RecyclerView.Adapter<WorldListAdapter.Worl
     }
 
     public void initAdapter(DocumentFile appDataFolder) {
-        if (rootFolder == null) rootFolder = appDataFolder;
+        initAdapter(appDataFolder, false);
+    }
+
+    public void initAdapter(DocumentFile appDataFolder, boolean force) {
+        if (rootFolder == null || force) rootFolder = appDataFolder;
+        worldLevelData.clear();
         DocumentFile f = DocumentUtils.getFileFromPath(rootFolder, new String[]{
                 "files",
                 "games",
                 COM_MOJANG_FOLDER,
                 WORLDS_FOLDER});
         if (f != null) {
-            Arrays.stream(f.listFiles()).forEach(file -> {
-                worldLevelData.add(new WorldLevelData(file));
-            });
+            Arrays.stream(f.listFiles()).forEach(file -> worldLevelData.add(new WorldLevelData(file)));
+            worldLevelData.sort((a, b) -> Math.toIntExact(b.dataBundle.getLong("LastPlayed") - a.dataBundle.getLong("LastPlayed")));
         }
     }
 }

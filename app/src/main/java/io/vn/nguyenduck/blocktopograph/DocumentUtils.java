@@ -23,6 +23,11 @@ public class DocumentUtils {
         return f;
     }
 
+    @Nullable
+    public static DocumentFile getFileFromPath(@NonNull DocumentFile root, @NonNull String path) {
+        return root.findFile(path);
+    }
+
     public static DocumentFile findFiles(@NonNull DocumentFile root, @NonNull String startWiths) {
         for (DocumentFile f : root.listFiles()) {
             String name = f.getName();

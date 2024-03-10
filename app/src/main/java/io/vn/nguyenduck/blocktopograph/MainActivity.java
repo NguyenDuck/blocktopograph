@@ -1,5 +1,6 @@
 package io.vn.nguyenduck.blocktopograph;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,9 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.logging.Logger;
 
 import static io.vn.nguyenduck.blocktopograph.Constants.*;
+import static io.vn.nguyenduck.blocktopograph.Logger.LOGGER;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQ_FOLDER_PERMISSION = 0x00a;
@@ -81,10 +82,18 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onResume() {
         super.onResume();
         if (!hasPermission()) displayStoragePermissionAlert();
+        else {
+            RecyclerView view = findViewById(R.id.world_list_layout);
+            if (view.getAdapter() != null) {
+                ((WorldListAdapter) view.getAdapter()).initAdapter(getCurrentRootFolder(), true);
+                view.requestLayout();
+            }
+        }
     }
 
     private void requestPermission() {
@@ -99,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 .addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        startActivityForResult(intent, REQ_FOLDER_PERMISSION);
+        startActivityIfNeeded(intent, REQ_FOLDER_PERMISSION);
     }
 
     @Override
