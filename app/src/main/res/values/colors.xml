@@ -17,5 +17,9 @@
 	<color name="light_blue_A200">#FF40C4FF</color>
 	<color name="light_blue_A400">#FF00B0FF</color>
 	<color name="black_overlay">#66000000</color>
-	<color name="yellow">#E4CD00</color>
+
+	<color name="yellow">#ffe866</color>
+	<color name="default_bg_color">#48494a</color>
+	<color name="border_bg_color">#1e1e1f</color>
+	<color name="activated_bg_color">#313233</color>
 </resources>

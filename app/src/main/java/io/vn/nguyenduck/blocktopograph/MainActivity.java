@@ -46,13 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         view.setAdapter(adapter);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this,
-                2, GridLayoutManager.VERTICAL, false);
-        view.setLayoutManager(layoutManager);
-
-        if (getCurrentRootFolder() != null) {
-            adapter.initAdapter(getCurrentRootFolder());
-        }
+        if (getCurrentRootFolder() != null) adapter.initAdapter(getCurrentRootFolder());
     }
 
     private DocumentFile getCurrentRootFolder() {
@@ -69,14 +63,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayStoragePermissionAlert() {
-        new AlertDialog.Builder(this, R.style.Dialog_StoragePermission)
+        new AlertDialog.Builder(this, R.style.StoragePermission)
                 .setTitle(R.string.storage_permission_title)
                 .setMessage(R.string.storage_permission_description)
                 .setPositiveButton(
                         android.R.string.ok,
-                        (DialogInterface dialog, int which) -> {
-                            requestPermission();
-                        })
+                        (DialogInterface dialog, int which) -> requestPermission())
                 .setCancelable(false)
                 .create()
                 .show();
