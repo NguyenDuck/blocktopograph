@@ -6,6 +6,7 @@ local.properties
 .metadata
 .settings
 *~
+release/
 
 
 ### Gradle template

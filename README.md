@@ -21,7 +21,8 @@
 
 ## Demo (Android 13)
 
-![Demo](./assets/Screenshot_20240309_154205.png)
+![Storage Request Permission](./assets/Screenshot_20240309_174508.png)
+![Main](./assets/Screenshot_20240309_154205.png)
 
 ## Build
 
