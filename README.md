@@ -9,9 +9,16 @@
 
 * Android SDK Version
 
-|    Minium     |       Target       |
-|:-------------:|:------------------:|
-| Oreo - 8 (26) | Tiramisu - 13 (33) |
+|    Minium     |          Target          |
+|:-------------:|:------------------------:|
+| Oreo - 8 (26) | UpsideDownCake - 14 (34) |
+
+* Storage Privacy
+
+| Min Android Version |       Method       |
+|:-------------------:|:------------------:|
+|       8 (26)        | Directly with File |
+|      11+ (30)       |      Shizuku       |
 
 * Minecraft World Version
 
