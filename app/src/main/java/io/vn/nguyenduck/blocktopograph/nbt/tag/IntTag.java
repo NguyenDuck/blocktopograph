@@ -1,10 +1,10 @@
 package io.vn.nguyenduck.blocktopograph.nbt.tag;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import io.vn.nguyenduck.blocktopograph.nbt.Type;
-
 import static io.vn.nguyenduck.blocktopograph.nbt.Type.INT;
+
+import androidx.annotation.NonNull;
+
+import io.vn.nguyenduck.blocktopograph.nbt.Type;
 
 public class IntTag implements Tag {
     private final String name;

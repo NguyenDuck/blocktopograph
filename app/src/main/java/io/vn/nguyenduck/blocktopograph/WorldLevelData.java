@@ -1,24 +1,27 @@
 package io.vn.nguyenduck.blocktopograph;
 
-import android.net.Uri;
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.documentfile.provider.DocumentFile;
-import io.vn.nguyenduck.blocktopograph.nbt.NbtInputStream;
-import io.vn.nguyenduck.blocktopograph.nbt.Type;
-import io.vn.nguyenduck.blocktopograph.nbt.tag.Tag;
-
-import java.io.*;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static io.vn.nguyenduck.blocktopograph.Constants.*;
-import static io.vn.nguyenduck.blocktopograph.DocumentUtils.*;
-import static io.vn.nguyenduck.blocktopograph.Logger.LOGGER;
-import static io.vn.nguyenduck.blocktopograph.nbt.Type.*;
 import static java.lang.Math.log10;
 import static java.lang.Math.pow;
+import static io.vn.nguyenduck.blocktopograph.Constants.WORLD_ICON_PREFIX;
+import static io.vn.nguyenduck.blocktopograph.Constants.WORLD_LEVELNAME_FILE;
+import static io.vn.nguyenduck.blocktopograph.Constants.WORLD_LEVEL_DATA_FILE;
+import static io.vn.nguyenduck.blocktopograph.DocumentUtils.contentResolver;
+import static io.vn.nguyenduck.blocktopograph.DocumentUtils.findFiles;
+
+import android.net.Uri;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.documentfile.provider.DocumentFile;
+
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+
+import io.vn.nguyenduck.blocktopograph.nbt.NbtInputStream;
+import io.vn.nguyenduck.blocktopograph.nbt.tag.Tag;
 
 public class WorldLevelData {
 
@@ -87,7 +90,6 @@ public class WorldLevelData {
 
             NbtInputStream data = new NbtInputStream(dataIS);
             Tag t = data.readTag();
-//            LOGGER.info(t.toString());
             dataBundle = NbtUtils.toBundle(t);
         } catch (Exception e) {
             throw new RuntimeException(e);

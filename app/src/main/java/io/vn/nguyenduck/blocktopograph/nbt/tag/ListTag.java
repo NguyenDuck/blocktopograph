@@ -1,17 +1,13 @@
 package io.vn.nguyenduck.blocktopograph.nbt.tag;
 
+import static io.vn.nguyenduck.blocktopograph.nbt.Type.LIST;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import io.vn.nguyenduck.blocktopograph.nbt.Type;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringJoiner;
-import java.util.stream.Stream;
 
-import static io.vn.nguyenduck.blocktopograph.Logger.LOGGER;
-import static io.vn.nguyenduck.blocktopograph.nbt.Type.LIST;
+import io.vn.nguyenduck.blocktopograph.nbt.Type;
 
 public class ListTag implements Tag {
     private final String name;

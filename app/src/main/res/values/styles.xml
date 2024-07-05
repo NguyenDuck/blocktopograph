@@ -96,15 +96,15 @@
 		<item name="android:textColor">@color/colorAccent</item>
 	</style>
 
-	<style name="MenuButtonsStyle">
-		<item name="fab_size">mini</item>
-		<item name="fab_showAnimation">@anim/jump_from_down</item>
-		<item name="fab_hideAnimation">@anim/jump_to_down</item>
-		<item name="fab_shadowColor">#444</item>
-		<item name="fab_colorNormal">@color/colorAccent</item>
-		<item name="fab_colorPressed">@color/colorAccentDark</item>
-		<item name="fab_colorRipple">#fff</item>
-	</style>
+<!--	<style name="MenuButtonsStyle">-->
+<!--		<item name="fab_size">mini</item>-->
+<!--		<item name="fab_showAnimation">@anim/jump_from_down</item>-->
+<!--		<item name="fab_hideAnimation">@anim/jump_to_down</item>-->
+<!--		<item name="fab_shadowColor">#444</item>-->
+<!--		<item name="fab_colorNormal">@color/colorAccent</item>-->
+<!--		<item name="fab_colorPressed">@color/colorAccentDark</item>-->
+<!--		<item name="fab_colorRipple">#fff</item>-->
+<!--	</style>-->
 
 	<style name="WaterMarkTextStyle">
 		<item name="android:paddingLeft">4dp</item>

@@ -1,32 +1,25 @@
 package io.vn.nguyenduck.blocktopograph;
 
+import static io.vn.nguyenduck.blocktopograph.Constants.DOC_AUTHORITY;
+import static io.vn.nguyenduck.blocktopograph.Constants.DOC_DATA_PATH;
+import static io.vn.nguyenduck.blocktopograph.Constants.MINECRAFT_APP_ID;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import androidx.annotation.RequiresApi;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Objects;
 import java.util.StringJoiner;
-
-import static io.vn.nguyenduck.blocktopograph.Constants.*;
-import static io.vn.nguyenduck.blocktopograph.Logger.LOGGER;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQ_FOLDER_PERMISSION = 0x00a;
