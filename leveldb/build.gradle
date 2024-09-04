@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86_64', 'x86', 'arm64-v8a'
+        }
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path "src/main/cpp/Android.mk"
+        }
+    }
+    namespace 'com.litl.leveldb'
+
+}

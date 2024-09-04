@@ -1,35 +1,21 @@
 # Blocktopograph
 
-- This fork is trying to support MCBE 1.20+ for Android 10+ (*Storage Access Framework*)
-- Improve UI and more valid NBT editing ways
+## How this work in future?
 
-> Working on level.dat editor ui
+### Display worlds
+1. Use shizuku to access com.mojang data first
+2. Copy data to other directory
+3. Read the world data
+4. Display on app
 
-## Technical Support
+*Note: apply data back to original directory after stop the app*
 
-* Android SDK Version
-
-|    Minium     |          Target          |
-|:-------------:|:------------------------:|
-| Oreo - 8 (26) | UpsideDownCake - 14 (34) |
-
-* Storage Privacy
-
-| Min Android Version |       Method       |
-|:-------------------:|:------------------:|
-|       8 (26)        | Directly with File |
-|      11+ (30)       |      Shizuku       |
-
-* Minecraft World Version
-
-| Version | Support Status |
-|:-------:|:--------------:|
-|  1.20+  |  *Processing*  |
-
-## Demo (Android 13)
-
-![Storage Request Permission](./assets/Screenshot_20240310_174304.png)
-![Main](./assets/Screenshot_20240310_174321.png)
+### Edit world data
+#### level.dat
+- Can be edit directly in the app
+#### world data (chunks, entities, biomes,...)
+1. Open a server from app and go to minecraft to edit directly (support resource packs)
+2. After edited, if you exit server, that will save data and apply to original
 
 ## Build
 
@@ -39,7 +25,7 @@ Install missing SDK components. Android Studio would give you the auto-fix optio
 Or Manual
 
 ```shell
-git clone https://github.com/NguyenDuck/blocktopograph.git
+git clone https://github.com/NguyenDuck/blocktopograph.git --recursive
 cd blocktopograph
 ./gradlew build assembly
 ```
