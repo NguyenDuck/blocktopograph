@@ -1,3 +1,3 @@
-[submodule "leveldbmcpe"]
-	path = leveldb/src/cpp/leveldb-mcpe
-	url = https://github.com/vhebert-gh/levedb-mcpe-legacy
+[submodule "leveldb/src/main/cpp/leveldb-mcpe"]
+	path = leveldb/src/main/cpp/leveldb-mcpe
+	url = git@github.com:vhebert-gh/levedb-mcpe-legacy.git
