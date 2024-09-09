@@ -1,3 +1,4 @@
+![Blocktopograph](./app/src/main/assets/icon.png)
 # Blocktopograph
 
 ## How this work in future?
