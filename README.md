@@ -1,5 +1,5 @@
-![Blocktopograph](./app/src/main/assets/icon.png)
 # Blocktopograph
+![Blocktopograph](./app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 
 ## How this work in future?
 
