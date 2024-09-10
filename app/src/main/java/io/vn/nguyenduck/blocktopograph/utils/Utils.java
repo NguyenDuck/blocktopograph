@@ -1,0 +1,20 @@
+package io.vn.nguyenduck.blocktopograph.utils;
+
+import android.os.Build;
+
+public class Utils {
+    public static boolean includes(byte[] sub, byte[] main) {
+        for (int i = 0; i <= main.length - sub.length; i++) {
+            int j;
+            for (j = 0; j < sub.length; j++) {
+                if (main[i+j] != sub[j]) break;
+                if (j == sub.length - 1) return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAndroid11Up() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
+    }
+}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<color name="colorPrimary">#689f38</color>
-	<color name="colorPrimaryDark">#5C8D31</color>
+	<color name="colorPrimaryDark">#204003</color>
 	<color name="colorAccent">#1e88e5</color>
 	<color name="colorAccentDark">#1a76c7</color>
 
@@ -19,7 +19,7 @@
 	<color name="black_overlay">#66000000</color>
 
 	<color name="yellow">#ffe866</color>
-	<color name="default_bg_color">#48494a</color>
+	<color name="colorBackgroundDark">#0C0E0C</color>
 	<color name="border_bg_color">#1e1e1f</color>
 	<color name="activated_bg_color">#313233</color>
 </resources>

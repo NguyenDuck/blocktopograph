@@ -27,7 +27,7 @@
 			android:layout_height="match_parent"
 			android:orientation="vertical"
 			android:layout_marginStart="2dp"
-			android:background="@color/default_bg_color">
+			android:background="@color/colorBackgroundDark">
 
 			<TextView
 				android:layout_width="match_parent"
