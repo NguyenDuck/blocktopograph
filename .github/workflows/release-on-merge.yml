@@ -9,8 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  pre-process:
-    name: Pre Process
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
@@ -25,25 +24,18 @@ jobs:
          java-version: '11'
          cache: 'gradle'
 
-  build:
-    name: Build APK
-    runs-on: ubuntu-latest
-    needs: pre-process
-    steps:
+      - run: chmod +x ./gradlew
+
       - name: Build
         run: ./gradlew build
 
       - name: Create Debug APK
         run: ./gradlew assembleDebug
 
-  post-process:
-    name: Upload Artifact
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - run: mv app/build/outputs/apk/debug/*.apk Blocktopograph.apk
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
         with:
           name: Blocktopograph Debug APK
           path: Blocktopograph.apk
