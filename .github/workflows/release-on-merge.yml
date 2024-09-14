@@ -1,0 +1,49 @@
+name: Create Pre-Release On Merge (app)
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - app/src/**
+  workflow_dispatch:
+
+jobs:
+  pre-process:
+    name: Pre Process
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v3
+        with:
+         submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+         distribution: 'microsoft'
+         java-version: '11'
+         cache: 'gradle'
+
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    needs: pre-process
+    steps:
+      - name: Build
+        run: ./gradlew build
+
+      - name: Create Debug APK
+        run: ./gradlew assembleDebug
+
+  post-process:
+    name: Upload Artifact
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - run: mv app/build/outputs/apk/debug/*.apk Blocktopograph.apk
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Blocktopograph Debug APK
+          path: Blocktopograph.apk

@@ -1,6 +1,7 @@
 package io.vn.nguyenduck.blocktopograph.utils;
 
 import android.os.Build;
+import android.os.Environment;
 
 public class Utils {
     public static boolean includes(byte[] sub, byte[] main) {
@@ -16,5 +17,9 @@ public class Utils {
 
     public static boolean isAndroid11Up() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
+    }
+
+    public static String buildAndroidDataDir(String appId) {
+        return Environment.getExternalStorageDirectory() + "/Android/data/" + appId + "/files";
     }
 }

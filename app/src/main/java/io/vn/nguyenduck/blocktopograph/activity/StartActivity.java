@@ -7,6 +7,7 @@ import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSIO
 import static io.vn.nguyenduck.blocktopograph.Constants.MINECRAFT_APP_ID;
 import static io.vn.nguyenduck.blocktopograph.Constants.SHIZUKU_PACKAGE_NAME;
 import static io.vn.nguyenduck.blocktopograph.InternalLogger.LOGGER;
+import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildAndroidDataDir;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
 
 import android.content.Intent;
@@ -83,14 +84,14 @@ public class StartActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (StoragePermission && ShizukuPermission) {
-//            startActivity(new Intent(this, WorldListActivity.class));
             try {
-                var p = Environment.buildExternalStorageAppFilesDirs(MINECRAFT_APP_ID)[0].getPath();
+                var p = buildAndroidDataDir(MINECRAFT_APP_ID);
                 var f = new BFile(p.concat("/games/com.mojang/minecraftWorlds"));
                 LOGGER.info(Arrays.toString(f.listDirs()));
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, e, () -> "");
             }
+            startActivity(new Intent(this, WorldListActivity.class));
         } else {
             if (!StoragePermission) requestStoragePermission();
             if (isAndroid11Up() && !ShizukuInstalled) {
