@@ -26,14 +26,18 @@ public class BFile {
         this.path = String.join(seperator, path.split(seperator));
     }
 
+    private BFile[] splitPathResult(String result) {
+        return Arrays.stream(result.split(seperator)).map(BFile::new).toArray(BFile[]::new);
+    }
+
     public BFile[] listDirs() throws Exception {
         String result = Runner.runString("find", this.path + "/*", "-maxdepth", "0", "-type", "d");
-        return Arrays.stream(result.split("\n")).map(BFile::new).toArray(BFile[]::new);
+        return splitPathResult(result);
     }
 
     public BFile[] listFiles() throws Exception {
         String result = Runner.runString("find", this.path, "-maxdepth", "1", "-type", "f");
-        return Arrays.stream(result.split("\n")).map(BFile::new).toArray(BFile[]::new);
+        return splitPathResult(result);
     }
 
     public String read() throws Exception {

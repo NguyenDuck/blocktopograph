@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         google()
@@ -5,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.5.2'
+//        classpath 'com.facebook.react:react-native-gradle-plugin'
     }
 }
 
