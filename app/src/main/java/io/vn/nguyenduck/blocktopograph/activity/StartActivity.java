@@ -9,17 +9,20 @@ import static io.vn.nguyenduck.blocktopograph.Constants.SHIZUKU_PACKAGE_NAME;
 import static io.vn.nguyenduck.blocktopograph.InternalLogger.LOGGER;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildAndroidDataDir;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
+import static io.vn.nguyenduck.blocktopograph.utils.Utils.sleep;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import io.vn.nguyenduck.blocktopograph.R;
@@ -34,6 +37,9 @@ public class StartActivity extends AppCompatActivity {
     private boolean StoragePermission;
     private boolean ShizukuPermission;
     private boolean ShizukuInstalled = false;
+
+    private boolean IsLoaded = false;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final Shizuku.OnBinderReceivedListener BINDER_RECEIVED_LISTENER = () -> {
         if (Shizuku.isPreV11()) this.showNotSupportedShizukuVersion();
@@ -70,11 +76,20 @@ public class StartActivity extends AppCompatActivity {
         StoragePermission = hasFileAccessPermission();
         ShizukuInstalled = hasInstalledShizuku();
         ShizukuPermission = hasShizukuPermission();
+    }
 
+    private void onLoaded() {
+        startActivity(new Intent(this, WorldListActivity.class));
+    }
+
+    private void loadAll() {
+        IsLoaded = true;
         try {
-            var f1 = new File(getDataDir(), "cache");
-            var f2 = new BFile(f1.getPath());
-            LOGGER.log(Level.INFO, String.valueOf(f2.isFile()));
+            sleep(1000);
+            TextView v = findViewById(R.id.status);
+            runOnUiThread(() -> v.setText("Loading Worlds..."));
+            sleep(1000);
+            onLoaded();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e, () -> "");
         }
@@ -83,6 +98,7 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!IsLoaded) executor.submit(this::loadAll);
         if (StoragePermission && ShizukuPermission) {
             try {
                 var p = buildAndroidDataDir(MINECRAFT_APP_ID);
@@ -91,7 +107,6 @@ public class StartActivity extends AppCompatActivity {
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, e, () -> "");
             }
-            startActivity(new Intent(this, WorldListActivity.class));
         } else {
             if (!StoragePermission) requestStoragePermission();
             if (isAndroid11Up() && !ShizukuInstalled) {
