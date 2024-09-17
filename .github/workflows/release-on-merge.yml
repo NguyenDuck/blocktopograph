@@ -15,14 +15,14 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v3
         with:
-         submodules: true
+          submodules: true
 
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-         distribution: 'microsoft'
-         java-version: '21'
-         cache: 'gradle'
+          distribution: 'microsoft'
+          java-version: '21'
+          cache: 'gradle'
 
       - run: chmod +x ./gradlew
 
@@ -34,8 +34,8 @@ jobs:
 
       - run: mv app/build/outputs/apk/debug/*.apk Blocktopograph.apk
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+      - uses: ncipollo/release-action@v1.14.0
         with:
-          name: Blocktopograph Debug APK
-          path: Blocktopograph.apk
+          prerelease: true
+          name: Nightly Build
+          artifact: Blocktopograph.apk
