@@ -23,6 +23,10 @@ public class Utils {
         return Environment.getExternalStorageDirectory() + "/Android/data/" + appId + "/files";
     }
 
+    public static String buildMinecraftDataDir(String parent, String folder) {
+        return parent + "/games/com.mojang/" + folder;
+    }
+
     public static void sleep(long millis) {
         try {
             Thread.sleep(millis);

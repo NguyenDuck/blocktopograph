@@ -8,12 +8,15 @@ import static io.vn.nguyenduck.blocktopograph.Constants.MINECRAFT_APP_ID;
 import static io.vn.nguyenduck.blocktopograph.Constants.SHIZUKU_PACKAGE_NAME;
 import static io.vn.nguyenduck.blocktopograph.InternalLogger.LOGGER;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildAndroidDataDir;
+import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildMinecraftDataDir;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.sleep;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -79,7 +82,21 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void onLoaded() {
-        startActivity(new Intent(this, WorldListActivity.class));
+
+        LayoutInflater activityInflater = LayoutInflater.from(this);
+
+        LinearLayout main = (LinearLayout) activityInflater.inflate(R.layout.main_activity, null, false);
+
+        var navigation = new Navigation(main.findViewById(R.id.navigation));
+
+        navigation.addTab("Create");
+        var t2 = navigation.addTab("World");
+        t2.callOnClick();
+        navigation.addTab("Setting");
+
+        runOnUiThread(() -> {
+            setContentView(main);
+        });
     }
 
     private void loadAll() {
@@ -102,7 +119,7 @@ public class StartActivity extends AppCompatActivity {
         if (StoragePermission && ShizukuPermission) {
             try {
                 var p = buildAndroidDataDir(MINECRAFT_APP_ID);
-                var f = new BFile(p.concat("/games/com.mojang/minecraftWorlds"));
+                var f = new BFile(buildMinecraftDataDir(p, "minecraftWorlds"));
                 LOGGER.info(Arrays.toString(f.listDirs()));
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, e, () -> "");
