@@ -42,3 +42,5 @@ jobs:
           name: Nightly Build
           artifacts: Blocktopograph.apk
           tag: nightly
+          allowUpdates: true
+          artifactErrorsFailBuild: true

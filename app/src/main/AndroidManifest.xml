@@ -29,10 +29,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.WorldListActivity"
-            android:exported="true" />
-
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"
