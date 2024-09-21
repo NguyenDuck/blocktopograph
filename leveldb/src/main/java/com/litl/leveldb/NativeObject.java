@@ -11,11 +11,7 @@ abstract class NativeObject implements Closeable {
 
     protected NativeObject(long ptr) {
         this();
-
-        if (ptr == 0) {
-            throw new OutOfMemoryError("Failed to allocate native object");
-        }
-
+        if (ptr == 0) throw new OutOfMemoryError("Failed to allocate native object");
         mPtr = ptr;
     }
 
@@ -28,9 +24,7 @@ abstract class NativeObject implements Closeable {
     }
 
     protected void assertOpen(String message) {
-        if (getPtr() == 0) {
-            throw new IllegalStateException(message);
-        }
+        if (isClosed()) throw new IllegalStateException(message);
     }
 
     protected abstract void closeNativeObject(long ptr);
@@ -43,9 +37,7 @@ abstract class NativeObject implements Closeable {
 
     @Override
     protected void finalize() throws Throwable {
-        if (mPtr != 0) closeNativeObject(mPtr);
-        mPtr = 0;
-
+        if (mPtr != 0) close();
         super.finalize();
     }
 }

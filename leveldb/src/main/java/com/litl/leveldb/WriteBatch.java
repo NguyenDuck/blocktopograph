@@ -1,5 +1,7 @@
 package com.litl.leveldb;
 
+import android.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 
 public class WriteBatch extends NativeObject {
@@ -12,29 +14,22 @@ public class WriteBatch extends NativeObject {
         nativeDestroy(ptr);
     }
 
-    public void delete(ByteBuffer key) {
+    private void assertOpen() {
         assertOpen("WriteBatch is closed");
-        if (key == null) {
-            throw new NullPointerException("key");
-        }
+    }
 
+    public void delete(@NonNull ByteBuffer key) {
+        assertOpen();
         nativeDelete(mPtr, key);
     }
 
-    public void put(ByteBuffer key, ByteBuffer value) {
-        assertOpen("WriteBatch is closed");
-        if (key == null) {
-            throw new NullPointerException("key");
-        }
-        if (value == null) {
-            throw new NullPointerException("value");
-        }
-
+    public void put(@NonNull ByteBuffer key, @NonNull ByteBuffer value) {
+        assertOpen();
         nativePut(mPtr, key, value);
     }
 
     public void clear() {
-        assertOpen("WriteBatch is closed");
+        assertOpen();
         nativeClear(mPtr);
     }
 

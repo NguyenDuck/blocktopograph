@@ -12,6 +12,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="2.5dp"
         android:layout_weight="1"
+        android:weightSum="1"
         android:orientation="horizontal">
 
     </LinearLayout>

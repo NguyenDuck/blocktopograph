@@ -1,5 +1,7 @@
 package com.litl.leveldb;
 
+import android.annotation.NonNull;
+
 import java.io.File;
 import java.nio.ByteBuffer;
 
@@ -11,20 +13,18 @@ public class DB extends NativeObject {
     }
 
     private final String mPath;
-    private boolean mDestroyOnClose = false;
 
-    public DB(String path) {
-        super();
-
-        if (path == null) {
-            throw new NullPointerException();
-        }
+    public DB(@NonNull String path) {
         mPath = path;
-        this.open();
+        open();
     }
 
     public void open() {
         mPtr = nativeOpen(mPath);
+    }
+
+    private void assertOpen() {
+        assertOpen("Database is closed");
     }
 
     @Override
@@ -32,15 +32,8 @@ public class DB extends NativeObject {
         nativeClose(ptr);
     }
 
-    public void put(byte[] key, byte[] value) {
-        assertOpen("Database is closed");
-        if (key == null) {
-            throw new NullPointerException("key");
-        }
-        if (value == null) {
-            throw new NullPointerException("value");
-        }
-
+    public void put(@NonNull byte[] key, @NonNull byte[] value) {
+        assertOpen();
         nativePut(mPtr, key, value);
     }
 
@@ -48,12 +41,8 @@ public class DB extends NativeObject {
         return get(null, key);
     }
 
-    public byte[] get(Snapshot snapshot, byte[] key) {
-        assertOpen("Database is closed");
-        if (key == null) {
-            throw new NullPointerException();
-        }
-
+    public byte[] get(Snapshot snapshot, @NonNull byte[] key) {
+        assertOpen();
         return nativeGet(mPtr, snapshot != null ? snapshot.getPtr() : 0, key);
     }
 
@@ -61,30 +50,18 @@ public class DB extends NativeObject {
         return get(null, key);
     }
 
-    public byte[] get(Snapshot snapshot, ByteBuffer key) {
-        assertOpen("Database is closed");
-        if (key == null) {
-            throw new NullPointerException();
-        }
-
+    public byte[] get(Snapshot snapshot, @NonNull ByteBuffer key) {
+        assertOpen();
         return nativeGet(mPtr, snapshot != null ? snapshot.getPtr() : 0, key);
     }
 
-    public void delete(byte[] key) {
-        assertOpen("Database is closed");
-        if (key == null) {
-            throw new NullPointerException();
-        }
-
+    public void delete(@NonNull byte[] key) {
+        assertOpen();
         nativeDelete(mPtr, key);
     }
 
-    public void write(WriteBatch batch) {
-        assertOpen("Database is closed");
-        if (batch == null) {
-            throw new NullPointerException();
-        }
-
+    public void write(@NonNull WriteBatch batch) {
+        assertOpen();
         nativeWrite(mPtr, batch.getPtr());
     }
 
@@ -93,7 +70,7 @@ public class DB extends NativeObject {
     }
 
     public Iterator iterator(final Snapshot snapshot) {
-        assertOpen("Database is closed");
+        assertOpen();
 
         return new Iterator(nativeIterator(mPtr, snapshot != null ? snapshot.getPtr() : 0)) {
             @Override
@@ -104,7 +81,7 @@ public class DB extends NativeObject {
     }
 
     public Snapshot getSnapshot() {
-        assertOpen("Database is closed");
+        assertOpen();
         return new Snapshot(nativeGetSnapshot(mPtr)) {
             protected void closeNativeObject(long ptr) {
                 nativeReleaseSnapshot(DB.this.getPtr(), getPtr());

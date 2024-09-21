@@ -1,5 +1,7 @@
 package com.litl.leveldb;
 
+import android.annotation.NonNull;
+
 public class Iterator extends NativeObject {
     Iterator(long iterPtr) {
         super(iterPtr);
@@ -10,46 +12,47 @@ public class Iterator extends NativeObject {
         nativeDestroy(ptr);
     }
 
-    public void seekToFirst() {
+    private void assertOpen() {
         assertOpen("Iterator is closed");
+    }
+
+    public void seekToFirst() {
+        assertOpen();
         nativeSeekToFirst(mPtr);
     }
 
     public void seekToLast() {
-        assertOpen("Iterator is closed");
+        assertOpen();
         nativeSeekToLast(mPtr);
     }
 
-    public void seek(byte[] target) {
-        assertOpen("Iterator is closed");
-        if (target == null) {
-            throw new IllegalArgumentException();
-        }
+    public void seek(@NonNull byte[] target) {
+        assertOpen();
         nativeSeek(mPtr, target);
     }
 
     public boolean isValid() {
-        assertOpen("Iterator is closed");
+        assertOpen();
         return nativeValid(mPtr);
     }
 
     public void next() {
-        assertOpen("Iterator is closed");
+        assertOpen();
         nativeNext(mPtr);
     }
 
     public void prev() {
-        assertOpen("Iterator is closed");
+        assertOpen();
         nativePrev(mPtr);
     }
 
     public byte[] getKey() {
-        assertOpen("Iterator is closed");
+        assertOpen();
         return nativeKey(mPtr);
     }
 
     public byte[] getValue() {
-        assertOpen("Iterator is closed");
+        assertOpen();
         return nativeValue(mPtr);
     }
 

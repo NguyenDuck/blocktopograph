@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -87,16 +88,16 @@ public class StartActivity extends AppCompatActivity {
 
         LinearLayout main = (LinearLayout) activityInflater.inflate(R.layout.main_activity, null, false);
 
-        var navigation = new Navigation(main.findViewById(R.id.navigation));
+        Navigation navigation = new Navigation(main);
 
-        navigation.addTab("Create");
-        var t2 = navigation.addTab("World");
-        t2.callOnClick();
-        navigation.addTab("Setting");
+        navigation.addTab("Create", R.layout.navigation_content_create);
+        navigation.addTab("World", R.layout.navigation_content_world).setTabSelected();
+        navigation.addTab("Setting", R.layout.navigation_content_setting);
 
-        runOnUiThread(() -> {
-            setContentView(main);
-        });
+        WorldItemList world_item = new WorldItemList((ScrollView) navigation.getTab(1).getContentView());
+        world_item.addWorld("Demo World", "Demo Path");
+
+        runOnUiThread(() -> setContentView(main));
     }
 
     private void loadAll() {
