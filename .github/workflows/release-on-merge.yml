@@ -20,7 +20,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'graalvm'
+          distribution: 'liberica'
           java-version: '21'
           cache: 'gradle'
 
