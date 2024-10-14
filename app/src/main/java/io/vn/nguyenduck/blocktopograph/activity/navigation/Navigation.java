@@ -1,12 +1,13 @@
 package io.vn.nguyenduck.blocktopograph.activity.navigation;
 
-import android.annotation.LayoutRes;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.LayoutRes;
 
 import java.util.ArrayList;
 
