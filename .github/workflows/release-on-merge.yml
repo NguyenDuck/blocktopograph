@@ -3,7 +3,7 @@ name: Create Pre-Release On Merge (app)
 on:
   push:
     branches:
-      - release
+      - dev
     paths:
       - app
   workflow_dispatch:
