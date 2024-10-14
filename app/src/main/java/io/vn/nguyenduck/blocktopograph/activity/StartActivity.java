@@ -25,11 +25,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import io.vn.nguyenduck.blocktopograph.R;
+import io.vn.nguyenduck.blocktopograph.activity.navigation.Navigation;
+import io.vn.nguyenduck.blocktopograph.activity.navigation.WorldItemList;
 import io.vn.nguyenduck.blocktopograph.file.BFile;
 import rikka.shizuku.Shizuku;
 
@@ -43,7 +43,6 @@ public class StartActivity extends AppCompatActivity {
     private boolean ShizukuInstalled = false;
 
     private boolean IsLoaded = false;
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final Shizuku.OnBinderReceivedListener BINDER_RECEIVED_LISTENER = () -> {
         if (Shizuku.isPreV11()) this.showNotSupportedShizukuVersion();
@@ -116,7 +115,7 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!IsLoaded) executor.submit(this::loadAll);
+        if (!IsLoaded) loadAll();
         if (StoragePermission && ShizukuPermission) {
             try {
                 var p = buildAndroidDataDir(MINECRAFT_APP_ID);
