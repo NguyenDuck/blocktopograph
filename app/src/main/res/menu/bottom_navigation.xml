@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_create"
+        android:icon="@drawable/create_world"
+        android:title="Create" />
+
+    <item
+        android:id="@+id/navigation_world"
+        android:icon="@drawable/ic_world_icon"
+        android:title="World" />
+
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/settings"
+        android:title="Setting" />
+</menu>

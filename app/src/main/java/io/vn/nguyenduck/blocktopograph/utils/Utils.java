@@ -1,5 +1,7 @@
 package io.vn.nguyenduck.blocktopograph.utils;
 
+import static io.vn.nguyenduck.blocktopograph.Constants.COM_MOJANG_FOLDER;
+
 import android.os.Build;
 import android.os.Environment;
 
@@ -20,11 +22,11 @@ public class Utils {
     }
 
     public static String buildAndroidDataDir(String appId) {
-        return Environment.getExternalStorageDirectory() + "/Android/data/" + appId + "/files";
+        return String.format("%s/Android/data/%s/files", Environment.getExternalStorageDirectory(), appId);
     }
 
     public static String buildMinecraftDataDir(String parent, String folder) {
-        return parent + "/games/com.mojang/" + folder;
+        return String.format("%s/games/%s/%s", parent, COM_MOJANG_FOLDER, folder);
     }
 
     public static void sleep(long millis) {
