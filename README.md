@@ -28,7 +28,7 @@ Or Manual
 ```shell
 git clone https://github.com/NguyenDuck/blocktopograph.git --recursive
 cd blocktopograph
-./gradlew build assembly
+./gradlew build assemble
 ```
 
 ## Contributing
