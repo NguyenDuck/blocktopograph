@@ -1,31 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/content"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/content_view"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="2.5dp"
-        android:layout_weight="1"
-        android:weightSum="1"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_above="@id/navigation_view"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/navigation"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:background="@color/border_bg_color"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:backgroundTint="@color/border_bg_color"
+        app:menu="@menu/bottom_navigation"
+        android:theme="@style/MinecraftFont"/>
 
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
