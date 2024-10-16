@@ -27,10 +27,7 @@ jobs:
       - run: chmod +x ./gradlew
 
       - name: Build
-        run: ./gradlew build
-
-      - name: Create Debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew build assembleDebug
 
       - run: mv app/build/outputs/apk/debug/*.apk Blocktopograph.apk
 
