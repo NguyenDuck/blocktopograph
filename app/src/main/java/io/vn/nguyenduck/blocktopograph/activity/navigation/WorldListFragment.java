@@ -1,5 +1,8 @@
 package io.vn.nguyenduck.blocktopograph.activity.navigation;
 
+import static io.vn.nguyenduck.blocktopograph.Constants.BOGGER;
+import static io.vn.nguyenduck.blocktopograph.shell.Runner.isRooted;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +25,6 @@ public class WorldListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        BOGGER.info(String.valueOf(isRooted()));
     }
 }

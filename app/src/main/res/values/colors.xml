@@ -10,13 +10,12 @@
 	<color name="splashSubTitle">#fff</color>
 
 	<color name="waterMark">#fff</color>
-	<color name="waterMarkShadow">#212121</color>
 	<color name="color_float_grey">#cdcdcd</color>
 	<color name="light_blue_600">#FF039BE5</color>
 	<color name="light_blue_900">#FF01579B</color>
 	<color name="light_blue_A200">#FF40C4FF</color>
 	<color name="light_blue_A400">#FF00B0FF</color>
-	<color name="black_overlay">#66000000</color>
+	<color name="black_overlay">#AA000000</color>
 
 	<color name="yellow">#ffe866</color>
 	<color name="colorBackgroundDark">#0C0E0C</color>

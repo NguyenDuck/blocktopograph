@@ -11,15 +11,15 @@ import rikka.shizuku.Shizuku;
 
 public class Runner {
 
-    private static boolean checkedRoot;
-    private static boolean hasRooted;
+    private static boolean checkedRoot = false;
+    private static boolean hasRooted = false;
 
     public static boolean isRooted() {
         if (!checkedRoot) {
             try {
-                Process process = Runtime.getRuntime().exec("su");
+                Process process = Runtime.getRuntime().exec("su --help");
                 process.getOutputStream().close();
-                hasRooted = process.exitValue() == 0;
+                hasRooted = process.getErrorStream().available() == 0 || process.exitValue() == 0;
             } catch (Exception ignored) {
             }
             checkedRoot = true;

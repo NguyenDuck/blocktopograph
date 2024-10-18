@@ -5,14 +5,13 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 import static io.vn.nguyenduck.blocktopograph.Constants.BOGGER;
-import static io.vn.nguyenduck.blocktopograph.Constants.MINECRAFT_APP_ID;
 import static io.vn.nguyenduck.blocktopograph.Constants.SHIZUKU_PACKAGE_NAME;
-import static io.vn.nguyenduck.blocktopograph.Constants.WORLDS_FOLDER;
-import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildAndroidDataDir;
-import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildMinecraftDataDir;
+import static io.vn.nguyenduck.blocktopograph.shell.Runner.isRooted;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -21,12 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
 
 import io.vn.nguyenduck.blocktopograph.R;
-import io.vn.nguyenduck.blocktopograph.file.BFile;
 import rikka.shizuku.Shizuku;
 
 public class StartActivity extends AppCompatActivity {
@@ -34,11 +29,9 @@ public class StartActivity extends AppCompatActivity {
     private final int STORAGE_PERMISSION_CODE = 0x7832;
     private final int SHIZUKU_PERMISSION_CODE = 0xbfde;
 
-    private boolean StoragePermission;
-    private boolean ShizukuPermission;
+    private boolean StoragePermission = false;
+    private boolean ShizukuPermission = false;
     private boolean ShizukuInstalled = false;
-
-    private final ExecutorService executor = Executors.newWorkStealingPool();
 
     private final Shizuku.OnBinderReceivedListener BINDER_RECEIVED_LISTENER = () -> {
         if (Shizuku.isPreV11()) showNotSupportedShizukuVersion();
@@ -75,28 +68,35 @@ public class StartActivity extends AppCompatActivity {
         StoragePermission = hasFileAccessPermission();
         ShizukuInstalled = hasInstalledShizuku();
         ShizukuPermission = hasShizukuPermission();
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+
+        // setup for auto rotated screen on sensor
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (StoragePermission && ShizukuPermission) {
-            try {
-                var p = buildAndroidDataDir(MINECRAFT_APP_ID);
-                var f = new BFile(buildMinecraftDataDir(p, WORLDS_FOLDER));
-                BOGGER.info(Arrays.toString(f.listDirs()));
-            } catch (Exception e) {
-                BOGGER.log(Level.SEVERE, e, () -> "");
-            }
-        } else {
-            if (!StoragePermission) requestStoragePermission();
-            if (isAndroid11Up() && !ShizukuInstalled) {
+
+        if (!StoragePermission) requestStoragePermission();
+        if (isAndroid11Up()) {
+            if (isRooted()) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            } else if (!ShizukuInstalled) {
                 BOGGER.info("Shizuku Not Installed!");
-            } else if (Shizuku.pingBinder() && !ShizukuPermission) {
+            } else if (!Shizuku.pingBinder()) {
+                showNotRunningShizuku();
+            } else if (!ShizukuPermission) {
+                BOGGER.info("Shizuku Not Granted!");
                 Shizuku.requestPermission(SHIZUKU_PERMISSION_CODE);
             }
+            if (StoragePermission && ShizukuPermission) {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            }
+        } else if (StoragePermission) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
     }
 
@@ -144,5 +144,18 @@ public class StartActivity extends AppCompatActivity {
                     STORAGE_PERMISSION_CODE
             );
         }
+    }
+
+    private void showNotRunningShizuku() {
+        new AlertDialog.Builder(this)
+                .setTitle("Shizuku Not Running!")
+                .setMessage("You need to start shizuku and run it first")
+                .setPositiveButton("Open Shizuku", (dialog, which) -> openShizuku())
+                .setCancelable(false)
+                .show();
+    }
+
+    private void openShizuku() {
+        startActivity(getPackageManager().getLaunchIntentForPackage(SHIZUKU_PACKAGE_NAME));
     }
 }

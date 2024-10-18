@@ -1,9 +1,7 @@
 package io.vn.nguyenduck.blocktopograph.activity;
 
-import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        new Handler().post(() -> Toast.makeText(this, "Opening Demo GameActivity...", Toast.LENGTH_LONG).show());
-        new Handler().postDelayed(() -> startActivity(new Intent(this, GameActivity.class)), 5000);
+        // setup for auto rotated screen on sensor
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 }

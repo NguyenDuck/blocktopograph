@@ -1,7 +1,5 @@
 package io.vn.nguyenduck.blocktopograph.file;
 
-import androidx.annotation.NonNull;
-
 import java.util.Arrays;
 
 import io.vn.nguyenduck.blocktopograph.shell.Runner;
@@ -42,13 +40,5 @@ public class BFile {
 
     public String read() throws Exception {
         return Runner.runString("cat", this.path);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "BFile{" +
-                "path='" + path + '\'' +
-                '}';
     }
 }
