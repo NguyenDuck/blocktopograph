@@ -13,11 +13,12 @@ public class BFile {
     }
 
     public boolean isFile() throws Exception {
-        return !Runner.runString("[ -f", this.path, "] && echo 0").isEmpty();
+        String command = String.format("[ -f %s ] && echo 0", path);
+        return !Runner.runString(command).isEmpty();
     }
 
     public String getPath() {
-        return this.path;
+        return path;
     }
 
     public void setPath(String path) {
@@ -29,16 +30,16 @@ public class BFile {
     }
 
     public BFile[] listDirs() throws Exception {
-        String result = Runner.runString("find", this.path + "/*", "-maxdepth", "0", "-type", "d");
-        return splitPathResult(result);
+        String command = String.format("find %s/* -maxdepth 1 -type d", path);
+        return splitPathResult(Runner.runString(command));
     }
 
     public BFile[] listFiles() throws Exception {
-        String result = Runner.runString("find", this.path, "-maxdepth", "1", "-type", "f");
-        return splitPathResult(result);
+        String command = String.format("find %s -maxdepth 1 -type f", path);
+        return splitPathResult(Runner.runString(command));
     }
 
     public String read() throws Exception {
-        return Runner.runString("cat", this.path);
+        return Runner.runString("cat", path);
     }
 }
