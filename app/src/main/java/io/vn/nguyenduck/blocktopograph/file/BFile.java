@@ -1,18 +1,20 @@
 package io.vn.nguyenduck.blocktopograph.file;
 
+import java.io.File;
 import java.util.Arrays;
 
 import io.vn.nguyenduck.blocktopograph.shell.Runner;
 
-public class BFile {
+public class BFile extends File {
     private String path;
     private static final String seperator = "/";
 
     public BFile(String path) {
+        super(path);
         setPath(path);
     }
 
-    public boolean isFile() throws Exception {
+    public boolean isFile() {
         String command = String.format("[ -f %s ] && echo 0", path);
         return !Runner.runString(command).isEmpty();
     }
@@ -29,17 +31,21 @@ public class BFile {
         return Arrays.stream(result.split(seperator)).map(BFile::new).toArray(BFile[]::new);
     }
 
-    public BFile[] listDirs() throws Exception {
+    public BFile[] listDirs() {
         String command = String.format("find %s/* -maxdepth 1 -type d", path);
         return splitPathResult(Runner.runString(command));
     }
 
-    public BFile[] listFiles() throws Exception {
+    public BFile[] listFiles() {
         String command = String.format("find %s -maxdepth 1 -type f", path);
         return splitPathResult(Runner.runString(command));
     }
 
-    public String read() throws Exception {
+    public String read() {
         return Runner.runString("cat", path);
+    }
+
+    public long lastModified() {
+        return Long.parseLong(Runner.runString("stat", "-c", "%Y", path));
     }
 }
