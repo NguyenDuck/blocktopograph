@@ -1,25 +1,26 @@
 package io.vn.nguyenduck.blocktopograph.file;
 
-import androidx.annotation.NonNull;
-
+import java.io.File;
 import java.util.Arrays;
 
 import io.vn.nguyenduck.blocktopograph.shell.Runner;
 
-public class BFile {
+public class BFile extends File {
     private String path;
     private static final String seperator = "/";
 
     public BFile(String path) {
+        super(path);
         setPath(path);
     }
 
-    public boolean isFile() throws Exception {
-        return !Runner.runString("[ -f", this.path, "] && echo 0").isEmpty();
+    public boolean isFile() {
+        String command = String.format("[ -f %s ] && echo 0", path);
+        return !Runner.runString(command).isEmpty();
     }
 
     public String getPath() {
-        return this.path;
+        return path;
     }
 
     public void setPath(String path) {
@@ -30,25 +31,29 @@ public class BFile {
         return Arrays.stream(result.split(seperator)).map(BFile::new).toArray(BFile[]::new);
     }
 
-    public BFile[] listDirs() throws Exception {
-        String result = Runner.runString("find", this.path + "/*", "-maxdepth", "0", "-type", "d");
-        return splitPathResult(result);
+    public BFile[] listDirs() {
+        String command = String.format("find %s/* -maxdepth 1 -type d", path);
+        return splitPathResult(Runner.runString(command));
     }
 
-    public BFile[] listFiles() throws Exception {
-        String result = Runner.runString("find", this.path, "-maxdepth", "1", "-type", "f");
-        return splitPathResult(result);
+    public BFile[] listFiles() {
+        String command = String.format("find %s -maxdepth 1 -type f", path);
+        return splitPathResult(Runner.runString(command));
     }
 
-    public String read() throws Exception {
-        return Runner.runString("cat", this.path);
+    public String read() {
+        return Runner.runString("cat", path);
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "BFile{" +
-                "path='" + path + '\'' +
-                '}';
+    public long lastModified() {
+        return Long.parseLong(Runner.runString("stat", "-c", "%Y", path));
+    }
+
+    public void copyTo(BFile dest) {
+        if (new BFile(dest.getPath() + getName()).exists()) {
+            Runner.run("cp", path, dest.getPath());
+        } else {
+            Runner.run("cp", "-r", path, dest.getPath());
+        }
     }
 }

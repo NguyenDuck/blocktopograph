@@ -13,6 +13,11 @@
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         android:minSdkVersion="29"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+
+    <queries>
+        <package android:name="moe.shizuku.privileged.api"/>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -28,8 +33,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity"/>
-        <activity android:name=".activity.GameActivity"/>
+        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.GameActivity" />
 
         <provider
             android:name="rikka.shizuku.ShizukuProvider"

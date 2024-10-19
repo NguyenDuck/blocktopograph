@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/navigation_create"
-        android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.WorldListFragment"
+        android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.CreateFragment"
         tools:layout="@layout/world_list_fragment"/>
 
     <fragment
@@ -16,6 +16,6 @@
 
     <fragment
         android:id="@+id/navigation_setting"
-        android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.WorldListFragment"
+        android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.SettingFragment"
         tools:layout="@layout/world_list_fragment"/>
 </navigation>
