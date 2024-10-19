@@ -14,5 +14,6 @@ public class WorldPreLoader {
     }
 
     private void fetchWorldIcon() {
+
     }
 }

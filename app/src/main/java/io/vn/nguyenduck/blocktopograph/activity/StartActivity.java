@@ -124,7 +124,8 @@ public class StartActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Shizuku Not Installed!")
                 .setMessage("You need to install shizuku first")
-                .setPositiveButton("Open Google Play Store", (dialog, which) -> showShizukuInMarket())
+                .setPositiveButton("Open Google Play Store", (d, w) -> showShizukuInMarket())
+                .setNegativeButton("Exit", (d, w) -> System.exit(0))
                 .setCancelable(false)
                 .show();
     }
@@ -133,7 +134,8 @@ public class StartActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Shizuku Not Running!")
                 .setMessage("You need to start shizuku and run it first")
-                .setPositiveButton("Open Shizuku", (dialog, which) -> openShizuku())
+                .setPositiveButton("Open Shizuku", (d, w) -> openShizuku())
+                .setNegativeButton("Exit", (d, w) -> System.exit(0))
                 .setCancelable(false)
                 .show();
     }

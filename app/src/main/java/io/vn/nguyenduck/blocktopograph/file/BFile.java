@@ -48,4 +48,12 @@ public class BFile extends File {
     public long lastModified() {
         return Long.parseLong(Runner.runString("stat", "-c", "%Y", path));
     }
+
+    public void copyTo(BFile dest) {
+        if (new BFile(dest.getPath() + getName()).exists()) {
+            Runner.run("cp", path, dest.getPath());
+        } else {
+            Runner.run("cp", "-r", path, dest.getPath());
+        }
+    }
 }

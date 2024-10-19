@@ -106,7 +106,7 @@ public class Runner {
         return run(String.join(" ", commandSplit)).getBytes();
     }
 
-    public static String runString(String command) {
+    private static String runString(String command) {
         try {
             return run("\n", command);
         } catch (Exception e) {
