@@ -8,3 +8,6 @@
 ### 18Oct24
 - Added a way to check rooted
 - Added show shizuku not running required dialog when start app
+
+### 19Oct24
+- Auto copy games from Android/data to /sdcard/games folder and back
