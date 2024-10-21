@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -34,11 +36,11 @@ import io.vn.nguyenduck.blocktopograph.world.WorldPreLoader;
 public class WorldListFragment extends Fragment {
 
     private static final String[] WORLD_PATHS = new String[]{
-            buildMinecraftDataDir(Environment.getLegacyExternalStorageDirectory().getPath(), WORLDS_FOLDER)
+            buildMinecraftDataDir(Environment.getExternalStorageDirectory().getPath(), WORLDS_FOLDER)
     };
 
     private static final Map<String, WorldPreLoader> WORLDS = new HashMap<>();
-    private static ArrayList<String> WORLD_PATH = new ArrayList<>();
+    private static final ArrayList<String> WORLD_PATH = new ArrayList<>();
     private static final WorldListAdapter ADAPTER = new WorldListAdapter();
 
     private static ExecutorService EXECUTOR_SERVICE;
@@ -77,17 +79,17 @@ public class WorldListFragment extends Fragment {
         }
     }
 
-    private static class WorldListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static class WorldListAdapter extends Adapter<ViewHolder> {
         @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.world_item, parent, false);
-            return new RecyclerView.ViewHolder(view){};
+            return new ViewHolder(view){};
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             WorldPreLoader world = WORLDS.get(WORLD_PATH.get(position));
             View view = holder.itemView;
 
@@ -122,12 +124,6 @@ public class WorldListFragment extends Fragment {
                 DateFormat formater = SimpleDateFormat.getDateInstance(2);
                 lastPlay.setText(formater.format(new Date(time * 1000)));
             }
-//            {
-//                TextView worldSize = view.findViewById(R.id.world_item_size);
-//
-//                worldSize.setText(getFormatedWorldSize());
-//            }
-
 //            BOGGER.info(data.toString());
         }
 
