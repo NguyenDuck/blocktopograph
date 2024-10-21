@@ -11,3 +11,6 @@
 
 ### 19Oct24
 - Auto copy games from Android/data to /sdcard/games folder and back
+
+### 20Oct24
+- Added world display, scanner
