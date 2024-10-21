@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.Nullable;
+
 import com.badlogic.gdx.utils.LittleEndianInputStream;
 
 import java.io.BufferedReader;
@@ -41,21 +43,25 @@ public class WorldPreLoader {
         data = fetchWorldData();
     }
 
+    @Nullable
     private File fetchIcon() {
         if (icon != null) return icon;
         var i = Arrays.stream(path.listFiles((v, n) -> n.startsWith("world_icon"))).findFirst();
         return i.orElse(null);
     }
 
+    @Nullable
     private File fetchWorldData() {
         if (data != null) return data;
         var i = Arrays.stream(path.listFiles((v, n) -> n.equals("level.dat"))).findFirst();
         return i.orElse(null);
     }
 
+    @Nullable
     public Drawable getIconDrawable() {
-        Bitmap icon = BitmapFactory.decodeFile(fetchIcon().getPath());
-        assert icon != null;
+        File iconFile = fetchIcon();
+        if (iconFile == null) return null;
+        Bitmap icon = BitmapFactory.decodeFile(iconFile.getPath());
         return new BitmapDrawable(Resources.getSystem(), icon);
     }
 

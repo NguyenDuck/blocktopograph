@@ -4,14 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:showIn="@layout/main_activity">
+    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/world_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:spanCount="@integer/world_list_span_count"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
+    <include layout="@layout/world_list"/>
 
 </LinearLayout>

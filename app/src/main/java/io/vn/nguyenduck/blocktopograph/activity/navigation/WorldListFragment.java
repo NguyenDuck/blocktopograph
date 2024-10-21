@@ -3,6 +3,7 @@ package io.vn.nguyenduck.blocktopograph.activity.navigation;
 import static io.vn.nguyenduck.blocktopograph.Constants.WORLDS_FOLDER;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildMinecraftDataDir;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -55,6 +56,9 @@ public class WorldListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.world_list_fragment, container, false);
+        v.setFocusable(true);
+        v.setFocusableInTouchMode(true);
+        v.setOnClickListener(View::requestFocus);
         RecyclerView recyclerView = v.findViewById(R.id.world_list);
         recyclerView.setAdapter(ADAPTER);
         return v;
@@ -85,19 +89,22 @@ public class WorldListFragment extends Fragment {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.world_item, parent, false);
-            return new ViewHolder(view){};
+            return new ViewHolder(view) {
+            };
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             WorldPreLoader world = WORLDS.get(WORLD_PATH.get(position));
-            View view = holder.itemView;
+            View view = getView(holder);
 
             assert world != null;
             CompoundTag data = (CompoundTag) world.getData();
 
             ImageView icon = view.findViewById(R.id.world_item_icon);
-            icon.setImageDrawable(world.getIconDrawable());
+            Drawable iconDrawable = world.getIconDrawable();
+            if (iconDrawable != null) icon.setImageDrawable(iconDrawable);
+            else icon.setImageResource(R.drawable.world_preview_default);
 
             TextView name = view.findViewById(R.id.world_item_name);
             name.setText(world.getName());
@@ -125,6 +132,25 @@ public class WorldListFragment extends Fragment {
                 lastPlay.setText(formater.format(new Date(time * 1000)));
             }
 //            BOGGER.info(data.toString());
+        }
+
+        private static @NonNull View getView(@NonNull ViewHolder holder) {
+            View view = holder.itemView;
+
+            view.setFocusable(true);
+            view.setFocusableInTouchMode(true);
+            view.setOnFocusChangeListener((v, f) ->
+                    v.findViewById(R.id.toolbar_under_world_item)
+                            .setVisibility(f ? View.VISIBLE : View.GONE)
+            );
+
+            view.setOnClickListener(v -> {
+                if (v.hasFocus()) {
+                    v.clearFocus();
+                    v.findViewById(R.id.toolbar_under_world_item).setVisibility(View.GONE);
+                } else v.requestFocus();
+            });
+            return view;
         }
 
         @Override
