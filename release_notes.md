@@ -14,3 +14,7 @@
 
 ### 20Oct24
 - Added world display, scanner
+
+### 21Oct24
+- Fixed alternative world not have icon make it crash
+- Added toolbar to world when clicked
