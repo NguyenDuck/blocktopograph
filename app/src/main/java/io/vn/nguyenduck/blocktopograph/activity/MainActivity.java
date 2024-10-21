@@ -4,7 +4,7 @@ import static io.vn.nguyenduck.blocktopograph.Constants.MINECRAFT_APP_ID;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.buildAndroidDataDir;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
 
-import android.content.pm.ActivityInfo;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -18,8 +18,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import io.vn.nguyenduck.blocktopograph.R;
 import io.vn.nguyenduck.blocktopograph.file.BFile;
-import io.vn.nguyenduck.blocktopograph.shell.Runner;
 
+@SuppressLint("SdCardPath")
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -34,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = NavHostFragment.findNavController(contentView);
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
-        // setup for auto rotated screen on sensor
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     @Override
@@ -44,12 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (isAndroid11Up()) {
             BFile f = new BFile(buildAndroidDataDir(MINECRAFT_APP_ID) + "/games");
-
-            Runner.runString(
-                    "cp -r",
-                    f.getPath(),
-                    "/sdcard"
-            );
+            f.copyTo(new BFile("/sdcard"));
         }
     }
 
@@ -57,13 +49,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (isAndroid11Up()) {
-            BFile f = new BFile(buildAndroidDataDir(MINECRAFT_APP_ID));
-
-            Runner.runString(
-                    "cp -r",
-                    "/sdcard/games",
-                    f.getPath()
-            );
+            BFile f = new BFile("/sdcard/games");
+            f.copyTo(new BFile(buildAndroidDataDir(MINECRAFT_APP_ID)));
         }
     }
 }

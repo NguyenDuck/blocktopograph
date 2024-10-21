@@ -35,4 +35,8 @@ public class Utils {
         } catch (InterruptedException ignored) {
         }
     }
+
+    public static String getFormatedWorldSize(long size) {
+        return "";
+    }
 }
