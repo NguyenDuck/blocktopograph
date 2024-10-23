@@ -11,3 +11,10 @@
 
 ### 19Oct24
 - Auto copy games from Android/data to /sdcard/games folder and back
+
+### 20Oct24
+- Added world display, scanner
+
+### 21Oct24
+- Fixed alternative world not have icon make it crash
+- Added toolbar to world when clicked
