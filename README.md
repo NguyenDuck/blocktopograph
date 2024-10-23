@@ -1,5 +1,6 @@
 # Blocktopograph
-![Blocktopograph](./app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+
+<img src="./assets/ic_launcher_round.svg" alt="Blocktopograph"/>
 
 ## How this work in future?
 
