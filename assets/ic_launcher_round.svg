@@ -1,19 +1,11 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="512"
-    android:viewportHeight="512">
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="blocktopograph_icon">
     <path
-        android:fillColor="#689f38"
-        android:pathData="M 256,32A 224,224 0 0 1 256,480A 224,224 0 0 1 256,32" />
-
+        d="M 256 32 C 315.386 32 372.4 55.616 414.392 97.608 C 456.384 139.6 480 196.614 480 256 C 480 315.386 456.384 372.4 414.392 414.392 C 372.4 456.384 315.386 480 256 480 C 196.614 480 139.6 456.384 97.608 414.392 C 55.616 372.4 32 315.386 32 256 C 32 196.614 55.616 139.6 97.608 97.608 C 139.6 55.616 196.614 32 256 32"
+        fill="#689f38" />
     <path
-        android:fillColor="#204003"
-        android:pathData="M 128,155L 248,260L 120,358L 250,480A 224,224 0 0 0 480,248L 384,155" />
-
+        d="M 128 155 L 248 260 L 120 358 L 250 480 C 290.911 481.123 331.358 471.012 366.929 450.771 C 402.5 430.53 431.853 400.923 451.785 365.178 C 471.717 329.433 481.477 288.9 480 248 L 384 155"
+        fill="#204003" />
     <path
-        android:fillColor="#ffffff"
-        android:pathData="M 256,90L 384,155L 256,225L 128,155M 120,170L 248,240L 248,422L 120,358M 390,170L 265,240L 265,422L 390,358" />
-
-</vector>
+        d="M 256 90 L 384 155 L 256 225 L 128 155 M 120 170 L 248 240 L 248 422 L 120 358 M 390 170 L 265 240 L 265 422 L 390 358"
+        fill="#ffffff" />
+</svg>
