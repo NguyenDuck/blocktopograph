@@ -1,0 +1,11 @@
+[package]
+name = "blocktopograph"
+version = "0.0.1"
+authors = ["NguyenDuck <duck.duc.vit@gmail.com>"]
+description = "A voxel game use bevy game engine to work"
+edition = "2021"
+
+[dependencies]
+bevy = "0.15.1"
+bevy_atmosphere = "0.12.2"
+bevy_rapier3d = "0.28.0"
