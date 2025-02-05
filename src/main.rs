@@ -14,37 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+////////////////////////////////////////////////////////////////////////
 use bevy::{
     asset::{Assets, RenderAssetUsages},
     color::palettes::css::{GREEN, WHITE},
-    input::mouse::MouseMotion,
     math::Vec3,
-    pbr::DirectionalLightShadowMap,
-    pbr::StandardMaterial,
+    pbr::{DirectionalLightShadowMap, StandardMaterial},
     prelude::*,
     render::mesh::{Indices, PrimitiveTopology},
     utils::default,
-    window::{CursorGrabMode, PrimaryWindow},
     DefaultPlugins,
 };
-
-use bevy_atmosphere::{model::AtmosphereModel, plugin::AtmospherePlugin, prelude::Nishita};
+use bevy_atmosphere::{
+    model::AtmosphereModel,
+    plugin::{AtmosphereCamera, AtmospherePlugin},
+    prelude::Nishita,
+};
 use bevy_rapier3d::prelude::*;
+use blocktopograph::{
+    camera::camera_control_system,
+    input_mapping::{input_system, InputMapping, InputMappingPlugin},
+    l18n::{L18n, L18nPlugin},
+};
+use std::collections::HashMap;
 
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::srgb(0.0, 0.0, 0.0)))
-        .add_plugins(DefaultPlugins)
+        .add_plugins((
+            DefaultPlugins,
+            AtmospherePlugin,
+            InputMappingPlugin,
+            L18nPlugin,
+        ))
         .insert_resource(AmbientLight {
             brightness: 250.,
             ..default()
         })
-        .insert_resource(AtmosphereModel::new(Nishita::default()))
-        .add_plugins(AtmospherePlugin)
         .insert_resource(DirectionalLightShadowMap { size: 4096 })
-        .add_systems(PreStartup, setup)
-        .add_systems(Update, (camera_control_system, cursor_grab_system))
-        .insert_resource(blocktopograph::input_mapping::InputMapping::default())
+        .add_systems(PostStartup, setup)
+        .add_systems(PreUpdate, (camera_control_system, input_system))
         .run();
 }
 
@@ -81,11 +90,15 @@ fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    mut windows: Query<&mut Window>,
+    mut input_mapping: ResMut<InputMapping>,
+    localization: Res<L18n>,
 ) {
-    commands.spawn((
-        Camera3d::default(),
-        Transform::from_xyz(-5., 1., 0.).looking_at(Vec3::ZERO, Dir3::Y),
-    ));
+    let mut window = windows.single_mut();
+    window.title = localization.translate(vec!["application", "title"]);
+
+    commands.insert_resource(AtmosphereModel::new(Nishita { ..default() }));
+    commands.spawn((Camera3d::default(), AtmosphereCamera::default()));
 
     commands.spawn((
         Mesh3d(meshes.add(create_cube())),
@@ -97,7 +110,7 @@ fn setup(
     ));
 
     commands.spawn((
-        Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::ONE * 100.))),
+        Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::ONE * 1000.))),
         Collider::halfspace(Vec3::Z).unwrap(),
         MeshMaterial3d(materials.add(StandardMaterial {
             base_color: WHITE.into(),
@@ -118,88 +131,18 @@ fn setup(
         },
         Transform::from_xyz(-5., 5., -5.).looking_at(Vec3::ZERO, Dir3::Y),
     ));
-}
 
-fn camera_control_system(
-    time: Res<Time>,
-    mouse_button_input: Res<ButtonInput<MouseButton>>,
-    mut mouse_motion_events: EventReader<MouseMotion>,
-    keyboard_input: Res<ButtonInput<KeyCode>>,
-    mut query: Query<&mut Transform, With<Camera>>,
-) {
-    // Thiết lập độ nhạy chuột
-    let sensitivity = 0.005;
-    let speed = 5.0;
+    let key_bindings: HashMap<&str, Vec<KeyCode>> = HashMap::from([
+        ("move_forward", vec![KeyCode::KeyW]),
+        ("move_backward", vec![KeyCode::KeyS]),
+        ("move_left", vec![KeyCode::KeyA]),
+        ("move_right", vec![KeyCode::KeyD]),
+        ("jump", vec![KeyCode::Space]),
+        ("crouch", vec![KeyCode::ShiftLeft]),
+        ("sprint", vec![KeyCode::ControlLeft]),
+    ]);
 
-    // Chỉ sử dụng chuyển động chuột khi chuột phải đang được nhấn giữ
-    if mouse_button_input.pressed(MouseButton::Right) {
-        for mut transform in query.iter_mut() {
-            // Tổng hợp chuyển động chuột
-            let mut delta = Vec2::ZERO;
-            for event in mouse_motion_events.read().into_iter() {
-                delta += event.delta;
-            }
-
-            // Tính toán góc quay dựa trên chuyển động chuột
-            let delta_yaw = -delta.x * sensitivity;
-            let delta_pitch = -delta.y * sensitivity;
-
-            // Lấy góc Euler hiện tại của camera
-            let (yaw, pitch, roll) = transform.rotation.to_euler(EulerRot::YXZ);
-
-            // Cập nhật góc yaw và pitch
-            let new_yaw = yaw + delta_yaw;
-            let mut new_pitch = pitch + delta_pitch;
-
-            // Giới hạn góc pitch để tránh lật camera
-            let max_pitch = std::f32::consts::FRAC_PI_2;
-            new_pitch = new_pitch.clamp(-max_pitch, max_pitch);
-
-            // Cập nhật rotation của camera
-            transform.rotation = Quat::from_euler(EulerRot::YXZ, new_yaw, new_pitch, roll);
-        }
-    }
-
-    // Xử lý chuyển động bàn phím
-    for mut transform in query.iter_mut() {
-        let mut direction = Vec3::ZERO;
-        if keyboard_input.pressed(KeyCode::KeyW) {
-            direction -= Vec3::Z;
-        }
-        if keyboard_input.pressed(KeyCode::KeyS) {
-            direction += Vec3::Z;
-        }
-        if keyboard_input.pressed(KeyCode::KeyA) {
-            direction -= Vec3::X;
-        }
-        if keyboard_input.pressed(KeyCode::KeyD) {
-            direction += Vec3::X;
-        }
-        if keyboard_input.pressed(KeyCode::ShiftLeft) {
-            direction -= Vec3::Y;
-        }
-        if keyboard_input.pressed(KeyCode::Space) {
-            direction += Vec3::Y;
-        }
-
-        if direction.length_squared() > 0.0 {
-            direction = direction.normalize();
-            let movement = transform.rotation * direction * speed * time.delta_secs();
-            transform.translation += movement;
-        }
-    }
-}
-
-fn cursor_grab_system(
-    mouse_button_input: Res<ButtonInput<MouseButton>>,
-    mut query: Query<&mut Window, With<PrimaryWindow>>,
-) {
-    let mut window = query.single_mut();
-    if mouse_button_input.pressed(MouseButton::Right) {
-        window.cursor_options.visible = false;
-        window.cursor_options.grab_mode = CursorGrabMode::Locked;
-    } else {
-        window.cursor_options.visible = true;
-        window.cursor_options.grab_mode = CursorGrabMode::None;
+    for (action, keys) in key_bindings {
+        input_mapping.add_custom_binding(keys, action.to_string());
     }
 }

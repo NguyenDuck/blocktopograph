@@ -14,28 +14,90 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-use std::collections::{HashMap, HashSet};
+////////////////////////////////////////////////////////////////////////
+use bevy::prelude::*;
+use std::collections::HashMap;
 
-use bevy::{
-    ecs::system::Resource,
-    input::keyboard::{Key, KeyCode},
-};
-
-type InputCallback = Box<dyn Fn() + Send + Sync + 'static>;
+pub struct InputMappingPlugin;
 
 #[derive(Resource, Default)]
 pub struct InputMapping {
-    unordered_to_ordered: HashMap<HashSet<KeyCode>, Vec<(Vec<KeyCode>, InputCallback)>>,
+    key_map: HashMap<Vec<KeyCode>, String>,
+    ordered_key_map: HashMap<Vec<KeyCode>, String>,
+    action_callbacks: HashMap<String, Box<dyn Fn() + Send + Sync>>,
+}
+
+impl Plugin for InputMappingPlugin {
+    fn build(&self, app: &mut App) {
+        app.insert_resource(InputMapping::default());
+    }
 }
 
 impl InputMapping {
-    fn add_mapping(&mut self, keys: Vec<KeyCode>, callback: InputCallback) {
-        let unoredered_keys: HashSet<KeyCode> = keys.iter().cloned().collect();
+    pub fn add_custom_binding(&mut self, key_codes: Vec<KeyCode>, action: String) {
+        let mut sorted_key_codes = key_codes.clone();
+        sorted_key_codes.sort();
 
+        if self.ordered_key_map.contains_key(&sorted_key_codes) {
+            self.key_map.insert(key_codes, action);
+        } else {
+            self.ordered_key_map.insert(sorted_key_codes, action);
+        }
+    }
 
-        // self.unordered_to_ordered
-        //     .entry(unoredered_keys)
-        //     .or_insert_with(Vec::new)
-        //     .push((keys, callback))
+    pub fn register_action_callback<F>(&mut self, action: String, callback: F)
+    where
+        F: Fn() + Send + Sync + 'static,
+    {
+        self.action_callbacks.insert(action, Box::new(callback));
+    }
+
+    pub fn rebind_action(
+        mut input_mapping: ResMut<InputMapping>,
+        action: String,
+        new_keys: Vec<KeyCode>,
+    ) {
+        // Xóa binding cũ
+        input_mapping.key_map.retain(|_, v| v != &action);
+        input_mapping.ordered_key_map.retain(|_, v| v != &action);
+
+        // Thêm binding mới
+        input_mapping.add_custom_binding(new_keys, action);
+    }
+
+    pub fn get_action(&self, key_codes: &[KeyCode]) -> Option<&String> {
+        let mut sorted_key_codes = key_codes.to_vec();
+        sorted_key_codes.sort_unstable();
+
+        self.key_map
+            .get(key_codes)
+            .or_else(|| self.ordered_key_map.get(&sorted_key_codes))
+    }
+
+    fn execute_action(&self, action: &str) {
+        if let Some(callback) = self.action_callbacks.get(action) {
+            callback();
+        }
+    }
+}
+
+pub fn input_system(keyboard_input: Res<ButtonInput<KeyCode>>, input_mapping: Res<InputMapping>) {
+    let pressed_keys: Vec<KeyCode> = keyboard_input.get_pressed().cloned().collect();
+
+    if pressed_keys.is_empty() {
+        return;
+    }
+
+    // Kiểm tra xem tổ hợp phím có trong keymap không
+    if let Some(action) = input_mapping.get_action(&pressed_keys) {
+        input_mapping.execute_action(action);
+        return;
+    }
+
+    // Nếu không có tổ hợp, kiểm tra từng phím đơn lẻ
+    for key in &pressed_keys {
+        if let Some(action) = input_mapping.get_action(&[*key]) {
+            input_mapping.execute_action(action);
+        }
     }
 }
