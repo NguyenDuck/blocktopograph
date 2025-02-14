@@ -38,8 +38,6 @@ impl L18n {
     fn new() -> Self {
         let global_translations = Self::load_global();
 
-        println!("{:#?}", global_translations);
-
         L18n {
             global_translations,
             translations: Value::Null,

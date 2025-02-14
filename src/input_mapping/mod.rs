@@ -52,17 +52,13 @@ impl InputMapping {
         self.action_callbacks.insert(action, Box::new(callback));
     }
 
-    pub fn rebind_action(
-        mut input_mapping: ResMut<InputMapping>,
-        action: String,
-        new_keys: Vec<KeyCode>,
-    ) {
+    pub fn rebind_action(&mut self, action: String, new_keys: Vec<KeyCode>) {
         // Xóa binding cũ
-        input_mapping.key_map.retain(|_, v| v != &action);
-        input_mapping.ordered_key_map.retain(|_, v| v != &action);
+        self.key_map.retain(|_, v| v != &action);
+        self.ordered_key_map.retain(|_, v| v != &action);
 
         // Thêm binding mới
-        input_mapping.add_custom_binding(new_keys, action);
+        self.add_custom_binding(new_keys, action);
     }
 
     pub fn get_action(&self, key_codes: &[KeyCode]) -> Option<&String> {
