@@ -2,6 +2,8 @@
 
 Blocktopograph is an open-source world editor for Minecraft Bedrock Edition (MCBE).
 
+![Discord Server](https://dcbadge.limes.pink/api/server/https://discord.gg/u8GCn23naN)
+
 ## Features
 
 -   **Cross-Platform Compatibility**
