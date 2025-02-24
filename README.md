@@ -63,6 +63,10 @@ We welcome contributions from the community. To contribute:
 
 Please ensure that your code adheres to the project's coding standards and includes appropriate tests.
 
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/NguyenDuck/blocktopograph.svg?variant=adaptive)](https://starchart.cc/NguyenDuck/blocktopograph)
+
 ## License
 
 This project is licensed under two different licenses for source code and non-code assets:
