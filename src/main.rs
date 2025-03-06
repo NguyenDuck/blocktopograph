@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright © 2025 NguyenDuck
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,12 +30,12 @@ use bevy_atmosphere::{
     plugin::{AtmosphereCamera, AtmospherePlugin},
     prelude::Nishita,
 };
-use bevy_rapier3d::prelude::*;
-use blocktopograph::{
-    camera::camera_control_system,
-    input_mapping::{input_system, InputMapping, InputMappingPlugin},
-    l18n::{L18n, L18nPlugin},
-};
+// use blocktopograph::{
+//     format_i18n,
+//     i18n::{I18n, I18nPlugin},
+//     input::{InputActionDescriptor, InputMapping, InputMappingPlugin, KeyboardInputPlugin},
+//     systems::BlocktopographSystemPlugins,
+// };
 use std::collections::HashMap;
 
 fn main() {
@@ -44,8 +44,10 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             AtmospherePlugin,
-            InputMappingPlugin,
-            L18nPlugin,
+            // KeyboardInputPlugin,
+            // InputMappingPlugin,
+            // I18nPlugin,
+            // BlocktopographSystemPlugins,
         ))
         .insert_resource(AmbientLight {
             brightness: 250.,
@@ -53,7 +55,6 @@ fn main() {
         })
         .insert_resource(DirectionalLightShadowMap { size: 4096 })
         .add_systems(PostStartup, setup)
-        .add_systems(PreUpdate, (camera_control_system, input_system))
         .run();
 }
 
@@ -91,11 +92,11 @@ fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut windows: Query<&mut Window>,
-    mut input_mapping: ResMut<InputMapping>,
-    localization: Res<L18n>,
+    // mut input_mapping: ResMut<InputMapping>,
+    // i18n: Res<I18n>,
 ) {
-    let mut window = windows.single_mut();
-    window.title = localization.translate(vec!["application", "title"]);
+    // let mut window = windows.single_mut();
+    // window.title = format_i18n!(i18n, "application.title");
 
     commands.insert_resource(AtmosphereModel::new(Nishita { ..default() }));
     commands.spawn((Camera3d::default(), AtmosphereCamera::default()));
@@ -111,7 +112,6 @@ fn setup(
 
     commands.spawn((
         Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::ONE * 1000.))),
-        Collider::halfspace(Vec3::Z).unwrap(),
         MeshMaterial3d(materials.add(StandardMaterial {
             base_color: WHITE.into(),
             ..default()
@@ -132,17 +132,18 @@ fn setup(
         Transform::from_xyz(-5., 5., -5.).looking_at(Vec3::ZERO, Dir3::Y),
     ));
 
-    let key_bindings: HashMap<&str, Vec<KeyCode>> = HashMap::from([
-        ("move_forward", vec![KeyCode::KeyW]),
-        ("move_backward", vec![KeyCode::KeyS]),
-        ("move_left", vec![KeyCode::KeyA]),
-        ("move_right", vec![KeyCode::KeyD]),
-        ("jump", vec![KeyCode::Space]),
-        ("crouch", vec![KeyCode::ShiftLeft]),
-        ("sprint", vec![KeyCode::ControlLeft]),
-    ]);
+    // let key_bindings: HashMap<&str, Vec<KeyCode>> = HashMap::from([
+    //     ("move_forward", vec![KeyCode::KeyW]),
+    //     ("move_backward", vec![KeyCode::KeyS]),
+    //     ("move_left", vec![KeyCode::KeyA]),
+    //     ("move_right", vec![KeyCode::KeyD]),
+    //     ("jump", vec![KeyCode::Space]),
+    //     ("crouch", vec![KeyCode::ShiftLeft]),
+    //     ("sprint", vec![KeyCode::ControlLeft]),
+    //     ("fullscreen", vec![KeyCode::F11]),
+    // ]);
 
-    for (action, keys) in key_bindings {
-        input_mapping.add_custom_binding(keys, action.to_string());
-    }
+    // for (action, keys) in key_bindings {
+    //     input_mapping.register_action(InputActionDescriptor::new(action, keys));
+    // }
 }
