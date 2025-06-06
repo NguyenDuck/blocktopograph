@@ -68,8 +68,6 @@ pub fn try_identify_key(key: &[u8]) -> Result<KeyType, Error> {
         Ok(KeyType::TheEnd)
     } else if key.starts_with(b"portals") {
         Ok(KeyType::Portals)
-    } else if key.len() == 8 || key.len() == 11 || key.len() == 12 {
-        Ok(KeyType::Digp) // Assuming these lengths are for Digp keys
     } else if key.len() == 9 || key.len() == 10 || key.len() == 13 || key.len() == 14 {
         Ok(KeyType::ChunkData)
     } else {
