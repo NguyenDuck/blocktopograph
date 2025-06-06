@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright © 2025 NguyenDuck
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,135 +15,75 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-use bevy::{
-    asset::{Assets, RenderAssetUsages},
-    color::palettes::css::{GREEN, WHITE},
-    math::Vec3,
-    pbr::{DirectionalLightShadowMap, StandardMaterial},
-    prelude::*,
-    render::mesh::{Indices, PrimitiveTopology},
-    utils::default,
-    DefaultPlugins,
+use std::path::Path;
+
+use leveldb::{
+    db::Database,
+    iterator::Iterable,
+    options::{Options, ReadOptions},
 };
-use bevy_atmosphere::{
-    model::AtmosphereModel,
-    plugin::{AtmosphereCamera, AtmospherePlugin},
-    prelude::Nishita,
+
+mod server;
+use server::{
+    core::chunk::{
+        chunk_reader::ChunkReaderImpl,
+        chunk_tag::{ChunkTag, ChunkTagType},
+    },
+    leveldb::utils::{try_identify_key, KeyType},
 };
-// use blocktopograph::{
-//     format_i18n,
-//     i18n::{I18n, I18nPlugin},
-//     input::{InputActionDescriptor, InputMapping, InputMappingPlugin, KeyboardInputPlugin},
-//     systems::BlocktopographSystemPlugins,
-// };
 use std::collections::HashMap;
 
 fn main() {
-    App::new()
-        .insert_resource(ClearColor(Color::srgb(0.0, 0.0, 0.0)))
-        .add_plugins((
-            DefaultPlugins,
-            AtmospherePlugin,
-            // KeyboardInputPlugin,
-            // InputMappingPlugin,
-            // I18nPlugin,
-            // BlocktopographSystemPlugins,
-        ))
-        .insert_resource(AmbientLight {
-            brightness: 250.,
-            ..default()
-        })
-        .insert_resource(DirectionalLightShadowMap { size: 4096 })
-        .add_systems(PostStartup, setup)
-        .run();
-}
+    let db_path = Path::new("./assets/test_world/db");
+    if !db_path.exists() {
+        println!("Database path does not exist: {}", db_path.display());
+        return;
+    }
 
-fn create_cube() -> Mesh {
-    Mesh::new(
-        PrimitiveTopology::TriangleList,
-        RenderAssetUsages::default(),
-    )
-    .with_inserted_attribute(
-        Mesh::ATTRIBUTE_POSITION,
-        vec![
-            [0., 0., 0.],
-            [0., 0., 1.],
-            [0., 1., 0.],
-            [0., 1., 1.],
-            [1., 0., 0.],
-            [1., 0., 1.],
-            [1., 1., 0.],
-            [1., 1., 1.],
-        ],
-    )
-    .with_inserted_indices(Indices::U16(vec![
-        1, 5, 3, 3, 5, 7, // North
-        0, 2, 4, 4, 2, 6, // South
-        0, 1, 2, 2, 1, 3, // East
-        6, 7, 4, 4, 7, 5, // West
-        2, 3, 6, 6, 3, 7, // Up
-        5, 1, 4, 4, 1, 0, // Down
-    ]))
-    .with_inserted_attribute(Mesh::ATTRIBUTE_NORMAL, vec![[0.0, 1.0, 0.0]; 8])
-}
+    let mut keytype_counts: HashMap<KeyType, usize> = HashMap::new();
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    mut windows: Query<&mut Window>,
-    // mut input_mapping: ResMut<InputMapping>,
-    // i18n: Res<I18n>,
-) {
-    // let mut window = windows.single_mut();
-    // window.title = format_i18n!(i18n, "application.title");
+    let db = Database::open(db_path, &Options::new()).unwrap();
 
-    commands.insert_resource(AtmosphereModel::new(Nishita { ..default() }));
-    commands.spawn((Camera3d::default(), AtmosphereCamera::default()));
+    db.iter(&ReadOptions::new())
+        .for_each(|(k, v)| match try_identify_key(k.as_slice()) {
+            Ok(key_type) => {
+                *keytype_counts.entry(key_type.clone()).or_insert(0) += 1;
 
-    commands.spawn((
-        Mesh3d(meshes.add(create_cube())),
-        MeshMaterial3d(materials.add(StandardMaterial {
-            base_color: GREEN.into(),
-            ..default()
-        })),
-        Transform::from_xyz(0., 1., 0.),
-    ));
+                if key_type == KeyType::ChunkData {
+                    ChunkTag::read(k.as_slice())
+                        .map(|tag| match tag.key_type {
+                            ChunkTagType::FinalizedState
+                            | ChunkTagType::ActorDigestVersion
+                            | ChunkTagType::Version
+                            | ChunkTagType::BlendingData
+                            | ChunkTagType::BlendingBiomeHeight
+                            | ChunkTagType::PendingTicks
+                            | ChunkTagType::Data3D
+                            | ChunkTagType::AABBVolumes
+                            | ChunkTagType::BlockEntity
+                            | ChunkTagType::RandomTicks => {}
+                            ChunkTagType::SubChunkPrefix => {
+                                let _ = ChunkReaderImpl::new().read_chunk(tag, &v);
+                            }
+                            _ => println!(
+                                "Chunk Tag - X: {}, Z: {}, Dim: {:?}, Type: {:?}",
+                                tag.x, tag.z, tag.dim, tag.key_type,
+                            ),
+                        })
+                        .unwrap_or_else(|e| {
+                            println!("Error reading chunk tag: {}", e);
+                        });
+                }
+            }
+            Err(_) => {
+                println!("Key: {:?}, Raw Key: {:?}", String::from_utf8(k.clone()), k)
+            }
+        });
 
-    commands.spawn((
-        Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::ONE * 1000.))),
-        MeshMaterial3d(materials.add(StandardMaterial {
-            base_color: WHITE.into(),
-            ..default()
-        })),
-        Transform::IDENTITY
-            .with_translation(Vec3::ONE.with_y(0.) / 2.)
-            .looking_to(Dir3::Z, Dir3::Y),
-    ));
+    println!("Key Type Counts:");
+    for (key_type, count) in keytype_counts {
+        println!("{:?}: {}", key_type, count);
+    }
 
-    commands.spawn((
-        DirectionalLight {
-            shadows_enabled: true,
-            illuminance: 10000.,
-            shadow_depth_bias: 0.02,
-            shadow_normal_bias: 0.5,
-            ..default()
-        },
-        Transform::from_xyz(-5., 5., -5.).looking_at(Vec3::ZERO, Dir3::Y),
-    ));
-
-    // let key_bindings: HashMap<&str, Vec<KeyCode>> = HashMap::from([
-    //     ("move_forward", vec![KeyCode::KeyW]),
-    //     ("move_backward", vec![KeyCode::KeyS]),
-    //     ("move_left", vec![KeyCode::KeyA]),
-    //     ("move_right", vec![KeyCode::KeyD]),
-    //     ("jump", vec![KeyCode::Space]),
-    //     ("crouch", vec![KeyCode::ShiftLeft]),
-    //     ("sprint", vec![KeyCode::ControlLeft]),
-    //     ("fullscreen", vec![KeyCode::F11]),
-    // ]);
-
-    // for (action, keys) in key_bindings {
-    //     input_mapping.register_action(InputActionDescriptor::new(action, keys));
-    // }
+    println!("Database loaded successfully from {}", db_path.display());
 }

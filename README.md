@@ -1,6 +1,6 @@
 # Blocktopograph
 
-Blocktopograph is an open-source world editor for Minecraft Bedrock Edition (MCBE).
+Blocktopograph is an world editor for Minecraft Bedrock Edition (MCBE).
 
 <a href="https://discord.gg/u8GCn23naN" title="Discord Server">
     <img src="https://dcbadge.limes.pink/api/server/https://discord.gg/u8GCn23naN" />
@@ -10,9 +10,6 @@ Blocktopograph is an open-source world editor for Minecraft Bedrock Edition (MCB
 
 -   **Cross-Platform Compatibility**
     Designed to run seamlessly on multiple platforms, leveraging Rust's portability.
-
--   **Bevy Engine Integration**
-    Utilizes the Bevy game engine for efficient rendering and system management.
 
 -   **Advanced World Editing**
     Provides comprehensive tools to edit MCBE worlds with support for the latest features.
@@ -49,12 +46,6 @@ Follow these steps to build Blocktopograph:
     ```
 
     The compiled binary will be located in `target/release/`.
-
-3. **Build for Mobile Platforms (iOS, Android)**
-
-    - **Android**: Follow the [Rust on Android guide](https://rust-lang.github.io/rustup/cross-compilation.html#android) to set up your environment and build the project.
-
-    - **iOS**: Refer to the [Rust on iOS guide](https://rust-lang.github.io/rustup/cross-compilation.html#ios) for instructions on building for iOS devices.
 
 ## Contributing
 

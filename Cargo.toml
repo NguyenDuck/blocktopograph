@@ -1,13 +1,13 @@
 [package]
 name = "blocktopograph"
-version = "0.0.1"
-authors = ["NguyenDuck <duck.duc.vit@gmail.com>"]
-description = "A voxel game use bevy game engine to work"
+version = "0.1.0"
 edition = "2021"
+authors = ["NguyenDuck <nguyenduck2k4@gmail.com>"]
+description = ""
+license = "LICENSE"
+repository = "https://github.com/NguyenDuck/blocktopograph"
 
 [dependencies]
-bevy = "0.15.1"
-bevy_atmosphere = "0.12.2"
-bevy_rapier3d = "0.28.0"
-serde = "1.0.217"
-serde_yml = "0.0.12"
+bytemuck = "1.23.0"
+byteorder = "1.5.0"
+rs-leveldb = "0.1.5"
