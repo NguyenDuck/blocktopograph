@@ -1,0 +1,4 @@
+[submodule "test_worlds"]
+	path = tests/assets/tests_worlds
+	url = https://github.com/NguyenDuck/blocktopograph-test-worlds.git
+	branch = dev
