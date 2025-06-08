@@ -220,11 +220,15 @@ impl SubChunk {
         let states = block_data.get("states").unwrap();
         let version = block_data.get("version").unwrap().as_int()? as u32;
 
-        let block_water_logged = self.get_layer_block(1, index as usize)?;
-        let block_data = block_water_logged.as_compound()?;
-        let block_name = block_data.get("name").unwrap().as_string()?;
+        let is_water_logged = if self.layers.len() == 2 {
+            let block_water_logged = self.get_layer_block(1, index as usize)?;
+            let block_data = block_water_logged.as_compound()?;
+            let block_name = block_data.get("name").unwrap().as_string()?;
 
-        let is_water_logged = block_name == "minecraft:water";
+            block_name == "minecraft:water"
+        } else {
+            false
+        };
 
         Ok(Some(Block {
             name: name.clone(),
