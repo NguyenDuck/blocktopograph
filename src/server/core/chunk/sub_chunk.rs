@@ -24,9 +24,10 @@ use crate::server::{
     buffer::{reader::LEDataBufReader, writer::LEDataBufWriter, DataBufRead, DataBufWrite},
     core::block::Block,
     nbt::{reader::NbtReader, writer::NbtWriter, NbtTag, TagId},
-    utils::semver::SemVer,
+    utils::{diff::find_first_diff, semver::SemVer},
 };
 
+#[derive(Debug, Clone)]
 pub struct SubChunk {
     pub raw_data: Vec<u8>,
     pub layers: Vec<SubChunkLayer>,
@@ -34,20 +35,26 @@ pub struct SubChunk {
     pub version: u8,
 }
 
+#[derive(Debug, Clone)]
 pub struct SubChunkLayer {
     pub block_indices: Box<[u16; 4096]>,
     pub blocks: Vec<(Option<String>, NbtTag)>,
 }
 
 impl SubChunk {
-    pub fn from(data: &[u8]) -> Result<Self, Error> {
+    pub fn from(data: impl Read) -> Result<Self, Error> {
+        let byte: Vec<u8> = data.bytes().into_iter().map(|f| f.unwrap()).collect();
+
+        let raw_data = byte.clone();
+
         let mut subchunk = SubChunk {
-            raw_data: data.to_vec(),
+            raw_data,
             layers: Vec::new(),
             index: 0,
             version: 9,
         };
-        subchunk.load(LEDataBufReader::new(data))?;
+
+        subchunk.load(LEDataBufReader::new(byte.as_slice()))?;
         Ok(subchunk)
     }
 
@@ -180,31 +187,51 @@ impl SubChunk {
         Ok(())
     }
 
-    pub fn get_block(&self, x: i32, y: i32, z: i32) -> Result<Option<Block>, Error> {
-        let index = x << 8 | z << 4 | y;
+    fn get_layer_block(&self, layer_index: usize, block_index: usize) -> Result<NbtTag, Error> {
+        let layer = &self.layers[layer_index];
 
-        println!("index: {}", index);
-
-        println!("layer count: {}", self.layers.len());
-
-        let layer = self.layers.get(0).unwrap();
         let block_indices = &layer.block_indices;
         let blocks = &layer.blocks;
 
-        let state_index = block_indices.get(index as usize).unwrap();
-        println!("state_index: {}", state_index);
+        let state_index = block_indices[block_index];
 
-        let block = blocks.get(*state_index as usize).unwrap();
+        let (_, block_nbt) = &blocks[state_index as usize];
 
-        println!("block: {:?}", block.1);
-        println!("{:?}", block.1.as_compound().unwrap());
+        Ok(block_nbt.clone())
+    }
 
-        // Some(Block {
-        //     name: block.1,
-        //     states: state,
-        //     version: SemVer::from(value),
-        // })
-        Ok(None)
+    pub fn get_block(&self, x: i32, y: i32, z: i32) -> Result<Option<Block>, Error> {
+        let index = x << 8 | z << 4 | y;
+
+        if self.layers.len() > 2 {
+            return Err(Error::new(
+                std::io::ErrorKind::Unsupported,
+                format!(
+                    "SubChunk layer count is greater than 2, got: {}",
+                    self.layers.len()
+                ),
+            ));
+        }
+
+        let block_nbt = self.get_layer_block(0, index as usize)?;
+        let block_data = block_nbt.as_compound()?;
+
+        let name = block_data.get("name").unwrap().as_string()?;
+        let states = block_data.get("states").unwrap();
+        let version = block_data.get("version").unwrap().as_int()? as u32;
+
+        let block_water_logged = self.get_layer_block(1, index as usize)?;
+        let block_data = block_water_logged.as_compound()?;
+        let block_name = block_data.get("name").unwrap().as_string()?;
+
+        let is_water_logged = block_name == "minecraft:water";
+
+        Ok(Some(Block {
+            name: name.clone(),
+            states: states.clone(),
+            version: version.into(),
+            water_logged: is_water_logged,
+        }))
     }
 }
 

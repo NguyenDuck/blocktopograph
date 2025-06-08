@@ -26,8 +26,8 @@ use leveldb::{
 mod server;
 use server::{
     core::chunk::{
-        chunk_reader::ChunkReaderImpl,
         chunk_tag::{ChunkTag, ChunkTagType},
+        reader::ChunkReaderManager,
     },
     leveldb::utils::{try_identify_key, KeyType},
 };
@@ -63,7 +63,7 @@ fn main() {
                             | ChunkTagType::BlockEntity
                             | ChunkTagType::RandomTicks => {}
                             ChunkTagType::SubChunkPrefix => {
-                                let _ = ChunkReaderImpl::new().read_chunk(tag, &v);
+                                let _ = ChunkReaderManager::new().read_chunk(tag, &v);
                             }
                             _ => println!(
                                 "Chunk Tag - X: {}, Z: {}, Dim: {:?}, Type: {:?}",

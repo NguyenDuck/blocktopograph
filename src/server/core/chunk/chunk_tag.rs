@@ -17,7 +17,10 @@
 ////////////////////////////////////////////////////////////////////////
 use std::io::{self, Error, ErrorKind};
 
-use crate::server::{core::world::dimension::DimensionEnum, utils::data_reader::DataReader};
+use crate::server::{
+    buffer::{reader::LEDataBufReader, DataBufRead},
+    core::world::dimension::DimensionEnum,
+};
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -80,7 +83,7 @@ impl From<u8> for ChunkTagType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ChunkTagKey {
     pub x: i32,
     pub z: i32,
@@ -93,21 +96,21 @@ pub struct ChunkTag;
 
 impl ChunkTag {
     pub fn read(bytes: &[u8]) -> Result<ChunkTagKey, Error> {
-        let mut reader = DataReader::new(io::Cursor::new(bytes));
+        let cursor = io::Cursor::new(bytes);
+        let mut reader = LEDataBufReader::new(cursor);
 
-        let x = reader.read::<i32>().unwrap();
-        let z = reader.read::<i32>().unwrap();
+        let x = reader.read_i32()?;
+        let z = reader.read_i32()?;
 
         let dim = if bytes[8] != ChunkTagType::SubChunkPrefix as u8
             && (bytes.len() == 13 || bytes.len() == 14)
         {
-            DimensionEnum::from_id(reader.read::<i32>().unwrap().into())
-                .unwrap_or(DimensionEnum::Overworld)
+            DimensionEnum::from_id(reader.read_i32()?).unwrap_or(DimensionEnum::Overworld)
         } else {
             DimensionEnum::Overworld
         };
 
-        let key_type: ChunkTagType = reader.read::<u8>().unwrap().into();
+        let key_type: ChunkTagType = reader.read_u8()?.into();
         if key_type == ChunkTagType::Invalid {
             return Err(Error::new(
                 ErrorKind::InvalidData,
@@ -119,7 +122,7 @@ impl ChunkTag {
             ));
         }
 
-        let index = reader.read::<i8>().unwrap_or(0);
+        let index = reader.read_i8().unwrap_or(0);
 
         Ok(ChunkTagKey {
             x,

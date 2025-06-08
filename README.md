@@ -62,7 +62,15 @@ Please ensure that your code adheres to the project's coding standards and inclu
 
 [![Stargazers over time](https://starchart.cc/NguyenDuck/blocktopograph.svg?variant=adaptive)](https://starchart.cc/NguyenDuck/blocktopograph)
 
+## Special thanks to
+
+-   Vũ Quang Hào provided knowledge about chunk parser ([Github](https://github.com/Hao-1337))
+
 ## License
+
+### Desrcribe
+
+-   **US**: Who original author writen Blocktopograph in rust
 
 This project is licensed under two different licenses for source code and non-code assets:
 
@@ -77,7 +85,7 @@ This project is licensed under two different licenses for source code and non-co
 
     However, you **must**:
 
-    -   Give appropriate credit to NguyenDuck.
+    -   Give appropriate credit to **US**.
     -   Provide a link to the license.
     -   Indicate if changes were made.
     -   **Not use the assets for commercial purposes.**
@@ -90,5 +98,6 @@ This project is licensed under two different licenses for source code and non-co
 ---
 
 ```
-© 2025 NguyenDuck. All rights reserved.
+All rights reserved.
+Copyright © NguyenDuck.
 ```

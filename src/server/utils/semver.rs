@@ -15,10 +15,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
+use std::fmt::Debug;
+
+#[derive(PartialEq, Clone)]
 pub struct SemVer {
     pub major: u32,
     pub minor: u32,
     pub patch: u32,
+}
+
+impl Debug for SemVer {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SemVer {}.{}.{}", self.major, self.minor, self.patch)
+    }
 }
 
 impl Default for SemVer {

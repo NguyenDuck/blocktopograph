@@ -1,4 +1,3 @@
-pub mod diff;
 /**
  * Copyright © 2025 NguyenDuck
  *
@@ -16,4 +15,19 @@ pub mod diff;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-pub mod semver;
+pub fn find_first_diff<T: Sized + PartialEq + Copy>(
+    vec1: Vec<T>,
+    vec2: Vec<T>,
+) -> Option<(usize, T, T)> {
+    if vec1.len() != vec2.len() {
+        return None;
+    }
+
+    for (index, (&byte1, &byte2)) in vec1.iter().zip(vec2.iter()).enumerate() {
+        if byte1 != byte2 {
+            return Some((index, byte1, byte2));
+        }
+    }
+
+    None
+}

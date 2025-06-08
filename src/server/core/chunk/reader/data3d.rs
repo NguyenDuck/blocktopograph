@@ -1,4 +1,3 @@
-pub mod diff;
 /**
  * Copyright © 2025 NguyenDuck
  *
@@ -16,4 +15,12 @@ pub mod diff;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-pub mod semver;
+use crate::server::core::chunk::{chunk_tag::ChunkTagKey, reader::ChunkReader};
+
+pub struct Data3DReader;
+
+impl ChunkReader for Data3DReader {
+    fn read_chunk(&self, key: ChunkTagKey, data: &[u8]) -> Result<(), std::io::Error> {
+        Ok(())
+    }
+}

@@ -16,8 +16,8 @@
  */
 ////////////////////////////////////////////////////////////////////////
 use std::{
-    fmt::Debug,
-    io::{Error, ErrorKind},
+    error::Error,
+    fmt::{Debug, Display},
 };
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
@@ -39,7 +39,37 @@ pub enum KeyType {
     Portals,
 }
 
-pub fn try_identify_key(key: &[u8]) -> Result<KeyType, Error> {
+#[derive(Debug)]
+pub struct InvalidKeyError {
+    pub key: Vec<u8>,
+}
+
+impl InvalidKeyError {
+    pub fn new(key: &[u8]) -> Self {
+        Self {
+            key: key.to_owned(),
+        }
+    }
+}
+
+impl Display for InvalidKeyError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Invalid key, Raw: {:?}, String: {:?}",
+            self.key,
+            String::from_utf8_lossy(&self.key)
+        )
+    }
+}
+
+impl Error for InvalidKeyError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+pub fn try_identify_key(key: &[u8]) -> Result<KeyType, InvalidKeyError> {
     if key.starts_with(b"digp") {
         Ok(KeyType::Digp)
     } else if key.starts_with(b"actorprefix") {
@@ -71,6 +101,6 @@ pub fn try_identify_key(key: &[u8]) -> Result<KeyType, Error> {
     } else if key.len() == 9 || key.len() == 10 || key.len() == 13 || key.len() == 14 {
         Ok(KeyType::ChunkData)
     } else {
-        Err(Error::new(ErrorKind::InvalidData, "Unknown key type"))
+        Err(InvalidKeyError::new(key))
     }
 }

@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-use std::any::Any;
-
 use crate::server::{nbt::NbtTag, utils::semver::SemVer};
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct Block {
     pub name: String,
     pub states: NbtTag,
     pub version: SemVer,
+    pub water_logged: bool,
 }

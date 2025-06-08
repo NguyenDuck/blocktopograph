@@ -1,4 +1,3 @@
-pub mod diff;
 /**
  * Copyright © 2025 NguyenDuck
  *
@@ -16,4 +15,4 @@ pub mod diff;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-pub mod semver;
+mod chunk;

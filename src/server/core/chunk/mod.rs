@@ -1,3 +1,4 @@
+pub mod chunk_tag;
 /**
  * Copyright © 2025 NguyenDuck
  *
@@ -15,6 +16,5 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-pub mod chunk_reader;
-pub mod chunk_tag;
+pub mod reader;
 pub mod sub_chunk;

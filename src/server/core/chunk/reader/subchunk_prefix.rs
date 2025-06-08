@@ -15,43 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-use std::{collections::HashMap, io::Error};
+use std::io::Error;
 
-use crate::server::core::chunk::sub_chunk::SubChunk;
-
-use super::chunk_tag::{ChunkTagKey, ChunkTagType};
-
-pub trait ChunkReader {
-    fn read_chunk(&self, key: ChunkTagKey, data: &[u8]) -> Result<(), Error>;
-}
-
-pub struct ChunkReaderManager {
-    map: HashMap<ChunkTagType, Box<dyn ChunkReader>>,
-}
-
-impl ChunkReaderManager {
-    pub fn new() -> Self {
-        let mut map: HashMap<ChunkTagType, Box<dyn ChunkReader>> = HashMap::new();
-        map.insert(ChunkTagType::SubChunkPrefix, Box::new(SubChunkPrefixReader));
-
-        Self { map }
-    }
-
-    pub fn read_chunk(
-        &self,
-        tag_key: ChunkTagKey,
-        data: &[u8],
-    ) -> Result<(), impl std::error::Error> {
-        if let Some(chunk_reader) = self.map.get(&tag_key.key_type) {
-            chunk_reader.read_chunk(tag_key, data)
-        } else {
-            Err(Error::new(
-                std::io::ErrorKind::Unsupported,
-                format!("No reader found for chunk type: {:?}", tag_key.key_type),
-            ))
-        }
-    }
-}
+use crate::server::{
+    core::chunk::{chunk_tag::ChunkTagKey, reader::ChunkReader, sub_chunk::SubChunk},
+    utils::diff::find_first_diff,
+};
 
 pub struct SubChunkPrefixReader;
 
@@ -62,13 +31,13 @@ impl ChunkReader for SubChunkPrefixReader {
         let mut subchunk = SubChunk::from(data)?;
 
         let block = subchunk.get_block(0, 0, 0)?;
-        println!("saygex {:?}", block.unwrap());
+        println!("{:?}", block);
 
         let old_buffer = subchunk.raw_data.clone();
 
         let new_buffer = subchunk.save()?;
 
-        let f = find_first_diff(old_buffer.clone().as_ref(), new_buffer.clone().as_ref());
+        let f = find_first_diff(old_buffer.clone(), new_buffer.clone());
 
         match f {
             Some((v, a, b)) => {
@@ -114,18 +83,4 @@ impl ChunkReader for SubChunkPrefixReader {
 
         Ok(())
     }
-}
-
-fn find_first_diff(vec1: &Vec<u8>, vec2: &Vec<u8>) -> Option<(usize, u8, u8)> {
-    if vec1.len() != vec2.len() {
-        return None;
-    }
-
-    for (index, (&byte1, &byte2)) in vec1.iter().zip(vec2.iter()).enumerate() {
-        if byte1 != byte2 {
-            return Some((index, byte1, byte2));
-        }
-    }
-
-    None
 }

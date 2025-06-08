@@ -20,7 +20,7 @@ pub mod writer;
 
 use std::{collections::BTreeMap, io::Error};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum NbtTag {
     End,
     Byte(i8),
@@ -53,16 +53,6 @@ pub enum TagId {
     Compound = 10,
     IntArray = 11,
     LongArray = 12,
-}
-
-pub trait Id {
-    fn id(self) -> u8;
-}
-
-impl Id for TagId {
-    fn id(self) -> u8 {
-        self as u8
-    }
 }
 
 impl TagId {

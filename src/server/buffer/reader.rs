@@ -38,6 +38,46 @@ impl<R: Read> LEDataBufReader<R> {
             tmp
         }
     }
+
+    fn read_u8(&mut self) -> Result<u8, std::io::Error> {
+        Ok(self.read::<u8>())
+    }
+
+    fn read_u16(&mut self) -> Result<u16, std::io::Error> {
+        Ok(self.read::<u16>())
+    }
+
+    fn read_u32(&mut self) -> Result<u32, std::io::Error> {
+        Ok(self.read::<u32>())
+    }
+
+    fn read_u64(&mut self) -> Result<u64, std::io::Error> {
+        Ok(self.read::<u64>())
+    }
+
+    fn read_i8(&mut self) -> Result<i8, std::io::Error> {
+        Ok(self.read::<i8>())
+    }
+
+    fn read_i16(&mut self) -> Result<i16, std::io::Error> {
+        Ok(self.read::<i16>())
+    }
+
+    fn read_i32(&mut self) -> Result<i32, std::io::Error> {
+        Ok(self.read::<i32>())
+    }
+
+    fn read_i64(&mut self) -> Result<i64, std::io::Error> {
+        Ok(self.read::<i64>())
+    }
+
+    fn read_f32(&mut self) -> Result<f32, std::io::Error> {
+        Ok(self.read::<f32>())
+    }
+
+    fn read_f64(&mut self) -> Result<f64, std::io::Error> {
+        Ok(self.read::<f64>())
+    }
 }
 
 impl<R: Read> Read for LEDataBufReader<R> {
