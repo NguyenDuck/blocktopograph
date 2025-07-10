@@ -1,6 +1,6 @@
 [package]
 name = "blocktopograph"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 authors = ["NguyenDuck <nguyenduck2k4@gmail.com>"]
 description = ""
@@ -8,6 +8,12 @@ license = "LICENSE"
 repository = "https://github.com/NguyenDuck/blocktopograph"
 
 [dependencies]
-bytemuck = "1.23.0"
+bytemuck = "1.23.1"
 byteorder = "1.5.0"
-rs-leveldb = "0.1.5"
+bytes = "1.10.1"
+mojang-leveldb = "0.7.0"
+bnbt = "0.0.5"
+raw-window-handle = "0.6.2"
+serde = "1.0.219"
+thiserror = "2.0.12"
+winit = "0.30.11"

@@ -15,46 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-use std::{collections::HashMap, io::Error};
+use std::io::Result;
 
-use crate::server::core::chunk::reader::{
-    data3d::Data3DReader, subchunk_prefix::SubChunkPrefixReader,
-};
-
-use super::chunk_tag::{ChunkTagKey, ChunkTagType};
+use super::chunk_tag::ChunkTagKey;
 
 pub mod data3d;
 pub mod subchunk_prefix;
 
-pub trait ChunkReader {
-    fn read_chunk(&self, key: ChunkTagKey, data: &[u8]) -> Result<(), Error>;
-}
-
-pub struct ChunkReaderManager {
-    map: HashMap<ChunkTagType, Box<dyn ChunkReader>>,
-}
-
-impl ChunkReaderManager {
-    pub fn new() -> Self {
-        let mut map: HashMap<ChunkTagType, Box<dyn ChunkReader>> = HashMap::new();
-        map.insert(ChunkTagType::SubChunkPrefix, Box::new(SubChunkPrefixReader));
-        map.insert(ChunkTagType::Data3D, Box::new(Data3DReader));
-
-        Self { map }
-    }
-
-    pub fn read_chunk(
-        &self,
-        tag_key: ChunkTagKey,
-        data: &[u8],
-    ) -> Result<(), impl std::error::Error> {
-        if let Some(chunk_reader) = self.map.get(&tag_key.key_type) {
-            chunk_reader.read_chunk(tag_key, data)
-        } else {
-            Err(Error::new(
-                std::io::ErrorKind::Unsupported,
-                format!("No reader found for chunk type: {:?}", tag_key.key_type),
-            ))
-        }
-    }
+pub trait ChunkReaderTrait<T> {
+    fn read(&self, tag_key: ChunkTagKey, data: Vec<u8>) -> Result<T>;
 }

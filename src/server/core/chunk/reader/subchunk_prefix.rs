@@ -15,72 +15,124 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-use std::io::Error;
+use std::{
+    io::{Cursor, Error, ErrorKind, Read, Result},
+    os::raw,
+};
 
-use crate::server::{
-    core::chunk::{chunk_tag::ChunkTagKey, reader::ChunkReader, sub_chunk::SubChunk},
-    utils::diff::find_first_diff,
+use bnbt::{nbt, NBTSerializer, NBTTag};
+use byteorder::{ReadBytesExt, LE};
+use bytes::{Buf, Bytes};
+
+use crate::server::core::chunk::{
+    chunk_tag::ChunkTagKey,
+    reader::ChunkReaderTrait,
+    sub_chunk::{SubChunk, SubChunkLayer},
 };
 
 pub struct SubChunkPrefixReader;
 
-impl ChunkReader for SubChunkPrefixReader {
-    fn read_chunk(&self, tag_key: ChunkTagKey, data: &[u8]) -> Result<(), Error> {
-        let index = tag_key.index;
+impl SubChunkPrefixReader {
+    fn read_version(
+        &self,
+        sub_chunk: &mut SubChunk,
+        _: ChunkTagKey,
+        reader: &mut Bytes,
+    ) -> Result<u8> {
+        let version = reader.get_u8();
+        sub_chunk.version = version;
 
-        let mut subchunk = SubChunk::from(data)?;
+        Ok(version)
+    }
 
-        let block = subchunk.get_block(0, 0, 0)?;
-        println!("{:?}", block);
+    fn read_layer(&self, tag_key: ChunkTagKey, reader: &mut Bytes) -> Result<()> {
+        self.read_block_indices(tag_key, reader).unwrap();
+        self.read_pallette(tag_key, reader).unwrap();
+        Ok(())
+    }
 
-        let old_buffer = subchunk.raw_data.clone();
+    fn read_block_indices(&self, _: ChunkTagKey, reader: &mut Bytes) -> Result<()> {
+        let palette_type = reader.get_u8();
 
-        let new_buffer = subchunk.save()?;
+        let bits_per_block = palette_type >> 1;
+        let blocks_per_word = 32 / bits_per_block;
+        let word_count = (4096 + (blocks_per_word as i32 - 1)) / (blocks_per_word as i32);
+        let mask = (1 << bits_per_block) - 1;
 
-        let f = find_first_diff(old_buffer.clone(), new_buffer.clone());
+        let mut pos: usize = 0;
+        let mut block_indices = [0u16; 4096];
 
-        match f {
-            Some((v, a, b)) => {
-                println!(
-                    "Found diff of x: {}, z: {}, dim: {:?}, index: {}",
-                    tag_key.x, tag_key.z, tag_key.dim, index
-                );
-                println!(
-                    "diff at {}, old: {}, new: {}, old length: {}, new length: {}",
-                    v,
-                    a,
-                    b,
-                    old_buffer.len(),
-                    new_buffer.len()
-                );
+        for _ in 0..word_count {
+            let mut word = reader.get_u32_le();
 
-                std::fs::write(
-                    format!(
-                        "./debug/{}",
-                        format!(
-                            "subchunk_{}_{}_{:?}_{}.bin",
-                            tag_key.x, tag_key.z, tag_key.dim, tag_key.index
-                        )
-                    ),
-                    old_buffer.clone().as_slice(),
-                )
-                .expect("Failed to write debug subchunk file");
+            for _ in 0..blocks_per_word {
+                if pos == 4096 {
+                    break;
+                }
 
-                std::fs::write(
-                    format!(
-                        "./debug/{}",
-                        format!(
-                            "subchunk_{}_{}_{:?}_{}.2.bin",
-                            tag_key.x, tag_key.z, tag_key.dim, tag_key.index
-                        )
-                    ),
-                    new_buffer.clone().as_slice(),
-                )
-                .expect("Failed to write debug subchunk file");
+                block_indices[pos] = (word & mask) as u16;
+                word >>= bits_per_block;
+                pos += 1;
             }
-            None => {}
         }
 
         Ok(())
+    }
+
+    fn read_pallette(&self, _: ChunkTagKey, reader: &mut Bytes) -> Result<()> {
+        let palette_count = reader.get_u32_le();
+        let mut blocks = Vec::with_capacity(palette_count as usize);
+
+        for _ in 0..palette_count {
+            let value = NBTTag::from_bytes(reader);
+
+            blocks.push(value);
+        }
+
+        Ok(())
+    }
+}
+
+impl ChunkReaderTrait<SubChunk> for SubChunkPrefixReader {
+    fn read(&self, tag_key: ChunkTagKey, data: Vec<u8>) -> Result<SubChunk> {
+        if data.len() == 1 {
+            return Ok(SubChunk::default());
+        }
+
+        let mut sub_chunk = SubChunk::default();
+
+        let mut reader = Bytes::from(data);
+
+        let version = self
+            .read_version(&mut sub_chunk, tag_key, &mut reader)
+            .unwrap();
+
+        match version {
+            1 => self.read_layer(tag_key, &mut reader).unwrap(),
+            8 | 9 => {
+                let layer_count = reader.get_u8();
+                if sub_chunk.layers.len() != layer_count as usize {
+                    sub_chunk
+                        .layers
+                        .resize(layer_count as usize, SubChunkLayer::default());
+                }
+
+                if version == 9 {
+                    sub_chunk.index = reader.get_i8();
+                }
+
+                for _ in 0..layer_count {
+                    self.read_layer(tag_key, &mut reader).unwrap();
+                }
+            }
+            _ => {
+                return Err(Error::new(
+                    ErrorKind::InvalidData,
+                    format!("Invalid subchunk version, found: {}", version),
+                ))
+            }
+        }
+
+        Ok(sub_chunk)
     }
 }

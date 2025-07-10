@@ -15,75 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-use std::path::Path;
+mod client;
 
-use leveldb::{
-    db::Database,
-    iterator::Iterable,
-    options::{Options, ReadOptions},
-};
+use client::platform::windows;
 
-mod server;
-use server::{
-    core::chunk::{
-        chunk_tag::{ChunkTag, ChunkTagType},
-        reader::ChunkReaderManager,
-    },
-    leveldb::utils::{try_identify_key, KeyType},
-};
-use std::collections::HashMap;
+use crate::client::platform::PlatformAPI;
 
 fn main() {
-    let db_path = Path::new("./assets/test_world/db");
-    if !db_path.exists() {
-        println!("Database path does not exist: {}", db_path.display());
-        return;
-    }
+    let w = windows::WindowsPlatform::create_window("TVVL").unwrap();
 
-    let mut keytype_counts: HashMap<KeyType, usize> = HashMap::new();
-
-    let db = Database::open(db_path, &Options::new()).unwrap();
-
-    db.iter(&ReadOptions::new())
-        .for_each(|(k, v)| match try_identify_key(k.as_slice()) {
-            Ok(key_type) => {
-                *keytype_counts.entry(key_type.clone()).or_insert(0) += 1;
-
-                if key_type == KeyType::ChunkData {
-                    ChunkTag::read(k.as_slice())
-                        .map(|tag| match tag.key_type {
-                            ChunkTagType::FinalizedState
-                            | ChunkTagType::ActorDigestVersion
-                            | ChunkTagType::Version
-                            | ChunkTagType::BlendingData
-                            | ChunkTagType::BlendingBiomeHeight
-                            | ChunkTagType::PendingTicks
-                            | ChunkTagType::Data3D
-                            | ChunkTagType::AABBVolumes
-                            | ChunkTagType::BlockEntity
-                            | ChunkTagType::RandomTicks => {}
-                            ChunkTagType::SubChunkPrefix => {
-                                let _ = ChunkReaderManager::new().read_chunk(tag, &v);
-                            }
-                            _ => println!(
-                                "Chunk Tag - X: {}, Z: {}, Dim: {:?}, Type: {:?}",
-                                tag.x, tag.z, tag.dim, tag.key_type,
-                            ),
-                        })
-                        .unwrap_or_else(|e| {
-                            println!("Error reading chunk tag: {}", e);
-                        });
-                }
-            }
-            Err(_) => {
-                println!("Key: {:?}, Raw Key: {:?}", String::from_utf8(k.clone()), k)
-            }
-        });
-
-    println!("Key Type Counts:");
-    for (key_type, count) in keytype_counts {
-        println!("{:?}: {}", key_type, count);
-    }
-
-    println!("Database loaded successfully from {}", db_path.display());
+    println!("{:?}", w);
 }

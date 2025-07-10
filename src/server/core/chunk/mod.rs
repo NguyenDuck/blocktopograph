@@ -1,4 +1,3 @@
-pub mod chunk_tag;
 /**
  * Copyright © 2025 NguyenDuck
  *
@@ -16,5 +15,12 @@ pub mod chunk_tag;
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
+pub mod biome;
+pub mod chunk_tag;
+pub mod data3d;
 pub mod reader;
 pub mod sub_chunk;
+pub mod writer;
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Chunk {}

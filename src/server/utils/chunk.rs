@@ -15,5 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-pub mod core;
-pub mod utils;
+pub fn bits_needed_to_store(val: usize) -> usize {
+    if val > 0 {
+        let value_size = val.count_zeros() + val.count_ones();
+        (value_size - val.leading_zeros()) as usize
+    } else {
+        1
+    }
+}

@@ -15,5 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-pub mod core;
-pub mod utils;
+mod subchunk_prefix;
+
+pub trait ChunkWriterTrait<T> {
+    fn write(&self, x: i32, z: i32, data: T) -> Result<Vec<u8>, std::io::Error>;
+}

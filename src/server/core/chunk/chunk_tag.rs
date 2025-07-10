@@ -15,12 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 ////////////////////////////////////////////////////////////////////////
-use std::io::{self, Error, ErrorKind};
+use std::io::{Error, ErrorKind, Result};
 
-use crate::server::{
-    buffer::{reader::LEDataBufReader, DataBufRead},
-    core::world::dimension::DimensionEnum,
-};
+use bytes::{Buf, Bytes};
+
+use crate::server::core::world::dimension::DimensionEnum;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -95,34 +94,54 @@ pub struct ChunkTagKey {
 pub struct ChunkTag;
 
 impl ChunkTag {
-    pub fn read(bytes: &[u8]) -> Result<ChunkTagKey, Error> {
-        let cursor = io::Cursor::new(bytes);
-        let mut reader = LEDataBufReader::new(cursor);
+    pub fn read(data: Vec<u8>) -> Result<ChunkTagKey> {
+        let data_cloned_for_error = data.clone();
 
-        let x = reader.read_i32()?;
-        let z = reader.read_i32()?;
+        let mut reader = Bytes::from(data);
 
-        let dim = if bytes[8] != ChunkTagType::SubChunkPrefix as u8
-            && (bytes.len() == 13 || bytes.len() == 14)
-        {
-            DimensionEnum::from_id(reader.read_i32()?).unwrap_or(DimensionEnum::Overworld)
+        let x = reader.get_i32_le();
+        let z = reader.get_i32_le();
+
+        let dim = if reader.remaining() > 4 {
+            let is_sub_chunk_tag = reader.get_u8() == ChunkTagType::SubChunkPrefix as u8;
+
+            println!("is_sub_chunk_tag: {}", is_sub_chunk_tag);
+
+            // if is_sub_chunk_tag {
+            //     return DimensionEnum::from_id(reader.get_i32_le())
+            //         .unwrap_or(DimensionEnum::Overworld);
+            // } else {
+            DimensionEnum::Overworld
+            // }
         } else {
             DimensionEnum::Overworld
         };
 
-        let key_type: ChunkTagType = reader.read_u8()?.into();
+        // let dim = if *reader.get(8).unwrap() != ChunkTagType::SubChunkPrefix as u8
+        //     && (data.len() == 13 || data.len() == 14)
+        // {
+        //     DimensionEnum::from_id(reader.get_i32_le()).unwrap_or(DimensionEnum::Overworld)
+        // } else {
+        //     DimensionEnum::Overworld
+        // };
+
+        let key_type: ChunkTagType = reader.get_u8().into();
         if key_type == ChunkTagType::Invalid {
             return Err(Error::new(
                 ErrorKind::InvalidData,
                 format!(
                     "Invalid chunk tag type, {:?}, String: {:?}",
-                    bytes,
-                    String::from_utf8(bytes.to_vec())
+                    data_cloned_for_error,
+                    String::from_utf8(data_cloned_for_error.to_vec()).unwrap()
                 ),
             ));
         }
 
-        let index = reader.read_i8().unwrap_or(0);
+        let index = if reader.remaining() > 0 {
+            reader.get_i8()
+        } else {
+            0
+        };
 
         Ok(ChunkTagKey {
             x,
@@ -132,4 +151,88 @@ impl ChunkTag {
             index,
         })
     }
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+pub enum KeyType {
+    Invalid,
+    Digp,
+    ActorPrefix,
+    MobEvents,
+    Scoreboard,
+    LocalPlayer,
+    ChunkData,
+    AutonomousEntities,
+    VillageData,
+    BiomeData,
+    LevelChunkMetaDataDictionary,
+    Overworld,
+    Nether,
+    RealmsStoriesData,
+    TheEnd,
+    Portals,
+    Autonomous,
+}
+
+pub fn try_identify_key(key: Vec<u8>) -> Result<KeyType> {
+    let key_str = String::from_utf8_lossy(key.as_slice());
+
+    let estimate_tag = {
+        if key_str.starts_with("digp") {
+            KeyType::Digp
+        } else if [9, 10, 13, 14].contains(&key.len()) {
+            KeyType::ChunkData
+        } else {
+            KeyType::Invalid
+        }
+    };
+
+    if estimate_tag != KeyType::Invalid {
+        Ok(estimate_tag)
+    } else {
+        Err(Error::new(
+            ErrorKind::InvalidData,
+            format!(
+                "Cannot identify key, found: {:?}, String: {:?}",
+                key,
+                String::from_utf8_lossy(key.as_slice())
+            ),
+        ))
+    }
+
+    // if key.starts_with(b"digp") {
+    //     Ok(KeyType::Digp)
+    // } else if key.starts_with(b"actorprefix") {
+    //     Ok(KeyType::ActorPrefix)
+    // } else if key.starts_with(b"mobevents") {
+    //     Ok(KeyType::MobEvents)
+    // } else if key.starts_with(b"scoreboard") {
+    //     Ok(KeyType::Scoreboard)
+    // } else if key.starts_with(b"~local_player") {
+    //     Ok(KeyType::LocalPlayer)
+    // } else if key.starts_with(b"AutonomousEntities") {
+    //     Ok(KeyType::AutonomousEntities)
+    // } else if key.starts_with(b"VILLAGE") {
+    //     Ok(KeyType::VillageData)
+    // } else if key.starts_with(b"BiomeData") {
+    //     Ok(KeyType::BiomeData)
+    // } else if key.starts_with(b"LevelChunkMetaDataDictionary") {
+    //     Ok(KeyType::LevelChunkMetaDataDictionary)
+    // } else if key.starts_with(b"Overworld") {
+    //     Ok(KeyType::Overworld)
+    // } else if key.starts_with(b"Nether") {
+    //     Ok(KeyType::Nether)
+    // } else if key.starts_with(b"RealmsStoriesData") {
+    //     Ok(KeyType::RealmsStoriesData)
+    // } else if key.starts_with(b"TheEnd") {
+    //     Ok(KeyType::TheEnd)
+    // } else if key.starts_with(b"portals") {
+    //     Ok(KeyType::Portals)
+    // } else if key.starts_with(b"Autonomou") {
+    //     Ok(KeyType::Autonomous)
+    // } else if key.len() == 9 || key.len() == 10 || key.len() == 13 || key.len() == 14 {
+    //     Ok(KeyType::ChunkData)
+    // } else {
+
+    // }
 }

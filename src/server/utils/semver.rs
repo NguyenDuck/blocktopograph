@@ -55,3 +55,15 @@ impl From<u32> for SemVer {
         }
     }
 }
+
+impl Into<i32> for SemVer {
+    fn into(self) -> i32 {
+        Into::<u32>::into(self) as i32
+    }
+}
+
+impl From<i32> for SemVer {
+    fn from(value: i32) -> Self {
+        From::<u32>::from(value as u32)
+    }
+}
