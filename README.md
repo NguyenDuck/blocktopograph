@@ -76,3 +76,14 @@ For more detailed technical details, see the [Technology Proposal](docs/technolo
 Blocktopograph is **NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.**
 
 We are committed to respecting Mojang's intellectual property. This software does not redistribute Minecraft assets; it requires a legitimate local installation to function. For more details on our compliance strategy, see the [Legal Compliance section](docs/technology_proposal.md#8-legal-compliance--copyright) in our Technology Proposal.
+
+## License
+
+Licensed under either of
+
+- Apache License, Version 2.0
+  ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license
+  ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
